@@ -18,6 +18,11 @@ public class ReadOdsIntance : IFeature
             .WithRouteOptions(b => b.WithResponse<OdsInstanceModel[]>(200))
             .BuildForVersions(AdminApiVersions.V1);
 
+        AdminApiEndpointBuilder.MapGet(endpoints, "/odsinstances/{offset}/{limit}", GetOdsInstancesPaging)
+            .WithDefaultDescription()
+            .WithRouteOptions(b => b.WithResponse<OdsInstanceModel[]>(200))
+            .BuildForVersions(AdminApiVersions.V1);
+
         AdminApiEndpointBuilder.MapGet(endpoints, "/odsinstances/{id}", GetOdsInstance)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponse<OdsInstanceModel>(200))
@@ -28,6 +33,12 @@ public class ReadOdsIntance : IFeature
     internal Task<IResult> GetOdsInstances(IGetOdsInstancesQuery getOdsInstancesQuery, IMapper mapper)
     {
         var odsInstances = mapper.Map<List<OdsInstanceModel>>(getOdsInstancesQuery.Execute());
+        return Task.FromResult(Results.Ok(odsInstances));
+    }
+
+    internal Task<IResult> GetOdsInstancesPaging(IGetOdsInstancesQuery getOdsInstancesQuery, IMapper mapper, int offset, int limit)
+    {
+        var odsInstances = mapper.Map<List<OdsInstanceModel>>(getOdsInstancesQuery.Execute(offset, limit));
         return Task.FromResult(Results.Ok(odsInstances));
     }
 

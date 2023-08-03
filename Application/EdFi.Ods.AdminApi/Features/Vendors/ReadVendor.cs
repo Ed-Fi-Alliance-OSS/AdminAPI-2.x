@@ -19,6 +19,11 @@ public class ReadVendor : IFeature
             .WithRouteOptions(b => b.WithResponse<VendorModel[]>(200))
             .BuildForVersions(AdminApiVersions.V1);
 
+        AdminApiEndpointBuilder.MapGet(endpoints, "/vendors/{offset}/{limit}", GetVendorsPaging)
+            .WithDefaultDescription()
+            .WithRouteOptions(b => b.WithResponse<VendorModel[]>(200))
+            .BuildForVersions(AdminApiVersions.V1);
+
         AdminApiEndpointBuilder.MapGet(endpoints, "/vendors/{id}", GetVendor)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponse<VendorModel>(200))
@@ -28,6 +33,12 @@ public class ReadVendor : IFeature
     internal Task<IResult> GetVendors(IGetVendorsQuery getVendorsQuery, IMapper mapper)
     {
         var vendorList = mapper.Map<List<VendorModel>>(getVendorsQuery.Execute());
+        return Task.FromResult(Results.Ok(vendorList));
+    }
+
+    internal Task<IResult> GetVendorsPaging(IGetVendorsQuery getVendorsQuery, IMapper mapper, int offset, int limit)
+    {
+        var vendorList = mapper.Map<List<VendorModel>>(getVendorsQuery.Execute(offset, limit));
         return Task.FromResult(Results.Ok(vendorList));
     }
 

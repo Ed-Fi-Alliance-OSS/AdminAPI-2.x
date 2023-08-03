@@ -19,6 +19,11 @@ public class ReadApplication : IFeature
             .WithRouteOptions(b => b.WithResponse<ApplicationModel[]>(200))
             .BuildForVersions(AdminApiVersions.V1);
 
+        AdminApiEndpointBuilder.MapGet(endpoints, "/applications/{offset}/{limit}", GetApplicationsPaging)
+            .WithDefaultDescription()
+            .WithRouteOptions(b => b.WithResponse<ApplicationModel[]>(200))
+            .BuildForVersions(AdminApiVersions.V1);
+
         AdminApiEndpointBuilder.MapGet(endpoints, "/applications/{id}", GetApplication)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponse<ApplicationModel>(200))
@@ -28,6 +33,17 @@ public class ReadApplication : IFeature
     internal Task<IResult> GetApplications(IGetVendorsQuery getVendorsAndApplicationsQuery, IMapper mapper)
     {
         var vendors = getVendorsAndApplicationsQuery.Execute();
+        var applications = new List<ApplicationModel>();
+        foreach (var vendor in vendors)
+        {
+            applications.AddRange(mapper.Map<List<ApplicationModel>>(vendor.Applications));
+        }
+        return Task.FromResult(Results.Ok(applications));
+    }
+
+    internal Task<IResult> GetApplicationsPaging(IGetVendorsQuery getVendorsAndApplicationsQuery, IMapper mapper, int offset, int limit)
+    {
+        var vendors = getVendorsAndApplicationsQuery.Execute(offset, limit);
         var applications = new List<ApplicationModel>();
         foreach (var vendor in vendors)
         {
