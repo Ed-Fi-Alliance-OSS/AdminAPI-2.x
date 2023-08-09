@@ -4,7 +4,9 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using AutoMapper;
+using EdFi.Common.Extensions;
 using EdFi.Ods.AdminApi.Features.Applications;
+using EdFi.Ods.AdminApi.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
@@ -21,32 +23,15 @@ public class ReadClaimSets : IFeature
            .WithRouteOptions(b => b.WithResponse<List<ClaimSetModel>>(200))
            .BuildForVersions(AdminApiVersions.V2);
 
-        AdminApiEndpointBuilder.MapGet(endpoints, "/claimsets/{offset}/{limit}", GetClaimSetsPaging)
-           .WithDefaultDescription()
-           .WithRouteOptions(b => b.WithResponse<List<ClaimSetModel>>(200))
-           .BuildForVersions(AdminApiVersions.V2);
-
         AdminApiEndpointBuilder.MapGet(endpoints, "/claimsets/{id}", GetClaimSet)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponse<ClaimSetDetailsModel>(200))
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    internal Task<IResult> GetClaimSets(IGetAllClaimSetsQuery getClaimSetsQuery, IGetApplicationsByClaimSetIdQuery getApplications, IMapper mapper)
+    internal Task<IResult> GetClaimSets(IGetAllClaimSetsQuery getClaimSetsQuery, IGetApplicationsByClaimSetIdQuery getApplications, IMapper mapper, int offset, int limit)
     {
-        var claimSets = getClaimSetsQuery.Execute();
-        var model = mapper.Map<List<ClaimSetModel>>(claimSets);
-        foreach (var claimSet in model)
-        {
-            claimSet.Applications = mapper.Map<List<SimpleApplicationModel>>(getApplications.Execute(claimSet.Id));
-            claimSet.IsSystemReserved = Constants.DefaultClaimSets.Contains(claimSet.Name);
-        }
-        return Task.FromResult(Results.Ok(model));
-    }
-
-    internal Task<IResult> GetClaimSetsPaging(IGetAllClaimSetsQuery getClaimSetsQuery, IGetApplicationsByClaimSetIdQuery getApplications, IMapper mapper, int offset, int limit)
-    {
-        var claimSets = getClaimSetsQuery.Execute(offset,limit);
+        var claimSets = getClaimSetsQuery.Execute(offset, limit);
         var model = mapper.Map<List<ClaimSetModel>>(claimSets);
         foreach (var claimSet in model)
         {

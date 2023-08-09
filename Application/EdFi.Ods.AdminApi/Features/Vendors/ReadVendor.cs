@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using AutoMapper;
+using EdFi.Ods.AdminApi.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
@@ -19,24 +20,13 @@ public class ReadVendor : IFeature
             .WithRouteOptions(b => b.WithResponse<VendorModel[]>(200))
             .BuildForVersions(AdminApiVersions.V1);
 
-        AdminApiEndpointBuilder.MapGet(endpoints, "/vendors/{offset}/{limit}", GetVendorsPaging)
-            .WithDefaultDescription()
-            .WithRouteOptions(b => b.WithResponse<VendorModel[]>(200))
-            .BuildForVersions(AdminApiVersions.V1);
-
         AdminApiEndpointBuilder.MapGet(endpoints, "/vendors/{id}", GetVendor)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponse<VendorModel>(200))
             .BuildForVersions(AdminApiVersions.V1);
     }
 
-    internal Task<IResult> GetVendors(IGetVendorsQuery getVendorsQuery, IMapper mapper)
-    {
-        var vendorList = mapper.Map<List<VendorModel>>(getVendorsQuery.Execute());
-        return Task.FromResult(Results.Ok(vendorList));
-    }
-
-    internal Task<IResult> GetVendorsPaging(IGetVendorsQuery getVendorsQuery, IMapper mapper, int offset, int limit)
+    internal Task<IResult> GetVendors(IGetVendorsQuery getVendorsQuery, IMapper mapper, int offset, int limit)
     {
         var vendorList = mapper.Map<List<VendorModel>>(getVendorsQuery.Execute(offset, limit));
         return Task.FromResult(Results.Ok(vendorList));

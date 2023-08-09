@@ -4,22 +4,20 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using AutoMapper;
+using EdFi.Ods.AdminApi.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
+using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApi.Features.Applications;
 
 public class ReadApplication : IFeature
 {
+
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         AdminApiEndpointBuilder.MapGet(endpoints, "/applications", GetApplications)
-            .WithDefaultDescription()
-            .WithRouteOptions(b => b.WithResponse<ApplicationModel[]>(200))
-            .BuildForVersions(AdminApiVersions.V1);
-
-        AdminApiEndpointBuilder.MapGet(endpoints, "/applications/{offset}/{limit}", GetApplicationsPaging)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponse<ApplicationModel[]>(200))
             .BuildForVersions(AdminApiVersions.V1);
@@ -30,18 +28,7 @@ public class ReadApplication : IFeature
             .BuildForVersions(AdminApiVersions.V1);
     }
 
-    internal Task<IResult> GetApplications(IGetVendorsQuery getVendorsAndApplicationsQuery, IMapper mapper)
-    {
-        var vendors = getVendorsAndApplicationsQuery.Execute();
-        var applications = new List<ApplicationModel>();
-        foreach (var vendor in vendors)
-        {
-            applications.AddRange(mapper.Map<List<ApplicationModel>>(vendor.Applications));
-        }
-        return Task.FromResult(Results.Ok(applications));
-    }
-
-    internal Task<IResult> GetApplicationsPaging(IGetVendorsQuery getVendorsAndApplicationsQuery, IMapper mapper, int offset, int limit)
+    internal Task<IResult> GetApplications(IGetVendorsQuery getVendorsAndApplicationsQuery, IMapper mapper, int offset, int limit)
     {
         var vendors = getVendorsAndApplicationsQuery.Execute(offset, limit);
         var applications = new List<ApplicationModel>();

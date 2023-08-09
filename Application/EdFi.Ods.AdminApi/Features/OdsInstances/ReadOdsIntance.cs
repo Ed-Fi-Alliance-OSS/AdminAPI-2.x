@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using AutoMapper;
+using EdFi.Ods.AdminApi.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
@@ -18,25 +19,13 @@ public class ReadOdsIntance : IFeature
             .WithRouteOptions(b => b.WithResponse<OdsInstanceModel[]>(200))
             .BuildForVersions(AdminApiVersions.V1);
 
-        AdminApiEndpointBuilder.MapGet(endpoints, "/odsinstances/{offset}/{limit}", GetOdsInstancesPaging)
-            .WithDefaultDescription()
-            .WithRouteOptions(b => b.WithResponse<OdsInstanceModel[]>(200))
-            .BuildForVersions(AdminApiVersions.V1);
-
         AdminApiEndpointBuilder.MapGet(endpoints, "/odsinstances/{id}", GetOdsInstance)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponse<OdsInstanceModel>(200))
             .BuildForVersions(AdminApiVersions.V1);
     }
 
-
-    internal Task<IResult> GetOdsInstances(IGetOdsInstancesQuery getOdsInstancesQuery, IMapper mapper)
-    {
-        var odsInstances = mapper.Map<List<OdsInstanceModel>>(getOdsInstancesQuery.Execute());
-        return Task.FromResult(Results.Ok(odsInstances));
-    }
-
-    internal Task<IResult> GetOdsInstancesPaging(IGetOdsInstancesQuery getOdsInstancesQuery, IMapper mapper, int offset, int limit)
+    internal Task<IResult> GetOdsInstances(IGetOdsInstancesQuery getOdsInstancesQuery, IMapper mapper, int offset, int limit)
     {
         var odsInstances = mapper.Map<List<OdsInstanceModel>>(getOdsInstancesQuery.Execute(offset, limit));
         return Task.FromResult(Results.Ok(odsInstances));
