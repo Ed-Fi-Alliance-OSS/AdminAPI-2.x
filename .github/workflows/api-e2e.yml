@@ -66,11 +66,12 @@ jobs:
 
       - name: Run tests
         run: |
-          newman run './E2E Tests/Admin API E2E 2.0 - User Management.postman_collection.json' \
+          newman run './E2E Tests/AdminAPIE2E-2.0-User-Management.postman_collection.json' \
             -e './E2E Tests/Admin API Docker.postman_environment.json' \
             -r htmlextra \
             --reporter-htmlextra-title "AdminAPI - User Management" \
-            --reporter-htmlextra-export './reports/'
+            --reporter-htmlextra-export './reports/User-Management.html' \
+            -k
 
       - name: Get Docker logs
         if: failure()
