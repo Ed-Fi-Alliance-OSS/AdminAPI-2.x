@@ -62,55 +62,15 @@ jobs:
           node-version: "16"
 
       - name: Install newman
-        run: npm install -g newman newman-reporter-junitfull
+        run: npm install -g newman newman-reporter-htmlextra
 
       - name: Run tests
         run: |
           newman run './E2E Tests/Admin API E2E 2.0 - User Management.postman_collection.json' \
             -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r junit,cli \
-            --reporter-junit-export ./reports/reportUser.xml \
-            -k
-          newman run './E2E Tests/Admin API E2E 2.0 - Vendors.postman_collection.json' \
-            -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r junit,cli \
-            --reporter-junit-export ./reports/reportVendors.xml \
-            -k
-          newman run './E2E Tests/Admin API E2E 2.0 - Application.postman_collection.json' \
-            -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r junit,cli \
-            --reporter-junit-export ./reports/reportApplication.xml \
-            -k
-          newman run './E2E Tests/Admin API E2E 2.0 - ClaimSets.postman_collection.json' \
-            -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r junit,cli \
-            --reporter-junit-export ./reports/reportClaimSets.xml \
-            -k
-          newman run './E2E Tests/Admin API E2E 2.0 - Resourceclaims.postman_collection.json' \
-            -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r junit,cli \
-            --reporter-junit-export ./reports/reportResourceClaims.xml \
-            -k
-          newman run './E2E Tests/Admin API E2E 2.0 - AuthStrategies.postman_collection.json' \
-            -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r junit,cli \
-            --reporter-junit-export ./reports/reportAuthStrategies.xml \
-            -k
-          newman run './E2E Tests/Admin API E2E 2.0 - Profiles.postman_collection.json' \
-            -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r junit,cli \
-            --reporter-junit-export ./reports/reportProfiles.xml \
-            -k
-          newman run './E2E Tests/Admin API E2E 2.0 - Actions.postman_collection.json' \
-            -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r junit,cli \
-            --reporter-junit-export ./reports/reportActions.xml \
-            -k
-          newman run './E2E Tests/Admin API E2E 2.0 - OdsInstances.postman_collection.json' \
-            -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r junit,cli \
-            --reporter-junit-export ./reports/reportOdsInstances.xml \
-            -k
+            -r htmlextra \
+            --reporter-htmlextra-title "AdminAPI - User Management" \
+            --reporter-htmlextra-export ./reports/
 
       - name: Get Docker logs
         if: failure()
@@ -132,7 +92,7 @@ jobs:
         if: success() || failure()
         with:
           name: test-results
-          path: Application/EdFi.Ods.AdminApi/reports/report.xml
+          path: Application/EdFi.Ods.AdminApi/reports/*
           retention-days: 10
 
   report:
