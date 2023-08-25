@@ -74,9 +74,9 @@ jobs:
         run: |
           newman run './E2E Tests/Admin-API-Full-Collection.postman_collection.json' \
             -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r htmlextra \
+            -r cli,htmlextra \
             --reporter-htmlextra-title 'AdminAPI - 2.0' \
-            --reporter-htmlextra-export 'Application/EdFi.Ods.AdminApi/reports/results.html' \
+            --reporter-htmlextra-export './reports/results.html' \
             -k
 
       - name: Get Docker logs
