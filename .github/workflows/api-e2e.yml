@@ -62,72 +62,21 @@ jobs:
           node-version: "16"
 
       - name: Install newman
-        run: npm install -g newman newman-reporter-htmlextra
+        run: npm install -g newman newman-reporter-htmlextra postman-combine-collections
+
+      - name: Combine Collections
+        run: |
+          postman-combine-collections -f './E2E Tests/*.postman_collection.json' \
+             -n 'Admin API E2E 2.0' \
+             -o './E2E Tests/Admin-API-Full-Collection.postman_collection.json'
 
       - name: Run tests
         run: |
-          newman run './E2E Tests/Admin API E2E 2.0 - User Management.postman_collection.json' \
+          newman run './E2E Tests/Admin-API-Full-Collection.postman_collection.json' \
             -e './E2E Tests/Admin API Docker.postman_environment.json' \
             -r htmlextra \
-            --reporter-htmlextra-title "AdminAPI - User Management" \
-            --reporter-htmlextra-export ./reports/User-Management.html \
-            --reporter-htmlextra-displayProgressBar \
-            -k
-          newman run './E2E Tests/Admin API E2E 2.0 - Vendors.postman_collection.json' \
-            -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r htmlextra \
-            --reporter-htmlextra-title "AdminAPI - Vendors" \
-            --reporter-htmlextra-export ./reports/Vendors.html \
-            --reporter-htmlextra-displayProgressBar \
-            -k
-          newman run './E2E Tests/Admin API E2E 2.0 - Application.postman_collection.json' \
-            -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r htmlextra \
-            --reporter-htmlextra-title "AdminAPI - Application" \
-            --reporter-htmlextra-export ./reports/Application.html \
-            --reporter-htmlextra-displayProgressBar \
-            -k
-          newman run './E2E Tests/Admin API E2E 2.0 - ClaimSets.postman_collection.json' \
-            -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r htmlextra \
-            --reporter-htmlextra-title "AdminAPI - ClaimSets" \
-            --reporter-htmlextra-export ./reports/Claimsets.html \
-            --reporter-htmlextra-displayProgressBar \
-            -k
-          newman run './E2E Tests/Admin API E2E 2.0 - Resourceclaims.postman_collection.json' \
-            -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r htmlextra \
-            --reporter-htmlextra-title "AdminAPI - Resourceclaims" \
-            --reporter-htmlextra-export ./reports/Resourceclaims.html \
-            --reporter-htmlextra-displayProgressBar \
-            -k
-          newman run './E2E Tests/Admin API E2E 2.0 - AuthStrategies.postman_collection.json' \
-            -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r htmlextra \
-            --reporter-htmlextra-title "AdminAPI - AuthStrategies" \
-            --reporter-htmlextra-export ./reports/AuthStrategies.html \
-            --reporter-htmlextra-displayProgressBar \
-            -k
-          newman run './E2E Tests/Admin API E2E 2.0 - Profiles.postman_collection.json' \
-            -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r htmlextra \
-            --reporter-htmlextra-title "AdminAPI - Profiles" \
-            --reporter-htmlextra-export ./reports/Profiles.html \
-            --reporter-htmlextra-displayProgressBar \
-            -k
-          newman run './E2E Tests/Admin API E2E 2.0 - Actions.postman_collection.json' \
-            -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r htmlextra \
-            --reporter-htmlextra-title "AdminAPI - Actions" \
-            --reporter-htmlextra-export ./reports/Actions.html \
-            --reporter-htmlextra-displayProgressBar \
-            -k
-          newman run './E2E Tests/Admin API E2E 2.0 - OdsInstances.postman_collection.json' \
-            -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r htmlextra \
-            --reporter-htmlextra-title "AdminAPI - OdsInstances" \
-            --reporter-htmlextra-export ./reports/OdsInstances.html \
-            --reporter-htmlextra-displayProgressBar \
+            --reporter-htmlextra-title 'AdminAPI - User Management' \
+            --reporter-htmlextra-export './reports/results.html' \
             -k
 
       - name: Get Docker logs
@@ -143,15 +92,15 @@ jobs:
         with:
           name: docker-logs
           path: Application/EdFi.Ods.AdminApi/docker-logs/
-          retention-days: 10
+          retention-days: 5
 
       - name: Upload results
         uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         if: success() || failure()
         with:
           name: test-results
-          path: Application/EdFi.Ods.AdminApi/reports/*
-          retention-days: 10
+          path: Application/EdFi.Ods.AdminApi/reports/results.html
+          retention-days: 5
 
   report:
     if: ${{ false }}
