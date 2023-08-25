@@ -17,7 +17,7 @@ public class DeleteClaimSet : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiEndpointBuilder.MapDelete(endpoints, "/claimsets/{id}", Handle)
+        AdminApiEndpointBuilder.MapDelete(endpoints, "/claimSets/{id}", Handle)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponseCode(200, FeatureConstants.DeletedSuccessResponseDescription))
             .BuildForVersions(AdminApiVersions.V2);
@@ -42,13 +42,11 @@ public class DeleteClaimSet : IFeature
 
     private static void CheckClaimSetExists(int id, IGetClaimSetByIdQuery query)
     {
-        try
+        var claimSet = query.Execute(id);
+        if (claimSet != null && !claimSet.IsEditable)
         {
-            query.Execute(id);
-        }
-        catch (AdminApiException)
-        {
-            throw new NotFoundException<int>("claimset", id);
+            throw new ValidationException(new[] { new ValidationFailure(nameof(id),
+                $"Claim set ({claimSet.Name}) is system reserved. May not be modified.") });
         }
     }
 

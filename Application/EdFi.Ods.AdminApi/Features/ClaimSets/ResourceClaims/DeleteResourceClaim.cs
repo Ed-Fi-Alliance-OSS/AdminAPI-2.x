@@ -6,6 +6,8 @@
 using AutoMapper;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
+using FluentValidation;
+using FluentValidation.Results;
 
 namespace EdFi.Ods.AdminApi.Features.ClaimSets.ResourceClaims;
 
@@ -13,7 +15,7 @@ public class DeleteResourceClaim : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiEndpointBuilder.MapDelete(endpoints, "/claimsets/{claimsetid}/resourceclaims/{resourceclaimid}", Handle)
+        AdminApiEndpointBuilder.MapDelete(endpoints, "/claimSets/{claimSetId}/resourceClaimActions/{resourceClaimId}", Handle)
        .WithDefaultDescription()
        .WithRouteOptions(b => b.WithResponseCode(200))
        .BuildForVersions(AdminApiVersions.V2);
@@ -23,18 +25,23 @@ public class DeleteResourceClaim : IFeature
         IGetClaimSetByIdQuery getClaimSetByIdQuery,
         IAuthStrategyResolver strategyResolver,
         IDeleteResouceClaimOnClaimSetCommand deleteResouceClaimOnClaimSetCommand,
-        IMapper mapper, int claimsetid, int resourceclaimid)
+        IMapper mapper, int claimSetId, int resourceClaimId)
     {
-        var claimSet = getClaimSetByIdQuery.Execute(claimsetid);
+        var claimSet = getClaimSetByIdQuery.Execute(claimSetId);
 
-        var resourceClaim = getResourcesByClaimSetIdQuery.SingleResource(claimSet.Id, resourceclaimid);
+        if (!claimSet.IsEditable)
+        {
+            throw new ValidationException(new[] { new ValidationFailure(nameof(claimSetId), $"Claim set ({claimSet.Name}) is system reserved. May not be modified.") });
+        }
+
+        var resourceClaim = getResourcesByClaimSetIdQuery.SingleResource(claimSet.Id, resourceClaimId);
         if (resourceClaim == null)
         {
-            throw new NotFoundException<int>("ResourceClaim", resourceclaimid);
+            throw new NotFoundException<int>("ResourceClaim", resourceClaimId);
         }
         else
         {
-            deleteResouceClaimOnClaimSetCommand.Execute(claimSet.Id, resourceclaimid);
+            deleteResouceClaimOnClaimSetCommand.Execute(claimSet.Id, resourceClaimId);
         }
 
         return await Task.FromResult(Results.Ok());

@@ -16,12 +16,12 @@ public class ReadClaimSets : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiEndpointBuilder.MapGet(endpoints, "/claimsets", GetClaimSets)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/claimSets", GetClaimSets)
            .WithDefaultDescription()
            .WithRouteOptions(b => b.WithResponse<List<ClaimSetModel>>(200))
            .BuildForVersions(AdminApiVersions.V2);
 
-        AdminApiEndpointBuilder.MapGet(endpoints, "/claimsets/{id}", GetClaimSet)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/claimSets/{id}", GetClaimSet)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponse<ClaimSetDetailsModel>(200))
             .BuildForVersions(AdminApiVersions.V2);
@@ -29,12 +29,11 @@ public class ReadClaimSets : IFeature
 
     internal Task<IResult> GetClaimSets(IGetAllClaimSetsQuery getClaimSetsQuery, IGetApplicationsByClaimSetIdQuery getApplications, IMapper mapper, int offset, int limit)
     {
-        var claimSets = getClaimSetsQuery.Execute(offset,limit);
+        var claimSets = getClaimSetsQuery.Execute(offset, limit);
         var model = mapper.Map<List<ClaimSetModel>>(claimSets);
         foreach (var claimSet in model)
         {
             claimSet.Applications = mapper.Map<List<SimpleApplicationModel>>(getApplications.Execute(claimSet.Id));
-            claimSet.IsSystemReserved = Constants.DefaultClaimSets.Contains(claimSet.Name);
         }
         return Task.FromResult(Results.Ok(model));
     }
