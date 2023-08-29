@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "6f8d400d-e200-45f4-b5ea-d3a41ec9b0ab",
+		"_postman_id": "214dd720-261b-4f4f-aa26-1c49f68310df",
 		"name": "Admin API E2E 2.0 - Application",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "3724147"
+		"_exporter_id": "21286036"
 	},
 	"item": [
 		{
@@ -38,11 +38,7 @@
 											"},  \r",
 											"function (err, response) {\r",
 											"  if(err) { console.log(\"Error in Pre-request:\", err); }\r",
-											"  const json = response.json();\r",
-											"  if(!json.id) { console.log('Error in Pre-request: vendorID missing from response. Response is:', json); }\r",
-											"  else {\r",
-											"    pm.collectionVariables.set(\"ApplicationVendorId\", json.id);\r",
-											"  }\r",
+											"  pm.collectionVariables.set(\"ApplicationVendorId\", response.headers.get(\"Location\").split(\"/\")[2]);\r",
 											"});\r",
 											"\r",
 											"pm.sendRequest({\r",
@@ -1561,6 +1557,18 @@
 		},
 		{
 			"key": "OtherApplicationId",
+			"value": ""
+		},
+		{
+			"key": "CreatedId",
+			"value": ""
+		},
+		{
+			"key": "ApplicationVendorId",
+			"value": ""
+		},
+		{
+			"key": "CreatedApplicationId",
 			"value": ""
 		}
 	]
