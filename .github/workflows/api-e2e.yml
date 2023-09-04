@@ -76,7 +76,7 @@ jobs:
             -e './E2E Tests/Admin API Docker.postman_environment.json' \
             -r cli,junit,htmlextra \
             --reporter-htmlextra-title 'AdminAPI - 2.0' \
-            --reporter-htmlextra-export './reports/results.html' \
+            --reporter-htmlextra-export './report-html/results.html' \
             --reporter-junit-export ./reports/report.xml \
             -k
 
@@ -100,7 +100,7 @@ jobs:
         if: success() || failure()
         with:
           name: test-html-results
-          path: Application/EdFi.Ods.AdminApi/reports/results.html
+          path: Application/EdFi.Ods.AdminApi/report-html/results.html
           retention-days: 5
 
       - name: Upload xml results
