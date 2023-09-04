@@ -99,7 +99,7 @@ jobs:
         uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         if: success() || failure()
         with:
-          name: test-results
+          name: test-html-results
           path: Application/EdFi.Ods.AdminApi/reports/results.html
           retention-days: 5
 
@@ -107,8 +107,8 @@ jobs:
         uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         if: success() || failure()
         with:
-          name: test-results
-          path: Application/EdFi.Ods.Admin.Api/reports/report.xml
+          name: test-xml-results
+          path: Application/EdFi.Ods.AdminApi/reports/report.xml
           retention-days: 5
 
   report:
