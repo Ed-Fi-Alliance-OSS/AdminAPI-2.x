@@ -74,9 +74,10 @@ jobs:
         run: |
           newman run './E2E Tests/Admin-API-Full-Collection.json' \
             -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r cli,htmlextra \
+            -r cli,junit,htmlextra \
             --reporter-htmlextra-title 'AdminAPI - 2.0' \
             --reporter-htmlextra-export './reports/results.html' \
+            --reporter-junit-export ./reports/report.xml \
             -k
 
       - name: Get Docker logs
@@ -94,7 +95,7 @@ jobs:
           path: Application/EdFi.Ods.AdminApi/docker-logs/
           retention-days: 5
 
-      - name: Upload results
+      - name: Upload Html results
         uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         if: success() || failure()
         with:
@@ -102,8 +103,15 @@ jobs:
           path: Application/EdFi.Ods.AdminApi/reports/results.html
           retention-days: 5
 
+      - name: Upload xml results
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
+        if: success() || failure()
+        with:
+          name: test-results
+          path: Application/EdFi.Ods.Admin.Api/reports/report.xml
+          retention-days: 5
+
   report:
-    if: ${{ false }}
     defaults:
       run:
         shell: pwsh
