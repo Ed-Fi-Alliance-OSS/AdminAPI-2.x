@@ -21,7 +21,7 @@ env:
   CYCLE_NAME: "Automation Cycle"
   TASK_NAME: "API Automation Task"
   FOLDER_NAME: "API Automation Run"
-  RESULTS_FILE: "test-results"
+  RESULTS_FILE: "test-xml-results"
 
 jobs:
   run-e2e-tests:
