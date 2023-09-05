@@ -37,4 +37,8 @@ public class FeatureConstants
     public const string ClaimSetIdToCopy = "ClaimSet id to copy";
     public const string ProfileName = "Profile name";
     public const string ProfileDefinition = "Profile definition";
+    public const string OdsInstanceDerivativeIdDescription = "ODS instance derivative id";
+    public const string OdsInstanceDerivativeOdsInstanceIdDescription = "ODS instance derivative ODS instance id";
+    public const string OdsInstanceDerivativeDerivativeTypeDescription = "derivative type";
+    public const string OdsInstanceDerivativeConnectionStringDescription = "connection string";
 }

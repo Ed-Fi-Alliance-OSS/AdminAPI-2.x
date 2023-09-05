@@ -139,6 +139,11 @@ public class AdminApiMappingProfile : Profile
         CreateMap<EdFi.Admin.DataAccess.Models.Profile, ProfileDetailsModel>()
           .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.ProfileId))
           .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ProfileName))
-          .ForMember(dst => dst.Definition, opt => opt.MapFrom(src => src.ProfileDefinition));
+          .ForMember(dst => dst.Definition, opt => opt.MapFrom(src => src.ProfileDefinition));
+
+        CreateMap<EdFi.Admin.DataAccess.Models.OdsInstanceDerivative, OdsInstanceDerivativeModel>()
+         .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.OdsInstanceDerivativeId))
+         .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstanceId))         .ForMember(dst => dst.DerivativeType, opt => opt.MapFrom(src => src.DerivativeType))
+         .ForMember(dst => dst.ConnectionString, opt => opt.MapFrom(src => src.ConnectionString));
     }
 }
