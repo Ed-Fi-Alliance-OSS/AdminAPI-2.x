@@ -5,10 +5,16 @@
 
 using AutoMapper;
 using EdFi.Admin.DataAccess.Contexts;
+using EdFi.Ods.AdminApi.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
+using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using FluentValidation;
 using FluentValidation.Results;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Options;
+using Npgsql;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace EdFi.Ods.AdminApi.Features.Profiles;
@@ -26,18 +32,12 @@ public class EditOdsInstanceDerivative : IFeature
 
     public async Task<IResult> Handle(Validator validator, IEditOdsInstanceDerivativeCommand editOdsInstanceDerivativeCommand, IMapper mapper, IUsersContext db, EditOdsInstanceDerivativeRequest request, int id)
     {
-        await validator.GuardAsync(request);
         request.Id = id;
-        GuardAgainstInvalidEntityReferences(request, db);
+        await validator.GuardAsync(request);
         editOdsInstanceDerivativeCommand.Execute(request);
         return Results.Ok();
     }
 
-    private void GuardAgainstInvalidEntityReferences(EditOdsInstanceDerivativeRequest request, IUsersContext db)
-    {
-        if (null == db.OdsInstances.Find(request.OdsInstanceId))
-            throw new ValidationException(new[] { new ValidationFailure(nameof(request.OdsInstanceId), $"ODS instance with ID {request.OdsInstanceId} not found.") });
-    }
 
     [SwaggerSchema(Title = "EditOdsInstanceDerivativeRequest")]
     public class EditOdsInstanceDerivativeRequest : IEditOdsInstanceDerivativeModel
@@ -54,11 +54,75 @@ public class EditOdsInstanceDerivative : IFeature
 
     public class Validator : AbstractValidator<EditOdsInstanceDerivativeRequest>
     {
-        public Validator()
+        private readonly IGetOdsInstanceQuery _getOdsInstanceQuery;
+        private readonly string _databaseEngine;
+        public Validator(IGetOdsInstanceQuery getOdsInstanceQuery, IOptions<AppSettings> options)
         {
+            _getOdsInstanceQuery = getOdsInstanceQuery;
+            _databaseEngine = options.Value.DatabaseEngine ?? throw new NotFoundException<string>("AppSettings", "DatabaseEngine");
+
             RuleFor(m => m.DerivativeType).NotEmpty();
-            RuleFor(m => m.ConnectionString).NotEmpty();
-            RuleFor(m => m.OdsInstanceId).Must(id => id > 0).WithMessage(FeatureConstants.OdsInstanceIdValidationMessage);
+
+            RuleFor(m => m.DerivativeType)
+                .Matches("^(ReadReplica|Snapshot)$")
+                .WithMessage(FeatureConstants.OdsInstanceDerivativeDerivativeTypeNotValid)
+                .When(m => !string.IsNullOrEmpty(m.DerivativeType));
+
+            RuleFor(m => m.OdsInstanceId)
+                .NotEqual(0)
+                .WithMessage(FeatureConstants.OdsInstanceIdValidationMessage);
+
+            RuleFor(m => m.OdsInstanceId)
+                .Must(BeAnExistingOdsInstance)
+                .When(m => !m.OdsInstanceId.Equals(0));
+
+            RuleFor(m => m.ConnectionString)
+                .Must(BeAValidConnectionString)
+                .WithMessage(FeatureConstants.OdsInstanceDerivativeConnectionStringNotValid)
+                .When(m => !string.IsNullOrEmpty(m.ConnectionString));
+
+        }
+
+        private bool BeAnExistingOdsInstance(int id)
+        {
+            try
+            {
+                var odsInstance = _getOdsInstanceQuery.Execute(id) ?? throw new AdminApiException("Not Found");
+                return true;
+            }
+            catch (AdminApiException)
+            {
+                throw new NotFoundException<int>("OdsInstanceId", id);
+            }
+        }
+
+        private bool BeAValidConnectionString(string? connectionString)
+        {
+            bool result = true;
+            if (_databaseEngine == "SqlServer")
+            {
+                try
+                {
+                    SqlConnectionStringBuilder sqlConnectionStringBuilder = new SqlConnectionStringBuilder(connectionString);
+                }
+                catch (ArgumentException)
+                {
+                    result = false;
+                }
+            }
+            else if (_databaseEngine == "PostgreSQL")
+            {
+                try
+                {
+                    NpgsqlConnectionStringBuilder npgsqlConnectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString);
+                }
+                catch (ArgumentException)
+                {
+                    result = false;
+                }
+            }
+
+            return result;
         }
     }
 }
