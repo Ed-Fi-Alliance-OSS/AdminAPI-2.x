@@ -11,13 +11,12 @@ using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using FluentValidation;
-using FluentValidation.Results;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
 using Npgsql;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace EdFi.Ods.AdminApi.Features.Profiles;
+namespace EdFi.Ods.AdminApi.Features.OdsInstancesDerivative;
 
 public class EditOdsInstanceDerivative : IFeature
 {

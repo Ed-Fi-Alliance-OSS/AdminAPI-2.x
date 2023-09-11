@@ -27,8 +27,8 @@ public class GetOdsInstancesDerivativeQueryTests : PlatformUsersContextTestBase
 
         var odsInstanceDerivative1 = new OdsInstanceDerivative
         {
-            ConnectionString = "{ConnectionString}",
-            DerivativeType = "Type",
+            ConnectionString = "Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False",
+            DerivativeType = "ReadReplica",
             OdsInstance = odsInstance
         };
 

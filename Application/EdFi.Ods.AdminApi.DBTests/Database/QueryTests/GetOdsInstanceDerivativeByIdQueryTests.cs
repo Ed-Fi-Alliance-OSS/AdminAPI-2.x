@@ -26,15 +26,15 @@ public class GetOdsInstanceDerivativeByIdQueryTests : PlatformUsersContextTestBa
 
         var odsInstanceDerivative1 = new OdsInstanceDerivative
         {
-            ConnectionString = "{ConnectionString}",
-            DerivativeType = "Type",
+            ConnectionString = "Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False",
+            DerivativeType = "ReadReplica",
             OdsInstance = odsInstance
         };
 
         var odsInstanceDerivative2 = new OdsInstanceDerivative
         {
-            ConnectionString = "{ConnectionString}",
-            DerivativeType = "Type2",
+            ConnectionString = "Data Source=(local);Initial Catalog=EdFi_Ods2;Integrated Security=True;Encrypt=False",
+            DerivativeType = "Snapshot",
             OdsInstance = odsInstance
         };
 

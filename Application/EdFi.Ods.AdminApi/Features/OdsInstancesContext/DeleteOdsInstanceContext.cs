@@ -6,21 +6,21 @@
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 
-namespace EdFi.Ods.AdminApi.Features.OdsInstancesDerivative;
+namespace EdFi.Ods.AdminApi.Features.OdsInstancesContext;
 
-public class DeleteOdsInstanceDerivative : IFeature
+public class DeleteOdsInstanceContext : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiEndpointBuilder.MapDelete(endpoints, "/odsInstancesDerivative/{id}", Handle)
+        AdminApiEndpointBuilder.MapDelete(endpoints, "/odsInstancesContext/{id}", Handle)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponseCode(200, FeatureConstants.DeletedSuccessResponseDescription))
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    public Task<IResult> Handle(IDeleteOdsInstanceDerivativeCommand deleteOdsInstanceDerivativeCommand, int id)
+    public Task<IResult> Handle(IDeleteOdsInstanceContextCommand deleteOdsInstanceContextCommand, int id)
     {
-        deleteOdsInstanceDerivativeCommand.Execute(id);
+        deleteOdsInstanceContextCommand.Execute(id);
         return Task.FromResult(Results.Ok());
     }
 }

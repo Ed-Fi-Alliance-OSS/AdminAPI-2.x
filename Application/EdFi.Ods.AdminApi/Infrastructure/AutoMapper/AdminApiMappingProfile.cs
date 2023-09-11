@@ -10,7 +10,8 @@ using EdFi.Ods.AdminApi.Features.AuthorizationStrategies;
 using EdFi.Ods.AdminApi.Features.ClaimSets;
 using EdFi.Ods.AdminApi.Features.ODSInstances;
 using EdFi.Ods.AdminApi.Features.Profiles;
-using EdFi.Ods.AdminApi.Features.OdsInstancesDerivative;
+using EdFi.Ods.AdminApi.Features.OdsInstancesDerivative;
+using EdFi.Ods.AdminApi.Features.OdsInstancesContext;
 using EdFi.Ods.AdminApi.Features.Vendors;
 using EdFi.Ods.AdminApi.Infrastructure.AutoMapper;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
@@ -134,6 +135,12 @@ public class AdminApiMappingProfile : Profile
         CreateMap<EdFi.Admin.DataAccess.Models.OdsInstanceDerivative, OdsInstanceDerivativeModel>()
          .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.OdsInstanceDerivativeId))
          .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstanceId))         .ForMember(dst => dst.DerivativeType, opt => opt.MapFrom(src => src.DerivativeType))
-         .ForMember(dst => dst.ConnectionString, opt => opt.MapFrom(src => src.ConnectionString));
+         .ForMember(dst => dst.ConnectionString, opt => opt.MapFrom(src => src.ConnectionString));
+
+        CreateMap<EdFi.Admin.DataAccess.Models.OdsInstanceContext, OdsInstanceContextModel>()
+       .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.OdsInstanceContextId))
+       .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstanceId))
+       .ForMember(dst => dst.ContextKey, opt => opt.MapFrom(src => src.ContextKey))
+       .ForMember(dst => dst.ContextValue, opt => opt.MapFrom(src => src.ContextValue));
     }
 }

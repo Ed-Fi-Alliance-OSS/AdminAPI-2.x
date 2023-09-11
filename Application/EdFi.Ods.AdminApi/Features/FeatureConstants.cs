@@ -43,6 +43,8 @@ public class FeatureConstants
     public const string OdsInstanceDerivativeConnectionStringDescription = "connection string";
     public const string OdsInstanceDerivativeDerivativeTypeNotValid = "The value for the Derivative type is not allowed. The only accepted values are: 'ReadReplica' or 'Snapshot'";
     public const string OdsInstanceDerivativeConnectionStringNotValid = "The connection string is not valid.";
-
-
+    public const string OdsInstanceContextIdDescription = "ODS instance context id";
+    public const string OdsInstanceContextOdsInstanceIdDescription = "ODS instance context ODS instance id";
+    public const string OdsInstanceContextContextKeyDescription = "derivative type";
+    public const string OdsInstanceContextContextValueDescription = "connection string"; 
 }

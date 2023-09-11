@@ -28,7 +28,7 @@ public class AddOdsInstanceDerivativeTests : PlatformUsersContextTestBase
 
         Save(odsInstance);
 
-        var derivativeType = "D Type";
+        var derivativeType = "ReadReplica";
         var connectionString = "Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False";
 
         var newOdsInstanceDerivative = new Mock<IAddOdsInstanceDerivativeModel>();

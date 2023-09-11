@@ -33,7 +33,7 @@ public class EditOdsInstanceDerivativeTests : PlatformUsersContextTestBase
         };
         Save(odsInstance2);
 
-        var derivativeType = "D Type";
+        var derivativeType = "ReadReplica";
         var connectionString = "Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False";
         var newOdsInstanceDerivative = new OdsInstanceDerivative
         {
@@ -43,7 +43,7 @@ public class EditOdsInstanceDerivativeTests : PlatformUsersContextTestBase
         };
         Save(newOdsInstanceDerivative);
 
-        var updateDerivativeType = "D2 Type";
+        var updateDerivativeType = "ReadReplica";
         var updateConnectionString = "Data Source=(local);Initial Catalog=EdFi_Ods_2;Integrated Security=True;Encrypt=False";
         var editOdsInstanceDerivative = new Mock<IEditOdsInstanceDerivativeModel>();
         editOdsInstanceDerivative.Setup(x => x.OdsInstanceId).Returns(odsInstance2.OdsInstanceId);
