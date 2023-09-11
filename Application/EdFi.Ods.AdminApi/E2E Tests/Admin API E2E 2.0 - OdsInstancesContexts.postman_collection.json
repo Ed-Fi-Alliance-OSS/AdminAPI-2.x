@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "f7d3293b-7a18-43ed-940a-e4c7876d930a",
-		"name": "Admin API E2E 2.0 - OdsInstancesContext",
+		"_postman_id": "5d8749ee-88b0-4260-b85a-840b6d8dd8ca",
+		"name": "Admin API E2E 2.0 - OdsInstancesContexts",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "21286036"
 	},
@@ -10,7 +10,7 @@
 			"name": "v2",
 			"item": [
 				{
-					"name": "OdsInstancesContext",
+					"name": "OdsInstancesContexts",
 					"item": [
 						{
 							"name": "OdsInstancesContext",
@@ -74,13 +74,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/OdsInstancesContext/",
+									"raw": "{{API_URL}}/v2/OdsInstancesContexts/",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"OdsInstancesContext",
+										"OdsInstancesContexts",
 										""
 									]
 								}
@@ -136,13 +136,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/OdsInstancesContext/",
+									"raw": "{{API_URL}}/v2/OdsInstancesContexts/",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"OdsInstancesContext",
+										"OdsInstancesContexts",
 										""
 									]
 								}
@@ -202,13 +202,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/OdsInstancesContext/",
+									"raw": "{{API_URL}}/v2/OdsInstancesContexts/",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"OdsInstancesContext",
+										"OdsInstancesContexts",
 										""
 									]
 								}
@@ -273,13 +273,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/OdsInstancesContext/?offset={{offset}}&limit={{limit}}",
+									"raw": "{{API_URL}}/v2/OdsInstancesContexts/?offset={{offset}}&limit={{limit}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"OdsInstancesContext",
+										"OdsInstancesContexts",
 										""
 									],
 									"query": [
@@ -351,13 +351,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/OdsInstancesContext/{{CreatedOdsInstanceContextId}}",
+									"raw": "{{API_URL}}/v2/OdsInstancesContexts/{{CreatedOdsInstanceContextId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"OdsInstancesContext",
+										"OdsInstancesContexts",
 										"{{CreatedOdsInstanceContextId}}"
 									]
 								}
@@ -406,13 +406,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/OdsInstancesContext/{{NotExistOdsInstancesContextId}}",
+									"raw": "{{API_URL}}/v2/OdsInstancesContexts/{{NotExistOdsInstancesContextId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"OdsInstancesContext",
+										"OdsInstancesContexts",
 										"{{NotExistOdsInstancesContextId}}"
 									]
 								}
@@ -440,7 +440,7 @@
 											"});\r",
 											"\r",
 											"pm.sendRequest({\r",
-											"  url: `${pm.variables.get(\"API_URL\")}/v2/OdsInstancesContext/${pm.collectionVariables.get(\"CreatedOdsInstanceContextId\")}`,\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v2/OdsInstancesContexts/${pm.collectionVariables.get(\"CreatedOdsInstanceContextId\")}`,\r",
 											"  method: 'GET',\r",
 											"  header: {\r",
 											"      \"Content-Type\": \"application/json\",\r",
@@ -478,13 +478,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/OdsInstancesContext/{{CreatedOdsInstanceContextId}}",
+									"raw": "{{API_URL}}/v2/OdsInstancesContexts/{{CreatedOdsInstanceContextId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"OdsInstancesContext",
+										"OdsInstancesContexts",
 										"{{CreatedOdsInstanceContextId}}"
 									]
 								}
@@ -543,13 +543,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/OdsInstancesContext/{{NotExistOdsInstancesContextId}}",
+									"raw": "{{API_URL}}/v2/OdsInstancesContexts/{{NotExistOdsInstancesContextId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"OdsInstancesContext",
+										"OdsInstancesContexts",
 										"{{NotExistOdsInstancesContextId}}"
 									]
 								}
@@ -605,13 +605,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/OdsInstancesContext/{{CreatedOdsInstanceContextId}}",
+									"raw": "{{API_URL}}/v2/OdsInstancesContexts/{{CreatedOdsInstanceContextId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"OdsInstancesContext",
+										"OdsInstancesContexts",
 										"{{CreatedOdsInstanceContextId}}"
 									]
 								}
@@ -670,13 +670,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/OdsInstancesContext/{{CreatedOdsInstanceContextId}}",
+									"raw": "{{API_URL}}/v2/OdsInstancesContexts/{{CreatedOdsInstanceContextId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"OdsInstancesContext",
+										"OdsInstancesContexts",
 										"{{CreatedOdsInstanceContextId}}"
 									]
 								}
@@ -703,13 +703,13 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/OdsInstancesContext/{{CreatedOdsInstanceContextId}}",
+									"raw": "{{API_URL}}/v2/OdsInstancesContexts/{{CreatedOdsInstanceContextId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"OdsInstancesContext",
+										"OdsInstancesContexts",
 										"{{CreatedOdsInstanceContextId}}"
 									]
 								}
@@ -749,13 +749,13 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/OdsInstancesContext/{{NotExistOdsInstancesContextId}}",
+									"raw": "{{API_URL}}/v2/OdsInstancesContexts/{{NotExistOdsInstancesContextId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"OdsInstancesContext",
+										"OdsInstancesContexts",
 										"{{NotExistOdsInstancesContextId}}"
 									]
 								}

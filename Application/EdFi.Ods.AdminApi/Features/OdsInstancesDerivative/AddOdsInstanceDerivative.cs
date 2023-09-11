@@ -22,7 +22,7 @@ public class AddOdsInstanceDerivative : IFeature
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         AdminApiEndpointBuilder
-           .MapPost(endpoints, "/odsInstancesDerivative", Handle)
+           .MapPost(endpoints, "/odsInstancesDerivatives", Handle)
            .WithDefaultDescription()
            .WithRouteOptions(b => b.WithResponseCode(201))
            .BuildForVersions(AdminApiVersions.V2);
@@ -32,7 +32,7 @@ public class AddOdsInstanceDerivative : IFeature
     {
         await validator.GuardAsync(request);
         var addedOdsInstanceDerivative = addOdsInstanceDerivativeCommand.Execute(request);
-        return Results.Created($"/odsInstancesDerivative/{addedOdsInstanceDerivative.OdsInstanceDerivativeId}", null);
+        return Results.Created($"/odsInstancesDerivatives/{addedOdsInstanceDerivative.OdsInstanceDerivativeId}", null);
     }
 
   

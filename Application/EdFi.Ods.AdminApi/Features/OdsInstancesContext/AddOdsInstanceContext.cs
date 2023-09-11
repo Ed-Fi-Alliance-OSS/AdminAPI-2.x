@@ -20,7 +20,7 @@ public class AddOdsInstanceContext : IFeature
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         AdminApiEndpointBuilder
-           .MapPost(endpoints, "/odsInstancesContext", Handle)
+           .MapPost(endpoints, "/odsInstancesContexts", Handle)
            .WithDefaultDescription()
            .WithRouteOptions(b => b.WithResponseCode(201))
            .BuildForVersions(AdminApiVersions.V2);
@@ -30,7 +30,7 @@ public class AddOdsInstanceContext : IFeature
     {
         await validator.GuardAsync(request);
         var addedOdsInstanceContext = addOdsInstanceContextCommand.Execute(request);
-        return Results.Created($"/odsInstancesContext/{addedOdsInstanceContext.OdsInstanceContextId}", null);
+        return Results.Created($"/odsInstancesContexts/{addedOdsInstanceContext.OdsInstanceContextId}", null);
     }
 
 

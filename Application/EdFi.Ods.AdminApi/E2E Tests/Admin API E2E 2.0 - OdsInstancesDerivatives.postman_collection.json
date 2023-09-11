@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "ad921ee3-ad2d-432a-9bef-2dc67699cc2a",
-		"name": "Admin API E2E 2.0 - OdsInstancesDerivative",
+		"name": "Admin API E2E 2.0 - OdsInstancesDerivatives",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "21286036"
 	},
@@ -10,7 +10,7 @@
 			"name": "v2",
 			"item": [
 				{
-					"name": "OdsInstancesDerivative",
+					"name": "OdsInstancesDerivatives",
 					"item": [
 						{
 							"name": "OdsInstancesDerivative",
@@ -66,7 +66,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"odsInstanceId\": {{ODSInstanceId}},\r\n  \"derivativeType\": \"ReadReplica\",\r\n  \"connectionString\": \"Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False\"\r\n}",
+									"raw": "{\r\n  \"odsInstanceId\": {{ODSInstanceId}},\r\n  \"derivativeType\": \"ReadReplica\",\r\n  \"connectionString\": \"{{connectionString}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -74,13 +74,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/OdsInstancesDerivative/",
+									"raw": "{{API_URL}}/v2/OdsInstancesDerivatives/",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"OdsInstancesDerivative",
+										"OdsInstancesDerivatives",
 										""
 									]
 								}
@@ -128,7 +128,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"odsInstanceId\": {{ODSInstanceId}},\r\n  \"derivativeType\": \"\",\r\n  \"connectionString\": \"Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False\"\r\n}",
+									"raw": "{\r\n  \"odsInstanceId\": {{ODSInstanceId}},\r\n  \"derivativeType\": \"\",\r\n  \"connectionString\": {{connectionString}}\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -136,13 +136,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/OdsInstancesDerivative/",
+									"raw": "{{API_URL}}/v2/OdsInstancesDerivatives/",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"OdsInstancesDerivative",
+										"OdsInstancesDerivatives",
 										""
 									]
 								}
@@ -194,7 +194,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"odsInstanceId\": 0,\r\n  \"derivativeType\": \"ReadReplica\",\r\n  \"connectionString\": \"Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False\"\r\n}",
+									"raw": "{\r\n  \"odsInstanceId\": 0,\r\n  \"derivativeType\": \"ReadReplica\",\r\n  \"connectionString\": {{connectionString}}\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -202,13 +202,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/OdsInstancesDerivative/",
+									"raw": "{{API_URL}}/v2/OdsInstancesDerivatives/",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"OdsInstancesDerivative",
+										"OdsInstancesDerivatives",
 										""
 									]
 								}
@@ -273,13 +273,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/OdsInstancesDerivative/?offset={{offset}}&limit={{limit}}",
+									"raw": "{{API_URL}}/v2/OdsInstancesDerivatives/?offset={{offset}}&limit={{limit}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"OdsInstancesDerivative",
+										"OdsInstancesDerivatives",
 										""
 									],
 									"query": [
@@ -351,13 +351,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/OdsInstancesDerivative/{{CreatedOdsInstanceDerivativeId}}",
+									"raw": "{{API_URL}}/v2/OdsInstancesDerivatives/{{CreatedOdsInstanceDerivativeId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"OdsInstancesDerivative",
+										"OdsInstancesDerivatives",
 										"{{CreatedOdsInstanceDerivativeId}}"
 									]
 								}
@@ -406,13 +406,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/OdsInstancesDerivative/{{NotExistOdsInstancesDerivativeId}}",
+									"raw": "{{API_URL}}/v2/OdsInstancesDerivatives/{{NotExistOdsInstancesDerivativeId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"OdsInstancesDerivative",
+										"OdsInstancesDerivatives",
 										"{{NotExistOdsInstancesDerivativeId}}"
 									]
 								}
@@ -440,7 +440,7 @@
 											"});\r",
 											"\r",
 											"pm.sendRequest({\r",
-											"  url: `${pm.variables.get(\"API_URL\")}/v2/OdsInstancesDerivative/${pm.collectionVariables.get(\"CreatedOdsInstanceDerivativeId\")}`,\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v2/OdsInstancesDerivatives/${pm.collectionVariables.get(\"CreatedOdsInstanceDerivativeId\")}`,\r",
 											"  method: 'GET',\r",
 											"  header: {\r",
 											"      \"Content-Type\": \"application/json\",\r",
@@ -470,7 +470,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"odsInstanceId\": {{ODSInstanceId}},\r\n  \"derivativeType\": \"Snapshot\",\r\n  \"connectionString\": \"Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False\"\r\n}",
+									"raw": "{\r\n  \"odsInstanceId\": {{ODSInstanceId}},\r\n  \"derivativeType\": \"Snapshot\",\r\n  \"connectionString\": {{connectionString}}\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -478,13 +478,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/OdsInstancesDerivative/{{CreatedOdsInstanceDerivativeId}}",
+									"raw": "{{API_URL}}/v2/OdsInstancesDerivatives/{{CreatedOdsInstanceDerivativeId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"OdsInstancesDerivative",
+										"OdsInstancesDerivatives",
 										"{{CreatedOdsInstanceDerivativeId}}"
 									]
 								}
@@ -535,7 +535,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"odsInstanceId\": {{ODSInstanceId}},\r\n  \"derivativeType\": \"Snapshot\",\r\n  \"connectionString\": \"Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False\"\r\n}",
+									"raw": "{\r\n  \"odsInstanceId\": {{ODSInstanceId}},\r\n  \"derivativeType\": \"Snapshot\",\r\n  \"connectionString\": {{connectionString}}\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -543,13 +543,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/OdsInstancesDerivative/{{NotExistOdsInstancesDerivativeId}}",
+									"raw": "{{API_URL}}/v2/OdsInstancesDerivatives/{{NotExistOdsInstancesDerivativeId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"OdsInstancesDerivative",
+										"OdsInstancesDerivatives",
 										"{{NotExistOdsInstancesDerivativeId}}"
 									]
 								}
@@ -597,7 +597,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"odsInstanceId\": 0,\r\n  \"derivativeType\": \"\",\r\n  \"connectionString\": \"Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False\"\r\n}",
+									"raw": "{\r\n  \"odsInstanceId\": 0,\r\n  \"derivativeType\": \"\",\r\n  \"connectionString\": {{connectionString}}\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -605,13 +605,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/OdsInstancesDerivative/{{CreatedOdsInstanceDerivativeId}}",
+									"raw": "{{API_URL}}/v2/OdsInstancesDerivatives/{{CreatedOdsInstanceDerivativeId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"OdsInstancesDerivative",
+										"OdsInstancesDerivatives",
 										"{{CreatedOdsInstanceDerivativeId}}"
 									]
 								}
@@ -662,7 +662,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"odsInstanceId\": 0,\r\n  \"derivativeType\": \"ReadReplica\",\r\n  \"connectionString\": \"Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False\"\r\n}",
+									"raw": "{\r\n  \"odsInstanceId\": 0,\r\n  \"derivativeType\": \"ReadReplica\",\r\n  \"connectionString\": {{connectionString}}\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -670,13 +670,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/OdsInstancesDerivative/{{CreatedOdsInstanceDerivativeId}}",
+									"raw": "{{API_URL}}/v2/OdsInstancesDerivatives/{{CreatedOdsInstanceDerivativeId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"OdsInstancesDerivative",
+										"OdsInstancesDerivatives",
 										"{{CreatedOdsInstanceDerivativeId}}"
 									]
 								}
@@ -703,13 +703,13 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/OdsInstancesDerivative/{{CreatedOdsInstanceDerivativeId}}",
+									"raw": "{{API_URL}}/v2/OdsInstancesDerivatives/{{CreatedOdsInstanceDerivativeId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"OdsInstancesDerivative",
+										"OdsInstancesDerivatives",
 										"{{CreatedOdsInstanceDerivativeId}}"
 									]
 								}
@@ -749,13 +749,13 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/OdsInstancesDerivative/{{NotExistOdsInstancesDerivativeId}}",
+									"raw": "{{API_URL}}/v2/OdsInstancesDerivatives/{{NotExistOdsInstancesDerivativeId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"OdsInstancesDerivative",
+										"OdsInstancesDerivatives",
 										"{{NotExistOdsInstancesDerivativeId}}"
 									]
 								}

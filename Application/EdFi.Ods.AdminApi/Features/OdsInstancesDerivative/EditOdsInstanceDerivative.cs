@@ -23,7 +23,7 @@ public class EditOdsInstanceDerivative : IFeature
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         AdminApiEndpointBuilder
-            .MapPut(endpoints, "/odsInstancesDerivative/{id}", Handle)
+            .MapPut(endpoints, "/odsInstancesDerivatives/{id}", Handle)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponseCode(200))
             .BuildForVersions(AdminApiVersions.V2);

@@ -12,7 +12,7 @@ public class DeleteOdsInstanceContext : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiEndpointBuilder.MapDelete(endpoints, "/odsInstancesContext/{id}", Handle)
+        AdminApiEndpointBuilder.MapDelete(endpoints, "/odsInstancesContexts/{id}", Handle)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponseCode(200, FeatureConstants.DeletedSuccessResponseDescription))
             .BuildForVersions(AdminApiVersions.V2);
