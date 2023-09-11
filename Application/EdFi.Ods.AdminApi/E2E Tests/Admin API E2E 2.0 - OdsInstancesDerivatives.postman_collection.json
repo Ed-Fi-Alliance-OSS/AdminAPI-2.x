@@ -128,7 +128,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"odsInstanceId\": {{ODSInstanceId}},\r\n  \"derivativeType\": \"\",\r\n  \"connectionString\": {{connectionString}}\r\n}",
+									"raw": "{\r\n  \"odsInstanceId\": {{ODSInstanceId}},\r\n  \"derivativeType\": \"\",\r\n  \"connectionString\": \"\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -194,7 +194,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"odsInstanceId\": 0,\r\n  \"derivativeType\": \"ReadReplica\",\r\n  \"connectionString\": {{connectionString}}\r\n}",
+									"raw": "{\r\n  \"odsInstanceId\": 0,\r\n  \"derivativeType\": \"ReadReplica\",\r\n  \"connectionString\": \"\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -454,7 +454,7 @@
 											"  } \r",
 											"  const updatedJson = response.json();\r",
 											"  pm.test(\"PUT OdsInstancesDerivative: Response includes updated OdsInstanceDerivative\", function () {\r",
-											"    pm.expect(updatedJson.derivativeType).to.equal(\"Snapshot\");\r",
+											"    pm.expect(updatedJson.derivativeType).to.be(\"Snapshot\");\r",
 											"    pm.expect(updatedJson.connectionString).to.be.not.empty;\r",
 											"    pm.expect(updatedJson.odsInstanceId).to.be.not.equal(0);\r",
 											"   });\r",
@@ -597,7 +597,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"odsInstanceId\": 0,\r\n  \"derivativeType\": \"\",\r\n  \"connectionString\": {{connectionString}}\r\n}",
+									"raw": "{\r\n  \"odsInstanceId\": 0,\r\n  \"derivativeType\": \"\",\r\n  \"connectionString\": \"{{connectionString}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
