@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "c839237d-4e4f-4606-931b-ec0f8da4904f",
+		"_postman_id": "c50ccf39-c9b2-4a3e-90aa-59114931ded1",
 		"name": "Admin API E2E 2.0 - OdsInstancesDerivative",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "21286036"
@@ -66,7 +66,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"odsInstanceId\": {{ODSInstanceId}},\r\n  \"derivativeType\": \"Derivative Type 1\",\r\n  \"connectionString\": \"Host=localhost; Database=EdFi_Ods; username=username; Integrated Security=true; Application Name=AdminApi;\"\r\n}",
+									"raw": "{\r\n  \"odsInstanceId\": {{ODSInstanceId}},\r\n  \"derivativeType\": \"ReadReplica\",\r\n  \"connectionString\": \"Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -128,7 +128,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"odsInstanceId\": {{ODSInstanceId}},\r\n  \"derivativeType\": \"\",\r\n  \"connectionString\": \"Host=localhost; Database=EdFi_Ods; username=username; Integrated Security=true; Application Name=AdminApi;\"\r\n}",
+									"raw": "{\r\n  \"odsInstanceId\": {{ODSInstanceId}},\r\n  \"derivativeType\": \"\",\r\n  \"connectionString\": \"Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -194,7 +194,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"odsInstanceId\": 0,\r\n  \"derivativeType\": \"Derivative Type 1\",\r\n  \"connectionString\": \"Host=localhost; Database=EdFi_Ods; username=username; Integrated Security=true; Application Name=AdminApi;\"\r\n}",
+									"raw": "{\r\n  \"odsInstanceId\": 0,\r\n  \"derivativeType\": \"ReadReplica\",\r\n  \"connectionString\": \"Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -454,7 +454,7 @@
 											"  } \r",
 											"  const updatedJson = response.json();\r",
 											"  pm.test(\"PUT OdsInstancesDerivative: Response includes updated OdsInstanceDerivative\", function () {\r",
-											"    pm.expect(updatedJson.derivativeType).to.equal(\"DerivativeTypeU1\");\r",
+											"    pm.expect(updatedJson.derivativeType).to.equal(\"Snapshot\");\r",
 											"    pm.expect(updatedJson.connectionString).to.be.not.empty;\r",
 											"    pm.expect(updatedJson.odsInstanceId).to.be.not.equal(0);\r",
 											"   });\r",
@@ -470,7 +470,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"odsInstanceId\": {{ODSInstanceId}},\r\n  \"derivativeType\": \"DerivativeTypeU1\",\r\n  \"connectionString\": \"Host=localhost; Database=EdFi_Ods; username=username; Integrated Security=true; Application Name=AdminApi;\"\r\n}",
+									"raw": "{\r\n  \"odsInstanceId\": {{ODSInstanceId}},\r\n  \"derivativeType\": \"Snapshot\",\r\n  \"connectionString\": \"Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -535,7 +535,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"odsInstanceId\": {{ODSInstanceId}},\r\n  \"derivativeType\": \"DerivativeTypeNF\",\r\n  \"connectionString\": \"Host=localhost; Database=EdFi_Ods; username=username; Integrated Security=true; Application Name=AdminApi;\"\r\n}",
+									"raw": "{\r\n  \"odsInstanceId\": {{ODSInstanceId}},\r\n  \"derivativeType\": \"Snapshot\",\r\n  \"connectionString\": \"Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -597,7 +597,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"odsInstanceId\": 0,\r\n  \"derivativeType\": \"\",\r\n  \"connectionString\": \"Host=localhost; Database=EdFi_Ods; username=username; Integrated Security=true; Application Name=AdminApi;\"\r\n}",
+									"raw": "{\r\n  \"odsInstanceId\": 0,\r\n  \"derivativeType\": \"\",\r\n  \"connectionString\": \"Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -662,7 +662,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"odsInstanceId\": 0,\r\n  \"derivativeType\": \"DerivativeTypeNF\",\r\n  \"connectionString\": \"Host=localhost; Database=EdFi_Ods; username=username; Integrated Security=true; Application Name=AdminApi;\"\r\n}",
+									"raw": "{\r\n  \"odsInstanceId\": 0,\r\n  \"derivativeType\": \"ReadReplica\",\r\n  \"connectionString\": \"Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
