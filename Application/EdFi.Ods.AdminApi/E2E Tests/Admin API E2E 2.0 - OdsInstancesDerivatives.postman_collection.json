@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "ad921ee3-ad2d-432a-9bef-2dc67699cc2a",
+		"_postman_id": "4997fc6e-eaa4-4269-b6d5-59e3e0c5ad0f",
 		"name": "Admin API E2E 2.0 - OdsInstancesDerivatives",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "21286036"
@@ -66,7 +66,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"odsInstanceId\": {{ODSInstanceId}},\r\n  \"derivativeType\": \"ReadReplica\",\r\n  \"connectionString\": \"{{connectionString}}\"\r\n}",
+									"raw": "{\r\n  \"odsInstanceId\": {{ODSInstanceId}},\r\n  \"derivativeType\": \"ReadReplica\",\r\n  \"connectionString\": {{connectionString}}\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -597,7 +597,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"odsInstanceId\": 0,\r\n  \"derivativeType\": \"\",\r\n  \"connectionString\": \"{{connectionString}}\"\r\n}",
+									"raw": "{\r\n  \"odsInstanceId\": 0,\r\n  \"derivativeType\": \"\",\r\n  \"connectionString\": {{connectionString}}\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
