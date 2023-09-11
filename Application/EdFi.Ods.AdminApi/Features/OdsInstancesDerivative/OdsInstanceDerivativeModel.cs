@@ -5,7 +5,7 @@
 
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace EdFi.Ods.AdminApi.Features.Profiles;
+namespace EdFi.Ods.AdminApi.Features.OdsInstancesDerivative;
 
 [SwaggerSchema(Title = "OdsInstanceDerivative")]
 public class OdsInstanceDerivativeModel
