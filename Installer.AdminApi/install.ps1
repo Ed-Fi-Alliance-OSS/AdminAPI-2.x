@@ -61,13 +61,8 @@ Deploy Admin Api for use with a "District Specific" ODS API
         DbConnectionInfo = $dbConnectionInfo
         OdsApiUrl = "http://web-api.example.com/WebApi"
         PackageVersion = '1.1.0'
-        AdminApiFeatures = $adminApiFeatures
     }
 #>
-
-$adminApiFeatures = @{
-    ApiMode = "sharedinstance"
-}
 
 # Authentication Settings
 # Authentication:SigningKey must be a Base64-encoded string
@@ -90,7 +85,6 @@ $p = @{
     PackageVersion = '2.0.0.0'
     PackageSource = $adminApiSource
     AuthenticationSettings = $authenticationSettings
-    AdminApiFeatures = $adminApiFeatures
 }
 
 if ([string]::IsNullOrWhiteSpace($p.OdsApiUrl)) {

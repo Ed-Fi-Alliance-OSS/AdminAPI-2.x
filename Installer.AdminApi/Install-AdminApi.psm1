@@ -66,13 +66,6 @@ function Install-EdFiOdsAdminApi {
                 Server="edfi-auth.my-sql-server.example"
                 UseIntegratedSecurity=$true
             }
-            OdsDbConnectionInfo = @{
-                DatabaseName="EdFi_ODS_Staging"
-                Engine="SqlServer"
-                Server="edfi-stage.my-sql-server.example"
-                Username="ods-write"
-                Password="@#$%^&*(GHJ%^&*YUKSDF"
-            }
             SecurityDbConnectionInfo = @{
                 Engine="SqlServer"
                 Server="edfi-auth.my-sql-server.example"
@@ -113,14 +106,10 @@ function Install-EdFiOdsAdminApi {
             ToolsPath = "C:/temp/tools"
             DbConnectionInfo = $dbConnectionInfo
             OdsApiUrl = "http://example-web-api.com/WebApi"
-            AdminApiFeatures = @{
-                ApiMode="yearspecific"
-            }
         }
         PS c:\> Install-EdFiOdsAdminApi @parameters
 
-        Installs Admin Api to SQL Server in Year Specific mode for 2020. The installer will also
-        install Admin Api in ASP.NET Identity mode, rather than AD Authentication.
+        The installer will install Admin Api in ASP.NET Identity mode, rather than AD Authentication.
     #>
     [CmdletBinding()]
     param (
@@ -216,16 +205,6 @@ function Install-EdFiOdsAdminApi {
         [Parameter(Mandatory=$true, ParameterSetName="SeparateCredentials")]
         $AdminDbConnectionInfo,
 
-        # Database connectivity only for the ODS database.
-        #
-        # The hashtable must include: Server, Engine (SqlServer or PostgreSQL), and
-        # either UseIntegratedSecurity or Username and Password (Password can be skipped
-        # for PostgreSQL when using pgconf file). Optionally can include Port and
-        # DatabaseName.
-        [hashtable]
-        [Parameter(Mandatory=$true, ParameterSetName="SeparateCredentials")]
-        $OdsDbConnectionInfo,
-
         # Database connectivity only for the security database.
         #
         # The hashtable must include: Server, Engine (SqlServer or PostgreSQL), and
@@ -240,13 +219,6 @@ function Install-EdFiOdsAdminApi {
         [hashtable]
         [Parameter(Mandatory=$true)]
         $AuthenticationSettings,
-
-        # Optional overrides for features and settings in the appsettings.
-        #
-        # The hashtable can include: ApiMode. By default, AdminApi is installed
-        # inShared Instance mode.
-        [hashtable]
-        $AdminApiFeatures,
 
         # Database Config
         [switch]
@@ -285,7 +257,6 @@ function Install-EdFiOdsAdminApi {
         OdsDbConnectionInfo = $OdsDbConnectionInfo
         SecurityDbConnectionInfo = $SecurityDbConnectionInfo
         AuthenticationSettings = $AuthenticationSettings
-        AdminApiFeatures = $AdminApiFeatures
         NoDuration = $NoDuration
     }
 
@@ -580,15 +551,6 @@ function Invoke-InstallationPreCheck{
                 exit
             }else {
                 Write-Warning "We found a preexisting Admin Api package version $versionString installation newer than the target version $installVersionString. Downgrades are not supported. Please fully uninstall the existing Admin Api first and retry. Exiting."
-                exit
-            }
-        }
-
-        if($Config.AdminApiFeatures.ContainsKey("ApiMode") -and $Config.AdminApiFeatures.ApiMode) {
-            $apiMode = $Config.AdminApiFeatures.ApiMode
-            $supportedModes = @('sandbox', 'sharedinstance', 'yearspecific', 'districtspecific')
-            if ($supportedModes -NotContains $apiMode) {
-                Write-Warning "Not supported ApiMode: '$apiMode'. Please use one of the supported modes for the ApiMode Admin Api feature. Supported modes:'$($supportedModes -join "','")'"
                 exit
             }
         }
@@ -963,19 +925,6 @@ function Invoke-TransformAppSettings {
         $settings = Get-Content $settingsFile | ConvertFrom-Json | ConvertTo-Hashtable
         $settings.AppSettings.ProductionApiUrl = $Config.OdsApiUrl
         $settings.AppSettings.DatabaseEngine = $config.engine
-
-        if ($Config.AdminApiFeatures) {
-            if ($Config.AdminApiFeatures.ContainsKey("ApiMode") -and $Config.AdminApiFeatures.ApiMode) {
-                $settings.AppSettings.ApiStartupType = $Config.AdminApiFeatures.ApiMode
-                if ($Config.AdminApiFeatures.ApiMode -ieq "yearspecific" -or $Config.AdminApiFeatures.ApiMode -ieq "districtspecific") {
-                    if (-not $Config.OdsDatabaseName.Contains("{0}")) {
-                        $Config.OdsDatabaseName += "_{0}"
-
-                        $Config.OdsDatabaseName = $Config.OdsDatabaseName -replace "_Ods_\{0\}", "_{0}"
-                    }
-                }
-            }
-        }
 
         $missingAuthenticationSettings = @()
         if ($Config.AuthenticationSettings.ContainsKey("Authority")) {
