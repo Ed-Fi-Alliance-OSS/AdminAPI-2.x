@@ -40,27 +40,30 @@ $dbConnectionInfo = @{
 Review and edit the following application settings and connection information for Admin App
 
 .EXAMPLE
-Configure Admin Api to manage an ODS API with url "https://localhost:54746"
+Configure Admin Api with Single tenant
 
     $p = @{
         ToolsPath = "C:/temp/tools"
         DbConnectionInfo = $dbConnectionInfo
-        OdsApiUrl = "https://localhost:54746"
-        PackageVersion = '1.1.0'
+        PackageVersion = '2.0.2.0'
     }
 
-.EXAMPLE
-Deploy Admin Api for use with a "District Specific" ODS API
-
-    $adminApiFeatures = @{
-        ApiMode = "districtspecifc"
-    }
-
+Configure Admin Api with Multi tenant
     $p = @{
+        IsMultiTenant = $true
         ToolsPath = "C:/temp/tools"
         DbConnectionInfo = $dbConnectionInfo
-        OdsApiUrl = "http://web-api.example.com/WebApi"
-        PackageVersion = '1.1.0'
+        PackageVersion = '2.0.2.0'
+        Tenants = @{
+            Tenant1 = @{
+                AdminDatabaseName = "EdFi_Admin_Tenant1"
+                SecurityDatabaseName = "EdFi_Security_Tenant1"
+            }
+            Tenant2 = @{
+                AdminDatabaseName = "EdFi_Admin_Tenant2"
+                SecurityDatabaseName = "EdFi_Security_Tenant2"
+            }
+        }
     }
 #>
 
