@@ -49,7 +49,6 @@ function Install-EdFiOdsAdminApi {
         PS c:\> $parameters = @{
             ToolsPath = "C:/temp/tools"
             DbConnectionInfo = $dbConnectionInfo
-            OdsApiUrl = "http://example-web-api.com/WebApi"
         }
         PS c:\> Install-EdFiOdsAdminApi @parameters
 
@@ -59,7 +58,6 @@ function Install-EdFiOdsAdminApi {
     .EXAMPLE
         PS c:\> $parameters = @{
             ToolsPath = "C:/temp/tools"
-            OdsApiUrl = "http://example-web-api.com/WebApi"
             AdminDbConnectionInfo = @{
                 Engine="SqlServer"
                 Server="edfi-auth.my-sql-server.example"
@@ -88,7 +86,6 @@ function Install-EdFiOdsAdminApi {
             ToolsPath = "C:/temp/tools"
             DbConnectionInfo = $dbConnectionInfo
             InstallCredentialsUseIntegratedSecurity = $true
-            OdsApiUrl = "http://example-web-api.com/WebApi"
         }
         PS c:\> Install-EdFiOdsAdminApi @parameters
 
@@ -104,7 +101,6 @@ function Install-EdFiOdsAdminApi {
         PS c:\> $parameters = @{
             ToolsPath = "C:/temp/tools"
             DbConnectionInfo = $dbConnectionInfo
-            OdsApiUrl = "http://example-web-api.com/WebApi"
         }
         PS c:\> Install-EdFiOdsAdminApi @parameters
 
@@ -152,11 +148,6 @@ function Install-EdFiOdsAdminApi {
         # TLS certificiate thumbprint, optional. When not set, a self-signed certificate will be created.
         [string]
         $CertThumbprint,
-
-        # Full URL to the Ed-Fi ODS / API version endpoint.
-        [string]
-        [Parameter(Mandatory=$true)]
-        $OdsApiUrl,
 
         # Install Credentials: User
         [string]
@@ -260,7 +251,6 @@ function Install-EdFiOdsAdminApi {
         WebSitePort = $WebsitePort
         CertThumbprint = $CertThumbprint
         WebApplicationName = $WebApplicationName
-        OdsApiUrl = $OdsApiUrl
         DatabaseInstallCredentials = @{
             DatabaseUser = $InstallCredentialsUser
             DatabasePassword = $InstallCredentialsPassword
@@ -745,7 +735,7 @@ function Invoke-TransferAppsettings {
 
         $backUpPath = $Config.ApplicationBackupPath
         Write-Warning "The following appsettings will be copied over from existing application: "
-        $appSettings = @('ProductionApiUrl','DatabaseEngine', 'ApiStartupType', 'ApiExternalUrl', 'PathBase', 'Log4NetConfigFileName', 'Authority', 'IssuerUrl', 'SigningKey', 'AllowRegistration')
+        $appSettings = @('DatabaseEngine', 'ApiStartupType', 'ApiExternalUrl', 'PathBase', 'Log4NetConfigFileName', 'Authority', 'IssuerUrl', 'SigningKey', 'AllowRegistration')
         foreach ($property in $appSettings) {
            Write-Host $property;
         }
@@ -755,7 +745,6 @@ function Invoke-TransferAppsettings {
         $newSettingsFile = Join-Path $Config.WebConfigLocation "appsettings.json"
         $newSettings = Get-Content $newSettingsFile | ConvertFrom-Json | ConvertTo-Hashtable
 
-        $newSettings.AppSettings.ProductionApiUrl = $oldSettings.AppSettings.ProductionApiUrl
         $newSettings.AppSettings.DatabaseEngine = $oldSettings.AppSettings.DatabaseEngine
         $newSettings.AppSettings.ApiStartupType = $oldSettings.AppSettings.ApiStartupType
         $newSettings.AppSettings.ApiExternalUrl =  $oldSettings.AppSettings.ApiExternalUrl
@@ -953,7 +942,6 @@ function Invoke-TransformAppSettings {
     Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
         $settingsFile = Join-Path $Config.WebConfigLocation "appsettings.json"
         $settings = Get-Content $settingsFile | ConvertFrom-Json | ConvertTo-Hashtable
-        $settings.AppSettings.ProductionApiUrl = $Config.OdsApiUrl
         $settings.AppSettings.DatabaseEngine = $config.engine
 
         $setting.AppSettings.MultiTenancy = $config.IsMultiTenant
