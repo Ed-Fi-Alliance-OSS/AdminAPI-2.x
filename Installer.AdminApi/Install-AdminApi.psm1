@@ -190,6 +190,7 @@ function Install-EdFiOdsAdminApi {
         # The hashtable must include: Server, Engine (SqlServer or PostgreSQL), and
         # either UseIntegratedSecurity or Username and Password (Password can be skipped
         # for PostgreSQL when using pgconf file). Optionally can include Port.
+        # This can be used with IsMultiTenant flag.
         [hashtable]
         [Parameter(Mandatory=$true, ParameterSetName="SharedCredentials")]
         [Parameter(ParameterSetName="MultiTenant")]
@@ -1098,11 +1099,11 @@ function Get-AdminInstallConnectionString {
     param (
         [hashtable]
         [Parameter(Mandatory=$true)]
-        $Config
+        $AdminDbConnectionInfo
     )
 
     $dbInstallCredentials = $Config.DatabaseInstallCredentials
-    $adminDbConnectionInfo = $Config.AdminDbConnectionInfo
+    $adminDbConnectionInfo = $AdminDbConnectionInfo
 
     $useInstallCredentials = ($dbInstallCredentials.UseIntegratedSecurity) -or ($dbInstallCredentials.DatabaseUser -and $dbInstallCredentials.DatabasePassword -and -not $dbInstallCredentials.UseIntegratedSecurity)
 
@@ -1113,9 +1114,9 @@ function Get-AdminInstallConnectionString {
     }
     else
     {
-        if($Config.ApplicationInstallType -ieq "Upgrade" -and $Config.AdminConnectionString)
+        if($Config.ApplicationInstallType -ieq "Upgrade" -and $AdminDbConnectionInfo)
         {
-            return $Config.AdminConnectionString
+            return $AdminDbConnectionInfo
         }
     }
 
@@ -1132,7 +1133,6 @@ function Invoke-DbUpScripts {
 
     Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
 
-        $adminConnectionString = Get-AdminInstallConnectionString $Config
         $engine = "PostgreSql"
 
         if(!(Test-IsPostgreSQL -Engine $Config.engine)){
@@ -1143,12 +1143,25 @@ function Invoke-DbUpScripts {
             Verb = "Deploy"
             Engine = $engine
             Database = "Admin"
-            ConnectionString = $adminConnectionString
+            ConnectionString = ""
             FilePaths = $Config.WebApplicationPath
             ToolsPath = $Config.ToolsPath
         }
 
-        Invoke-DbDeploy @params
+        if($Config.IsMultiTenant)
+        {
+            foreach ($tenantKey in $Config.Tenants.Keys) {       
+                
+                $adminConnectionString = Get-AdminInstallConnectionString  $Config.Tenants[$tenantKey].AdminDbConnectionInfo
+                $params["ConnectionString"] = $adminConnectionString
+                Invoke-DbDeploy @params
+            }           
+        }
+        else
+        {
+            $adminConnectionString = Get-AdminInstallConnectionString $Config.AdminDbConnectionInfo
+            Invoke-DbDeploy @params
+        }
     }
 }
 
