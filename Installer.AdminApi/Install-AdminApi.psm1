@@ -230,7 +230,12 @@ function Install-EdFiOdsAdminApi {
         #   - AdminDbConnectionInfo and SecurityDbConnectionInfo when DbConnectionInfo is not used.
         [hashtable]
         [Parameter(Mandatory=$true, ParameterSetName="MultiTenant")]
-        $Tenants
+        $Tenants,
+
+        # Set Encrypt=false for all connection strings
+        # Not recomended for production environment.
+        [switch]
+        $UnEncryptedConnection
     )
 
     Write-InvocationInfo $MyInvocation
@@ -266,6 +271,7 @@ function Install-EdFiOdsAdminApi {
         NoDuration = $NoDuration
         IsMultiTenant = $IsMultiTenant.IsPresent
         Tenants = $Tenants
+        UnEncryptedConnection = $UnEncryptedConnection
     }
 
     $elapsed = Use-StopWatch {
@@ -1016,6 +1022,11 @@ function Invoke-TransformConnectionStrings {
         $adminconnString = New-ConnectionString -ConnectionInfo $Config.AdminDbConnectionInfo -SspiUsername $Config.WebApplicationName
         $securityConnString = New-ConnectionString -ConnectionInfo $Config.SecurityDbConnectionInfo -SspiUsername $Config.WebApplicationName
 
+        if ($Config.UnEncryptedConnection) {
+            $adminconnString += ";Encrypt=false"
+            $securityConnString += ";Encrypt=false"
+        }
+        
         $connectionstrings = @{
             ConnectionStrings = @{
                 Admin = $adminconnString
