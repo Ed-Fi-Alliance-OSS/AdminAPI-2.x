@@ -92,7 +92,8 @@ public class TenantResolverMiddleware : IMiddleware
         bool RequestFromSwagger() => (context.Request.Path.Value != null && context.Request.Path.Value.Contains("swagger")) ||
                 context.Request.Headers.Referer.FirstOrDefault(x => x.ToLower().Contains("swagger")) != null;
 
-        bool HealthCheck() => context.Request.Path.Value != null && context.Request.Path.Value.Contains("health");
+        bool HealthCheck() => context.Request.Path.Value != null &&
+            (context.Request.Path.Value.Contains("health") || context.Request.Path.Value.Equals("/"));
 
         void ThrowTenantValidationError(string errorMessage)
         {
