@@ -274,6 +274,11 @@ function Install-EdFiOdsAdminApi {
         UnEncryptedConnection = $UnEncryptedConnection
     }
 
+    if($IsMultiTenant.IsPresent)
+    {
+        Write-Warning "Please make sure required tenant specific Admin, Security databases are already available on the data server."
+    }
+
     $elapsed = Use-StopWatch {
         $result += Invoke-InstallationPreCheck -Config $Config
         $result += Initialize-Configuration -Config $config
@@ -281,7 +286,7 @@ function Install-EdFiOdsAdminApi {
         $result += Get-DbDeploy -Config $Config
         $result += Invoke-TransformAppSettings -Config $Config
 
-        if ($IsMultiTenant.IsPresent) {
+        if ($IsMultiTenant.IsPresent) {            
             $result += Invoke-TransformMultiTenantConnectionStrings -Config $config
         } else {
             $result += Invoke-TransformConnectionStrings -Config $config
