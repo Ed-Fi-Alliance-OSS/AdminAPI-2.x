@@ -867,7 +867,7 @@ function Initialize-Configuration {
         $Config.usingSharedCredentials = $Config.ContainsKey("DbConnectionInfo") -and (-not $null -eq $Config.DbConnectionInfo)
         if ($Config.usingSharedCredentials) {
             Assert-DatabaseConnectionInfo -DbConnectionInfo $Config.DbConnectionInfo
-            $Config.DbConnectionInfo.ApplicationName = "Ed-Fi ODS/API AdminApi"
+            $Config.DbConnectionInfo.ApplicationName = "AdminApi"
             $Config.engine = $Config.DbConnectionInfo.Engine
         }
         else {
@@ -880,8 +880,8 @@ function Initialize-Configuration {
             else{
             Assert-DatabaseConnectionInfo -DbConnectionInfo $Config.AdminDbConnectionInfo
             Assert-DatabaseConnectionInfo -DbConnectionInfo $Config.SecurityDbConnectionInfo
-            $Config.AdminDbConnectionInfo.ApplicationName = "Ed-Fi ODS/API AdminApi"
-            $Config.SecurityDbConnectionInfo.ApplicationName = "Ed-Fi ODS/API AdminApi"
+            $Config.AdminDbConnectionInfo.ApplicationName = "AdminApi"
+            $Config.SecurityDbConnectionInfo.ApplicationName = "AdminApi"
             $Config.engine = $Config.AdminDbConnectionInfo.Engine
             }
         }
@@ -1034,8 +1034,8 @@ function Invoke-TransformConnectionStrings {
         
         $connectionstrings = @{
             ConnectionStrings = @{
-                Admin = $adminconnString
-                Security = $securityConnString
+                EdFi_Admin = $adminconnString
+                EdFi_Security = $securityConnString
             }
         }
 
