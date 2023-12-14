@@ -955,7 +955,7 @@ function Invoke-TransformAppSettings {
         $settings = Get-Content $settingsFile | ConvertFrom-Json | ConvertTo-Hashtable
         $settings.AppSettings.DatabaseEngine = $config.engine
 
-        $setting.AppSettings.MultiTenancy = $config.IsMultiTenant
+        $settings.AppSettings.MultiTenancy = $config.IsMultiTenant
 
         $missingAuthenticationSettings = @()
         if ($Config.AuthenticationSettings.ContainsKey("Authority")) {
