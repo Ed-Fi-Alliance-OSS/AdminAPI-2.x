@@ -17,12 +17,10 @@ public interface IAddApplicationCommand
 public class AddApplicationCommand : IAddApplicationCommand
 {
     private readonly IUsersContext _usersContext;
-    private readonly InstanceContext _instanceContext;
 
-    public AddApplicationCommand(IUsersContext usersContext, InstanceContext instanceContext)
+    public AddApplicationCommand(IUsersContext usersContext)
     {
         _usersContext = usersContext;
-        _instanceContext = instanceContext;
     }
 
     public AddApplicationResult Execute(IAddApplicationModel applicationModel)
@@ -36,7 +34,7 @@ public class AddApplicationCommand : IAddApplicationCommand
 
         var odsInstance = _usersContext.OdsInstances.Single(o => o.OdsInstanceId == applicationModel.OdsInstanceId);
 
-        var user = vendor?.Users.FirstOrDefault();
+        var user = vendor.Users.FirstOrDefault();
 
         var apiClient = new ApiClient(true)
         {
