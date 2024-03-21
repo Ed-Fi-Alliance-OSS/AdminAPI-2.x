@@ -55,7 +55,7 @@ public class ClaimSetResourceClaimModel
 }
 
 
-public class ChildrenClaimSetResource
+public class ChildrenClaimSetResource: ClaimSetResourceClaimModel
 {
     [SwaggerSchema(ReadOnly = true)]
     public int Id { get; set; }
