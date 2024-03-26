@@ -58,7 +58,7 @@ public class ClaimSetResourceClaimModel
 public class ChildrenClaimSetResource: ClaimSetResourceClaimModel
 {
     [SwaggerSchema(Description = "Children are collection of ResourceClaim")]
-    public new List<ClaimSetResourceClaimModel?> Children { get; set; }
+    public new List<ClaimSetResourceClaimModel> Children { get; set; }
 
     public ChildrenClaimSetResource()
     {
