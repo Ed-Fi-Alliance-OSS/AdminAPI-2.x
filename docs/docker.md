@@ -70,7 +70,7 @@ style I fill:#fff
    cp .env.example .env
    code .env
    ```
-   > [!NOTE]
+   > [!NOTE] 
    > The .env file is a shared resource that can be referenced by both the 
    > "MultiTenant" and "SingleTenant" compose files.
 
