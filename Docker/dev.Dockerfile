@@ -3,12 +3,11 @@
 # The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 # See the LICENSE and NOTICES files in the project root for more information.
 
-# First layer uses a dotnet/sdk image to build the Admin API from source code
-# Second layer uses the dotnet/aspnet image to run the built code
+# First two layers use a dotnet/sdk image to build the Admin API from source
+# code. The next two layers use the dotnet/aspnet image to run the built code.
+# The extra layers in the middle support caching of base layers.
 
-
-#tag sdk:6.0-alpine
-FROM mcr.microsoft.com/dotnet/sdk@sha256:c1a73b72c02e7b837e9a93030d545bc4181193e1bab1033364ed2d00986d78ff AS buildbase
+FROM mcr.microsoft.com/dotnet/sdk:8.0.203-alpine3.18@sha256:2a8dca3af111071172b1629c12eefaeca0d6c2954887c4489195771c9e90833c as buildBase
 
 FROM buildbase as build
 RUN apk --no-cache add curl=~8
@@ -22,11 +21,12 @@ WORKDIR /source/EdFi.Ods.AdminApi
 RUN dotnet restore && dotnet build -c Release
 RUN dotnet publish -c Release /p:EnvironmentName=Production --no-build -o /app/EdFi.Ods.AdminApi
 
+# TODO: update to .NET 8, will be handled in AdminAPI-983
 #tag aspnet:6.0-alpine
 FROM mcr.microsoft.com/dotnet/aspnet@sha256:201cedd60cb295b2ebea7184561a45c5c0ee337e37300ea0f25cff5a2c762538 AS runtimebase
 
 FROM runtimebase AS runtime
-RUN apk --no-cache add dos2unix=~7 bash=~5 gettext=~0 icu=~72 && \
+RUN apk --no-cache add curl=~8 dos2unix=~7 bash=~5 gettext=~0 icu=~72 && \
     addgroup -S edfi && adduser -S edfi -G edfi
 
 FROM runtime AS setup
