@@ -35,6 +35,7 @@ LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
 # Disable the globaliztion invariant mode (set in base image)
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 ENV ASPNETCORE_ENVIRONMENT=Production
+ENV ASPNETCORE_HTTP_PORTS=80
 
 WORKDIR /app
 COPY --from=publish /app/EdFi.Ods.AdminApi .
@@ -49,8 +50,7 @@ RUN cp /app/log4net.txt /app/log4net.config && \
     chmod 500 /app/*.sh -- ** && \
     chown -R edfi /app
 
-EXPOSE 443
+EXPOSE ${ASPNETCORE_HTTP_PORTS}
 USER edfi
-WORKDIR /app
 
 ENTRYPOINT ["/app/run.sh"]
