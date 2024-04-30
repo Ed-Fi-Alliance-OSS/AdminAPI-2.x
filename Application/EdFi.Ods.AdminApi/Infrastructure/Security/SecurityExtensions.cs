@@ -4,9 +4,9 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Ods.AdminApi.Features.Connect;
+using EdFi.Ods.AdminApi.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using OpenIddict.Server;
@@ -16,22 +16,28 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Security;
 
 public static class SecurityExtensions
 {
-    public static void AddSecurityUsingOpenIddict(this IServiceCollection services,
-        IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
+    public static void AddSecurityUsingOpenIddict(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        IWebHostEnvironment webHostEnvironment
+    )
     {
-
-        var issuer = configuration.GetValue<string>("Authentication:IssuerUrl");
-        var authority = configuration.GetValue<string>("Authentication:Authority");
-        var isDockerEnvironment = configuration.GetValue<bool>("EnableDockerEnvironment");
+        var issuer = configuration.Get<string>("Authentication:IssuerUrl");
+        var authority = configuration.Get<string>("Authentication:Authority");
+        var isDockerEnvironment = configuration.Get("EnableDockerEnvironment", false);
 
         //OpenIddict Server
-        var signingKeyValue = configuration.GetValue<string>("Authentication:SigningKey");
-        var signingKey = string.IsNullOrEmpty(signingKeyValue) ? null : new SymmetricSecurityKey(Convert.FromBase64String(signingKeyValue));
+        var signingKeyValue = configuration.Get<string>("Authentication:SigningKey");
+        var signingKey = string.IsNullOrEmpty(signingKeyValue)
+            ? null
+            : new SymmetricSecurityKey(Convert.FromBase64String(signingKeyValue));
 
-        services.AddOpenIddict()
+        services
+            .AddOpenIddict()
             .AddCore(opt =>
             {
-                opt.UseEntityFrameworkCore().UseDbContext<AdminApiDbContext>()
+                opt.UseEntityFrameworkCore()
+                    .UseDbContext<AdminApiDbContext>()
                     .ReplaceDefaultEntities<ApiApplication, ApiAuthorization, ApiScope, ApiToken, int>();
             })
             .AddServer(opt =>
@@ -61,9 +67,10 @@ public static class SecurityExtensions
                     aspNetCoreBuilder.DisableTransportSecurityRequirement();
                 }
 
-                opt.AddEventHandler<ApplyTokenResponseContext>(
-                    builder =>
-                    builder.UseSingletonHandler<DefaultTokenResponseHandler>().SetType(OpenIddictServerHandlerType.Custom)
+                opt.AddEventHandler<ApplyTokenResponseContext>(builder =>
+                    builder
+                        .UseSingletonHandler<DefaultTokenResponseHandler>()
+                        .SetType(OpenIddictServerHandlerType.Custom)
                 );
             })
             .AddValidation(options =>
@@ -74,22 +81,24 @@ public static class SecurityExtensions
             });
 
         //Application Security
-        services.AddAuthentication(opt =>
-        {
-            opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(opt =>
-        {
-            opt.Authority = authority;
-            opt.SaveToken = true;
-            opt.TokenValidationParameters = new TokenValidationParameters
+        services
+            .AddAuthentication(opt =>
             {
-                ValidateAudience = false,
-                ValidIssuer = authority,
-                IssuerSigningKey = signingKey
-            };
-            opt.RequireHttpsMetadata = !isDockerEnvironment;
-        });
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(opt =>
+            {
+                opt.Authority = authority;
+                opt.SaveToken = true;
+                opt.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateAudience = false,
+                    ValidIssuer = authority,
+                    IssuerSigningKey = signingKey
+                };
+                opt.RequireHttpsMetadata = !isDockerEnvironment;
+            });
         services.AddAuthorization(opt =>
         {
             opt.DefaultPolicy = new AuthorizationPolicyBuilder()
@@ -105,16 +114,35 @@ public static class SecurityExtensions
 
     public class DefaultTokenResponseHandler : IOpenIddictServerHandler<ApplyTokenResponseContext>
     {
-        private const string DENIED_AUTHENTICATION_MESSAGE = "Access Denied. Please review your information and try again.";
+        private const string DENIED_AUTHENTICATION_MESSAGE =
+            "Access Denied. Please review your information and try again.";
 
         public ValueTask HandleAsync(ApplyTokenResponseContext context)
         {
             var response = context.Response;
 
-            if (string.Equals(response.Error, OpenIddictConstants.Errors.InvalidGrant, StringComparison.Ordinal) ||
-                string.Equals(response.Error, OpenIddictConstants.Errors.UnsupportedGrantType, StringComparison.Ordinal) ||
-                string.Equals(response.Error, OpenIddictConstants.Errors.InvalidClient, StringComparison.Ordinal) ||
-                string.Equals(response.Error, OpenIddictConstants.Errors.InvalidScope, StringComparison.Ordinal))
+            if (
+                string.Equals(
+                    response.Error,
+                    OpenIddictConstants.Errors.InvalidGrant,
+                    StringComparison.Ordinal
+                )
+                || string.Equals(
+                    response.Error,
+                    OpenIddictConstants.Errors.UnsupportedGrantType,
+                    StringComparison.Ordinal
+                )
+                || string.Equals(
+                    response.Error,
+                    OpenIddictConstants.Errors.InvalidClient,
+                    StringComparison.Ordinal
+                )
+                || string.Equals(
+                    response.Error,
+                    OpenIddictConstants.Errors.InvalidScope,
+                    StringComparison.Ordinal
+                )
+            )
             {
                 response.Error = OpenIddictConstants.Errors.InvalidClient;
                 response.ErrorDescription = DENIED_AUTHENTICATION_MESSAGE;
@@ -125,4 +153,3 @@ public static class SecurityExtensions
         }
     }
 }
-

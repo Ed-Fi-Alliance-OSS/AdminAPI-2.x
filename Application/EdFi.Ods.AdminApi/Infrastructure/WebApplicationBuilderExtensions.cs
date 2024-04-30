@@ -8,6 +8,7 @@ using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApi.Infrastructure.Documentation;
 using EdFi.Ods.AdminApi.Infrastructure.Security;
 using EdFi.Ods.AdminApi.Infrastructure.Api;
+using EdFi.Ods.AdminApi.Infrastructure.Extensions;
 using EdFi.Security.DataAccess.Contexts;
 using EdFi.Ods.AdminApi.Infrastructure.Services;
 using FluentValidation.AspNetCore;
@@ -26,7 +27,9 @@ public static class WebApplicationBuilderExtensions
 {
     public static void AddServices(this WebApplicationBuilder webApplicationBuilder)
     {
-        webApplicationBuilder.Services.Configure<AppSettings>(webApplicationBuilder.Configuration.GetSection("AppSettings"));
+        IConfiguration config = webApplicationBuilder.Configuration;
+
+        webApplicationBuilder.Services.Configure<AppSettings>(config.GetSection("AppSettings"));
         EnableMultiTenancySupport(webApplicationBuilder);
         var executingAssembly = Assembly.GetExecutingAssembly();
         webApplicationBuilder.Services.AddAutoMapper(executingAssembly, typeof(AdminApiMappingProfile).Assembly);
@@ -74,7 +77,7 @@ public static class WebApplicationBuilderExtensions
             opt.AssumeDefaultVersionWhenUnspecified = false;
         });
 
-        webApplicationBuilder.Services.Configure<SwaggerSettings>(webApplicationBuilder.Configuration.GetSection("SwaggerSettings"));
+        webApplicationBuilder.Services.Configure<SwaggerSettings>(config.GetSection("SwaggerSettings"));
         var issuer = webApplicationBuilder.Configuration.GetValue<string>("Authentication:IssuerUrl");
         webApplicationBuilder.Services.AddSwaggerGen(opt =>
         {
@@ -137,7 +140,7 @@ public static class WebApplicationBuilderExtensions
         });
 
         // Logging
-        var loggingOptions = webApplicationBuilder.Configuration.GetSection("Log4NetCore").Get<Log4NetProviderOptions>();
+        var loggingOptions = config.GetSection("Log4NetCore").Get<Log4NetProviderOptions>();
         webApplicationBuilder.Logging.AddLog4Net(loggingOptions);
 
         // Fluent validation
@@ -149,7 +152,7 @@ public static class WebApplicationBuilderExtensions
                         .GetCustomAttribute<System.ComponentModel.DataAnnotations.DisplayAttribute>()?.GetName();
 
         //Databases
-        var databaseEngine = webApplicationBuilder.Configuration["AppSettings:DatabaseEngine"];
+        var databaseEngine = config.Get("AppSettings:DatabaseEngine", "SqlServer");
         webApplicationBuilder.AddDatabases(databaseEngine);
 
         //Health
@@ -179,7 +182,9 @@ public static class WebApplicationBuilderExtensions
 
     private static void AddDatabases(this WebApplicationBuilder webApplicationBuilder, string databaseEngine)
     {
-        var multiTenancyEnabled = webApplicationBuilder.Configuration.GetValue<bool>("AppSettings:MultiTenancy");
+        IConfiguration config = webApplicationBuilder.Configuration;
+
+        var multiTenancyEnabled = config.Get("AppSettings:MultiTenancy", false);
 
         if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.PostgreSql))
         {
@@ -195,7 +200,7 @@ public static class WebApplicationBuilderExtensions
                 sp => new PostgresSecurityContext(SecurityDbContextOptions(sp, DatabaseEngineEnum.PostgreSql)));
 
             webApplicationBuilder.Services.AddScoped<IUsersContext>(
-                sp => new PostgresUsersContext(AdminDbContextOptions(sp, DatabaseEngineEnum.PostgreSql)));            
+                sp => new PostgresUsersContext(AdminDbContextOptions(sp, DatabaseEngineEnum.PostgreSql)));
         }
         else if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.SqlServer))
         {
@@ -210,14 +215,14 @@ public static class WebApplicationBuilderExtensions
                 (sp) => new SqlServerSecurityContext(SecurityDbContextOptions(sp, DatabaseEngineEnum.SqlServer)));
 
             webApplicationBuilder.Services.AddScoped<IUsersContext>(
-                (sp) => new SqlServerUsersContext(AdminDbContextOptions(sp, DatabaseEngineEnum.SqlServer)));          
+                (sp) => new SqlServerUsersContext(AdminDbContextOptions(sp, DatabaseEngineEnum.SqlServer)));
         }
         else
         {
             throw new Exception($"Unexpected DB setup error. Engine '{databaseEngine}' was parsed as valid but is not configured for startup.");
         }
 
-        string? AdminConnectionString(IServiceProvider serviceProvider)
+        string AdminConnectionString(IServiceProvider serviceProvider)
         {
             var adminConnectionString = string.Empty;
 
@@ -235,7 +240,7 @@ public static class WebApplicationBuilderExtensions
             }
             else
             {
-                adminConnectionString = webApplicationBuilder.Configuration.GetConnectionString("EdFi_Admin");
+                adminConnectionString = config.GetConnectionStringByName("EdFi_Admin");
             }
 
             return adminConnectionString;
@@ -244,7 +249,7 @@ public static class WebApplicationBuilderExtensions
         DbContextOptions AdminDbContextOptions(IServiceProvider serviceProvider, string databaseEngine)
         {
             var adminConnectionString = AdminConnectionString(serviceProvider);
-            DbContextOptionsBuilder builder = new DbContextOptionsBuilder();
+            var builder = new DbContextOptionsBuilder();
             if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.PostgreSql)) {
                 builder.UseNpgsql(adminConnectionString);
                 builder.UseLowerCaseNamingConvention();
@@ -256,7 +261,7 @@ public static class WebApplicationBuilderExtensions
             return builder.Options;
         }
 
-        string? SecurityConnectionString(IServiceProvider serviceProvider)
+        string SecurityConnectionString(IServiceProvider serviceProvider)
         {
             var securityConnectionString = string.Empty;
 
@@ -274,7 +279,7 @@ public static class WebApplicationBuilderExtensions
             }
             else
             {
-                securityConnectionString = webApplicationBuilder.Configuration.GetConnectionString("EdFi_Security");
+                securityConnectionString = config.GetConnectionStringByName("EdFi_Security");
             }
 
             return securityConnectionString;
@@ -283,7 +288,7 @@ public static class WebApplicationBuilderExtensions
         DbContextOptions SecurityDbContextOptions(IServiceProvider serviceProvider, string databaseEngine)
         {
             var securityConnectionString = SecurityConnectionString(serviceProvider);
-            DbContextOptionsBuilder builder = new DbContextOptionsBuilder();
+            var builder = new DbContextOptionsBuilder();
             if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.PostgreSql))
             {
                 builder.UseNpgsql(securityConnectionString);

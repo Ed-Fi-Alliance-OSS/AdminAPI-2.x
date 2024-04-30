@@ -3,29 +3,46 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using EdFi.Ods.AdminApi.Infrastructure.MultiTenancy;
+using EdFi.Ods.AdminApi.Infrastructure.Extensions;
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 
 public static class HealthCheckServiceExtensions
 {
-    public static IServiceCollection AddHealthCheck(this IServiceCollection services,
-             IConfigurationRoot configuration)
+    public static IServiceCollection AddHealthCheck(
+        this IServiceCollection services,
+        IConfigurationRoot configuration
+    )
     {
         Dictionary<string, string> connectionStrings;
-        var databaseEngine = configuration["AppSettings:DatabaseEngine"];
-        var multiTenancyEnabled = configuration.GetValue<bool>("AppSettings:MultiTenancy");
+        var databaseEngine = configuration.Get("AppSettings:DatabaseEngine", "SqlServer");
+        var multiTenancyEnabled = configuration.Get("AppSettings:MultiTenancy", false);
+
+        // This is bad! Should be reading the database name from the connection
+        // string. Use engine-appropriate class for to load and parse the
+        // connection string: SqlConnectionStringBuilder or NpgsqlConnectionStringBuilder.
+        // ADMINAPI-1005
         var dbName = "EdFi_Admin";
 
         if (multiTenancyEnabled)
         {
-            connectionStrings = configuration.Get<TenantsSection>().Tenants.
-                ToDictionary(x => x.Key, x => x.Value.ConnectionStrings[dbName]);
+            var tenantSettings =
+                configuration.Get<TenantsSection>()
+                ?? throw new AdminApiException("Unable to load tenant configuration from appSettings");
+
+            connectionStrings = tenantSettings.Tenants.ToDictionary(
+                x => x.Key,
+                x => x.Value.ConnectionStrings[dbName]
+            );
         }
         else
         {
-            connectionStrings = new() {
-                    { "SingleTenant", configuration.GetConnectionString(dbName) ?? string.Empty }};
+            connectionStrings = new()
+            {
+                { "SingleTenant", configuration.GetConnectionStringByName(dbName) }
+            };
         }
 
         if (!string.IsNullOrEmpty(databaseEngine))
