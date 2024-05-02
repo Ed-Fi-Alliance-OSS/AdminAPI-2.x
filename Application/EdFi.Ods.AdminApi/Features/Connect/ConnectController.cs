@@ -16,9 +16,9 @@ namespace EdFi.Ods.AdminApi.Features.Connect;
 [AllowAnonymous]
 [SwaggerResponse(400, FeatureConstants.BadRequestResponseDescription)]
 [SwaggerResponse(500, FeatureConstants.InternalServerErrorResponseDescription)]
-#pragma warning disable S6934
+#pragma warning disable S6934 // A Route attribute should be added to the controller when a route template is specified at the action level
 public class ConnectController : Controller
-#pragma warning disable S6934
+#pragma warning restore S6934 // A Route attribute should be added to the controller when a route template is specified at the action level
 {
     private readonly ITokenService _tokenService;
     private readonly IRegisterService _registerService;

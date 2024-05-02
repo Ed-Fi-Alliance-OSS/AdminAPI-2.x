@@ -6,6 +6,7 @@
 using AutoMapper;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
+using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.AutoMapper;
 
@@ -38,7 +39,7 @@ public class AuthStrategyIdsConverter : IValueConverter<List<string>, List<int>>
             }
             if (!string.IsNullOrEmpty(unavailableAuthStrategies))
             {
-                throw new ArgumentException($"Error transforming the ID for the AuthStrategyNames {unavailableAuthStrategies!}");
+                throw new AdminApiException($"Error transforming the ID for the AuthStrategyNames {unavailableAuthStrategies!}");
             }
         }
         return ids;
