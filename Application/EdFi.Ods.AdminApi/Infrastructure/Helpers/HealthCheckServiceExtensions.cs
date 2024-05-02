@@ -19,12 +19,7 @@ public static class HealthCheckServiceExtensions
         Dictionary<string, string> connectionStrings;
         var databaseEngine = configuration.Get("AppSettings:DatabaseEngine", "SqlServer");
         var multiTenancyEnabled = configuration.Get("AppSettings:MultiTenancy", false);
-
-        // This is bad! Should be reading the database name from the connection
-        // string. Use engine-appropriate class for to load and parse the
-        // connection string: SqlConnectionStringBuilder or NpgsqlConnectionStringBuilder.
-        // ADMINAPI-1005
-        var dbName = "EdFi_Admin";
+        var connectionStringName = "EdFi_Admin";
 
         if (multiTenancyEnabled)
         {
@@ -34,14 +29,14 @@ public static class HealthCheckServiceExtensions
 
             connectionStrings = tenantSettings.Tenants.ToDictionary(
                 x => x.Key,
-                x => x.Value.ConnectionStrings[dbName]
+                x => x.Value.ConnectionStrings[connectionStringName]
             );
         }
         else
         {
             connectionStrings = new()
             {
-                { "SingleTenant", configuration.GetConnectionStringByName(dbName) }
+                { "SingleTenant", configuration.GetConnectionStringByName(connectionStringName) }
             };
         }
 
