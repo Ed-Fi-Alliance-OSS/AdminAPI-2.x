@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Ods.AdminApi.Features.Connect;
+using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using EdFi.Ods.AdminApi.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -22,7 +23,11 @@ public static class SecurityExtensions
         IWebHostEnvironment webHostEnvironment
     )
     {
+#pragma warning disable S1481 // Unused local variables should be removed
+        // Temporarily suppress this issue, until we fix the configuration problem via ADMINAPI-1006
         var issuer = configuration.Get<string>("Authentication:IssuerUrl");
+#pragma warning restore S1481 // Unused local variables should be removed
+
         var authority = configuration.Get<string>("Authentication:Authority");
         var isDockerEnvironment = configuration.Get("EnableDockerEnvironment", false);
 
@@ -55,7 +60,7 @@ public static class SecurityExtensions
                 {
                     if (signingKey == null)
                     {
-                        throw new Exception("Invalid Configuration: Authentication:SigningKey is required.");
+                        throw new AdminApiException("Invalid Configuration: Authentication:SigningKey is required.");
                     }
                     opt.AddSigningKey(signingKey);
                 }
