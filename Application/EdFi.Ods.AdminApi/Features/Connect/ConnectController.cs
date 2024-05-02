@@ -16,8 +16,9 @@ namespace EdFi.Ods.AdminApi.Features.Connect;
 [AllowAnonymous]
 [SwaggerResponse(400, FeatureConstants.BadRequestResponseDescription)]
 [SwaggerResponse(500, FeatureConstants.InternalServerErrorResponseDescription)]
-[Route("[controller]/{action=Index}")]
+#pragma warning disable S6934
 public class ConnectController : Controller
+#pragma warning disable S6934
 {
     private readonly ITokenService _tokenService;
     private readonly IRegisterService _registerService;
