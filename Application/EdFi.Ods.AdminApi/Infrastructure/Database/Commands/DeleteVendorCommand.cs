@@ -33,7 +33,7 @@ public class DeleteVendorCommand
 
         if (vendor.IsSystemReservedVendor())
         {
-            throw new Exception("This Vendor is required for proper system function and may not be deleted");
+            throw new ArgumentException("This Vendor is required for proper system function and may not be deleted");
         }
 
         foreach (var application in vendor.Applications.ToList())
