@@ -13,8 +13,8 @@ public class AdminApiVersions
 {
     private static bool _isInitialized;
 
-    public static AdminApiVersion V1 { get; set; } = new(1.1, "v1");
-    public static AdminApiVersion V2 { get; set; } = new(2.0, "v2");
+    public static readonly AdminApiVersion V1 = new(1.1, "v1");
+    public static readonly AdminApiVersion V2 = new(2.0, "v2");
     private static ApiVersionSet? _versionSet;
 
     public static void Initialize(WebApplication app)
@@ -47,9 +47,10 @@ public class AdminApiVersions
 
     public static string[] GetAllVersionStrings()
     {
-        return GetAllVersions()
+        var result = GetAllVersions()
             .Select(apiVersion => apiVersion.ToString())
             .ToArray();
+        return result;
     }
 
     public class AdminApiVersion
