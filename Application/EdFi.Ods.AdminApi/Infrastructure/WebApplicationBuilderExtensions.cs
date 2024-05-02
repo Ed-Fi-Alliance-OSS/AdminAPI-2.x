@@ -45,24 +45,28 @@ public static class WebApplicationBuilderExtensions
 
                 if (concreteClass.Namespace != null)
                 {
-                    if (concreteClass.Namespace.EndsWith("Database.Commands") || concreteClass.Namespace.EndsWith("Database.Queries")
-                        || concreteClass.Namespace.EndsWith("ClaimSetEditor"))
+                    if (!concreteClass.Namespace.EndsWith("Database.Commands") &&
+                        !concreteClass.Namespace.EndsWith("Database.Queries")
+                        && !concreteClass.Namespace.EndsWith("ClaimSetEditor"))
                     {
-                        if (interfaces.Length == 1)
+                        continue;
+                    }
+
+                    if (interfaces.Length == 1)
+                    {
+                        var serviceType = interfaces.Single();
+                        if (serviceType.FullName == $"{concreteClass.Namespace}.I{concreteClass.Name}")
+                            webApplicationBuilder.Services.AddTransient(serviceType, concreteClass);
+                    }
+                    else if (interfaces.Length == 0)
+                    {
+                        if (!concreteClass.Name.EndsWith("Command")
+                            && !concreteClass.Name.EndsWith("Query")
+                            && !concreteClass.Name.EndsWith("Service"))
                         {
-                            var serviceType = interfaces.Single();
-                            if (serviceType.FullName == $"{concreteClass.Namespace}.I{concreteClass.Name}")
-                                webApplicationBuilder.Services.AddTransient(serviceType, concreteClass);
+                            continue;
                         }
-                        else if (interfaces.Length == 0)
-                        {
-                            if (concreteClass.Name.EndsWith("Command")
-                              || concreteClass.Name.EndsWith("Query")
-                              || concreteClass.Name.EndsWith("Service"))
-                            {
-                                webApplicationBuilder.Services.AddTransient(concreteClass);
-                            }
-                        }
+                        webApplicationBuilder.Services.AddTransient(concreteClass);
                     }
                 }
             }
@@ -219,7 +223,7 @@ public static class WebApplicationBuilderExtensions
         }
         else
         {
-            throw new Exception($"Unexpected DB setup error. Engine '{databaseEngine}' was parsed as valid but is not configured for startup.");
+            throw new ArgumentException($"Unexpected DB setup error. Engine '{databaseEngine}' was parsed as valid but is not configured for startup.");
         }
 
         string AdminConnectionString(IServiceProvider serviceProvider)
@@ -235,7 +239,7 @@ public static class WebApplicationBuilderExtensions
                 }
                 else
                 {
-                    throw new Exception($"Admin database connection setup error. Tenant not configured correctly.");
+                    throw new ArgumentException($"Admin database connection setup error. Tenant not configured correctly.");
                 }
             }
             else
@@ -274,7 +278,7 @@ public static class WebApplicationBuilderExtensions
                 }
                 else
                 {
-                    throw new Exception($"Security database connection setup error. Tenant not configured correctly.");
+                    throw new ArgumentException($"Security database connection setup error. Tenant not configured correctly.");
                 }
             }
             else

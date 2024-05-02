@@ -13,8 +13,8 @@ public class AdminApiVersions
 {
     private static bool _isInitialized;
 
-    public static AdminApiVersion V1 = new(1.1, "v1");
-    public static AdminApiVersion V2 = new(2.0, "v2");
+    public static AdminApiVersion V1 { get; set; } = new(1.1, "v1");
+    public static AdminApiVersion V2 { get; set; } = new(2.0, "v2");
     private static ApiVersionSet? _versionSet;
 
     public static void Initialize(WebApplication app)
@@ -31,7 +31,7 @@ public class AdminApiVersions
 
     public static ApiVersionSet VersionSet
     {
-        get => _versionSet ?? throw new Exception(
+        get => _versionSet ?? throw new ArgumentException(
             "Admin API Versions have not been initialized. Call Initialize() at app startup");
     }
 

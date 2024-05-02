@@ -33,7 +33,11 @@ namespace EdFi.Ods.AdminApi.Infrastructure
 
     [Serializable]
     [DebuggerDisplay("{DisplayName} - {Value}")]
+#pragma warning disable S1210 // "Equals" and the comparison operators should be overridden when implementing "IComparable"
+#pragma warning disable S4035 // Classes implementing "IEquatable<T>" should be sealed
     public abstract class Enumeration<TEnumeration, TValue> : IComparable<TEnumeration>, IEquatable<TEnumeration>
+#pragma warning restore S4035 // Classes implementing "IEquatable<T>" should be sealed
+#pragma warning restore S1210 // "Equals" and the comparison operators should be overridden when implementing "IComparable"
         where TEnumeration : Enumeration<TEnumeration, TValue>
         where TValue : IComparable
     {
@@ -118,13 +122,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure
         {
             return Parse(displayName, "display name", item => item.DisplayName == displayName);
         }
-
-        public static bool TryParse(Func<TEnumeration, bool> predicate, out TEnumeration? result)
-        {
-            result = GetAll().FirstOrDefault(predicate);
-            return result is not null;
-        }
-
+        
         private static TEnumeration? Parse(object value, string description, Func<TEnumeration, bool> predicate)
         {
             if (!TryParse(predicate, out var result))
@@ -134,6 +132,11 @@ namespace EdFi.Ods.AdminApi.Infrastructure
             }
 
             return result;
+        }
+        public static bool TryParse(Func<TEnumeration, bool> predicate, out TEnumeration? result)
+        {
+            result = GetAll().AsEnumerable().FirstOrDefault(predicate);
+            return result is not null;
         }
 
         public static bool TryParse(TValue value, out TEnumeration? result)

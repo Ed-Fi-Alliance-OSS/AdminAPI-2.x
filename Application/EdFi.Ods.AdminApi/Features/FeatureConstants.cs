@@ -7,7 +7,7 @@ using System.Security.Policy;
 
 namespace EdFi.Ods.AdminApi.Features;
 
-public class FeatureConstants
+public static class FeatureConstants
 {
     public const string VendorIdDescription = "Vendor/ company id";
     public const string VendorNameDescription = "Vendor/ company name";

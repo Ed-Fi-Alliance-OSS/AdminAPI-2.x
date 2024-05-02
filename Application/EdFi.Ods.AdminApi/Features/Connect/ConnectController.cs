@@ -16,6 +16,7 @@ namespace EdFi.Ods.AdminApi.Features.Connect;
 [AllowAnonymous]
 [SwaggerResponse(400, FeatureConstants.BadRequestResponseDescription)]
 [SwaggerResponse(500, FeatureConstants.InternalServerErrorResponseDescription)]
+[Route("[controller]/{action=Index}")]
 public class ConnectController : Controller
 {
     private readonly ITokenService _tokenService;

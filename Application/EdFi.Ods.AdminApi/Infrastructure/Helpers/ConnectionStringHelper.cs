@@ -17,7 +17,7 @@ public static class ConnectionStringHelper
         {
             try
             {
-                SqlConnectionStringBuilder sqlConnectionStringBuilder = new SqlConnectionStringBuilder(connectionString);
+                _ = new SqlConnectionStringBuilder(connectionString);
             }
             catch (ArgumentException)
             {
@@ -28,7 +28,7 @@ public static class ConnectionStringHelper
         {
             try
             {
-                NpgsqlConnectionStringBuilder npgsqlConnectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString);
+                _ = new NpgsqlConnectionStringBuilder(connectionString);
             }
             catch (ArgumentException)
             {

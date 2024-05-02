@@ -83,7 +83,7 @@ public class EditOdsInstanceContext : IFeature
 
         private bool BeUniqueCombinedKey(EditOdsInstanceContextRequest request)
         {
-            return !_getOdsInstanceContextsQuery.Execute().Any
+            return !_getOdsInstanceContextsQuery.Execute().Exists
                 (x => x.OdsInstance?.OdsInstanceId == request.OdsInstanceId &&
                 x.ContextKey.Equals(request.ContextKey, StringComparison.OrdinalIgnoreCase) &&
                 x.OdsInstanceContextId != request.Id);

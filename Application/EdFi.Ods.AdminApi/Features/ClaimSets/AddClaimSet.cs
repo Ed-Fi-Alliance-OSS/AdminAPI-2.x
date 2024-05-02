@@ -57,12 +57,6 @@ public class AddClaimSet : IFeature
         {
             _getAllClaimSetsQuery = getAllClaimSetsQuery;
 
-            var resourceClaims = (Lookup<string, ResourceClaim>)getResourceClaimsAsFlatListQuery.Execute()
-                .ToLookup(rc => rc.Name?.ToLower());
-
-            var authStrategyNames = getAllAuthorizationStrategiesQuery.Execute()
-                .Select(a => a.AuthStrategyName).ToList();
-
             RuleFor(m => m.Name).NotEmpty()
                 .Must(BeAUniqueName)
                 .WithMessage(FeatureConstants.ClaimSetAlreadyExistsMessage);
