@@ -84,7 +84,7 @@ public static class SecurityExtensions
                 ValidateAudience = false,
                 ValidateIssuer = true,
                 ValidateIssuerSigningKey = true,
-                ValidIssuer = issuer,
+                ValidIssuer = new Uri(issuer).Host,
                 IssuerSigningKey = signingKey
             };
             opt.RequireHttpsMetadata = !isDockerEnvironment;
