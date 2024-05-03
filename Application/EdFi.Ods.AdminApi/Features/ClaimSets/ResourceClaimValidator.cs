@@ -131,7 +131,7 @@ public class ResourceClaimValidator
                     continue;
                 }
 
-                foreach(var defaultAS in defaultASWithAction.AuthorizationStrategies)
+                foreach (var defaultAS in defaultASWithAction.AuthorizationStrategies)
                 {
                     if (defaultAS?.AuthStrategyName != null && !dbAuthStrategies.Contains(defaultAS.AuthStrategyName))
                     {
@@ -159,13 +159,13 @@ public class ResourceClaimValidator
                               .Where(g => g.Count() > 1)
                               .Select(y => y.Key)
                               .ToList();
-                foreach(var duplicate in duplicates)
+                foreach (var duplicate in duplicates)
                 {
                     context.AddFailure(propertyName, $"{duplicate} action is duplicated.");
                 }
                 foreach (var action in resourceClaimActions.Select(x => x.Name))
                 {
-                    if(!dbActions.Exists(actionName => actionName != null &&
+                    if (!dbActions.Exists(actionName => actionName != null &&
                         actionName.Equals(action, StringComparison.InvariantCultureIgnoreCase)))
                     {
                         context.AddFailure(propertyName, $"{action} is not a valid action.");

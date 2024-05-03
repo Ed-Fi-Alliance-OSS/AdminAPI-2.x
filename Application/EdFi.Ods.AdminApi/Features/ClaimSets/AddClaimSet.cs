@@ -51,9 +51,7 @@ public class AddClaimSet : IFeature
     {
         private readonly IGetAllClaimSetsQuery _getAllClaimSetsQuery;
 
-        public Validator(IGetAllClaimSetsQuery getAllClaimSetsQuery,
-            IGetResourceClaimsAsFlatListQuery getResourceClaimsAsFlatListQuery,
-            IGetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery)
+        public Validator(IGetAllClaimSetsQuery getAllClaimSetsQuery)
         {
             _getAllClaimSetsQuery = getAllClaimSetsQuery;
 

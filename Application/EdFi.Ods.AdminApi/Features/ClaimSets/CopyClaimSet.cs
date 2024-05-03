@@ -38,7 +38,7 @@ public class CopyClaimSet : IFeature
     }
 
     [SwaggerSchema(Title = "CopyClaimSetRequest")]
-    public class CopyClaimSetRequest: ICopyClaimSetModel
+    public class CopyClaimSetRequest : ICopyClaimSetModel
     {
         [SwaggerSchema(Description = FeatureConstants.ClaimSetIdToCopy, Nullable = false)]
         public int OriginalId { get; set; }
@@ -53,7 +53,7 @@ public class CopyClaimSet : IFeature
         private readonly IGetClaimSetByIdQuery _getClaimSetByIdQuery;
 
         public Validator(IGetAllClaimSetsQuery getAllClaimSetsQuery,
-            IGetClaimSetByIdQuery getClaimSetByIdQuery )
+            IGetClaimSetByIdQuery getClaimSetByIdQuery)
         {
             _getAllClaimSetsQuery = getAllClaimSetsQuery;
             _getClaimSetByIdQuery = getClaimSetByIdQuery;
