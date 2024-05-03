@@ -11,7 +11,6 @@ using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.Documentation;
 using FluentValidation;
 using Swashbuckle.AspNetCore.Annotations;
-using static EdFi.Ods.AdminApi.Features.OdsInstanceContext.AddOdsInstanceContext;
 
 namespace EdFi.Ods.AdminApi.Features.OdsInstanceContext;
 
@@ -58,7 +57,7 @@ public class EditOdsInstanceContext : IFeature
         {
             _getOdsInstanceQuery = getOdsInstanceQuery;
             _getOdsInstanceContextsQuery = getOdsInstanceContextsQuery;
-            
+
             RuleFor(m => m.ContextKey).NotEmpty();
             RuleFor(m => m.ContextValue).NotEmpty();
 

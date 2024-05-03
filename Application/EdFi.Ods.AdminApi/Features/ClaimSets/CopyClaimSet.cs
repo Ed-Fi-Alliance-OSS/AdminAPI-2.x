@@ -4,7 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using AutoMapper;
-using EdFi.Ods.AdminApi.Features.Applications;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
@@ -55,7 +54,7 @@ public class CopyClaimSet : IFeature
 
         public Validator(IGetAllClaimSetsQuery getAllClaimSetsQuery,
             IGetClaimSetByIdQuery getClaimSetByIdQuery )
-        {           
+        {
             _getAllClaimSetsQuery = getAllClaimSetsQuery;
             _getClaimSetByIdQuery = getClaimSetByIdQuery;
 
@@ -69,7 +68,7 @@ public class CopyClaimSet : IFeature
 
             RuleFor(m => m.Name)
                 .MaximumLength(255)
-                .WithMessage(FeatureConstants.ClaimSetNameMaxLengthMessage);           
+                .WithMessage(FeatureConstants.ClaimSetNameMaxLengthMessage);
         }
 
         private bool BeAnExistingClaimSet(int id)

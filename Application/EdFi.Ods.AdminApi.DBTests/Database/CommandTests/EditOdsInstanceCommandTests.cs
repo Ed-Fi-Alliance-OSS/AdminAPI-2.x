@@ -5,7 +5,6 @@ using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.CommandTests;
@@ -24,7 +23,7 @@ public class EditOdsInstanceCommandTests : PlatformUsersContextTestBase
             InstanceType = "old odsinstance instance type",
             ConnectionString = "old odsinstance connection string",
         };
-        
+
 
         Save(originalOdsInstance);
         _odsInstanceId = originalOdsInstance.OdsInstanceId;

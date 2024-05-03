@@ -5,11 +5,11 @@
 
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
-using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
 using Microsoft.EntityFrameworkCore;
+using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.CommandTests;
 
@@ -114,7 +114,7 @@ public class EditOdsInstanceDerivativeTests : PlatformUsersContextTestBase
                 updatedOdsInstanceDerivative.DerivativeType.ShouldBe(updateDerivativeType);
                 updatedOdsInstanceDerivative.ConnectionString.ShouldBe(updateConnectionString);
             });
-        });   
+        });
     }
 
     [Test]
