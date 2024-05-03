@@ -45,7 +45,7 @@ public class OverrideDefaultAuthorizationStrategyCommand
 
         if (claimSetResourceClaimAction != null)
         {
-            var resourceClaimActionDefaultAuthorizationStrategy = _context.ResourceClaimActionAuthorizationStrategies.FirstOrDefault(p => p.ResourceClaimAction.ResourceClaimId == model.ResourceClaimId
+            var resourceClaimActionDefaultAuthorizationStrategy = _context.ResourceClaimActionAuthorizationStrategies.AsEnumerable().FirstOrDefault(p => p.ResourceClaimAction.ResourceClaimId == model.ResourceClaimId
                 && p.ResourceClaimAction.Action.ActionName.Equals(model.ActionName, StringComparison.CurrentCultureIgnoreCase));
 
             if(resourceClaimActionDefaultAuthorizationStrategy == null && claimSetResourceClaimAction.ResourceClaim.ParentResourceClaim != null)
