@@ -11,7 +11,7 @@ namespace EdFi.Ods.AdminApi.Features.ClaimSets;
 public class ResourceClaimValidator
 {
     private static List<string>? _duplicateResources = [];
-    
+
     public void Validate<T>(Lookup<string, ResourceClaim> dbResourceClaims, List<string> dbActions,
         List<string?> dbAuthStrategies, ClaimSetResourceClaimModel resourceClaim, List<ChildrenClaimSetResource> existingResourceClaims,
         ValidationContext<T> context, string? claimSetName)
@@ -126,15 +126,17 @@ public class ResourceClaimValidator
         {
             foreach (var defaultASWithAction in resourceClaim.DefaultAuthorizationStrategiesForCRUD)
             {
-                if(defaultASWithAction?.AuthorizationStrategies != null)
+                if (defaultASWithAction?.AuthorizationStrategies == null)
                 {
-                    foreach(var defaultAS in defaultASWithAction.AuthorizationStrategies)
+                    continue;
+                }
+
+                foreach(var defaultAS in defaultASWithAction.AuthorizationStrategies)
+                {
+                    if (defaultAS?.AuthStrategyName != null && !dbAuthStrategies.Contains(defaultAS.AuthStrategyName))
                     {
-                        if (defaultAS?.AuthStrategyName != null && !dbAuthStrategies.Contains(defaultAS.AuthStrategyName))
-                        {
-                            context.MessageFormatter.AppendArgument("AuthStrategyName", defaultAS.AuthStrategyName);
-                            context.AddFailure(propertyName, "This resource claim contains an authorization strategy which is not in the system. Claimset Name: '{ClaimSetName}' Resource name: '{ResourceClaimName}' Authorization strategy: '{AuthStrategyName}'.");
-                        }
+                        context.MessageFormatter.AppendArgument("AuthStrategyName", defaultAS.AuthStrategyName);
+                        context.AddFailure(propertyName, "This resource claim contains an authorization strategy which is not in the system. Claimset Name: '{ClaimSetName}' Resource name: '{ResourceClaimName}' Authorization strategy: '{AuthStrategyName}'.");
                     }
                 }
             }

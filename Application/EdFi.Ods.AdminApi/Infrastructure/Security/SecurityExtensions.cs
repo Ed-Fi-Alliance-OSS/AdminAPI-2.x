@@ -26,6 +26,11 @@ public static class SecurityExtensions
         var issuer = configuration.GetValue<string>("Authentication:IssuerUrl");
         var isDockerEnvironment = configuration.GetValue<bool>("EnableDockerEnvironment");
 
+        if (issuer == null)
+        {
+            throw new AdminApiException("Invalid Configuration: Authentication:IssuerUrl is required.");
+        }
+
         //OpenIddict Server
         var signingKeyValue = configuration.Get<string>("Authentication:SigningKey");
         var signingKey = string.IsNullOrEmpty(signingKeyValue)
