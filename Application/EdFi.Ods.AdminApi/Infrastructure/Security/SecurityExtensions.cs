@@ -18,9 +18,7 @@ public static class SecurityExtensions
     public static void AddSecurityUsingOpenIddict(this IServiceCollection services,
         IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
     {
-
         var issuer = configuration.GetValue<string>("Authentication:IssuerUrl");
-        var authority = configuration.GetValue<string>("Authentication:Authority");
         var isDockerEnvironment = configuration.GetValue<bool>("EnableDockerEnvironment");
 
         //OpenIddict Server
@@ -79,11 +77,13 @@ public static class SecurityExtensions
             opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         }).AddJwtBearer(opt =>
         {
-            opt.Authority = authority;
+            opt.Authority = issuer;
             opt.SaveToken = true;
             opt.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateAudience = false,
+                ValidateIssuer = true,
+                ValidateIssuerSigningKey = true,
                 ValidIssuer = issuer,
                 IssuerSigningKey = signingKey
             };
