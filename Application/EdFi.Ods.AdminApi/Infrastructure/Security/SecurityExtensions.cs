@@ -23,13 +23,8 @@ public static class SecurityExtensions
         IWebHostEnvironment webHostEnvironment
     )
     {
-#pragma warning disable S1481 // Unused local variables should be removed
-        // Temporarily suppress this issue, until we fix the configuration problem via ADMINAPI-1006
-        var issuer = configuration.Get<string>("Authentication:IssuerUrl");
-#pragma warning restore S1481 // Unused local variables should be removed
-
-        var authority = configuration.Get<string>("Authentication:Authority");
-        var isDockerEnvironment = configuration.Get("EnableDockerEnvironment", false);
+        var issuer = configuration.GetValue<string>("Authentication:IssuerUrl");
+        var isDockerEnvironment = configuration.GetValue<bool>("EnableDockerEnvironment");
 
         //OpenIddict Server
         var signingKeyValue = configuration.Get<string>("Authentication:SigningKey");
@@ -54,7 +49,7 @@ public static class SecurityExtensions
                 opt.AddEphemeralEncryptionKey();
                 opt.AddEphemeralSigningKey();
                 opt.DisableAccessTokenEncryption();
-                opt.SetIssuer(new Uri(authority));
+                opt.SetIssuer(new Uri(issuer));
 
                 if (!webHostEnvironment.IsDevelopment()) //Keys below will override Ephemeral / Dev Keys
                 {
@@ -86,24 +81,24 @@ public static class SecurityExtensions
             });
 
         //Application Security
-        services
-            .AddAuthentication(opt =>
+        services.AddAuthentication(opt =>
+        {
+            opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(opt =>
+        {
+            opt.Authority = issuer;
+            opt.SaveToken = true;
+            opt.TokenValidationParameters = new TokenValidationParameters
             {
-                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(opt =>
-            {
-                opt.Authority = authority;
-                opt.SaveToken = true;
-                opt.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateAudience = false,
-                    ValidIssuer = authority,
-                    IssuerSigningKey = signingKey
-                };
-                opt.RequireHttpsMetadata = !isDockerEnvironment;
-            });
+                ValidateAudience = false,
+                ValidateIssuer = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = issuer,
+                IssuerSigningKey = signingKey
+            };
+            opt.RequireHttpsMetadata = !isDockerEnvironment;
+        });
         services.AddAuthorization(opt =>
         {
             opt.DefaultPolicy = new AuthorizationPolicyBuilder()
