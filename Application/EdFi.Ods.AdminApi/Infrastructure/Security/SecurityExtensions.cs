@@ -23,13 +23,8 @@ public static class SecurityExtensions
         IWebHostEnvironment webHostEnvironment
     )
     {
-        var issuer = configuration.GetValue<string>("Authentication:IssuerUrl");
-        var isDockerEnvironment = configuration.GetValue<bool>("EnableDockerEnvironment");
-
-        if (issuer == null)
-        {
-            throw new AdminApiException("Invalid Configuration: Authentication:IssuerUrl is required.");
-        }
+        var issuer = configuration.Get<string>("Authentication:IssuerUrl");
+        var isDockerEnvironment = configuration.Get<bool>("EnableDockerEnvironment");
 
         //OpenIddict Server
         var signingKeyValue = configuration.Get<string>("Authentication:SigningKey");
@@ -86,24 +81,25 @@ public static class SecurityExtensions
             });
 
         //Application Security
-        services.AddAuthentication(opt =>
-        {
-            opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(opt =>
-        {
-            opt.Authority = issuer;
-            opt.SaveToken = true;
-            opt.TokenValidationParameters = new TokenValidationParameters
+        services.
+            AddAuthentication(opt =>
             {
-                ValidateAudience = false,
-                ValidateIssuer = true,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer = issuer,
-                IssuerSigningKey = signingKey
-            };
-            opt.RequireHttpsMetadata = !isDockerEnvironment;
-        });
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(opt =>
+            {
+                opt.Authority = issuer;
+                opt.SaveToken = true;
+                opt.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateAudience = false,
+                    ValidateIssuer = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = issuer,
+                    IssuerSigningKey = signingKey
+                };
+                opt.RequireHttpsMetadata = !isDockerEnvironment;
+            });
         services.AddAuthorization(opt =>
         {
             opt.DefaultPolicy = new AuthorizationPolicyBuilder()
