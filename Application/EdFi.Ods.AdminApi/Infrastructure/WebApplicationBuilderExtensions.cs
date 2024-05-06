@@ -126,7 +126,8 @@ public static class WebApplicationBuilderExtensions
             {
                 opt.SwaggerDoc(version, new OpenApiInfo
                 {
-                    Title = "Admin API Documentation", Version = version
+                    Title = "Admin API Documentation",
+                    Version = version
                 });
             }
             opt.DocumentFilter<ListExplicitSchemaDocumentFilter>();
@@ -254,7 +255,8 @@ public static class WebApplicationBuilderExtensions
         {
             var adminConnectionString = AdminConnectionString(serviceProvider);
             var builder = new DbContextOptionsBuilder();
-            if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.PostgreSql)) {
+            if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.PostgreSql))
+            {
                 builder.UseNpgsql(adminConnectionString);
                 builder.UseLowerCaseNamingConvention();
             }

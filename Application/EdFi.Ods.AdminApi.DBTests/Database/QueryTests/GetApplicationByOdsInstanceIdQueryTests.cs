@@ -36,7 +36,6 @@ public class GetApplicationByOdsInstanceIdQueryTests : PlatformUsersContextTestB
             Vendor = vendor,
             OperationalContextUri = OperationalContext.DefaultOperationalContextUri,
         };
-
         var user = new VendorUser
         {
             Email = "",

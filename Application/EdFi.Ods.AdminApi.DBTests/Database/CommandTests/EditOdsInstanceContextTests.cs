@@ -116,7 +116,6 @@ public class EditOdsInstanceContextTests : PlatformUsersContextTestBase
                 updatedOdsInstanceContext.ContextValue.ShouldBe(updateContextValue);
             });
         });
-
     }
 
     [Test]
