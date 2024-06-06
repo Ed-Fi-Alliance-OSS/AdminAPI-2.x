@@ -77,6 +77,13 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.DefaultAuthorizationStrategiesForCRUD, opt => opt.MapFrom(src => src.DefaultAuthStrategiesForCRUD))
             .ForMember(dst => dst.Children, opt => opt.MapFrom(src => src.Children));
 
+        CreateMap<ResourceClaim, ChildrenClaimSetResource>()
+             .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
+             .ForMember(dst => dst.Actions, opt => opt.MapFrom(src => src.Actions))
+             .ForMember(dst => dst.AuthorizationStrategyOverridesForCRUD, opt => opt.MapFrom(src => src.AuthStrategyOverridesForCRUD))
+             .ForMember(dst => dst.DefaultAuthorizationStrategiesForCRUD, opt => opt.MapFrom(src => src.DefaultAuthStrategiesForCRUD))
+             .ForMember(dst => dst.Children, opt => opt.MapFrom(src => src.Children));
+
         CreateMap<ClaimSetResourceClaimModel, ChildrenClaimSetResource>()
             .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
             .ForMember(dst => dst.Actions, opt => opt.MapFrom(src => src.Actions))
