@@ -12,7 +12,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 public interface IGetVendorsQuery
 {
     List<Vendor> Execute();
-    List<Vendor> Execute(int offset, int limit);
+    List<Vendor> Execute(int offset, int limit, int? id, string? company, string? namespacePrefixes, string? contactName, string? contactEmailAddress);
 }
 
 public class GetVendorsQuery : IGetVendorsQuery
@@ -38,9 +38,14 @@ public class GetVendorsQuery : IGetVendorsQuery
             .OrderBy(v => v.VendorName).Where(v => !VendorExtensions.ReservedNames.Contains(v.VendorName.Trim())).ToList();
     }
 
-    public List<Vendor> Execute(int offset, int limit)
+    public List<Vendor> Execute(int offset, int limit, int? id, string? company, string? namespacePrefixes, string? contactName, string? contactEmailAddress)
     {
         return _context.Vendors
+            .Where(c => id == null || id < 1 || c.VendorId == id)
+            .Where(c => company == null || c.VendorName == company)
+            .Where(c => c.VendorNamespacePrefixes.Any(v => namespacePrefixes == null || v.NamespacePrefix == namespacePrefixes))
+            .Where(c => c.Users.Any(u => contactName == null || u.FullName == contactName))
+            .Where(c => c.Users.Any(u => contactEmailAddress == null || u.Email == contactEmailAddress))
             .Include(v => v.Applications)
                 .ThenInclude(a => a.Profiles)
             .Include(v => v.Applications)
