@@ -80,7 +80,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/actions",
+									"raw": "{{API_URL}}/v2/actions?offset=0&limit=25",
 									"host": [
 										"{{API_URL}}"
 									],

@@ -221,7 +221,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/resourceClaims",
+									"raw": "{{API_URL}}/v2/resourceClaims?offset=0&limit=25",
 									"host": [
 										"{{API_URL}}"
 									],
