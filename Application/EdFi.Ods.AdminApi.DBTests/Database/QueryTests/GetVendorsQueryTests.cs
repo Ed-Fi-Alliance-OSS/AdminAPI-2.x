@@ -59,6 +59,19 @@ public class GetVendorsQueryTests : PlatformUsersContextTestBase
 
         Save(vendors);
 
+        /// Id
+        Transaction(usersContext =>
+        {
+            var command = new GetVendorsQuery(usersContext);
+
+            var vendorsAfterOffset = command.Execute(offset, limit, vendors.First().VendorId, null, null, null, null);
+
+            vendorsAfterOffset.ShouldNotBeEmpty();
+            vendorsAfterOffset.Count.ShouldBe(1);
+
+            vendorsAfterOffset.ShouldContain(v => v.VendorName == "test vendor 1");
+        });
+
         /// Company
         Transaction(usersContext =>
         {

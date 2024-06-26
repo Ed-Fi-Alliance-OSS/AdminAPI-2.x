@@ -26,11 +26,11 @@ public class ReadResourceClaims : IFeature
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    internal Task<IResult> GetResourceClaims(IGetResourceClaimsQuery getResourceClaimsQuery, IMapper mapper)
+    internal Task<IResult> GetResourceClaims(IGetResourceClaimsQuery getResourceClaimsQuery, IMapper mapper, int offset, int limit, int? id, string? name)
     {
-        var resourceClaims = getResourceClaimsQuery.Execute().ToList();
+        var resourceClaims = getResourceClaimsQuery.Execute(offset, limit, id, name).ToList();
         var model = mapper.Map<List<ResourceClaimModel>>(resourceClaims);
-        
+
         return Task.FromResult(Results.Ok(model));
     }
 

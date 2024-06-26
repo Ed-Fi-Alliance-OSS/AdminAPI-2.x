@@ -19,9 +19,9 @@ public class ReadActions : IFeature
            .BuildForVersions(AdminApiVersions.V2);
     }
 
-    internal Task<IResult> GetActions(IGetAllActionsQuery getAllActionsQuery, IMapper mapper)
+    internal Task<IResult> GetActions(IGetAllActionsQuery getAllActionsQuery, IMapper mapper, int offset, int limit, int? id, string? name)
     {
-        var actions = getAllActionsQuery.Execute();
+        var actions = getAllActionsQuery.Execute(offset, limit, id, name);
         var result = mapper.Map<List<ActionModel>>(actions);
         return Task.FromResult(Results.Ok(result));
     }

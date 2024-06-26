@@ -25,9 +25,9 @@ public class ReadProfile : IFeature
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    internal Task<IResult> GetProfiles(IGetProfilesQuery getProfilesQuery, IMapper mapper, int offset, int limit)
+    internal Task<IResult> GetProfiles(IGetProfilesQuery getProfilesQuery, IMapper mapper, int offset, int limit, int? id, string? name)
     {
-        var profileList = mapper.Map<List<ProfileModel>>(getProfilesQuery.Execute(offset, limit));
+        var profileList = mapper.Map<List<ProfileModel>>(getProfilesQuery.Execute(offset, limit, id, name));
         return Task.FromResult(Results.Ok(profileList));
     }
 
