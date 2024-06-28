@@ -26,10 +26,10 @@ public class ReadApplication : IFeature
     }
 
     internal Task<IResult> GetApplications(
-        IGetVendorsQuery getVendorsAndApplicationsQuery, IMapper mapper, int offset, int limit, int? id, string? applicationName, string? claimsetName)
+        IGetVendorsQuery getVendorsAndApplicationsQuery, IMapper mapper, int offset, int limit, string? sortBy, bool? descendingSorting, int? id, string? applicationName, string? claimsetName)
     {
         var vendors = getVendorsAndApplicationsQuery.Execute();
-        var applications = new List<ApplicationModel>();
+        var applications = new SortableList<ApplicationModel>().Sort(sortBy ?? string.Empty, descendingSorting ?? false);
         foreach (var vendor in vendors)
         {
             applications.AddRange(mapper.Map<List<ApplicationModel>>(vendor.Applications));

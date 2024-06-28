@@ -5,6 +5,7 @@
 
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApi.Features;
 using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
@@ -12,7 +13,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 public interface IGetVendorsQuery
 {
     List<Vendor> Execute();
-    List<Vendor> Execute(int offset, int limit, int? id, string? company, string? namespacePrefixes, string? contactName, string? contactEmailAddress);
+    List<Vendor> Execute(int offset, int limit, string? sortBy, bool? descendingSorting, int? id, string? company, string? namespacePrefixes, string? contactName, string? contactEmailAddress);
 }
 
 public class GetVendorsQuery : IGetVendorsQuery
@@ -38,7 +39,7 @@ public class GetVendorsQuery : IGetVendorsQuery
             .OrderBy(v => v.VendorName).Where(v => !VendorExtensions.ReservedNames.Contains(v.VendorName.Trim())).ToList();
     }
 
-    public List<Vendor> Execute(int offset, int limit, int? id, string? company, string? namespacePrefixes, string? contactName, string? contactEmailAddress)
+    public List<Vendor> Execute(int offset, int limit, string? sortBy, bool? descendingSorting, int? id, string? company, string? namespacePrefixes, string? contactName, string? contactEmailAddress)
     {
         return _context.Vendors
             .Where(c => id == null || id < 1 || c.VendorId == id)
@@ -54,7 +55,7 @@ public class GetVendorsQuery : IGetVendorsQuery
                 .ThenInclude(a => a.ApiClients)
             .Include(v => v.Users)
             .Include(v => v.VendorNamespacePrefixes)
-            .OrderBy(v => v.VendorName).Where(v => !VendorExtensions.ReservedNames.Contains(v.VendorName.Trim()))
+            .Where(v => !VendorExtensions.ReservedNames.Contains(v.VendorName.Trim()))
             .Skip(offset).Take(limit).ToList();
     }
 }

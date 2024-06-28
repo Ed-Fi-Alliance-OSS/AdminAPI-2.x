@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using EdFi.Ods.AdminApi.Features;
 using EdFi.Ods.AdminApi.Helpers;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Any;
@@ -44,11 +45,11 @@ public class SwaggerDefaultParameterFilter : IOperationFilter
                     {
                         if (parameter.Name.ToLower().Equals("id"))
                         {
-                            parameter.Description = "Use this field to filter by Profile Id";
+                            parameter.Description = FeatureConstants.ProfileIdDescription;
                         }
                         else if (parameter.Name.ToLower().Equals("name"))
                         {
-                            parameter.Description = "Use this field to filter by Profile Name";
+                            parameter.Description = FeatureConstants.ProfileName;
                         }
                     }
                     break;
@@ -59,11 +60,11 @@ public class SwaggerDefaultParameterFilter : IOperationFilter
                     {
                         if (parameter.Name.ToLower().Equals("id"))
                         {
-                            parameter.Description = "Use this field to filter by Resource Claim Id";
+                            parameter.Description = FeatureConstants.ResourceClaimIdDescription;
                         }
                         else if (parameter.Name.ToLower().Equals("name"))
                         {
-                            parameter.Description = "Use this field to filter by Resource Claim Name";
+                            parameter.Description = FeatureConstants.ResourceClaimNameDescription;
                         }
                     }
                     break;
@@ -74,23 +75,23 @@ public class SwaggerDefaultParameterFilter : IOperationFilter
                     {
                         if (parameter.Name.ToLower().Equals("id"))
                         {
-                            parameter.Description = "Use this field to filter by Vendor Id";
+                            parameter.Description = FeatureConstants.VendorIdDescription;
                         }
                         else if (parameter.Name.ToLower().Equals("company"))
                         {
-                            parameter.Description = "Use this field to filter by Company Name";
+                            parameter.Description = FeatureConstants.VendorNameDescription;
                         }
                         else if (parameter.Name.ToLower().Equals("namespaceprefixes"))
                         {
-                            parameter.Description = "Use this field to filter by Namespace Prefix";
+                            parameter.Description = FeatureConstants.VendorNamespaceDescription;
                         }
                         else if (parameter.Name.ToLower().Equals("contactname"))
                         {
-                            parameter.Description = "Use this field to filter by Contact Name";
+                            parameter.Description = FeatureConstants.VendorContactDescription;
                         }
                         else if (parameter.Name.ToLower().Equals("contactemailaddress"))
                         {
-                            parameter.Description = "Use this field to filter by Contact Email Address";
+                            parameter.Description = FeatureConstants.VendorContactEmailDescription;
                         }
                     }
                     break;
@@ -101,11 +102,11 @@ public class SwaggerDefaultParameterFilter : IOperationFilter
                     {
                         if (parameter.Name.ToLower().Equals("id"))
                         {
-                            parameter.Description = "Use this field to filter by Ods Instance Id";
+                            parameter.Description = FeatureConstants.OdsInstanceIdsDescription;
                         }
                         else if (parameter.Name.ToLower().Equals("name"))
                         {
-                            parameter.Description = "Use this field to filter by Ods Instance Name";
+                            parameter.Description = FeatureConstants.OdsInstanceName;
                         }
                     }
                     break;
@@ -116,11 +117,11 @@ public class SwaggerDefaultParameterFilter : IOperationFilter
                     {
                         if (parameter.Name.ToLower().Equals("id"))
                         {
-                            parameter.Description = "Use this field to filter by Claimset Id";
+                            parameter.Description = FeatureConstants.ClaimSetIdDescription;
                         }
                         else if (parameter.Name.ToLower().Equals("name"))
                         {
-                            parameter.Description = "Use this field to filter by Claimset Name";
+                            parameter.Description = FeatureConstants.ClaimSetNameDescription;
                         }
                     }
                     break;
@@ -131,15 +132,15 @@ public class SwaggerDefaultParameterFilter : IOperationFilter
                     {
                         if (parameter.Name.ToLower().Equals("id"))
                         {
-                            parameter.Description = "Use this field to filter by Profile Id";
+                            parameter.Description = FeatureConstants.ApplicationIdDescription;
                         }
                         else if (parameter.Name.ToLower().Equals("applicationname"))
                         {
-                            parameter.Description = "Use this field to filter by Application Name";
+                            parameter.Description = FeatureConstants.ApplicationNameDescription;
                         }
                         else if (parameter.Name.ToLower().Equals("claimsetname"))
                         {
-                            parameter.Description = "Use this field to filter by Claimset Name";
+                            parameter.Description = FeatureConstants.ClaimSetNameDescription;
                         }
                     }
                     break;
@@ -150,11 +151,11 @@ public class SwaggerDefaultParameterFilter : IOperationFilter
                     {
                         if (parameter.Name.ToLower().Equals("id"))
                         {
-                            parameter.Description = "Use this field to filter by Actions Id";
+                            parameter.Description = FeatureConstants.ActionIdDescription;
                         }
                         else if (parameter.Name.ToLower().Equals("name"))
                         {
-                            parameter.Description = "Use this field to filter by Actions Name";
+                            parameter.Description = FeatureConstants.ActionNameDescription;
                         }
                     }
                     break;
