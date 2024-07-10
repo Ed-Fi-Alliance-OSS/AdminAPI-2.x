@@ -72,7 +72,7 @@ For more details check: [widdershins](https://github.com/Mermade/widdershins)
   <body>
 
     <elements-api
-      apiDescriptionUrl="https://raw.githubusercontent.com/Ed-Fi-Alliance-OSS/AdminAPI-2.x/main/docs/swagger.yaml"
+      apiDescriptionUrl="https://raw.githubusercontent.com/Ed-Fi-Alliance-OSS/AdminAPI-2.x/ADMINAPI-950/docs/swagger.yaml"
       router="hash"
       layout="sidebar"
     />
@@ -113,7 +113,7 @@ plugins: [
             specPath: "examples/swagger.yaml",
             outputDir: "docs/adminapi2x",
             downloadUrl:
-              "https://raw.githubusercontent.com/Ed-Fi-Alliance-OSS/AdminAPI-2.x/main/docs/swagger.yaml",
+              "https://raw.githubusercontent.com/Ed-Fi-Alliance-OSS/AdminAPI-2.x/ADMINAPI-950/docs/swagger.yaml",
             sidebarOptions: {
               groupPathsBy: "tag",
               categoryLinkSource: "tag",
