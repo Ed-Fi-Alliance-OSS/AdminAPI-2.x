@@ -1,8 +1,7 @@
 # Admin API documentation
-In order to generate the Admin API 2x documentation we need to generate the YAML/JSON file that contains the definition of it. The file is the most important thing if we want to generate the MD files using  a library like Docusaurus, widdershins, and so on.
+In order to generate the Admin API 2x documentation we need to generate the YAML/JSON file that contains the definition of it. The file is the most important thing if we want to generate the MD files using a library like Docusaurus, widdershins, and so on.
 
-The Admin API 2x uses the library called Swashbuckle to expose the Swagger/OpenAPI definition, in other words the YAML/JSON file, but this one is generated only when the application is running. 
-Fortanly, the library provides a CLI that we can use to generate the file passing the assembly. Let's see how we can do taht:
+The Admin API 2x uses the library called Swashbuckle to expose the Swagger/OpenAPI definition, in other words, the YAML/JSON file, but this one is generated only when the application is running. Fortunately, the library provides a CLI that we can use to generate the file passing the assembly. Let's see how we can do that:
 
 ## Install Swashbuckle.AspNetCore.Cli to generate the JSON/YAML
 
@@ -28,7 +27,7 @@ Check the .config/dotnet-tools.json file and verify if you have the section call
 }
 ```
 
-- Build the EdFi.Ods.AdminApi project and it should generate the assembly, the location should be Application\EdFi.Ods.AdminApi\bin\Debug\net8.0\EdFi.Ods.AdminApi.dll
+- Build the EdFi.Ods.AdminApi project and it should generate the assembly, the location should be in Application\EdFi.Ods.AdminApi\bin\Debug\net8.0\EdFi.Ods.AdminApi.dll
 
 - If everything goes well, we can proceed to generate the api description with following command:
 ```
