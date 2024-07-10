@@ -52,6 +52,8 @@ widdershins --search false --language_tabs 'http:HTTP' 'python:PYTHON' 'csharp:C
 ```
 In this case the MD file has sample code in different programming languages
 
+[Result](https://github.com/Ed-Fi-Alliance-OSS/AdminAPI-2.x/blob/ADMINAPI-950/docs/adminapi2x.md)
+
 For more details check: [widdershins](https://github.com/Mermade/widdershins)
 
 ### Elements - Web Component
