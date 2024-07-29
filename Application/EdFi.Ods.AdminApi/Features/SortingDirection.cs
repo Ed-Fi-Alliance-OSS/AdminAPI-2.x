@@ -34,5 +34,14 @@ namespace EdFi.Ods.AdminApi.Features
                     return true;
             }
         }
+
+        public static string GetNonEmptyOrDefault(string? direction)
+        {
+            if (!string.IsNullOrEmpty(direction))
+            {
+                return direction;
+            }
+            return SortDirection.Ascending.ToString();
+        }
     }
 }
