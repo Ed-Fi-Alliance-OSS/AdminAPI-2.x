@@ -6,42 +6,41 @@
 using System.ComponentModel;
 using System.Runtime.Serialization;
 
-namespace EdFi.Ods.AdminApi.Features
+namespace EdFi.Ods.AdminApi.Features;
+
+public class SortingDirection
 {
-    public class SortingDirection
+    public enum SortDirection
     {
-        public enum SortDirection
-        {
-            [Description("Ascending")]
-            [EnumMember(Value = "Asc")]
-            Ascending,
+        [Description("Ascending")]
+        [EnumMember(Value = "Asc")]
+        Ascending,
 
-            [Description("Descending")]
-            [EnumMember(Value = "Desc")]
-            Descending
-        }
+        [Description("Descending")]
+        [EnumMember(Value = "Desc")]
+        Descending
+    }
 
-        public static bool IsDescendingSorting(string input)
+    public static bool IsDescendingSorting(string input)
+    {
+        switch (input.ToLowerInvariant())
         {
-            switch (input.ToLowerInvariant())
-            {
-                case "asc":
-                case "ascending":
-                    return false;
-                case "desc":
-                case "descending":
-                default:
-                    return true;
-            }
+            case "asc":
+            case "ascending":
+                return false;
+            case "desc":
+            case "descending":
+            default:
+                return true;
         }
+    }
 
-        public static string GetNonEmptyOrDefault(string? direction)
+    public static string GetNonEmptyOrDefault(string? direction)
+    {
+        if (!string.IsNullOrEmpty(direction))
         {
-            if (!string.IsNullOrEmpty(direction))
-            {
-                return direction;
-            }
-            return SortDirection.Ascending.ToString();
+            return direction;
         }
+        return SortDirection.Ascending.ToString();
     }
 }
