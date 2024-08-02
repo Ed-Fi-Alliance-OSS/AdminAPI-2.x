@@ -5,23 +5,19 @@
 
 #tag 8.0-alpine
 FROM mcr.microsoft.com/dotnet/aspnet:8.0.3-alpine3.19-amd64@sha256:a531d9d123928514405b9da9ff28a3aa81bd6f7d7d8cfb6207b66c007e7b3075 as base
-ARG DB=pgsql
-
 RUN apk --no-cache add curl=~8 unzip=~6 dos2unix=~7 bash=~5 gettext=~0 jq=~1 icu=~74 && \
-    if [ "$DB" = "pgsql" ]; then apk --no-cache add postgresql13-client=~13; fi && \
     addgroup -S edfi && adduser -S edfi -G edfi
-
 FROM base as build
 LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
-
+ENV DB_ENGINE_FOLDER=${DATABASE_ENGINE_FOLDER}
+ARG DB=mssql
 # Alpine image does not contain Globalization Cultures library so we need to install ICU library to get for LINQ expression to work
 # Disable the globaliztion invariant mode (set in base image)
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 ARG VERSION=latest
 ENV ASPNETCORE_HTTP_PORTS=80
-
+RUN echo "ADD: ${DB_ENGINE_FOLDER}"
 WORKDIR /app
-
 COPY --chmod=600 Settings/"${DB}"/appsettings.template.json /app/appsettings.template.json
 COPY --chmod=500 Settings/"${DB}"/run.sh /app/run.sh
 COPY Settings/"${DB}"/log4net.config /app/log4net.txt
@@ -45,3 +41,4 @@ EXPOSE ${ASPNETCORE_HTTP_PORTS}
 USER edfi
 
 ENTRYPOINT [ "/app/run.sh" ]
+
