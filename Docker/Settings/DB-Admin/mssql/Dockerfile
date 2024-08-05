@@ -13,9 +13,10 @@ ENV MSSQL_PASSWORD=${SQLSERVER_PASSWORD}
 ENV MSSQL_DB=master
 
 ARG VERSION=latest
-ARG STANDARD_VERSION=5.0.0
-ARG ADMIN_VERSION=latest
-ARG SECURITY_VERSION=latest
+ENV ADMIN_API_VERSION="2.2.0"
+ARG STANDARD_VERSION="5.0.0"
+ARG ADMIN_VERSION="7.2.49"
+ARG SECURITY_VERSION="7.2.48"
 
 USER root
 COPY init-database.sh /tmp/init/3-init-database.sh
@@ -30,9 +31,9 @@ RUN useradd -M -s /bin/bash -u 10099 -g 0 edfi  && \
 FROM base as setup
 
 USER root
-RUN wget -q -O /tmp/EdFi_Admin.zip "https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_apis/packaging/feeds/EdFi/nuget/packages/EdFi.Database.Admin.BACPAC.Standard.5.0.0/versions/7.2.49/content" && \
-    wget -q -O /tmp/EdFi_Security.zip "https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_apis/packaging/feeds/EdFi/nuget/packages/EdFi.Database.Security.BACPAC.Standard.5.0.0/versions/7.2.48/content" && \
-    wget -nv -O /tmp/EdFi_AdminApi_Scripts.zip "https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_apis/packaging/feeds/EdFi/nuget/packages/EdFi.Suite3.ODS.AdminApi/versions/2.2.0/content" && \
+RUN wget -q -O /tmp/EdFi_Admin.zip "https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_apis/packaging/feeds/EdFi/nuget/packages/EdFi.Database.Admin.BACPAC.Standard.${STANDARD_VERSION}/versions/${ADMIN_VERSION}/content" && \
+    wget -q -O /tmp/EdFi_Security.zip "https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_apis/packaging/feeds/EdFi/nuget/packages/EdFi.Database.Security.BACPAC.Standard.${STANDARD_VERSION}/versions/${SECURITY_VERSION}/content" && \
+    wget -nv -O /tmp/EdFi_AdminApi_Scripts.zip "https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_apis/packaging/feeds/EdFi/nuget/packages/EdFi.Suite3.ODS.AdminApi/versions/${ADMIN_API_VERSION}/content" && \
     unzip -p /tmp/EdFi_Admin.zip EdFi_Admin.bacpac > /tmp/EdFi_Admin.bacpac && \
     unzip -p /tmp/EdFi_Security.zip EdFi_Security.bacpac > /tmp/EdFi_Security.bacpac && \
     unzip -o /tmp/EdFi_AdminApi_Scripts.zip AdminApi/Artifacts/MsSql/Structure/Admin/* -d  /tmp/AdminApiScripts/ && \
@@ -46,6 +47,7 @@ RUN wget -q -O /tmp/EdFi_Admin.zip "https://pkgs.dev.azure.com/ed-fi-alliance/Ed
     rm -f /tmp/EdFi_Admin.zip  && \
     rm -f /tmp/EdFi_Security.zip && \
     rm -f /tmp/EdFi_AdminApi_Scripts.zip
+
 EXPOSE 1433
 
 USER edfi

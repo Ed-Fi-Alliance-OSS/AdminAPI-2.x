@@ -9,21 +9,20 @@ RUN apk --no-cache add curl=~8 unzip=~6 dos2unix=~7 bash=~5 gettext=~0 jq=~1 icu
     addgroup -S edfi && adduser -S edfi -G edfi
 FROM base as build
 LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
-ENV DB_ENGINE_FOLDER=${DATABASE_ENGINE_FOLDER}
-ARG DB=mssql
+ARG DB="mssql"
+ENV ADMIN_API_VERSION="2.2.0"
 # Alpine image does not contain Globalization Cultures library so we need to install ICU library to get for LINQ expression to work
 # Disable the globaliztion invariant mode (set in base image)
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 ARG VERSION=latest
 ENV ASPNETCORE_HTTP_PORTS=80
-RUN echo "ADD: ${DB_ENGINE_FOLDER}"
 WORKDIR /app
 COPY --chmod=600 Settings/"${DB}"/appsettings.template.json /app/appsettings.template.json
 COPY --chmod=500 Settings/"${DB}"/run.sh /app/run.sh
 COPY Settings/"${DB}"/log4net.config /app/log4net.txt
 
 RUN umask 0077 && \
-    wget -nv -O /app/AdminApi.zip "https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_apis/packaging/feeds/EdFi/nuget/packages/EdFi.Suite3.ODS.AdminApi/versions/2.2.0/content" && \
+    wget -nv -O /app/AdminApi.zip "https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_apis/packaging/feeds/EdFi/nuget/packages/EdFi.Suite3.ODS.AdminApi/versions/${ADMIN_API_VERSION}/content" && \
     unzip /app/AdminApi.zip AdminApi/* -d /app/ && \
     cp -r /app/AdminApi/. /app/ && \
     rm -f /app/AdminApi.zip && \

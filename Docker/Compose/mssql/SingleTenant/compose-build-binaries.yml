@@ -27,9 +27,10 @@ services:
   adminapi:
     build:
       context: ../../../
+      additional_contexts:
+         assets: ../../../../
       dockerfile: api.mssql.Dockerfile
     environment:
-      DATABASE_ENGINE_FOLDER: ${DATABASE_ENGINE_FOLDER:-test}
       SQLSERVER_ADMIN_DATASOURCE: db-admin
       SQLSERVER_ODS_DATASOURCE: db-admin
       SQLSERVER_PORT: 1433

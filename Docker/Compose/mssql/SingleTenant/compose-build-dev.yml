@@ -30,7 +30,9 @@ services:
       # EdFi.Ods.AdminApi directory, so that the Dockerfile has access to other
       # C# projects.
       context: ../../../
-      dockerfile: dev.Dockerfile
+      additional_contexts:
+         assets: ../../../../
+      dockerfile: dev.mssql.Dockerfile
     environment:
       DATABASE_ENGINE_FOLDER: "mssql"
       SQLSERVER_ADMIN_DATASOURCE: db-admin

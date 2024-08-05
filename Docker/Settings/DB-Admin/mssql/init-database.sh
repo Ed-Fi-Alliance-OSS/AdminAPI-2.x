@@ -28,6 +28,7 @@ echo "Running Admin Api database migration scripts..."
 
 for FILE in `LANG=C ls /tmp/AdminApiScripts/MsSql/*.sql | sort -V`
 do
+    echo "Running script: ${FILE}..."
     /opt/mssql-tools18/bin/sqlcmd -S "(local),$MSSQL_PORT" -U "sa" -P "$MSSQL_SA_PASSWORD" -d "EdFi_Admin" -i $FILE -C
 done
 echo "Finish Admin Api database migration scripts..."
