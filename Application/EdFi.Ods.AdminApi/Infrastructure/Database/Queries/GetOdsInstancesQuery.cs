@@ -11,7 +11,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 public interface IGetOdsInstancesQuery
 {
     List<OdsInstance> Execute();
-    List<OdsInstance> Execute(int offset, int limit, int? id, string? name);
+    List<OdsInstance> Execute(int offset, int limit, int? id, string? name, string? instanceType);
 }
 
 public class GetOdsInstancesQuery : IGetOdsInstancesQuery
@@ -28,11 +28,12 @@ public class GetOdsInstancesQuery : IGetOdsInstancesQuery
         return _usersContext.OdsInstances.OrderBy(odsInstance => odsInstance.Name).ToList();
     }
 
-    public List<OdsInstance> Execute(int offset, int limit, int? id, string? name)
+    public List<OdsInstance> Execute(int offset, int limit, int? id, string? name, string? instanceType)
     {
         return _usersContext.OdsInstances
             .Where(o => id == null || o.OdsInstanceId == id)
             .Where(o => name == null || o.Name == name)
+            .Where(o => instanceType == null || o.InstanceType == instanceType)
             .OrderBy(odsInstance => odsInstance.Name)
             .Skip(offset).Take(limit).ToList();
     }
