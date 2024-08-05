@@ -704,6 +704,7 @@
 					"        }, (err, res) => {\r",
 					"            error = res.json().error\r",
 					"            if(error) {\r",
+					"                console.log(error);\r",
 					"                throw res.json().error_description\r",
 					"            }\r",
 					"        });\r",
