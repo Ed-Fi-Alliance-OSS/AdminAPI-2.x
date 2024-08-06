@@ -365,6 +365,170 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Get ODS Instances filter by Application Name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"GET Applications: Status code is OK\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"const response = pm.response.json();\r",
+							"const results = pm.response.json();\r",
+							"\r",
+							"pm.test(\"GET Applications: Response result includes application\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    pm.expect(results).to.have.lengthOf(1);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET Applications: Response result contains requested application\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    pm.expect(results[0].applicationName).to.eql(pm.collectionVariables.get(\"FILTERAPPLICATIONNAME\"));\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/v2/applications?offset={{offset}}&limit={{limit}}&applicationName={{FILTERAPPLICATIONNAME}}",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"v2",
+						"applications"
+					],
+					"query": [
+						{
+							"key": "offset",
+							"value": "{{offset}}"
+						},
+						{
+							"key": "limit",
+							"value": "{{limit}}"
+						},
+						{
+							"key": "applicationName",
+							"value": "{{FILTERAPPLICATIONNAME}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get ODS Instances filter by Claimset Name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"GET Applications: Status code is OK\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"const response = pm.response.json();\r",
+							"const results = pm.response.json();\r",
+							"\r",
+							"pm.test(\"GET Applications: Response result includes application\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    pm.expect(results).to.have.lengthOf(1);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET Applications: Response result contains requested application\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    pm.expect(results[0].applicationName).to.eql(pm.collectionVariables.get(\"FILTERAPPLICATIONNAME\"));\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/v2/applications?offset={{offset}}&limit={{limit}}&claimsetName={{FILTERCLAIMSETNAME}}",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"v2",
+						"applications"
+					],
+					"query": [
+						{
+							"key": "offset",
+							"value": "{{offset}}"
+						},
+						{
+							"key": "limit",
+							"value": "{{limit}}"
+						},
+						{
+							"key": "claimsetName",
+							"value": "{{FILTERCLAIMSETNAME}}"
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"auth": {
@@ -508,9 +672,6 @@
 					"}\r",
 					"\r",
 					"function createApplications() {\r",
-					"    let vendorId = 0;\r",
-					"    let odsInstanceId = 0;\r",
-					"\r",
 					"    header = {\r",
 					"        'Content-Type': 'application/json',\r",
 					"        'Authorization': `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
@@ -521,49 +682,50 @@
 					"        pm.request.headers.upsert({key: 'Tenant', value: `${pm.variables.get(\"tenant1\")}` });\r",
 					"    }\r",
 					"\r",
-					"    /// Vendor\r",
-					"    pm.sendRequest({\r",
-					"        url: `${pm.variables.get(\"API_URL\")}/v2/vendors`,\r",
-					"        method: 'POST',\r",
-					"        header: header,\r",
-					"        body: {\r",
-					"            mode: 'raw',\r",
-					"            raw: JSON.stringify({ \"company\": \"my company\", \"namespacePrefixes\": \"uri://test.org\", \"contactName\": \"my contact\", \"contactEmailAddress\":  \"joe@test.com\"})\r",
-					"        }\r",
-					"    }, (err, res) => {\r",
-					"        let location = res.headers.get('location');\r",
-					"        let matches = location.match(/(\\d+)/);\r",
-					"        vendorId = parseInt(matches[0], 10); \r",
-					"\r",
-					"        let claimsetName = generateAlphanumericString();\r",
-					"\r",
-					"        /// Claimset\r",
+					"    for (let i = 0; i <= 0; i++) {\r",
+					"    \r",
+					"        /// Vendor\r",
 					"        pm.sendRequest({\r",
-					"            url: `${pm.variables.get(\"API_URL\")}/v2/claimSets`,\r",
+					"            url: `${pm.variables.get(\"API_URL\")}/v2/vendors`,\r",
 					"            method: 'POST',\r",
 					"            header: header,\r",
 					"            body: {\r",
 					"                mode: 'raw',\r",
-					"                raw: JSON.stringify({ \"name\": `${claimsetName}` })\r",
+					"                raw: JSON.stringify({ \"company\": generateAlphanumericString(), \"namespacePrefixes\": `uri://${generateAlphanumericString()}.org`, \"contactName\": generateAlphanumericString(), \"contactEmailAddress\": `${generateAlphanumericString()}@test-ed-fi.org` })\r",
 					"            }\r",
 					"        }, (err, res) => {\r",
+					"            let location = res.headers.get('location');\r",
+					"            let matches = location.match(/(\\d+)/);\r",
+					"            let vendorId = parseInt(matches[0], 10); \r",
+					"            \r",
+					"            let claimsetName = generateAlphanumericString();\r",
 					"\r",
-					"            /// ods instance\r",
+					"            /// Claimset\r",
 					"            pm.sendRequest({\r",
-					"                url: `${pm.variables.get(\"API_URL\")}/v2/odsInstances`,\r",
+					"                url: `${pm.variables.get(\"API_URL\")}/v2/claimSets`,\r",
 					"                method: 'POST',\r",
 					"                header: header,\r",
 					"                body: {\r",
 					"                    mode: 'raw',\r",
-					"                    raw: JSON.stringify({ \"name\": `${generateAlphanumericString()}`, \"instanceType\": 'postgresql', \"connectionString\": pm.variables.get(\"connectionString\") })\r",
+					"                    raw: JSON.stringify({ \"name\": claimsetName })\r",
 					"                }\r",
 					"            }, (err, res) => {\r",
-					"                let location = res.headers.get('location');\r",
-					"                let matches = location.match(/(\\d+)/);\r",
-					"                odsInstanceId = parseInt(matches[0], 10); \r",
 					"\r",
-					"                /// Applications\r",
-					"                for (let i = 0; i <= 3; i++) {\r",
+					"                /// ods instance\r",
+					"                pm.sendRequest({\r",
+					"                    url: `${pm.variables.get(\"API_URL\")}/v2/odsInstances`,\r",
+					"                    method: 'POST',\r",
+					"                    header: header,\r",
+					"                    body: {\r",
+					"                        mode: 'raw',\r",
+					"                        raw: JSON.stringify({ \"name\": generateAlphanumericString(), \"instanceType\": 'postgresql', \"connectionString\": pm.variables.get(\"connectionString\") })\r",
+					"                    }\r",
+					"                }, (err, res) => {\r",
+					"                    let location = res.headers.get('location');\r",
+					"                    let matches = location.match(/(\\d+)/);\r",
+					"                    let odsInstanceId = parseInt(matches[0], 10); \r",
+					"\r",
+					"                    /// Applications\r",
 					"                    let applicationName =  generateApplicationName();\r",
 					"\r",
 					"                    pm.collectionVariables.set(\"FILTERAPPLICATIONNAME\", applicationName);\r",
@@ -575,7 +737,7 @@
 					"                        header: header,\r",
 					"                        body: {\r",
 					"                            mode: 'raw',\r",
-					"                            raw: JSON.stringify({ \"applicationName\": `${applicationName}`, \"vendorId\": vendorId, \"claimSetName\": `${claimsetName}`, 'educationOrganizationIds': [ 0 ], \"odsInstanceIds\": [ odsInstanceId ]})\r",
+					"                            raw: JSON.stringify({ \"applicationName\": applicationName, \"vendorId\": vendorId, \"claimSetName\": claimsetName, 'educationOrganizationIds': [ 0 ], \"odsInstanceIds\": [ odsInstanceId ]})\r",
 					"                        }\r",
 					"                    }, (err, res) => {\r",
 					"                        error = res.json().error\r",
@@ -583,11 +745,10 @@
 					"                            throw res.json().error_description\r",
 					"                        }\r",
 					"                    });\r",
-					"                }\r",
+					"               });\r",
 					"            });\r",
 					"        });\r",
-					"\r",
-					"    });\r",
+					"    }\r",
 					"}"
 				]
 			}
@@ -598,6 +759,71 @@
 				"type": "text/javascript",
 				"packages": {},
 				"exec": [
+					"header = {\r",
+					"    'Content-Type': 'application/json',\r",
+					"    'Accept': '*/*',\r",
+					"    'Authorization': `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+					"};\r",
+					"\r",
+					"function deleteApplication(application) {\r",
+					"    \r",
+					"    pm.sendRequest({\r",
+					"        url: `${pm.variables.get(\"API_URL\")}/v2/applications/${application.id}`,\r",
+					"        method: 'DELETE',\r",
+					"        header: header\r",
+					"    }, function (err, res) {\r",
+					"        var jsonData = res.json();\r",
+					"        if (err) {\r",
+					"            console.log(err);\r",
+					"        }\r",
+					"        pm.sendRequest({\r",
+					"            url: `${pm.variables.get(\"API_URL\")}/v2/odsInstances/${application.odsInstanceIds[0]}`,\r",
+					"            method: 'DELETE',\r",
+					"            header: header\r",
+					"        }, function (err, res) {\r",
+					"            var jsonData = res.json();\r",
+					"            if (err) {\r",
+					"                console.log(err);\r",
+					"            }\r",
+					"            pm.sendRequest({\r",
+					"                url: `${pm.variables.get(\"API_URL\")}/v2/vendors/${application.vendorId}`,\r",
+					"                method: 'DELETE',\r",
+					"                header: header\r",
+					"            }, function (err, res) {\r",
+					"                var jsonData = res.json();\r",
+					"                if (err) {\r",
+					"                    console.log(err);\r",
+					"                }\r",
+					"            });\r",
+					"        });\r",
+					"    });\r",
+					"}\r",
+					"\r",
+					"function deleteApplications() {\r",
+					"    pm.sendRequest({\r",
+					"        url: `${pm.variables.get(\"API_URL\")}/v2/applications?offset=0&limit=500`,\r",
+					"        method: 'GET',\r",
+					"        header: header\r",
+					"    }, function (err, res) {\r",
+					"        var results = res.json();\r",
+					"        if (err) {\r",
+					"            console.log(err);\r",
+					"        }\r",
+					"\r",
+					"        for (let i = 0; i < results.length; i++) {\r",
+					"            let application = results[i];\r",
+					"            setTimeout(function(){\r",
+					"                deleteApplication(application);\r",
+					"            }, 5000);\r",
+					"        }\r",
+					"    });\r",
+					"\r",
+					"    const results = pm.response.json();\r",
+					"}\r",
+					"\r",
+					"setTimeout(function(){\r",
+					"    deleteApplications();\r",
+					"}, 5000);\r",
 					""
 				]
 			}
