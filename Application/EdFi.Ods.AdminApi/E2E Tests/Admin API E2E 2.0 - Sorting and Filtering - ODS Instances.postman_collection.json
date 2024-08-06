@@ -689,7 +689,7 @@
 					"        pm.collectionVariables.set(\"FILTERNAME\", name);\r",
 					"        pm.collectionVariables.set(\"FILTERINSTANCETYPE\", instanceType);\r",
 					"\r",
-					"        var body = JSON.stringify({ \"name\": `${name}`, \"instanceType\": `${instanceType}`, \"connectionString\": 'Data Source=.;Initial Catalog=EdFi_Admin;Integrated Security=True;TrustServerCertificate=True' })\r",
+					"        var body = JSON.stringify({ \"name\": `${name}`, \"instanceType\": `${instanceType}`, \"connectionString\": pm.variables.get(\"connectionString\") })\r",
 					"        console.log(body);\r",
 					"\r",
 					"        pm.sendRequest({\r",
