@@ -795,7 +795,7 @@
 					"\r",
 					"function deleteVendors() {\r",
 					"    pm.sendRequest({\r",
-					"        url: `${pm.variables.get(\"API_URL\")}/v2/vendors?offset=0&limit=500`,\r",
+					"        url: `${pm.variables.get(\"API_URL\")}/v2/vendors?offset=0&limit=500&direction=Descending`,\r",
 					"        method: 'GET',\r",
 					"        header: header\r",
 					"    }, function (err, res) {\r",
