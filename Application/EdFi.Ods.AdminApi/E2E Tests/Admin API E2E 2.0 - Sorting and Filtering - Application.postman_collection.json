@@ -843,11 +843,6 @@
 		{
 			"key": "FILTERCLAIMSETNAME",
 			"value": ""
-		},
-		{
-			"key": "FIRSTRUN",
-			"value": "1",
-			"type": "string"
 		}
 	]
 }
