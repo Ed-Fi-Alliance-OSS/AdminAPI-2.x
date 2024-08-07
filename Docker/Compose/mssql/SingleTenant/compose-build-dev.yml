@@ -34,6 +34,7 @@ services:
          assets: ../../../../
       dockerfile: dev.mssql.Dockerfile
     environment:
+      ADMIN_MSSQL_HOST: pb-admin
       DATABASE_ENGINE_FOLDER: "mssql"
       SQLSERVER_ADMIN_DATASOURCE: db-admin
       SQLSERVER_ODS_DATASOURCE: db-admin
@@ -45,6 +46,7 @@ services:
       ISSUER_URL: ${ISSUER_URL}
       SIGNING_KEY: ${SIGNING_KEY}
       ADMIN_API_VIRTUAL_NAME: ${ADMIN_API_VIRTUAL_NAME:-adminapi}
+      MULTITENANCY_ENABLED: "${MULTITENANCY_ENABLED:-false}"
     depends_on:
       - db-admin
     restart: always

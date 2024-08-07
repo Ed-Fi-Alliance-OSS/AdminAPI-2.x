@@ -29,12 +29,13 @@ services:
       context: ../../../
       dockerfile: api.mssql.Dockerfile
     environment:
+      ADMIN_WAIT_MSSQL_HOSTS: "db-admin-tenant1 db-admin-tenant2"
       SQLSERVER_ADMIN_DATASOURCE: db-admin
       SQLSERVER_ODS_DATASOURCE: db-admin
       SQLSERVER_USER: ${SQLSERVER_USER:-sa}
       SQLSERVER_PASSWORD: "${SQLSERVER_PASSWORD:-P@55w0rd}"
       SQLSERVER_TENANT1_PORT: 1433
-      SQLSERVER_TENANT2_PORT: 1434
+      SQLSERVER_TENANT2_PORT: 1433
       DATABASEENGINE: "SqlServer"
       AUTHORITY: ${AUTHORITY}
       ISSUER_URL: ${ISSUER_URL}
@@ -42,9 +43,10 @@ services:
       ADMIN_API_VIRTUAL_NAME: ${ADMIN_API_VIRTUAL_NAME:-adminapi}
       AppSettings__DefaultPageSizeOffset: ${PAGING_OFFSET:-0}
       AppSettings__DefaultPageSizeLimit: ${PAGING_LIMIT:-25}
-      AppSettings__MultiTenancy: "${MULTITENANCY_ENABLED:-true}"
-      AppSettings__PreventDuplicateApplications: "${PREVENT_DUPLICATE_APPLICATIONS:-false}"
+      MULTITENANCY_ENABLED: "${MULTITENANCY_ENABLED:-true}"
+      AppSettings__PreventDuplicateApplications: ${PREVENT_DUPLICATE_APPLICATIONS:-false}
       ASPNETCORE_ENVIRONMENT: "multitenantdocker"
+      DEFAULT_TENANT: ${DEFAULT_TENANT:-tenant2}
     volumes:
       - ./appsettings.dockertemplate.json:/app/appsettings.dockertemplate.json
     entrypoint: ["/bin/sh"]
@@ -88,7 +90,7 @@ services:
       ACCEPT_EULA: "Y"
       SQLSERVER_ADMIN_DATASOURCE: db-admin
       SQLSERVER_ODS_DATASOURCE: db-admin
-      SQLSERVER_PORT: 1434
+      SQLSERVER_PORT: 1433
       SQLSERVER_USER: ${SQLSERVER_USER:-sa}
       SQLSERVER_PASSWORD: "${SQLSERVER_PASSWORD:-P@55w0rd}"
     ports:
