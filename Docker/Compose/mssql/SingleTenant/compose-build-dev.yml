@@ -34,7 +34,7 @@ services:
          assets: ../../../../
       dockerfile: dev.mssql.Dockerfile
     environment:
-      ADMIN_MSSQL_HOST: pb-admin
+      ADMIN_MSSQL_HOST: db-admin
       DATABASE_ENGINE_FOLDER: "mssql"
       SQLSERVER_ADMIN_DATASOURCE: db-admin
       SQLSERVER_ODS_DATASOURCE: db-admin
@@ -71,6 +71,10 @@ services:
       SQLSERVER_PASSWORD: "${SQLSERVER_PASSWORD:-P@55w0rd}"
     ports:
       - 1433:1433
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
+      interval: 10s
+      retries: 10
     volumes:
       - vol-db-admin-adminapi:/var/lib/mssql/data
     restart: always

@@ -7,6 +7,12 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0.3-alpine3.19-amd64@sha256:a531d9d123928514405b9da9ff28a3aa81bd6f7d7d8cfb6207b66c007e7b3075 as base
 RUN apk --no-cache add curl=~8 unzip=~6 dos2unix=~7 bash=~5 gettext=~0 jq=~1 icu=~74 && \
     addgroup -S edfi && adduser -S edfi -G edfi
+    # Install mssql-tools
+RUN curl -O https://download.microsoft.com/download/e/4/e/e4e67866-dffd-428c-aac7-8d28ddafb39b/msodbcsql17_17.10.5.1-1_amd64.apk
+RUN curl -O https://download.microsoft.com/download/e/4/e/e4e67866-dffd-428c-aac7-8d28ddafb39b/mssql-tools_17.10.1.1-1_amd64.apk
+
+RUN apk add --allow-untrusted msodbcsql17_17.10.5.1-1_amd64.apk
+RUN apk add --allow-untrusted mssql-tools_17.10.1.1-1_amd64.apk
 FROM base as build
 LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
 ARG DB="mssql"

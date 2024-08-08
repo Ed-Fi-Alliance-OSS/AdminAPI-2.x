@@ -76,6 +76,10 @@ services:
       SQLSERVER_PASSWORD: "${SQLSERVER_PASSWORD:-P@55w0rd}"
     ports:
       - 1433:1433
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
+      interval: 10s
+      retries: 10
     volumes:
       - vol-db-admin-adminapi-tenant1:/var/lib/mssql/data
     restart: always
@@ -95,6 +99,10 @@ services:
       SQLSERVER_PASSWORD: "${SQLSERVER_PASSWORD:-P@55w0rd}"
     ports:
       - 1434:1433
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
+      interval: 10s
+      retries: 10
     volumes:
       - vol-db-admin-adminapi-tenant2:/var/lib/mssql/data
     restart: always

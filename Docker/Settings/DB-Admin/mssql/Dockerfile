@@ -19,6 +19,9 @@ ARG ADMIN_VERSION="7.2.49"
 ARG SECURITY_VERSION="7.2.48"
 
 USER root
+COPY healthcheck.sh /usr/local/bin/healthcheck.sh
+RUN chmod +x /usr/local/bin/healthcheck.sh
+
 COPY init-database.sh /tmp/init/3-init-database.sh
 COPY entrypoint.sh /tmp/init/entrypoint.sh
 
