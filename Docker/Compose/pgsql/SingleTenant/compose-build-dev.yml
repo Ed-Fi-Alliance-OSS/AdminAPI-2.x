@@ -41,6 +41,7 @@ services:
       ISSUER_URL: ${ISSUER_URL}
       SIGNING_KEY: ${SIGNING_KEY}
       ADMIN_API_VIRTUAL_NAME: ${ADMIN_API_VIRTUAL_NAME:-adminapi}
+      MULTITENANCY_ENABLED: "${MULTITENANCY_ENABLED:-false}"
     depends_on:
       - pb-admin
     restart: always
