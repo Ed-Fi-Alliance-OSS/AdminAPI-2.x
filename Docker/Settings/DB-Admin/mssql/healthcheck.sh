@@ -5,4 +5,4 @@
 # See the LICENSE and NOTICES files in the project root for more information.
 #
 
-/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U SA -P "$SA_PASSWORD" -Q "SELECT 1" > /dev/null
+/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U SA -P "$SA_PASSWORD" -Q "SELECT 1" > /dev/null 2>&1

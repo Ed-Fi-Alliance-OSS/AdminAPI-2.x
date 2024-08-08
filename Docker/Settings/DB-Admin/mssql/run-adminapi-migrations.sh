@@ -17,6 +17,6 @@ echo "Running Admin Api database migration scripts..."
 
 for FILE in `LANG=C ls /tmp/AdminApiScripts/MsSql/*.sql | sort -V`
 do
-    /opt/mssql-tools/bin/sqlcmd -S localhost,$MSSQL_PORT -U "$MSSQL_USER" -P "$MSSQL_PASSWORD"  -d "EdFi_Admin" -i  --file $FILE 1> /dev/null
+    /opt/mssql-tools18/bin/sqlcmd -S localhost,$MSSQL_PORT -U "$MSSQL_USER" -P "$MSSQL_PASSWORD"  -d "EdFi_Admin" -i  --file $FILE 1> /dev/null
 done
 

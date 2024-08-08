@@ -33,6 +33,7 @@ services:
     environment:
       ADMIN_MSSQL_HOST: db-admin
       SQLSERVER_ADMIN_DATASOURCE: db-admin
+      SQLSERVER_SECURITY_DATASOURCE: db-admin
       SQLSERVER_ODS_DATASOURCE: db-admin
       SQLSERVER_PORT: 1433
       SQLSERVER_USER: ${SQLSERVER_USER:-edfi}
@@ -67,7 +68,7 @@ services:
       SQLSERVER_ADMIN_DATASOURCE: db-admin
       SQLSERVER_SECURITY_DATASOURCE: db-admin
       SQLSERVER_PORT: 1433
-      SQLSERVER_USER: ${SQLSERVER_USER:-sa}
+      SQLSERVER_USER: ${SQLSERVER_USER:-edfi}
       SQLSERVER_PASSWORD: "${SQLSERVER_PASSWORD:-P@55w0rd}"
     ports:
       - 1433:1433

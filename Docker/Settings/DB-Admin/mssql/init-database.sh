@@ -27,8 +27,8 @@ function does_edfi_admin_db_exist() {
 }
 if ! does_edfi_admin_db_exist; then
     echo "Creating base Admin and Security databases..."
-    /opt/sqlpackage/sqlpackage /Action:Import /tsn:"(local),1433" /tdn:"EdFi_Security" /tu:"sa" /tp:"$MSSQL_SA_PASSWORD" /sf:"/tmp/EdFi_Security.bacpac" /ttsc:true
-    /opt/sqlpackage/sqlpackage /Action:Import /tsn:"(local),1433" /tdn:"EdFi_Admin" /tu:"sa" /tp:"$MSSQL_SA_PASSWORD" /sf:"/tmp/EdFi_Admin.bacpac" /ttsc:true
+    /opt/sqlpackage/sqlpackage /Action:Import /tsn:"localhost" /tdn:"EdFi_Security" /tu:"sa" /tp:"$MSSQL_SA_PASSWORD" /sf:"/tmp/EdFi_Security.bacpac" /ttsc:true
+    /opt/sqlpackage/sqlpackage /Action:Import /tsn:"localhost" /tdn:"EdFi_Admin" /tu:"sa" /tp:"$MSSQL_SA_PASSWORD" /sf:"/tmp/EdFi_Admin.bacpac" /ttsc:true
 
     # Force sorting by name following C language sort ordering, so that the sql scripts are run
     # sequentially in the correct alphanumeric order
@@ -37,10 +37,12 @@ if ! does_edfi_admin_db_exist; then
     for FILE in `LANG=C ls /tmp/AdminApiScripts/MsSql/*.sql | sort -V`
     do
         echo "Running script: ${FILE}..."
-        /opt/mssql-tools18/bin/sqlcmd -S "(local),1433" -U "sa" -P "$MSSQL_SA_PASSWORD" -d "EdFi_Admin" -i $FILE -C
+        /opt/mssql-tools18/bin/sqlcmd -S "localhost" -U "sa" -P "$MSSQL_SA_PASSWORD" -d "EdFi_Admin" -i $FILE -C
     done
-
-    /opt/mssql-tools18/bin/sqlcmd -S "(local),1433" -C -U sa -P $MSSQL_SA_PASSWORD -Q "IF NOT EXISTS (SELECT * FROM master.sys.server_principals WHERE name = 'edfi') BEGIN CREATE LOGIN [edfi] WITH PASSWORD = '$SQLSERVER_PASSWORD'; END; ALTER AUTHORIZATION ON DATABASE::EdFi_Security TO [edfi]; ALTER AUTHORIZATION ON DATABASE::EdFi_Admin TO [edfi];"
-
     echo "Finish Admin Api database migration scripts..."
+
+    echo "Creating database users..."
+    /opt/mssql-tools18/bin/sqlcmd -S "localhost" -C -U sa -P $MSSQL_SA_PASSWORD -Q "IF NOT EXISTS (SELECT * FROM master.sys.server_principals WHERE name = '$MSSQL_USER') BEGIN CREATE LOGIN [$MSSQL_USER] WITH PASSWORD = '$SQLSERVER_PASSWORD'; END; ALTER AUTHORIZATION ON DATABASE::EdFi_Security TO [$MSSQL_USER]; ALTER AUTHORIZATION ON DATABASE::EdFi_Admin TO [$MSSQL_USER];"
+
+    echo "Database is initialized and ready to use."
 fi

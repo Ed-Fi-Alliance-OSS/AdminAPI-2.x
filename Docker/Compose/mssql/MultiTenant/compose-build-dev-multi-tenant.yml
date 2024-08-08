@@ -31,13 +31,16 @@ services:
       # C# projects.
       context: ../../../
       additional_contexts:
-         assets: ../../../../
+        assets: ../../../../
+      args:
+        ASPNETCORE_ENVIRONMENT: "multitenantdocker"
       dockerfile: dev.mssql.Dockerfile
     environment:
       ADMIN_WAIT_MSSQL_HOSTS: "db-admin-tenant1 db-admin-tenant2"
       SQLSERVER_ADMIN_DATASOURCE: db-admin
+      SQLSERVER_SECURITY_DATASOURCE: db-admin
       SQLSERVER_ODS_DATASOURCE: db-admin
-      SQLSERVER_USER: ${SQLSERVER_USER:-sa}
+      SQLSERVER_USER: ${SQLSERVER_USER:-edfi}
       SQLSERVER_PASSWORD: "${SQLSERVER_PASSWORD:-P@55w0rd}"
       SQLSERVER_TENANT1_PORT: 1433
       SQLSERVER_TENANT2_PORT: 1433
@@ -77,7 +80,7 @@ services:
       SQLSERVER_ADMIN_DATASOURCE: db-admin
       SQLSERVER_ODS_DATASOURCE: db-admin
       SQLSERVER_PORT: 1433
-      SQLSERVER_USER: ${SQLSERVER_USER:-sa}
+      SQLSERVER_USER: ${SQLSERVER_USER:-edfi}
       SQLSERVER_PASSWORD: "${SQLSERVER_PASSWORD:-P@55w0rd}"
     ports:
       - 1433:1433
@@ -100,7 +103,7 @@ services:
       SQLSERVER_ADMIN_DATASOURCE: db-admin
       SQLSERVER_ODS_DATASOURCE: db-admin
       SQLSERVER_PORT: 1433
-      SQLSERVER_USER: ${SQLSERVER_USER:-sa}
+      SQLSERVER_USER: ${SQLSERVER_USER:-edfi}
       SQLSERVER_PASSWORD: "${SQLSERVER_PASSWORD:-P@55w0rd}"
     ports:
       - 1434:1433

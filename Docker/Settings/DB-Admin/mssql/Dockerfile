@@ -25,7 +25,6 @@ RUN chmod +x /usr/local/bin/healthcheck.sh
 COPY init-database.sh /tmp/init/3-init-database.sh
 COPY entrypoint.sh /tmp/init/entrypoint.sh
 
-COPY run-adminapi-migrations.sh /tmp/init/4-run-adminapi-migrations.sh
 RUN useradd -M -s /bin/bash -u 10099 -g 0 edfi  && \
     mkdir -p -m 770 /var/opt/edfi && chgrp -R 0 /var/opt/edfi && \
     wget -nv -O /tmp/sqlpackage.zip "https://aka.ms/sqlpackage-linux" && \
@@ -45,7 +44,6 @@ RUN wget -q -O /tmp/EdFi_Admin.zip "https://pkgs.dev.azure.com/ed-fi-alliance/Ed
     dos2unix /tmp/EdFi_Admin.bacpac && \
     dos2unix /tmp/EdFi_Security.bacpac && \
     dos2unix /tmp/init/3-init-database.sh && \
-    dos2unix /tmp/init/4-run-adminapi-migrations.sh && \
     chmod -R 777 /tmp/AdminApiScripts/MsSql && \
     rm -f /tmp/EdFi_Admin.zip  && \
     rm -f /tmp/EdFi_Security.zip && \

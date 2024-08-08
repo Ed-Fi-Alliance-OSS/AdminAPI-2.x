@@ -17,7 +17,7 @@ fi
 export ADMIN_WAIT_MSSQL_HOSTS_ARR=($ADMIN_WAIT_MSSQL_HOSTS)
 for HOST in ${ADMIN_WAIT_MSSQL_HOSTS_ARR[@]}
 do
-  until /opt/mssql-tools/bin/sqlcmd -C -S "$HOST" -U "$SQLSERVER_USER" -P "$SQLSERVER_PASSWORD" -d "EdFi_Admin" -Q "IF EXISTS (SELECT * FROM sys.schemas WHERE name = 'adminapi') SELECT 1" > /dev/null
+  until /opt/mssql-tools18/bin/sqlcmd -C -S "$HOST" -U "$SQLSERVER_USER" -P "$SQLSERVER_PASSWORD" -d "EdFi_Admin" -Q "IF EXISTS (SELECT * FROM sys.schemas WHERE name = '$schema') SELECT 1" > /dev/null 2>&1
   do
     >&2 echo "EdFi_Admin is unavailable - sleeping"
     sleep 10
