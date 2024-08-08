@@ -33,7 +33,7 @@ LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 ENV ASPNETCORE_ENVIRONMENT=Production
 ENV ASPNETCORE_HTTP_PORTS=80
-ENV DB_FOLDER=mssql
+ENV DB_FOLDER=pgsql
 
 WORKDIR /app
 COPY --from=publish /app/EdFi.Ods.AdminApi .
