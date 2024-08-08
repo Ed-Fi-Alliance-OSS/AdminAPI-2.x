@@ -7,6 +7,172 @@
 	},
 	"item": [
 		{
+			"name": "Get Applications order by Default Asc",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var _ = require('lodash');\r",
+							"\r",
+							"pm.test(\"GET Applications: Status code is OK\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET Applications: Response result includes applications\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    pm.expect(results.length).to.be.greaterThan(0);   \r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET Applications: Response result is ordered by ApplicationName asc\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    var expectedSortedOrder = _.orderBy(results, [application => application.applicationName.toLowerCase()],['asc']);\r",
+							"    \r",
+							"    pm.expect(results).to.eql(expectedSortedOrder);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/v2/applications?offset={{offset}}&limit={{limit}}&direction=ASC",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"v2",
+						"applications"
+					],
+					"query": [
+						{
+							"key": "offset",
+							"value": "{{offset}}"
+						},
+						{
+							"key": "limit",
+							"value": "{{limit}}"
+						},
+						{
+							"key": "direction",
+							"value": "ASC"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Applications order by Default Desc",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var _ = require('lodash');\r",
+							"\r",
+							"pm.test(\"GET Applications: Status code is OK\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET Applications: Response result includes applications\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    pm.expect(results.length).to.be.greaterThan(0);   \r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET Applications: Response result is ordered by ApplicationName desc\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    var expectedSortedOrder = _.orderBy(results, [application => application.applicationName.toLowerCase()],['desc']);\r",
+							"    \r",
+							"    pm.expect(results).to.eql(expectedSortedOrder);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/v2/applications?offset={{offset}}&limit={{limit}}&direction=DESC",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"v2",
+						"applications"
+					],
+					"query": [
+						{
+							"key": "offset",
+							"value": "{{offset}}"
+						},
+						{
+							"key": "limit",
+							"value": "{{limit}}"
+						},
+						{
+							"key": "direction",
+							"value": "DESC"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get Applications order by ApplicationName Asc",
 			"event": [
 				{
@@ -710,15 +876,12 @@
 					"\r",
 					"function createApplications(vendorId, odsInstanceId, claimsetsCreated) {\r",
 					"    return new Promise((resolve, reject) => {\r",
-					"        for (let i = 0; i <= 3; i++) {\r",
+					"        for (let i = 0; i < pm.collectionVariables.get(\"APPLICATIONCOUNT\"); i++) {\r",
 					"            let claimsetName = claimsetsCreated[i];\r",
 					"            let applicationName =  generateAlphanumericString();\r",
 					"\r",
 					"            pm.collectionVariables.set(\"FILTERAPPLICATIONNAME\", applicationName);\r",
 					"            pm.collectionVariables.set(\"FILTERCLAIMSETNAME\", claimsetName);\r",
-					"\r",
-					"            let asdf = JSON.stringify({ \"applicationName\": applicationName, \"vendorId\": vendorId, \"claimSetName\": claimsetName, 'educationOrganizationIds': [ 0 ], \"odsInstanceIds\": [ odsInstanceId ]});\r",
-					"            console.log(asdf);\r",
 					"\r",
 					"            pm.sendRequest({\r",
 					"                url: `${pm.variables.get(\"API_URL\")}/v2/applications`,\r",
@@ -726,7 +889,7 @@
 					"                header: header,\r",
 					"                body: {\r",
 					"                    mode: 'raw',\r",
-					"                    raw: asdf\r",
+					"                    raw: JSON.stringify({ \"applicationName\": applicationName, \"vendorId\": vendorId, \"claimSetName\": claimsetName, 'educationOrganizationIds': [ 0 ], \"odsInstanceIds\": [ odsInstanceId ]})\r",
 					"                }\r",
 					"            }, (err, res) => {\r",
 					"                error = res.json().error\r",
@@ -904,6 +1067,11 @@
 		{
 			"key": "FILTERCLAIMSETNAME",
 			"value": ""
+		},
+		{
+			"key": "APPLICATIONCOUNT",
+			"value": "4",
+			"type": "string"
 		}
 	]
 }

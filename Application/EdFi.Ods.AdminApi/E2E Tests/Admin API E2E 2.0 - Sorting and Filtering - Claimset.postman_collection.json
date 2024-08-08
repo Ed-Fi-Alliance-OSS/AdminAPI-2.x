@@ -7,7 +7,173 @@
 	},
 	"item": [
 		{
-			"name": "Get Claimsets order by Name",
+			"name": "Get Claimsets order by Default ASC",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var _ = require('lodash');\r",
+							"\r",
+							"pm.test(\"GET Claimsets: Status code is OK\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET Claimsets: Response result includes claimsets\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    pm.expect(results.length).to.be.greaterThan(0);   \r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET Claimsets: Response result is ordered by Name asc\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    var expectedSortedOrder = _.orderBy(results, [claimset => claimset.name.toLowerCase()],['asc']);\r",
+							"    \r",
+							"    pm.expect(results).to.eql(expectedSortedOrder);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/v2/claimSets?offset={{offset}}&limit={{limit}}&direction=ASC",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"v2",
+						"claimSets"
+					],
+					"query": [
+						{
+							"key": "offset",
+							"value": "{{offset}}"
+						},
+						{
+							"key": "limit",
+							"value": "{{limit}}"
+						},
+						{
+							"key": "direction",
+							"value": "ASC"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Claimsets order by Default Desc",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var _ = require('lodash');\r",
+							"\r",
+							"pm.test(\"GET Claimsets: Status code is OK\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET Claimsets: Response result includes claimsets\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    pm.expect(results.length).to.be.greaterThan(0);   \r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET Claimsets: Response result is ordered by Name asc\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    var expectedSortedOrder = _.orderBy(results, [claimset => claimset.name.toLowerCase()],['desc']);\r",
+							"    \r",
+							"    pm.expect(results).to.eql(expectedSortedOrder);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/v2/claimSets?offset={{offset}}&limit={{limit}}&direction=desc",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"v2",
+						"claimSets"
+					],
+					"query": [
+						{
+							"key": "offset",
+							"value": "{{offset}}"
+						},
+						{
+							"key": "limit",
+							"value": "{{limit}}"
+						},
+						{
+							"key": "direction",
+							"value": "desc"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Claimsets order by Name ASC",
 			"event": [
 				{
 					"listen": "test",
@@ -407,7 +573,7 @@
 					"        pm.request.headers.upsert({key: 'Tenant', value: `${pm.variables.get(\"tenant1\")}` });\r",
 					"    }\r",
 					"\r",
-					"    for (let i = 0; i <= 3; i++) {\r",
+					"    for (let i = 0; i < pm.collectionVariables.get(\"CLAIMSETCOUNT\"); i++) {\r",
 					"        let name =  generateName();\r",
 					"\r",
 					"        pm.collectionVariables.set(\"FILTERNAME\", name);\r",
@@ -488,6 +654,11 @@
 		{
 			"key": "FILTERNAME",
 			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "CLAIMSETCOUNT",
+			"value": "4",
 			"type": "string"
 		}
 	]
