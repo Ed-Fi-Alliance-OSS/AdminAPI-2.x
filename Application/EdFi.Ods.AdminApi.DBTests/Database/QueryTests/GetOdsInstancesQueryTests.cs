@@ -35,7 +35,7 @@ public class GetOdsInstancesQueryTests : PlatformUsersContextTestBase
             var limit = 2;
 
             var command = new GetOdsInstancesQuery(usersContext);
-            var odsInstancesAfterOffset = command.Execute(offset, limit, null, null);
+            var odsInstancesAfterOffset = command.Execute(offset, limit, null, null, null);
 
             odsInstancesAfterOffset.ShouldNotBeEmpty();
             odsInstancesAfterOffset.Count.ShouldBe(2);
@@ -45,7 +45,7 @@ public class GetOdsInstancesQueryTests : PlatformUsersContextTestBase
 
             offset = 2;
 
-            odsInstancesAfterOffset = command.Execute(offset, limit, null, null);
+            odsInstancesAfterOffset = command.Execute(offset, limit, null, null, null);
 
             odsInstancesAfterOffset.ShouldNotBeEmpty();
             odsInstancesAfterOffset.Count.ShouldBe(2);
@@ -54,7 +54,7 @@ public class GetOdsInstancesQueryTests : PlatformUsersContextTestBase
 
             offset = 4;
 
-            odsInstancesAfterOffset = command.Execute(offset, limit, null, null);
+            odsInstancesAfterOffset = command.Execute(offset, limit, null, null, null);
 
             odsInstancesAfterOffset.ShouldNotBeEmpty();
             odsInstancesAfterOffset.Count.ShouldBe(1);
@@ -69,7 +69,7 @@ public class GetOdsInstancesQueryTests : PlatformUsersContextTestBase
         {
             var odsInstances = CreateMultiple();
             var command = new GetOdsInstancesQuery(usersContext);
-            var odsInstancesAfterOffset = command.Execute(0, 25, odsInstances[2].OdsInstanceId, null);
+            var odsInstancesAfterOffset = command.Execute(0, 25, odsInstances[2].OdsInstanceId, null, null);
 
             odsInstancesAfterOffset.ShouldNotBeEmpty();
             odsInstancesAfterOffset.Count.ShouldBe(1);
@@ -85,7 +85,7 @@ public class GetOdsInstancesQueryTests : PlatformUsersContextTestBase
         {
             var odsInstances = CreateMultiple();
             var command = new GetOdsInstancesQuery(usersContext);
-            var odsInstancesAfterOffset = command.Execute(0, 25, null, odsInstances[2].Name);
+            var odsInstancesAfterOffset = command.Execute(0, 25, null, odsInstances[2].Name, null);
 
             odsInstancesAfterOffset.ShouldNotBeEmpty();
             odsInstancesAfterOffset.Count.ShouldBe(1);
