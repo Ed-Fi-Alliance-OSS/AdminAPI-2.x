@@ -15,16 +15,20 @@ MSSQL_SECURITY_DB=$SQLSERVER_SECURITY_DATASOURCE
 
 
 function does_edfi_admin_db_exist() {
+    until /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P $MSSQL_SA_PASSWORD -Q "SELECT 1" > /dev/null 2>&1
+    do
+        >&2 echo "Database is unavailable - sleeping"
+        sleep 10
+    done
     local result=$(/opt/mssql-tools18/bin/sqlcmd -S "(local)" -U "sa" -P $MSSQL_SA_PASSWORD -C -Q "IF EXISTS (SELECT name FROM sys.databases WHERE name = 'EdFi_Admin') PRINT 'Database exists' ELSE PRINT 'Database does not exist'" -h -1)
 
     if [[ "$result" == *"Database exists"* ]]; then
-        echo "Database exists"
         return 0
     else
-        echo "Database does not exist"
         return 1
     fi
 }
+echo "Database initialization..."
 if ! does_edfi_admin_db_exist; then
     echo "Creating base Admin and Security databases..."
     /opt/sqlpackage/sqlpackage /Action:Import /tsn:"localhost" /tdn:"EdFi_Security" /tu:"sa" /tp:"$MSSQL_SA_PASSWORD" /sf:"/tmp/EdFi_Security.bacpac" /ttsc:true
@@ -43,6 +47,5 @@ if ! does_edfi_admin_db_exist; then
 
     echo "Creating database users..."
     /opt/mssql-tools18/bin/sqlcmd -S "localhost" -C -U sa -P $MSSQL_SA_PASSWORD -Q "IF NOT EXISTS (SELECT * FROM master.sys.server_principals WHERE name = '$MSSQL_USER') BEGIN CREATE LOGIN [$MSSQL_USER] WITH PASSWORD = '$SQLSERVER_PASSWORD'; END; ALTER AUTHORIZATION ON DATABASE::EdFi_Security TO [$MSSQL_USER]; ALTER AUTHORIZATION ON DATABASE::EdFi_Admin TO [$MSSQL_USER];"
-
-    echo "Database is initialized and ready to use."
 fi
+echo "Database is initialized and ready to use."

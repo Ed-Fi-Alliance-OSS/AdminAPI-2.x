@@ -43,6 +43,7 @@ RUN wget -q -O /tmp/EdFi_Admin.zip "https://pkgs.dev.azure.com/ed-fi-alliance/Ed
     dos2unix /tmp/EdFi_Admin.bacpac && \
     dos2unix /tmp/EdFi_Security.bacpac && \
     dos2unix /tmp/init/3-init-database.sh && \
+    chmod +x /tmp/init/3-init-database.sh && \
     chmod -R 777 /tmp/AdminApiScripts/MsSql && \
     rm -f /tmp/EdFi_Admin.zip  && \
     rm -f /tmp/EdFi_Security.zip && \
