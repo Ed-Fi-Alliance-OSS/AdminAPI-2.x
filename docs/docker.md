@@ -63,8 +63,10 @@ style I fill:#fff
    bash ./generate-certificate.sh
    ```
 
-2. Copy and customize the `.env.example` file. The project has a PostgreSQL version (Docker/Compose/pgsql) and a MSSQL version (Docker/Compose/mssql) to run the containers. Importantly, be sure to change
-   the encryption key. In a Bash prompt, generate a random key thusly: `openssl
+2. Copy and customize the `.env.example` file. The project has a PostgreSQL
+   version (Docker/Compose/pgsql) and a MSSQL version (Docker/Compose/mssql)
+   to run the containers. Importantly, be sure to change the encryption key.
+   In a Bash prompt, generate a random key thusly: `openssl
    rand -base64 32`.
 
    PostgreSQL

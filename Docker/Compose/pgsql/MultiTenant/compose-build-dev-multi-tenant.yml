@@ -30,7 +30,7 @@ services:
       # EdFi.Ods.AdminApi directory, so that the Dockerfile has access to other
       # C# projects.
       context: ../../../
-      dockerfile: dev.Dockerfile
+      dockerfile: dev.pgsql.Dockerfile
     environment:
       POSTGRES_PORT: 5432
       POSTGRES_USER: "${POSTGRES_USER}"

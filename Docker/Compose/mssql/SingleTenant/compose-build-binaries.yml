@@ -20,7 +20,7 @@ services:
     hostname: nginx
     volumes:
       - ../../../Settings/ssl:/ssl/
-      - ../../../Settings/gateway/adminapi-packaged.conf:/etc/nginx/templates/default.conf.template
+      - ../../../Settings/gateway/default.conf.template:/etc/nginx/templates/default.conf.template
     depends_on:
       - adminapi
 
