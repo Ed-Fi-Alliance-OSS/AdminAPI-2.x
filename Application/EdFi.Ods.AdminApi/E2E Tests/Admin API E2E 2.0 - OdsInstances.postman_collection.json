@@ -51,7 +51,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Test-OdsInstance-{{OdsInstanceGUID}}\",\r\n    \"instanceType\": \"postgresql\",\r\n    \"connectionString\": \"{{connectionString}}\"\r\n}",
+									"raw": "{\r\n    \"name\": \"Test-OdsInstance-{{OdsInstanceGUID}}\",\r\n    \"instanceType\": \"ODS Type\",\r\n    \"connectionString\": \"{{connectionString}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
