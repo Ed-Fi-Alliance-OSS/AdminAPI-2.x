@@ -17,7 +17,7 @@ MSSQL_SECURITY_DB=$SQLSERVER_SECURITY_DATASOURCE
 function does_edfi_admin_db_exist() {
     until /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P $MSSQL_SA_PASSWORD -Q "SELECT 1" > /dev/null 2>&1
     do
-        >&2 echo "Database is unavailable - sleeping"
+        >&2 echo "MSSQL is unavailable - sleeping"
         sleep 10
     done
     local result=$(/opt/mssql-tools18/bin/sqlcmd -S "(local)" -U "sa" -P $MSSQL_SA_PASSWORD -C -Q "IF EXISTS (SELECT name FROM sys.databases WHERE name = 'EdFi_Admin') PRINT 'Database exists' ELSE PRINT 'Database does not exist'" -h -1)
