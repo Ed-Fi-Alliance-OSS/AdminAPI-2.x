@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "5a03859f-6360-44de-a208-18bcc4c6d0b9",
+		"_postman_id": "3fdaec22-4d80-432a-bc87-a81b6bdcf485",
 		"name": "Admin API E2E 2.0 - Sorting and Filtering - Application",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "5260609"
@@ -1070,10 +1070,10 @@
 					"                if(error) {\r",
 					"                    throw res.json().error_description\r",
 					"                }\r",
+					"                resolve();\r",
 					"            });\r",
 					"        }\r",
 					"    }, (err, res) => {\r",
-					"        resolve();\r",
 					"    });\r",
 					"}\r",
 					"\r",
@@ -1146,7 +1146,8 @@
 					"\r",
 					"        for (let i = 0; i < results.length; i++) {\r",
 					"            let claimSet = results[i];\r",
-					"            deleteClaimsetById(claimSet.id);\r",
+					"            if (claimSet._isSystemReserved === false)\r",
+					"                deleteClaimsetById(claimSet.id);\r",
 					"        }\r",
 					"    });\r",
 					"}\r",
