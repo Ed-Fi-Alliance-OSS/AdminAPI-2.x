@@ -36,7 +36,7 @@ public class ReadApplication : IFeature
         IGetVendorsQuery getVendorsAndApplicationsQuery,
         IMapper mapper,
         IOptions<AppSettings> settings,
-        int offset, int limit, string? orderBy, string? direction, int? id, string? applicationName, string? claimsetName)
+        int? offset, int? limit, string? orderBy, string? direction, int? id, string? applicationName, string? claimsetName)
     {
         var vendors = getVendorsAndApplicationsQuery.Execute();
         var applications = new List<ApplicationModel>();
