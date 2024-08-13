@@ -28,12 +28,12 @@ public class ReadVendor : IFeature
     }
 
     internal Task<IResult> GetVendors(
-        IGetVendorsQuery getVendorsQuery, IMapper mapper, int? offset, int? limit, string? orderBy, string? direction, int? id, string? company, string? namespacePrefixes, string? contactName, string? contactEmailAddress)
+        IGetVendorsQuery getVendorsQuery, IMapper mapper, [AsParameters] CommonQueryParams commonQueryParams, int? id, string? company, string? namespacePrefixes, string? contactName, string? contactEmailAddress)
     {
         var vendorList = mapper.Map<List<VendorModel>>(getVendorsQuery.Execute(
-            new CommonQueryParams(offset, limit, orderBy, direction),
+            commonQueryParams,
             id, company, namespacePrefixes, contactName, contactEmailAddress));
-        return Task.FromResult(Results.Ok(vendorList.Sort(orderBy ?? string.Empty, SortingDirectionHelper.GetNonEmptyOrDefault(direction))));
+        return Task.FromResult(Results.Ok(vendorList.Sort(commonQueryParams.OrderBy ?? string.Empty, SortingDirectionHelper.GetNonEmptyOrDefault(commonQueryParams.Direction))));
     }
 
     internal Task<IResult> GetVendor(IGetVendorByIdQuery getVendorByIdQuery, IMapper mapper, int id)

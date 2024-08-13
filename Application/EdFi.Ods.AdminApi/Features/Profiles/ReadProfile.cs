@@ -27,12 +27,12 @@ public class ReadProfile : IFeature
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    internal Task<IResult> GetProfiles(IGetProfilesQuery getProfilesQuery, IMapper mapper, int? offset, int? limit, string? orderBy, string? direction, int? id, string? name)
+    internal Task<IResult> GetProfiles(IGetProfilesQuery getProfilesQuery, IMapper mapper, [AsParameters] CommonQueryParams commonQueryParams, int? id, string? name)
     {
         var profileList = mapper.Map<List<ProfileModel>>(getProfilesQuery.Execute(
-            new CommonQueryParams(offset, limit, orderBy, direction),
+            commonQueryParams,
             id, name));
-        return Task.FromResult(Results.Ok(profileList.Sort(orderBy ?? string.Empty, SortingDirectionHelper.GetNonEmptyOrDefault(direction))));
+        return Task.FromResult(Results.Ok(profileList.Sort(commonQueryParams.OrderBy ?? string.Empty, SortingDirectionHelper.GetNonEmptyOrDefault(commonQueryParams.Direction))));
     }
 
     internal Task<IResult> GetProfile(IGetProfileByIdQuery getProfileByIdQuery, IMapper mapper, int id)

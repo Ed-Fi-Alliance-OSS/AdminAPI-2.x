@@ -5,18 +5,26 @@
 
 using EdFi.Ods.AdminApi.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure.Helpers;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 
 public struct CommonQueryParams
 {
+    [FromQuery(Name = "offset")]
     public int? Offset { get; set; }
+    [FromQuery(Name = "limit")]
     public int? Limit { get; set; }
+    [FromQuery(Name = "orderBy")]
     public string? OrderBy { get; set; }
+    [BindNever]
     public string? OrderByDefault { get; set; }
+    [FromQuery(Name = "direction")]
     public string? Direction { get; set; }
-    public bool IsDescending { get; set; }
+    [BindNever]
+    public bool? IsDescending { get; set; }
     public CommonQueryParams() { }
     public CommonQueryParams(int? offset, int? limit)
     {

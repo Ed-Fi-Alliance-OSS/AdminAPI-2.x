@@ -36,7 +36,7 @@ public class ReadApplication : IFeature
         IGetVendorsQuery getVendorsAndApplicationsQuery,
         IMapper mapper,
         IOptions<AppSettings> settings,
-        int? offset, int? limit, string? orderBy, string? direction, int? id, string? applicationName, string? claimsetName)
+        [AsParameters] CommonQueryParams commonQueryParams, int? id, string? applicationName, string? claimsetName)
     {
         var vendors = getVendorsAndApplicationsQuery.Execute();
         var applications = new List<ApplicationModel>();
@@ -49,10 +49,10 @@ public class ReadApplication : IFeature
             .Where(a => id == null || a.Id == id)
             .Where(a => applicationName == null || a.ApplicationName == applicationName)
             .Where(a => claimsetName == null || a.ClaimSetName == claimsetName)
-            .Paginate(offset, limit, settings);
+            .Paginate(commonQueryParams.Offset, commonQueryParams.Limit, settings);
 
         var applicationsReturned = mapper.Map<List<ApplicationModel>>(filteredApplications);
-        applicationsReturned = applicationsReturned.Sort(orderBy ?? string.Empty, SortingDirectionHelper.GetNonEmptyOrDefault(direction));
+        applicationsReturned = applicationsReturned.Sort(commonQueryParams.OrderBy ?? string.Empty, SortingDirectionHelper.GetNonEmptyOrDefault(commonQueryParams.Direction));
         return Task.FromResult(Results.Ok(applicationsReturned));
     }
 
