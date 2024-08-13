@@ -4,7 +4,7 @@
 # See the LICENSE and NOTICES files in the project root for more information.
 
 #edfialliance/ods-api-db-admin:7.1
-FROM edfialliance/ods-api-db-admin@sha256:36e4295bf125eb804fbde1381d95361e8723b5ff2bcac173854fc2897e811c79 as base
+FROM edfialliance/ods-api-db-admin:7.1@sha256:36e4295bf125eb804fbde1381d95361e8723b5ff2bcac173854fc2897e811c79 as base
 LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
 
 ENV POSTGRES_USER=${POSTGRES_USER}
