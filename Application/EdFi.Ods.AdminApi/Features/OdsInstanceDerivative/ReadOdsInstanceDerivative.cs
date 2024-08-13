@@ -24,9 +24,9 @@ public class ReadOdsInstanceDerivative : IFeature
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    internal Task<IResult> GetOdsInstanceDerivatives(IGetOdsInstanceDerivativesQuery getOdsInstanceDerivativesQuery, IMapper mapper, int offset, int limit)
+    internal Task<IResult> GetOdsInstanceDerivatives(IGetOdsInstanceDerivativesQuery getOdsInstanceDerivativesQuery, IMapper mapper, int? offset, int? limit)
     {
-        var odsInstanceDerivativeList = mapper.Map<List<OdsInstanceDerivativeModel>>(getOdsInstanceDerivativesQuery.Execute(offset, limit));
+        var odsInstanceDerivativeList = mapper.Map<List<OdsInstanceDerivativeModel>>(getOdsInstanceDerivativesQuery.Execute(new CommonQueryParams(offset, limit)));
         return Task.FromResult(Results.Ok(odsInstanceDerivativeList));
     }
 

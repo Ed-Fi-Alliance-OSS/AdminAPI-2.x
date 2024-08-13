@@ -9,7 +9,8 @@ using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
-using static EdFi.Ods.AdminApi.Features.SortingDirection;
+using EdFi.Ods.AdminApi.Infrastructure.Extensions;
+using EdFi.Ods.AdminApi.Infrastructure.Helpers;
 
 namespace EdFi.Ods.AdminApi.Features.ClaimSets;
 
@@ -29,10 +30,13 @@ public class ReadClaimSets : IFeature
     }
 
     internal Task<IResult> GetClaimSets(
-        IGetAllClaimSetsQuery getClaimSetsQuery, IGetApplicationsByClaimSetIdQuery getApplications, IMapper mapper, int offset, int limit, string? orderBy, string? direction, int? id, string? name)
+        IGetAllClaimSetsQuery getClaimSetsQuery, IGetApplicationsByClaimSetIdQuery getApplications, IMapper mapper, int? offset, int? limit, string? orderBy, string? direction, int? id, string? name)
     {
-        var claimSets = mapper.Map<SortableList<ClaimSetModel>>(getClaimSetsQuery.Execute(offset, limit, id, name));
-        var model = claimSets.Sort(orderBy ?? string.Empty, SortingDirection.GetNonEmptyOrDefault(direction));
+        var claimSets = mapper.Map<List<ClaimSetModel>>(getClaimSetsQuery.Execute(
+            new CommonQueryParams(offset, limit, orderBy, direction),
+            id,
+            name));
+        var model = claimSets.Sort(orderBy ?? string.Empty, SortingDirectionHelper.GetNonEmptyOrDefault(direction));
         foreach (var claimSet in model)
         {
             claimSet.Applications = mapper.Map<List<SimpleApplicationModel>>(getApplications.Execute(claimSet.Id));
