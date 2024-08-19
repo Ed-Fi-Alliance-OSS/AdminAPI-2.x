@@ -1087,7 +1087,7 @@
 					"        claimsetIdsCreated.push(await createClaimset(claimsetNamesCreated[i]).then(claimsetId => claimsetId));\r",
 					"    }\r",
 					"    \r",
-					"    for (let i = 0; i < pm.collectionVariables.get(\"APPLICATIONCOUNT\"); i++) {\r",
+					"    for (let i = 0; i < applicationcount; i++) {\r",
 					"        let claimsetName = claimsetNamesCreated[i];\r",
 					"        let applicationName =  generateAlphanumericString();\r",
 					"\r",

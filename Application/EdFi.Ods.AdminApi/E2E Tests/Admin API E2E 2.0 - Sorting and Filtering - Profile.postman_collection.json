@@ -767,7 +767,7 @@
 					"    }\r",
 					"\r",
 					"    let profilesToDelete = [];\r",
-					"    for (let i = 0; i < pm.collectionVariables.get(\"PROFILECOUNT\"); i++) {\r",
+					"    for (let i = 0; i < parseInt(pm.collectionVariables.get(\"PROFILECOUNT\"), 10); i++) {\r",
 					"        let name =  generateAlphanumericString();\r",
 					"\r",
 					"        pm.collectionVariables.set(\"FILTERNAME\", name);\r",
