@@ -26,15 +26,13 @@
 							"\r",
 							"pm.test(\"GET ODS Instances: Response result is ordered by Name asc\", function () {\r",
 							"    const results = pm.response.json();\r",
-							"    const strSortByProperty = pm.variables.get('sortByProperty');\r",
-							"    eval(strSortByProperty);\r",
-							"    let expectedSortedOrder = sortByProperty(results, 'name');\r",
-							"    \r",
+							"    var expectedSortedOrder = _.orderBy(results, [dt => dt.name],['asc'])    \r",
 							"    pm.expect(results).to.eql(expectedSortedOrder);\r",
 							"});\r",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				},
 				{
@@ -43,7 +41,8 @@
 						"exec": [
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -109,17 +108,15 @@
 							"\r",
 							"pm.test(\"GET ODS Instances: Response result is ordered by Namne desc\", function () {\r",
 							"    const results = pm.response.json();\r",
-							"    // var expectedSortedOrder = _.orderBy(results, [odsInstance => odsInstance.name.toLowerCase()],['desc']);\r",
-							"    const strSortByProperty = pm.variables.get('sortByProperty');\r",
-							"    eval(strSortByProperty);\r",
-							"    let expectedSortedOrder = sortByProperty(results, 'name', -1);\r",
-							"\r",
+							"    var expectedSortedOrder = _.orderBy(results, [odsInstance => odsInstance.name],['desc']);\r",
+							"    \r",
 							"    pm.expect(results).to.eql(expectedSortedOrder);\r",
 							"});\r",
 							"\r",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				},
 				{
@@ -128,7 +125,8 @@
 						"exec": [
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -364,15 +362,13 @@
 							"\r",
 							"pm.test(\"GET ODS Instances: Response result is ordered by Name asc\", function () {\r",
 							"    const results = pm.response.json();\r",
-							"    const strSortByProperty = pm.variables.get('sortByProperty');\r",
-							"    eval(strSortByProperty);\r",
-							"    let expectedSortedOrder = sortByProperty(results, 'name');\r",
-							"\r",
+							"    var expectedSortedOrder = _.orderBy(results, [odsInstance => odsInstance.name],['asc']);\r",
 							"    pm.expect(results).to.eql(expectedSortedOrder);\r",
 							"});\r",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				},
 				{
@@ -381,7 +377,8 @@
 						"exec": [
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -451,15 +448,13 @@
 							"\r",
 							"pm.test(\"GET ODS Instances: Response result is ordered by Name desc\", function () {\r",
 							"    const results = pm.response.json();\r",
-							"    const strSortByProperty = pm.variables.get('sortByProperty');\r",
-							"    eval(strSortByProperty);\r",
-							"    let expectedSortedOrder = sortByProperty(results, 'name', -1);\r",
-							"\r",
+							"    var expectedSortedOrder = _.orderBy(results, [odsInstance => odsInstance.name],['desc']);\r",
 							"    pm.expect(results).to.eql(expectedSortedOrder);\r",
 							"});\r",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				},
 				{
@@ -468,7 +463,8 @@
 						"exec": [
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -538,15 +534,13 @@
 							"\r",
 							"pm.test(\"GET ODS Instances: Response result is ordered by InstanceType asc\", function () {\r",
 							"    const results = pm.response.json();\r",
-							"    // var expectedSortedOrder = _.orderBy(results, [odsInstance => odsInstance.instanceType ? odsInstance.instanceType.toLowerCase() : null],['asc']);\r",
-							"    const strSortByProperty = pm.variables.get('sortByProperty');\r",
-							"    eval(strSortByProperty);\r",
-							"    let expectedSortedOrder = sortByProperty(results, 'instanceType');\r",
+							"    var expectedSortedOrder = _.orderBy(results, [odsInstance => odsInstance.instanceType ? odsInstance.instanceType : null],['asc']);\r",
 							"    pm.expect(results).to.eql(expectedSortedOrder);\r",
 							"});\r",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				},
 				{
@@ -555,7 +549,8 @@
 						"exec": [
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -625,15 +620,13 @@
 							"\r",
 							"pm.test(\"GET ODS Instances: Response result is ordered by InstanceType desc\", function () {\r",
 							"    const results = pm.response.json();\r",
-							"    // var expectedSortedOrder = _.orderBy(results, [odsInstance => odsInstance.instanceType ? odsInstance.instanceType.toLowerCase() : null],['desc']);\r",
-							"    const strSortByProperty = pm.variables.get('sortByProperty');\r",
-							"    eval(strSortByProperty);\r",
-							"    let expectedSortedOrder = sortByProperty(results, 'instanceType', -1);\r",
+							"    var expectedSortedOrder = _.orderBy(results, [odsInstance => odsInstance.instanceType ? odsInstance.instanceType : null],['desc']);\r",
 							"    pm.expect(results).to.eql(expectedSortedOrder);\r",
 							"});\r",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				},
 				{
@@ -642,7 +635,8 @@
 						"exec": [
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
