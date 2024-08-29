@@ -3315,7 +3315,7 @@ EditResourceClaimActionsOnClaimSetRequest
 |---|---|---|---|---|
 |resourceClaimActions|[[resourceClaimAction](#schemaresourceclaimaction)]|true|none|none|
 
-<h2 id="tocS_registeClientRequest">registeClientRequest</h2>
+<h2 id="tocS_registeClientRequest">registerClientRequest</h2>
 <!-- backwards compatibility -->
 <a id="schemaregisteclientrequest"></a>
 <a id="schema_registeClientRequest"></a>

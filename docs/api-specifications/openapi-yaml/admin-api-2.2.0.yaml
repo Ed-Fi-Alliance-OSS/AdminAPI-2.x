@@ -1945,7 +1945,7 @@ components:
           items:
             $ref: '#/components/schemas/resourceClaimAction'
       additionalProperties: false
-    registeClientRequest:
+    registerClientRequest:
       title: RegisterClientRequest
       required:
         - clientId
