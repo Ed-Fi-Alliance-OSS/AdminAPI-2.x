@@ -1,6 +1,27 @@
+---
+title: API v2.2.0
+language_tabs:
+  - shell: Shell
+  - http: HTTP
+  - javascript: JavaScript
+  - ruby: Ruby
+  - python: Python
+  - php: PHP
+  - java: Java
+  - go: Go
+toc_footers: []
+includes: []
+search: true
+highlight_theme: darkula
+headingLevel: 2
+
+---
+
 <!-- Generator: Widdershins v4.0.1 -->
 
-<h1 id="api">Admin API v2.2.0</h1>
+<h1 id="api">undefined v2.2.0</h1>
+
+> Scroll down for code samples, example requests and responses. Select a language for code samples from the tabs above or the mobile navigation menu.
 
 The Ed-Fi Admin API is a REST API-based administrative interface for managing vendors, applications, client credentials, and authorization rules for accessing an Ed-Fi API.
 
@@ -1570,20 +1591,19 @@ oauth ( Scopes: api )
 
 ## Deletes an existing claimSet using the resource identifier.
 
-`DELETE /v2/claimSets/{claimSetId}/resourceClaimActions/{resourceClaimId}`
+`DELETE /v2/claimSets/{id}`
 
 <h3 id="deletes-an-existing-claimset-using-the-resource-identifier.-parameters">Parameters</h3>
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|claimSetId|path|integer(int32)|true|none|
-|resourceClaimId|path|integer(int32)|true|none|
+|id|path|integer(int32)|true|none|
 
 <h3 id="deletes-an-existing-claimset-using-the-resource-identifier.-responses">Responses</h3>
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Success|None|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Resource was successfully deleted.|None|
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
@@ -1850,6 +1870,32 @@ oauth ( Scopes: api )
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Success|None|
 |400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Bad Request. The request was invalid and cannot be completed. See the response body for details.|None|
+|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
+|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
+|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
+
+<aside class="warning">
+To perform this operation, you must be authenticated by means of one of the following methods:
+oauth ( Scopes: api )
+</aside>
+
+## Deletes a resourceClaims association from a claimSet.
+
+`DELETE /v2/claimSets/{claimSetId}/resourceClaimActions/{resourceClaimId}`
+
+<h3 id="deletes-a-resourceclaims-association-from-a-claimset.-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|claimSetId|path|integer(int32)|true|none|
+|resourceClaimId|path|integer(int32)|true|none|
+
+<h3 id="deletes-a-resourceclaims-association-from-a-claimset.-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Success|None|
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
@@ -2356,7 +2402,9 @@ oauth ( Scopes: api )
 
 ```
 
-### Action Properties
+Action
+
+### Properties
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
