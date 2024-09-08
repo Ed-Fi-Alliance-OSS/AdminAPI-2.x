@@ -15,13 +15,15 @@ on:
 permissions: write-all
 
 env:
-    CI_COMMIT_MESSAGE: Continuous Integration Build Artifacts
+    CI_COMMIT_MESSAGE: Add YAML and markdown file api-specification version ${{ inputs.version }}
     CI_COMMIT_AUTHOR: github-actions[bot]
     CI_COMMIT_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    BRANCH_NAME: openapi-${{ inputs.version }}
 
 jobs:
   create-doc-and-openapiyaml:
-    name: Build C#
+    name: Generate documentation
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -31,7 +33,9 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
       - name: Git create branch
-        run: git checkout -b openapi-${{ inputs.version }}
+        run: |
+          git checkout -b ${{ env.BRANCH_NAME }}
+          git push --set-upstream origin ${{ env.BRANCH_NAME }}
 
       - name: Install Swashbuckle CLI
         run: dotnet tool install Swashbuckle.AspNetCore.Cli --version 6.5.0 --create-manifest-if-needed
@@ -39,10 +43,7 @@ jobs:
       - name: Install widdershins CLI
         run: npm install -g widdershins
 
-      - name: Set issuer and signingkey
-        run: ./build.ps1 -Command Build -Configuration Debug
-
-      - name: Build
+      - name: Build and generate YAML and MD files
         run: |
           $p = @{
               Authority        = "http://api"
@@ -55,15 +56,16 @@ jobs:
           }
           ./build.ps1 -APIVersion ${{ inputs.version }} -Configuration Release -DockerEnvValues $p -Command GenerateOpenAPIAndMD
 
-      - name: GIT commit and push
-        run: |
-           git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
-           git config --global user.email "${{ env.CI_COMMIT_EMAIL }}"
-           git add .
-           git commit -m "${{ env.CI_COMMIT_MESSAGE }}"
-           git push --set-upstream origin openapi-${{ inputs.version }}
+      - name: Commit file
+        id: commit
+        uses: ryancyq/github-signed-commit@v1
+        with:
+            branch-name: ${{ env.BRANCH_NAME }}
+            files: |
+              docs/api-specifications/markdown
+              docs/api-specifications/openapi-yaml
+            commit-message: ${{ env.CI_COMMIT_MESSAGE }}
 
-      - name: Create pull request
-        run: gh pr create -B main -H test1 --title 'Merge test1 into main' --body 'Created by Github action'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create PR
+        if: ${{ steps.commit.outputs.commit-sha != null }}
+        run: gh pr create -B main -H ${{ env.BRANCH_NAME }} --title '[Github Action] Open API documentation version ${{ inputs.version }}' --body 'Created by Github action'
