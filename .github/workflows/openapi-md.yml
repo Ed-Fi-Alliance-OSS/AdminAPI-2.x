@@ -8,8 +8,8 @@ name: Create PR to update doc and openapi definition
 on:
   workflow_dispatch:
     inputs:
-      version:
-        description: 'API Version [format 0.0.0]'
+      version-name:
+        description: 'Version Name. Example -> 2.2.2 will result "admin-api-2.2.2.yaml" "admin-api-2.2.2-summary.md"'
         required: true
         type: string
 permissions: write-all
@@ -18,7 +18,7 @@ env:
     CI_COMMIT_MESSAGE: Add YAML and markdown file api-specification version ${{ inputs.version }}
     CI_COMMIT_AUTHOR: github-actions[bot]
     CI_COMMIT_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
-    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
     BRANCH_NAME: openapi-${{ inputs.version }}
 
 jobs:
@@ -58,14 +58,12 @@ jobs:
 
       - name: Commit file
         id: commit
-        uses: ryancyq/github-signed-commit@v1
+        uses: planetscale/ghcommit-action@v0.1.18
         with:
-            branch-name: ${{ env.BRANCH_NAME }}
-            files: |
-              docs/api-specifications/markdown
-              docs/api-specifications/openapi-yaml
-            commit-message: ${{ env.CI_COMMIT_MESSAGE }}
+          commit_message: "${{ env.CI_COMMIT_MESSAGE }}"
+          repo: ${{ github.repository }}
+          branch: ${{ env.BRANCH_NAME }}
+          file_pattern: '*.yaml *.md'
 
       - name: Create PR
-        if: ${{ steps.commit.outputs.commit-sha != null }}
         run: gh pr create -B main -H ${{ env.BRANCH_NAME }} --title '[Github Action] Open API documentation version ${{ inputs.version }}' --body 'Created by Github action'
