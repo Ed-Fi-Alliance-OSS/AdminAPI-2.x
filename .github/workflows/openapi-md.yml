@@ -58,7 +58,7 @@ jobs:
 
       - name: Commit file
         id: commit
-        uses: planetscale/ghcommit-action@v0.1.18
+        uses: planetscale/ghcommit-action@4131649dbf2fdf1eb34421702972a5af7b0a8731
         with:
           commit_message: "${{ env.CI_COMMIT_MESSAGE }}"
           repo: ${{ github.repository }}
