@@ -8,7 +8,7 @@ name: Create PR to update doc and openapi definition
 on:
   workflow_dispatch:
     inputs:
-      version-name:
+      version:
         description: 'Version Name. Example -> 2.2.2 will result "admin-api-2.2.2.yaml" "admin-api-2.2.2-summary.md"'
         required: true
         type: string
