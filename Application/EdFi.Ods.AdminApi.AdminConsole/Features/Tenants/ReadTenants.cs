@@ -3,7 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Ods.AdminApi.AdminConsole.Features.Steps;
+using System.Collections.Generic;
 using EdFi.Ods.AdminApi.AdminConsole.Features.Tenants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -11,33 +11,33 @@ using Newtonsoft.Json;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Features.UserProfiles;
 
-public class ReadSteps : IFeature
+public class ReadTenants : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/steps", GetSteps)
+        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/tenants", GetTenants)
            .BuildForVersions();
 
-        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/step", GetStep)
+        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/tenant", GetTenant)
            .BuildForVersions();
     }
 
-    internal Task<IResult> GetSteps()
+    internal Task<IResult> GetTenants()
     {
-        using (StreamReader r = new StreamReader("Mockdata/data-steps.json"))
+        using (StreamReader r = new StreamReader("Mockdata/data-tenants.json"))
         {
             string json = r.ReadToEnd();
-            List<Step> result = JsonConvert.DeserializeObject<List<Step>>(json);
+            List<Tenant> result = JsonConvert.DeserializeObject<List<Tenant>>(json);
             return Task.FromResult(Results.Ok(result));
         }
     }
 
-    internal Task<IResult> GetStep(int id)
+    internal Task<IResult> GetTenant(int id)
     {
-        using (StreamReader r = new StreamReader("Mockdata/data-step.json"))
+        using (StreamReader r = new StreamReader("Mockdata/data-tenant.json"))
         {
             string json = r.ReadToEnd();
-            Step result = JsonConvert.DeserializeObject<Step>(json);
+            Tenant result = JsonConvert.DeserializeObject<Tenant>(json);
             return Task.FromResult(Results.Ok(result));
         }
     }
