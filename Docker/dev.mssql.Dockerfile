@@ -41,6 +41,7 @@ ENV ASPNETCORE_HTTP_PORTS=80
 ENV DB_FOLDER=mssql
 WORKDIR /app
 COPY --from=publish /app/EdFi.Ods.AdminApi .
+COPY --from=publish /app/EdFi.Ods.AdminApi.AdminConsole .
 
 COPY --chmod=500 Settings/dev/${DB_FOLDER}/run.sh /app/run.sh
 COPY Settings/dev/log4net.config /app/log4net.txt
