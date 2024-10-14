@@ -15,10 +15,15 @@ FROM buildbase AS publish
 WORKDIR /source
 COPY Application/NuGet.Config EdFi.Ods.AdminApi/
 COPY Application/EdFi.Ods.AdminApi EdFi.Ods.AdminApi/
+COPY Application/EdFi.Ods.AdminApi.AdminConsole EdFi.Ods.AdminApi.AdminConsole/
 
 WORKDIR /source/EdFi.Ods.AdminApi
 RUN dotnet restore && dotnet build -c Release
 RUN dotnet publish -c Release /p:EnvironmentName=Production --no-build -o /app/EdFi.Ods.AdminApi
+
+WORKDIR /source/EdFi.Ods.AdminApi.AdminConsole
+RUN dotnet restore && dotnet build -c Release
+RUN dotnet publish -c Release /p:EnvironmentName=Production --no-build -o /app/EdFi.Ods.AdminApi.AdminConsole
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0.3-alpine3.19-amd64@sha256:3776a5e9ff80cc182fa1727c4cb5e30ba5228ff04b530a57e7dff6ee19028075 AS runtimebase
 
@@ -37,6 +42,7 @@ ENV DB_FOLDER=pgsql
 
 WORKDIR /app
 COPY --from=publish /app/EdFi.Ods.AdminApi .
+COPY --from=publish /app/EdFi.Ods.AdminApi.AdminConsole .
 
 COPY --chmod=500 Settings/dev/${DB_FOLDER}/run.sh /app/run.sh
 COPY Settings/dev/log4net.config /app/log4net.txt
