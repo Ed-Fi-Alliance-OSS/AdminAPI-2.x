@@ -4,13 +4,9 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Dynamic;
-using System.Text.Json.Nodes;
-using EdFi.Ods.AdminApi.AdminConsole.Features.OdsInstances;
-using EdFi.Ods.AdminApi.AdminConsole.Features.Tenants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Features.UserProfiles;
 
