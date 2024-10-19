@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Dynamic;
 using EdFi.Ods.AdminApi.AdminConsole.Features.Steps;
 using EdFi.Ods.AdminApi.AdminConsole.Features.Tenants;
 using Microsoft.AspNetCore.Http;
@@ -27,7 +28,7 @@ public class ReadSteps : IFeature
         using (StreamReader r = new StreamReader("Mockdata/data-steps.json"))
         {
             string json = r.ReadToEnd();
-            List<Step> result = JsonConvert.DeserializeObject<List<Step>>(json);
+            List<ExpandoObject> result = JsonConvert.DeserializeObject<List<ExpandoObject>>(json);
             return Task.FromResult(Results.Ok(result));
         }
     }
@@ -37,7 +38,7 @@ public class ReadSteps : IFeature
         using (StreamReader r = new StreamReader("Mockdata/data-step.json"))
         {
             string json = r.ReadToEnd();
-            Step result = JsonConvert.DeserializeObject<Step>(json);
+            ExpandoObject result = JsonConvert.DeserializeObject<ExpandoObject>(json);
             return Task.FromResult(Results.Ok(result));
         }
     }
