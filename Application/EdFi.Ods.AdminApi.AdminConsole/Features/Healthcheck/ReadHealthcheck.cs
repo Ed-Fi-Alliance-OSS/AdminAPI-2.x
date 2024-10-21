@@ -3,7 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Ods.AdminApi.AdminConsole.Features.OdsInstances;
 using EdFi.Ods.AdminApi.AdminConsole.Features.UserProfiles;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -24,7 +23,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Features.Healthcheck
             using (StreamReader r = new StreamReader("Mockdata/data-healthcheck.json"))
             {
                 string json = r.ReadToEnd();
-                HealthcheckModel result = JsonConvert.DeserializeObject<HealthcheckModel>(json);
+                HealthcheckModel? result = JsonConvert.DeserializeObject<HealthcheckModel>(json);
                 return Task.FromResult(Results.Ok(result));
             }
         }
