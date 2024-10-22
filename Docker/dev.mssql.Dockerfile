@@ -26,7 +26,6 @@ RUN dotnet restore && dotnet build -c Release
 RUN dotnet publish -c Release /p:EnvironmentName=$ASPNETCORE_ENVIRONMENT --no-build -o /app/EdFi.Ods.AdminApi.AdminConsole
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0.8-alpine3.20-amd64@sha256:98fa594b91cda6cac28d2aae25567730db6f8857367fab7646bdda91bc784b5f AS runtimebase
-FROM runtimebase AS runtime
 RUN apk --upgrade --no-cache add dos2unix=~7 bash=~5 gettext=~0 icu=~74 && \
     addgroup -S edfi && adduser -S edfi -G edfi
 

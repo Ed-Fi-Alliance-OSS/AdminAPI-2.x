@@ -4,6 +4,7 @@
 # See the LICENSE and NOTICES files in the project root for more information.
 
 FROM edfialliance/ods-api-db-admin:7.2.5570-5.1.0@sha256:53a9c8bbed76075bc438e63ba9579a48f1539bf7d5a3ee1b5171739c7e496ab0 AS base
+# FROM edfialliance/ods-api-db-admin:7.1@sha256:36e4295bf125eb804fbde1381d95361e8723b5ff2bcac173854fc2897e811c79 AS base
 USER root
 RUN apk --upgrade --no-cache add dos2unix=~7 unzip=~6
 
