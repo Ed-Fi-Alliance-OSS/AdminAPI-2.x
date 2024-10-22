@@ -10,3 +10,38 @@ updates:
     target-branch: main
     schedule:
       interval: weekly
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: daily
+
+  - package-ecosystem: nuget
+    directory: /Application/EdFi.Ods.AdminApi.DBTests
+    schedule:
+      interval: daily
+
+  - package-ecosystem: nuget
+    directory: /Application/EdFi.Ods.AdminApi.UnitTests
+    schedule:
+      interval: daily
+
+  - package-ecosystem: nuget
+    directory: /Application/EdFi.Ods.AdminApi
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /Docker/Settings/DB-Admin/mssql
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /Docker/Settings/DB-Admin/pgsql
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /Docker/Settings/gateway
+    schedule:
+      interval: daily
