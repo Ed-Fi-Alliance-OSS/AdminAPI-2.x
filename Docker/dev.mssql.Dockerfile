@@ -7,9 +7,10 @@
 # code. The next two layers use the dotnet/aspnet image to run the built code.
 # The extra layers in the middle support caching of base layers.
 
-# FROM mcr.microsoft.com/dotnet/sdk:8.0.401-alpine3.20@sha256:658c93223111638f9bb54746679e554b2cf0453d8fb7b9fed32c3c0726c210fe AS build
-# FROM mcr.microsoft.com/dotnet/sdk:8.0.403-alpine3.20@sha256:07cb8622ca6c4d7600b42b2eccba968dff4b37d41b43a9bf4bd800aa02fab117 as build
+# FROM mcr.microsoft.com/dotnet/sdk:8.0.203-alpine3.19@sha256:b1275049a8fe922cbc9f1d173ffec044664f30b94e99e2c85dd9b7454fbf596c as build
 FROM mcr.microsoft.com/dotnet/sdk:8.0.401-alpine3.20@sha256:658c93223111638f9bb54746679e554b2cf0453d8fb7b9fed32c3c0726c210fe AS build
+# FROM mcr.microsoft.com/dotnet/sdk:8.0.403-alpine3.20@sha256:07cb8622ca6c4d7600b42b2eccba968dff4b37d41b43a9bf4bd800aa02fab117 as build
+
 ARG ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT:-"Production"}
 
 WORKDIR /source
@@ -44,7 +45,7 @@ ENV DB_FOLDER=mssql
 
 WORKDIR /app
 COPY --from=build /app/EdFi.Ods.AdminApi .
-COPY --from=publbuildish /app/EdFi.Ods.AdminApi.AdminConsole .
+COPY --from=build /app/EdFi.Ods.AdminApi.AdminConsole .
 
 COPY --chmod=500 Settings/dev/${DB_FOLDER}/run.sh /app/run.sh
 COPY Settings/dev/log4net.config /app/log4net.txt
