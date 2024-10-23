@@ -64,6 +64,8 @@ services:
   db-admin-tenant1:
     build:
       context: ../../../
+      additional_contexts:
+        assets: ../../../../
       dockerfile: dbadmin.Dockerfile
     environment:
       POSTGRES_USER: "${POSTGRES_USER}"
@@ -78,6 +80,8 @@ services:
   db-admin-tenant2:
     build:
       context: ../../../
+      additional_contexts:
+        assets: ../../../../
       dockerfile: dbadmin.Dockerfile
     environment:
       POSTGRES_USER: "${POSTGRES_USER}"
