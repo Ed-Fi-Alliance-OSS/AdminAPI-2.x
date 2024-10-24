@@ -17,7 +17,7 @@ else
     exit 1
 fi
 
-status=`curl -k --silent --output /dev/null -w '%{http_code}' https://localhost/adminapi`
+status=`wget -nv -t1 --spider https://localhost/adminapi/health 2>&1|grep "HTTP/"|awk '{print $2}')"`
 
 if [[ $status -eq "200" ]]
 then
