@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using AspNetCoreRateLimit;
+using EdFi.Ods.AdminApi.AdminConsole.DataAccess;
 using EdFi.Ods.AdminApi.Features;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.MultiTenancy;
@@ -18,6 +19,13 @@ builder.Services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
 builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 builder.Services.AddInMemoryRateLimiting();
+
+
+builder.AddServices();
+
+//DbSetup
+DbSetup.ConfigureDatabase(builder.Services, builder.Configuration);
+
 // logging
 var _logger = LogManager.GetLogger("Program");
 _logger.Info("Starting Admin API");
