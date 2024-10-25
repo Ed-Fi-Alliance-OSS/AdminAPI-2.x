@@ -18,6 +18,20 @@ builder.Services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
 builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 builder.Services.AddInMemoryRateLimiting();
+var enableCors = builder.Configuration.GetValue<bool>("CorsSettings:EnableCors");
+string allowAllCorsPolicyName = "allowAllCorsPolicyName";
+if (enableCors)
+{
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy(allowAllCorsPolicyName, policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
+    });
+}
 
 
 builder.AddServices();
@@ -27,7 +41,8 @@ var _logger = LogManager.GetLogger("Program");
 _logger.Info("Starting Admin API");
 
 var app = builder.Build();
-
+if (enableCors)
+    app.UseCors(allowAllCorsPolicyName);
 
 var pathBase = app.Configuration.GetValue<string>("AppSettings:PathBase");
 if (!string.IsNullOrEmpty(pathBase))
