@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using EdFi.Ods.AdminApi.AdminConsole.DataAccess.Contexts;
 using EdFi.Ods.AdminApi.AdminConsole.DataAccess.Contexts.AdminConsolePg;
 using EdFi.Ods.AdminApi.AdminConsole.DataAccess.Contexts.AdminConsoleSql;
 using Microsoft.EntityFrameworkCore;
@@ -20,11 +21,11 @@ public static class DbSetup
         switch (databaseProvider)
         {
             case DbProviders.SqlServer:
-                services.AddDbContext<AdminConsoleSqlContext>(options =>
+                services.AddDbContext<IDbContext, AdminConsoleSqlContext>(options =>
                            options.UseSqlServer(connectionString));
                 break;
             case DbProviders.PostgreSql:
-                services.AddDbContext<AdminConsolePgContext>(options =>
+                services.AddDbContext<IDbContext, AdminConsolePgContext>(options =>
                            options.UseNpgsql(connectionString));
                 break;
             default:
