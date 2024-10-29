@@ -5,6 +5,7 @@
 
 using AspNetCoreRateLimit;
 using EdFi.Ods.AdminApi.AdminConsole.DataAccess;
+using EdFi.Ods.AdminApi.AdminConsole.Services;
 using EdFi.Ods.AdminApi.Features;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.MultiTenancy;
@@ -20,6 +21,9 @@ builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounte
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 builder.Services.AddInMemoryRateLimiting();
 
+//Admin Console Repos and Services
+ServiceRegistration.AddRepositories(builder.Services);
+ServiceRegistration.AddServices(builder.Services);
 
 builder.AddServices();
 
