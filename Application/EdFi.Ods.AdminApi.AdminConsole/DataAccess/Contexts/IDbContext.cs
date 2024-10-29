@@ -17,5 +17,8 @@ namespace EdFi.Ods.AdminApi.AdminConsole.DataAccess.Contexts
     public interface IDbContext
     {
         DbSet<HealthCheck> HealthChecks { get; set; }
+
+        DbSet<T> Set<T>() where T : class;
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }
