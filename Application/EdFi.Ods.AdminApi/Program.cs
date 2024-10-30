@@ -1,3 +1,4 @@
+
 // SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
@@ -22,16 +23,13 @@ builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounte
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 builder.Services.AddInMemoryRateLimiting();
 
-//Admin Console Repos and Services
+
 ServiceRegistration.AddRepositories(builder.Services);
 ServiceRegistration.AddServices(builder.Services);
 ServiceRegistration.AddValidators(builder.Services);
-builder.Services.AddAutoMapper(typeof(AdminConsoleMappingProfile));
-
-builder.AddServices();
-
-//DbSetup
 DbSetup.ConfigureDatabase(builder.Services, builder.Configuration);
+
+builder.Services.AddAutoMapper(typeof(AdminConsoleMappingProfile));
 
 // logging
 var _logger = LogManager.GetLogger("Program");
