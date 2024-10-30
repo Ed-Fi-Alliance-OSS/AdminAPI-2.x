@@ -16,7 +16,7 @@ public static class DbSetup
 {
     public static void ConfigureDatabase(IServiceCollection services, IConfiguration configuration)
     {
-        var databaseProvider = configuration.GetValue<string>("AppSettings:DatabaseEngine");
+        var databaseProvider = DbProviders.Parse(configuration.GetValue<string>("AppSettings:DatabaseEngine")!);
         var connectionString = configuration.GetConnectionString("EdFi_Admin");
         switch (databaseProvider)
         {
