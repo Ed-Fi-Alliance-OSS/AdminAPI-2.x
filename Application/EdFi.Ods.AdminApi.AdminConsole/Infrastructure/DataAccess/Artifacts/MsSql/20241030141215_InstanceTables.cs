@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.MsSql
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InstanceTables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,7 +19,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.MsS
                 name: "adminconsole");
 
             migrationBuilder.CreateTable(
-                name: "HealthChecks",
+                name: "Instances",
                 schema: "adminconsole",
                 columns: table => new
                 {
@@ -32,34 +32,33 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.MsS
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_HealthChecks", x => x.DocId);
+                    table.PrimaryKey("PK_Instances", x => x.DocId);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_HealthChecks_EdOrgId",
+                name: "IX_Instances_EdOrgId",
                 schema: "adminconsole",
-                table: "HealthChecks",
+                table: "Instances",
                 column: "EdOrgId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_HealthChecks_InstanceId",
+                name: "IX_Instances_InstanceId",
                 schema: "adminconsole",
-                table: "HealthChecks",
+                table: "Instances",
                 column: "InstanceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_HealthChecks_TenantId",
+                name: "IX_Instances_TenantId",
                 schema: "adminconsole",
-                table: "HealthChecks",
-                column: "TenantId",
-                unique: true);
+                table: "Instances",
+                column: "TenantId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "HealthChecks",
+                name: "Instances",
                 schema: "adminconsole");
         }
     }

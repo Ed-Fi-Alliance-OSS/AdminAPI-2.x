@@ -12,6 +12,7 @@ using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.HealthChecks.Comman
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.HealthChecks.Queries;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services;
 
@@ -43,6 +44,11 @@ public static class ServiceRegistration
         serviceCollection.AddScoped<ICommandRepository<HealthCheck>, CommandRepository<HealthCheck>>();
         serviceCollection.AddScoped<IQueriesRepository<HealthCheck>, QueriesRepository<HealthCheck>>();
         #endregion
+
+        #region Instance
+        serviceCollection.AddScoped<ICommandRepository<Instance>, CommandRepository<Instance>>();
+        serviceCollection.AddScoped<IQueriesRepository<Instance>, QueriesRepository<Instance>>();
+        #endregion
     }
 
     private static void RegisterServices(IServiceCollection serviceCollection)
@@ -52,10 +58,17 @@ public static class ServiceRegistration
         serviceCollection.AddScoped<IGetHealthCheckQuery, GetHealthCheckQuery>();
         serviceCollection.AddScoped<IGetHealthChecksQuery, GetHealthChecksQuery>();
         #endregion Healthcheck
+
+        #region Instance
+        serviceCollection.AddScoped<IAddInstanceCommand, AddInstanceCommand>();
+        serviceCollection.AddScoped<IGetInstanceQuery, GetInstanceQuery>();
+        serviceCollection.AddScoped<IGetInstancesQuery, GetInstancesQuery>();
+        #endregion Instance
     }
 
     private static void RegisterValidators(IServiceCollection serviceCollection)
     {
         serviceCollection.AddTransient<AddHealthCheck.Validator>();
+        serviceCollection.AddTransient<AddInstance.Validator>();
     }
 }
