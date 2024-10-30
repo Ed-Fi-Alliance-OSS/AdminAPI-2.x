@@ -10,7 +10,7 @@ This document provides step-by-step guidance for generating and applying migrati
 Use the following command to add a migration in the command line:
 
 ```bash
-dotnet ef migrations add <MigrationName> --context <ContextName> --output-dir DataAccess/Artifacts/<DbProvider> --project EdFi.Ods.AdminApi.AdminConsole
+dotnet ef migrations add <MigrationName> --context <ContextName> --output-dir Infrastructure/DataAccess/Artifacts/<DbProvider> --project EdFi.Ods.AdminApi.AdminConsole
 ```
 
 #### Package Manager Console (`pmc`)
@@ -18,7 +18,7 @@ dotnet ef migrations add <MigrationName> --context <ContextName> --output-dir Da
 In the Package Manager Console within Visual Studio, run:
 
 ```powershell
-Add-Migration <MigrationName> -Context <ContextName> -Project EdFi.Ods.AdminApi.AdminConsole -OutputDir DataAccess/Artifacts/<DbProvider>
+Add-Migration <MigrationName> -Context <ContextName> -Project EdFi.Ods.AdminApi.AdminConsole -OutputDir Infrastructure/DataAccess/Artifacts/<DbProvider>
 ```
 
 - `MigrationName`: Name of the migration (e.g., `InitialCreate`).
@@ -51,7 +51,7 @@ Update-Database -Context <ContextName> -Project EdFi.Ods.AdminApi.AdminConsole
 
 | Action              | Command (cmd)                                                                                           | Command (pmc)                                                                                  |
 |---------------------|--------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------|
-| **Add Migration**   | `dotnet ef migrations add <MigrationName> --context <ContextName> --output-dir DataAccess/Artifacts/<DbProvider> --project EdFi.Ods.AdminApi.AdminConsole` | `Add-Migration <MigrationName> -Context <ContextName> -Project EdFi.Ods.AdminApi.AdminConsole -OutputDir DataAccess/Artifacts/<DbProvider>` |
+| **Add Migration**   | `dotnet ef migrations add <MigrationName> --context <ContextName> --output-dir Infrastructure/DataAccess/Artifacts/<DbProvider> --project EdFi.Ods.AdminApi.AdminConsole` | `Add-Migration <MigrationName> -Context <ContextName> -Project EdFi.Ods.AdminApi.AdminConsole -OutputDir Infrastructure/DataAccess/Artifacts/<DbProvider>` |
 | **Update Database** | `dotnet ef database update --context <ContextName> --project EdFi.Ods.AdminApi.AdminConsole`                               | `Update-Database -Context <ContextName> -Project EdFi.Ods.AdminApi.AdminConsole`                                  |
 
 ---

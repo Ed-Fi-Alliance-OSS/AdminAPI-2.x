@@ -8,17 +8,8 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Features.Healthcheck;
 
-[SwaggerSchema(Title = "Document")]
+[SwaggerSchema(Title = "HealthCheck")]
 public class HealthCheckModel
-{
-    public int DocId { get; set; }
-    public int InstanceId { get; set; }
-    public int EdOrgId { get; set; }
-    public DocumentModel Document { get; set; }
-}
-
-[SwaggerSchema(Title = "Document")]
-public class DocumentModel
 {
     [JsonProperty("localEducationAgencyId")]
     public long LocalEducationAgencyId { get; set; }

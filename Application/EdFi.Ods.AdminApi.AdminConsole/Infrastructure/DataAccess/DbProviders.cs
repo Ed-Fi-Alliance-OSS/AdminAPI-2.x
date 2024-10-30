@@ -3,11 +3,10 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using Microsoft.AspNetCore.Routing;
+namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess;
 
-namespace EdFi.Ods.AdminApi.AdminConsole.Features;
-
-public interface IFeature
+public static class DbProviders
 {
-    void MapEndpoints(IEndpointRouteBuilder endpoints);
+    public const string SqlServer = nameof(SqlServer);
+    public const string PostgreSql = nameof(PostgreSql);
 }

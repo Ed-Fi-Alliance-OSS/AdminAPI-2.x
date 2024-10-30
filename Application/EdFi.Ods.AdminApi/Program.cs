@@ -4,8 +4,9 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using AspNetCoreRateLimit;
-using EdFi.Ods.AdminApi.AdminConsole.DataAccess;
-using EdFi.Ods.AdminApi.AdminConsole.Services;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.AutoMapper;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services;
 using EdFi.Ods.AdminApi.Features;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.MultiTenancy;
@@ -24,6 +25,8 @@ builder.Services.AddInMemoryRateLimiting();
 //Admin Console Repos and Services
 ServiceRegistration.AddRepositories(builder.Services);
 ServiceRegistration.AddServices(builder.Services);
+ServiceRegistration.AddValidators(builder.Services);
+builder.Services.AddAutoMapper(typeof(AdminConsoleMappingProfile));
 
 builder.AddServices();
 
