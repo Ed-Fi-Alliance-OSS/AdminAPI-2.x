@@ -43,6 +43,11 @@ public static class ServiceRegistration
         serviceCollection.AddScoped<ICommandRepository<HealthCheck>, CommandRepository<HealthCheck>>();
         serviceCollection.AddScoped<IQueriesRepository<HealthCheck>, QueriesRepository<HealthCheck>>();
         #endregion
+
+        #region Tenant
+        serviceCollection.AddScoped<ICommandRepository<Tenant>, CommandRepository<Tenant>>();
+        serviceCollection.AddScoped<IQueriesRepository<Tenant>, QueriesRepository<Tenant>>();
+        #endregion
     }
 
     private static void RegisterServices(IServiceCollection serviceCollection)
@@ -51,11 +56,17 @@ public static class ServiceRegistration
         serviceCollection.AddScoped<IAddHealthCheckCommand, AddHealthCheckCommand>();
         serviceCollection.AddScoped<IGetHealthCheckQuery, GetHealthCheckQuery>();
         serviceCollection.AddScoped<IGetHealthChecksQuery, GetHealthChecksQuery>();
-        #endregion Healthcheck
+        #endregion
+
+        #region Tenant
+        serviceCollection.AddScoped<IAddTenantCommand, AddTenantCommand>();
+        serviceCollection.AddScoped<IGetTenantQuery, GetTenantQuery>();
+        #endregion
     }
 
     private static void RegisterValidators(IServiceCollection serviceCollection)
     {
         serviceCollection.AddTransient<AddHealthCheck.Validator>();
+        serviceCollection.AddTransient<FeaturesTenant.AddTenant.Validator>();
     }
 }
