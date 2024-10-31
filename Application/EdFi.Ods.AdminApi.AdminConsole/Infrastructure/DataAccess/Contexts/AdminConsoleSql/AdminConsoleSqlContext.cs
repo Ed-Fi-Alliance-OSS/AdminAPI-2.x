@@ -14,10 +14,13 @@ public class AdminConsoleSqlContext : DbContext, IDbContext
     public AdminConsoleSqlContext(DbContextOptions<AdminConsoleSqlContext> options) : base(options) { }
 
     public DbSet<HealthCheck> HealthChecks { get; set; }
+    public DbSet<Tenant> Tenants { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         const string DbProvider = DbProviders.SqlServer;
         modelBuilder.ApplyConfiguration(new HealthCheckConfiguration(DbProvider));
+
+        modelBuilder.ApplyConfiguration(new TenantConfiguration(DbProvider));
     }
 }
