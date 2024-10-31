@@ -23,13 +23,14 @@ builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounte
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 builder.Services.AddInMemoryRateLimiting();
 
-
-ServiceRegistration.AddRepositories(builder.Services);
-ServiceRegistration.AddServices(builder.Services);
-ServiceRegistration.AddValidators(builder.Services);
-DbSetup.ConfigureDatabase(builder.Services, builder.Configuration);
-
-builder.Services.AddAutoMapper(typeof(AdminConsoleMappingProfile));
+if (builder.Configuration.GetValue<bool>("AppSettings:EnableAdminConsoleAPI"))
+{
+    ServiceRegistration.AddRepositories(builder.Services);
+    ServiceRegistration.AddServices(builder.Services);
+    ServiceRegistration.AddValidators(builder.Services);
+    DbSetup.ConfigureDatabase(builder.Services, builder.Configuration);
+    builder.Services.AddAutoMapper(typeof(AdminConsoleMappingProfile));
+}
 
 // logging
 var _logger = LogManager.GetLogger("Program");
