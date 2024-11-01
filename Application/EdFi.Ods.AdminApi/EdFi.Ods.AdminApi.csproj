@@ -46,6 +46,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.7.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.8" />
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EdFi.Ods.AdminApi.AdminConsole\EdFi.Ods.AdminApi.AdminConsole.csproj" />
