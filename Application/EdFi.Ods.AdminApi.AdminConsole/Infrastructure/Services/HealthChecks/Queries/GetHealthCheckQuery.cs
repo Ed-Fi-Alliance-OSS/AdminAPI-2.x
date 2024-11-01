@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.ErrorHandling;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,7 +25,13 @@ public class GetHealthCheckQuery : IGetHealthCheckQuery
     }
     public async Task<HealthCheck> Execute(int tenantId)
     {
-        return await _healthCheckQuery.Query().SingleOrDefaultAsync(healthCheck => healthCheck.TenantId == tenantId)
-        ?? throw new Exception($"Not found {nameof(HealthCheck)} for Tenant Id: {tenantId}");
+        var healthCheck = await _healthCheckQuery.Query().SingleOrDefaultAsync(healthCheck => healthCheck.TenantId == tenantId);
+
+        if (healthCheck == null)
+        {
+            throw new NotFoundException<int>("healthCheck", tenantId);
+        }
+
+        return healthCheck;
     }
 }

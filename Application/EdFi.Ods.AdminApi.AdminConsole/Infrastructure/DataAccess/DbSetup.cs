@@ -32,4 +32,17 @@ public static class DbSetup
                 throw new InvalidOperationException($"Invalid database provider specified. {databaseProvider}.");
         }
     }
+
+    public static void ApplyMigrations(IServiceCollection services, IConfiguration configuration)
+    {
+        using var scope = services.BuildServiceProvider().CreateScope();
+        var databaseProvider = DbProviders.Parse(configuration.GetValue<string>("AppSettings:DatabaseEngine")!);
+        DbContext dbContext = databaseProvider switch
+        {
+            DbProviders.SqlServer => scope.ServiceProvider.GetRequiredService<AdminConsoleSqlContext>(),
+            DbProviders.PostgreSql => scope.ServiceProvider.GetRequiredService<AdminConsolePgContext>(),
+            _ => throw new InvalidOperationException("Invalid database provider.")
+        };
+        dbContext.Database.Migrate();
+    }
 }

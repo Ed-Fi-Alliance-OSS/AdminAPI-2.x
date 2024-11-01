@@ -23,13 +23,10 @@ builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounte
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 builder.Services.AddInMemoryRateLimiting();
 
-if (builder.Configuration.GetValue<bool>("AppSettings:EnableAdminConsoleAPI"))
+var adminConsoleIsEnabled = builder.Configuration.GetValue<bool>("AppSettings:EnableAdminConsoleAPI");
+if (adminConsoleIsEnabled)
 {
-    ServiceRegistration.AddRepositories(builder.Services);
-    ServiceRegistration.AddServices(builder.Services);
-    ServiceRegistration.AddValidators(builder.Services);
-    DbSetup.ConfigureDatabase(builder.Services, builder.Configuration);
-    builder.Services.AddAutoMapper(typeof(AdminConsoleMappingProfile));
+    ServiceRegistration.AddServices(builder.Services, builder.Configuration);
 }
 
 // logging
@@ -88,7 +85,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapFeatureEndpoints();
 //Map AdminConsole endpoints if the flag is enable
-if (app.Configuration.GetValue<bool>("AppSettings:EnableAdminConsoleAPI"))
+if (adminConsoleIsEnabled)
 {
     app.MapAdminConsoleFeatureEndpoints();
 }
