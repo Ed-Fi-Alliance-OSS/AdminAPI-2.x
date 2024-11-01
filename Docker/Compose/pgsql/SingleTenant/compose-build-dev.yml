@@ -54,8 +54,10 @@ services:
 
   db-admin:
     build:
-      context: ../../../Settings/DB-Admin/pgsql/
-      dockerfile: Dockerfile
+      context: ../../../
+      additional_contexts:
+        assets: ../../../../
+      dockerfile: dbadmin.Dockerfile
     environment:
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
