@@ -11,9 +11,9 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0.403-alpine3.20@sha256:07cb8622ca6c4d7600b4
 ARG ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT:-"Production"}
 
 WORKDIR /source
-COPY --from=assets ./Application/NuGet.Config EdFi.Ods.AdminApi/
-COPY --from=assets ./Application/EdFi.Ods.AdminApi EdFi.Ods.AdminApi/
-COPY --from=assets ./Application/EdFi.Ods.AdminApi.AdminConsole EdFi.Ods.AdminApi.AdminConsole/
+COPY Application/NuGet.Config EdFi.Ods.AdminApi/
+COPY Application/EdFi.Ods.AdminApi EdFi.Ods.AdminApi/
+COPY Application/EdFi.Ods.AdminApi.AdminConsole EdFi.Ods.AdminApi.AdminConsole/
 
 WORKDIR /source/EdFi.Ods.AdminApi
 RUN export ASPNETCORE_ENVIRONMENT=$ASPNETCORE_ENVIRONMENT
