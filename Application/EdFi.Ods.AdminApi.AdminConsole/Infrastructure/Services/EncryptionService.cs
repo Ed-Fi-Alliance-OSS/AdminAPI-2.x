@@ -3,8 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
-using Microsoft.Extensions.Logging;
 using static EdFi.Ods.AdminApi.AdminConsole.Helpers.Encryption;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services;
@@ -17,19 +15,11 @@ public interface IEncryptionService
 
 public class EncryptionService : IEncryptionService
 {
-    //private readonly ILogger _logger;
-
-    public EncryptionService(/*ILogger<EncryptionService> logger*/)
-    {
-        //_logger = logger;
-    }
-
     public bool TryEncrypt(string plainText, string encryptionKey, out string encryptedText)
     {
         encryptedText = string.Empty;
         if (string.IsNullOrEmpty(encryptionKey))
         {
-            //_logger.LogError("Encryption key can not be empty");
             return false;
         }
 
@@ -40,7 +30,6 @@ public class EncryptionService : IEncryptionService
         }
         catch (Exception ex)
         {
-            //_logger.LogError(ex, "Provided encryption key is not valid.");
         }
 
         return false;
@@ -51,7 +40,6 @@ public class EncryptionService : IEncryptionService
         decryptedText = string.Empty;
         if (string.IsNullOrEmpty(encryptionKey))
         {
-            //_logger.LogError("Encryption key can not be empty");
             return false;
         }
 
@@ -62,7 +50,6 @@ public class EncryptionService : IEncryptionService
         }
         catch (Exception ex)
         {
-            //_logger.LogError(ex, "Provided encryption key is not valid.");
         }
 
         return false;
