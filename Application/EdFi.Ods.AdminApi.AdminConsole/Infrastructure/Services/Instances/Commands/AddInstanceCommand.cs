@@ -68,7 +68,7 @@ public class AddInstanceCommand : IAddInstanceCommand
 public interface IAddInstanceModel
 {
     int InstanceId { get; }
-    int EdOrgId { get; }
+    int? EdOrgId { get; }
     int TenantId { get; }
     string Document { get; }
 }

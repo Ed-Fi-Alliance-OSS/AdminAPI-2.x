@@ -26,13 +26,6 @@ builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounte
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 builder.Services.AddInMemoryRateLimiting();
 
-builder.Services.Configure<AdminConsoleSettings>(builder.Configuration.GetSection("AdminConsoleSettings"));
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-builder.Services.AddTransient<IEncryptionKeySettings>(sp => sp.GetService<IOptions<AdminConsoleSettings>>().Value);
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-builder.Services.AddTransient<IEncryptionKeyResolver, OptionsEncryptionKeyResolver>();
-builder.Services.AddScoped<IEncryptionService, EncryptionService>();
-
 var adminConsoleIsEnabled = builder.Configuration.GetValue<bool>("AppSettings:EnableAdminConsoleAPI");
 if (adminConsoleIsEnabled)
 {
@@ -43,7 +36,7 @@ if (adminConsoleIsEnabled)
 var _logger = LogManager.GetLogger("Program");
 _logger.Info("Starting Admin API");
 // Read CORS settings from configuration
-var corsSettings = builder.Configuration.GetSection("AdminConsole");
+var corsSettings = builder.Configuration.GetSection("AdminConsoleSettings");
 var enableCors = corsSettings.GetValue<bool>("CorsSettings:EnableCors");
 string allowAllCorsPolicyName = "allowAllCorsPolicyName";
 var allowedOrigins = corsSettings.GetSection("CorsSettings:AllowedOrigins").Get<string[]>();

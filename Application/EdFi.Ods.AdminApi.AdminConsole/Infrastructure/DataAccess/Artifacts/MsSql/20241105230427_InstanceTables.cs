@@ -26,8 +26,8 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.MsS
                     DocId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     InstanceId = table.Column<int>(type: "int", nullable: false),
-                    EdOrgId = table.Column<int>(type: "int", nullable: false),
                     TenantId = table.Column<int>(type: "int", nullable: false),
+                    EdOrgId = table.Column<int>(type: "int", nullable: true),
                     Document = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -51,7 +51,8 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.MsS
                 name: "IX_Instances_TenantId",
                 schema: "adminconsole",
                 table: "Instances",
-                column: "TenantId");
+                column: "TenantId",
+                unique: true);
         }
 
         /// <inheritdoc />

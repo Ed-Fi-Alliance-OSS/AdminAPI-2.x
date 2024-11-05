@@ -3,7 +3,9 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Linq;
 using EdFi.Ods.AdminApi.AdminConsole.Features.OdsInstances;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Queries;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,11 +28,16 @@ public class ReadInstances : IFeature
     internal async Task<IResult> GetInstances([FromServices] IGetInstancesQuery getInstancesQuery)
     {
         var instances = await getInstancesQuery.Execute();
-        return Results.Ok(instances);
+        return Results.Ok(instances.Select(i => i.Document).ToList());
     }
-    internal async Task<IResult> GetInstance([FromServices] IGetInstanceQuery getInstanceQuery, int docId)
+
+    internal async Task<IResult> GetInstance([FromServices] IGetInstanceQuery getInstanceQuery, int tenantId)
     {
-        var instance = await getInstanceQuery.Execute(docId);
-        return Results.Ok(instance);
+        var instance = await getInstanceQuery.Execute(tenantId);
+
+        if (instance != null)
+            return Results.Ok(instance.Document);
+
+        return Results.NotFound();
     }
 }

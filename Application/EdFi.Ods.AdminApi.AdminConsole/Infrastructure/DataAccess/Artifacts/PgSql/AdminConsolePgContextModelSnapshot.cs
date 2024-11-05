@@ -67,7 +67,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.PgS
                         .IsRequired()
                         .HasColumnType("jsonb");
 
-                    b.Property<int>("EdOrgId")
+                    b.Property<int?>("EdOrgId")
                         .HasColumnType("integer");
 
                     b.Property<int>("InstanceId")

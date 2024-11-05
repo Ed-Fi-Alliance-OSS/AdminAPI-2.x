@@ -10,7 +10,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models
         int? DocId { get; set; }
         int InstanceId { get; set; }
         int TenantId { get; set; }
-        int EdOrgId { get; set; }
+        int? EdOrgId { get; set; }
         string Document { get; set; }
     }
 }

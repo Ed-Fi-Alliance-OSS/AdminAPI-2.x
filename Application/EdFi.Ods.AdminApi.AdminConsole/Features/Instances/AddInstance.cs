@@ -32,8 +32,7 @@ public class AddInstance : IFeature
     {
         [Required]
         public int InstanceId { get; set; }
-        [Required]
-        public int EdOrgId { get; set; }
+        public int? EdOrgId { get; set; }
         [Required]
         public int TenantId { get; set; }
         [Required]

@@ -13,7 +13,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Queri
 
 public interface IGetInstanceQuery
 {
-    Task<Instance> Execute(int docId);
+    Task<Instance> Execute(int tenantId);
 }
 
 public class GetInstanceQuery : IGetInstanceQuery
@@ -28,15 +28,14 @@ public class GetInstanceQuery : IGetInstanceQuery
         _encryptionKey = encryptionKeyResolver.GetEncryptionKey();
         _encryptionService = encryptionService;
     }
-    public async Task<Instance> Execute(int docId)
+
+    public async Task<Instance> Execute(int tenantId)
     {
 
-        var instance = await _instanceQuery.Query().SingleOrDefaultAsync(instance => instance.DocId == docId);
+        var instance = await _instanceQuery.Query().SingleOrDefaultAsync(instance => instance.TenantId == tenantId);
 
         if (instance == null)
-        {
-            throw new Exception($"Not found {nameof(Instance)} for Doc Id: {docId}");
-        }
+            return null;
 
         JsonNode? jnDocument = JsonNode.Parse(instance.Document);
 

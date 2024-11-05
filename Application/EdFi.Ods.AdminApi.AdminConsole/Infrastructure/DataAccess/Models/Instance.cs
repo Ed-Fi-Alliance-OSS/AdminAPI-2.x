@@ -10,6 +10,6 @@ public class Instance : IModel
     public int? DocId { get; set; }
     public required int InstanceId { get; set; }
     public required int TenantId { get; set; }
-    public required int EdOrgId { get; set; }
+    public int? EdOrgId { get; set; }
     public required string Document { get; set; }
 }

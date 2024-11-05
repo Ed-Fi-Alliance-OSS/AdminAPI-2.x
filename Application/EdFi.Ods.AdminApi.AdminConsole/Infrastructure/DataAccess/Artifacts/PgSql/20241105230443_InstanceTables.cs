@@ -1,8 +1,3 @@
-// SPDX-License-Identifier: Apache-2.0
-// Licensed to the Ed-Fi Alliance under one or more agreements.
-// The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
-// See the LICENSE and NOTICES files in the project root for more information.
-
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -16,9 +11,6 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.PgS
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.EnsureSchema(
-                name: "adminconsole");
-
             migrationBuilder.CreateTable(
                 name: "Instances",
                 schema: "adminconsole",
@@ -28,7 +20,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.PgS
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     InstanceId = table.Column<int>(type: "integer", nullable: false),
                     TenantId = table.Column<int>(type: "integer", nullable: false),
-                    EdOrgId = table.Column<int>(type: "integer", nullable: false),
+                    EdOrgId = table.Column<int>(type: "integer", nullable: true),
                     Document = table.Column<string>(type: "jsonb", nullable: false)
                 },
                 constraints: table =>
@@ -52,7 +44,8 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.PgS
                 name: "IX_Instances_TenantId",
                 schema: "adminconsole",
                 table: "Instances",
-                column: "TenantId");
+                column: "TenantId",
+                unique: true);
         }
 
         /// <inheritdoc />
