@@ -4,12 +4,18 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Configuration;
 using AspNetCoreRateLimit;
+using Autofac.Core;
+using EdFi.Ods.AdminApi.AdminConsole.Helpers;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.AutoMapper;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services;
 using EdFi.Ods.AdminApi.Features;
+using EdFi.Ods.AdminApi.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.MultiTenancy;
 using log4net;
+using Microsoft.Extensions.Options;
 using ServiceRegistration = EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.ServiceRegistration;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +27,13 @@ builder.Services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
 builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 builder.Services.AddInMemoryRateLimiting();
+
+builder.Services.Configure<AdminConsoleSettings>(builder.Configuration.GetSection("AdminConsoleSettings"));
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+builder.Services.AddTransient<IEncryptionKeySettings>(sp => sp.GetService<IOptions<AdminConsoleSettings>>().Value);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+builder.Services.AddTransient<IEncryptionKeyResolver, OptionsEncryptionKeyResolver>();
+builder.Services.AddScoped<IEncryptionService, EncryptionService>();
 
 var adminConsoleIsEnabled = builder.Configuration.GetValue<bool>("AppSettings:EnableAdminConsoleAPI");
 if (adminConsoleIsEnabled)
