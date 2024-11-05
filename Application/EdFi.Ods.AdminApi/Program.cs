@@ -39,8 +39,6 @@ if (adminConsoleIsEnabled)
     ServiceRegistration.AddServices(builder.Services, builder.Configuration);
 }
 
-builder.Services.AddAutoMapper(typeof(AdminConsoleMappingProfile));
-
 // logging
 var _logger = LogManager.GetLogger("Program");
 _logger.Info("Starting Admin API");
