@@ -20,7 +20,7 @@ internal class AddTenant : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiAdminConsoleEndpointBuilder.MapPost(endpoints, "/tenant", Execute)
+        AdminApiAdminConsoleEndpointBuilder.MapPost(endpoints, "/tenants", Execute)
             .WithRouteOptions(b => b.WithResponseCode(201))
             .BuildForVersions();
     }

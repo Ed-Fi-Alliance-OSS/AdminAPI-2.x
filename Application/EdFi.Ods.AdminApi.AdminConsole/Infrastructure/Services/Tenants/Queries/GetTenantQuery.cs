@@ -16,7 +16,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Tenants.Queries
 
 public interface IGetTenantQuery
 {
-    Task<Tenant> Get(int docId);
+    Task<Tenant> Get(int tenantId);
     Task<IEnumerable<Tenant>> GetAll();
 }
 

@@ -15,10 +15,10 @@ public class ReadTenants : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/tenant", GetTenants)
+        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/tenants", GetTenants)
            .BuildForVersions();
 
-        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/tenant/{tenantId}", GetTenant)
+        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/tenants/{tenantId}", GetTenant)
            .BuildForVersions();
     }
 
