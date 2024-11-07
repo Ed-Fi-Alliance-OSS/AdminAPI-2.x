@@ -29,7 +29,7 @@ internal class AddTenant : IFeature
     {
         await validator.GuardAsync(request);
         var addedTenant = await addTenantCommand.Execute(request);
-        return Results.Created($"/tenant/{addedTenant.TenantId}", null);
+        return Results.Created($"/tenants/{addedTenant.TenantId}", null);
     }
 
     public class AddTenantRequest : IAddTenantModel
