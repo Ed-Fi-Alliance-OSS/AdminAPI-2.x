@@ -26,7 +26,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.ModelConfigur
         {
             entity.ToTable("Tenants", "adminconsole");
             entity.HasKey(e => e.DocId);
-            switch (_dbProvider) // Add this line to get the database provider
+            switch (_dbProvider)
             {
                 case DbProviders.PostgreSql:
                     entity.Property(e => e.Document).HasColumnType("jsonb");

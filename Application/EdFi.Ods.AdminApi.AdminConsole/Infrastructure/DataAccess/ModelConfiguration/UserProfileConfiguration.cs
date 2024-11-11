@@ -3,24 +3,24 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.ModelConfiguration;
 
-public class HealthCheckConfiguration : IEntityTypeConfiguration<HealthCheck>
+public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
 {
     private readonly string _dbProvider;
-    public HealthCheckConfiguration(string dbProvider)
+
+    public UserProfileConfiguration(string dbProvider)
     {
         _dbProvider = dbProvider;
     }
 
-    public void Configure(EntityTypeBuilder<HealthCheck> entity)
+    public void Configure(EntityTypeBuilder<UserProfile> entity)
     {
-        entity.ToTable("HealthChecks", "adminconsole");
+        entity.ToTable("UserProfiles", "adminconsole");
         entity.HasKey(e => e.DocId);
         switch (_dbProvider)
         {
