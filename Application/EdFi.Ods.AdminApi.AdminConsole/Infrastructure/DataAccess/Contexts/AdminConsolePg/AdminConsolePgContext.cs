@@ -25,6 +25,7 @@ public class AdminConsolePgContext : DbContext, IDbContext
         modelBuilder.ApplyConfiguration(new HealthCheckConfiguration(DbProvider));
         modelBuilder.ApplyConfiguration(new TenantConfiguration(DbProvider));
         modelBuilder.ApplyConfiguration(new InstanceConfiguration(DbProvider));
+        modelBuilder.ApplyConfiguration(new PermissionConfiguration(DbProvider));
 
     }
 }
