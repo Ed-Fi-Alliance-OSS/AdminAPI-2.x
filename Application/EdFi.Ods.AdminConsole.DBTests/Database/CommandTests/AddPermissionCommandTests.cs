@@ -44,7 +44,7 @@ public class AddPermissionCommandTests : PlatformUsersContextTestBase
             var repository = new CommandRepository<Permission>(dbContext);
             var newPermission = new TestPermission
             {
-                PermissionId = 1,
+                InstanceId = 1,
                 TenantId = 1,
                 EdOrgId = 1,
                 Document = permissionDocument
@@ -61,7 +61,7 @@ public class AddPermissionCommandTests : PlatformUsersContextTestBase
             persistedPermission.Count().ShouldBe(1);
             persistedPermission.First().DocId.ShouldBe(1);
             persistedPermission.First().TenantId.ShouldBe(1);
-            persistedPermission.First().PermissionId.ShouldBe(1);
+            persistedPermission.First().InstanceId.ShouldBe(1);
             persistedPermission.First().EdOrgId.ShouldBe(1);
 
             JsonNode jnDocument = JsonNode.Parse(persistedPermission.First().Document);
@@ -87,7 +87,7 @@ public class AddPermissionCommandTests : PlatformUsersContextTestBase
     {
         public int DocId { get; }
         public int TenantId { get; set; }
-        public int PermissionId { get; set; }
+        public int InstanceId { get; set; }
         public int? EdOrgId { get; set; }
         public string Document { get; set; }
     }

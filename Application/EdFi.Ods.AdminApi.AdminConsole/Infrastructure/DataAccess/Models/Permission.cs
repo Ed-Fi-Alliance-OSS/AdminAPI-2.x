@@ -5,10 +5,10 @@
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 
-public class Permission : IPermission
+public class Permission : IModel
 {
     public int? DocId { get; set; }
-    public required int PermissionId { get; set; }
+    public required int InstanceId { get; set; }
     public required int TenantId { get; set; }
     public int? EdOrgId { get; set; }
     public required string Document { get; set; }

@@ -31,7 +31,7 @@ public class PermissionConfiguration : IEntityTypeConfiguration<Permission>
                 break;
         }
 
-        entity.HasIndex(e => e.PermissionId);
+        entity.HasIndex(e => e.InstanceId);
         entity.HasIndex(e => e.EdOrgId);
     }
 }

@@ -31,7 +31,7 @@ public class AddPermission: IFeature
     public class AddPermissionRequest : IAddPermissionModel
     {
         [Required]
-        public int PermissionId { get; set; }
+        public int InstanceId { get; set; }
         public int? EdOrgId { get; set; }
         [Required]
         public int TenantId { get; set; }
@@ -43,11 +43,14 @@ public class AddPermission: IFeature
     {
         public Validator()
         {
-            RuleFor(m => m.PermissionId)
+            RuleFor(m => m.InstanceId)
              .NotNull();
 
             RuleFor(m => m.EdOrgId)
              .NotNull();
+
+            RuleFor(m => m.TenantId)
+                 .NotNull();
 
             RuleFor(m => m.Document)
              .NotNull()

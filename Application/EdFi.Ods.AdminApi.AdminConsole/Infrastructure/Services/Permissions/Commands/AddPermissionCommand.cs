@@ -51,7 +51,7 @@ public class AddPermissionCommand : IAddPermissionCommand
         {
             return await _permissionCommand.AddAsync(new Permission
             {
-                PermissionId = permission.PermissionId,
+                InstanceId = permission.InstanceId,
                 TenantId = permission.TenantId,
                 EdOrgId = permission.EdOrgId,
                 Document = jnDocument!.ToJsonString(),
@@ -67,7 +67,7 @@ public class AddPermissionCommand : IAddPermissionCommand
 
 public interface IAddPermissionModel
 {
-    int PermissionId { get; }
+    int InstanceId { get; }
     int? EdOrgId { get; }
     int TenantId { get; }
     string Document { get; }

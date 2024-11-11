@@ -37,7 +37,7 @@ public class GetPermissionByIdQueryTests : PlatformUsersContextTestBase
 
         var newPermission = new TestPermission
         {
-            PermissionId = 1,
+            InstanceId = 1,
             TenantId = 1,
             EdOrgId = 1,
             Document = permissionDocument
@@ -59,7 +59,7 @@ public class GetPermissionByIdQueryTests : PlatformUsersContextTestBase
 
             permission.DocId.ShouldBe(result.DocId);
             permission.TenantId.ShouldBe(newPermission.TenantId);
-            permission.PermissionId.ShouldBe(newPermission.PermissionId);
+            permission.InstanceId.ShouldBe(newPermission.InstanceId);
             permission.EdOrgId.ShouldBe(newPermission.EdOrgId);
             permission.Document.ShouldBe(newPermission.Document);
         });
@@ -69,7 +69,7 @@ public class GetPermissionByIdQueryTests : PlatformUsersContextTestBase
     {
         public int DocId { get; }
         public int TenantId { get; set; }
-        public int PermissionId { get; set; }
+        public int InstanceId { get; set; }
         public int? EdOrgId { get; set; }
         public string Document { get; set; }
     }

@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -17,7 +17,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.Mss
                 {
                     DocId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PermissionId = table.Column<int>(type: "int", nullable: false),
+                    InstanceId = table.Column<int>(type: "int", nullable: false),
                     TenantId = table.Column<int>(type: "int", nullable: false),
                     EdOrgId = table.Column<int>(type: "int", nullable: true),
                     Document = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -34,10 +34,10 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.Mss
                 column: "EdOrgId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Permissions_PermissionId",
+                name: "IX_Permissions_InstanceId",
                 schema: "adminconsole",
                 table: "Permissions",
-                column: "PermissionId");
+                column: "InstanceId");
         }
 
         /// <inheritdoc />
