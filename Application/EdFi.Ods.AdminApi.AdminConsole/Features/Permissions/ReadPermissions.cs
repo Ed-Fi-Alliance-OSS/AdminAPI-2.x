@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
 
-namespace EdFi.Ods.AdminApi.AdminConsole.Features.UserProfiles;
+namespace EdFi.Ods.AdminApi.AdminConsole.Features.Permissions;
 
 public class ReadPermissions : IFeature
 {

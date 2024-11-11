@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace EdFi.Ods.AdminApi.AdminConsole.Features.UserProfiles;
+namespace EdFi.Ods.AdminApi.AdminConsole.Features.Instances;
 
 public class ReadInstances : IFeature
 {
