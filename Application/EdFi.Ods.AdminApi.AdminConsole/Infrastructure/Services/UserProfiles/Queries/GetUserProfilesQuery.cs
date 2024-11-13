@@ -12,18 +12,18 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.UserProfiles.Qu
 
 public interface IGetUserProfilesQuery
 {
-    Task<IEnumerable<Permission>> Execute();
+    Task<IEnumerable<UserProfile>> Execute();
 }
 
 public class GetUserProfilesQuery : IGetUserProfilesQuery
 {
-    private readonly IQueriesRepository<Permission> _userProfilesQuery;
+    private readonly IQueriesRepository<UserProfile> _userProfilesQuery;
 
-    public GetUserProfilesQuery(IQueriesRepository<Permission> userProfilesQuery)
+    public GetUserProfilesQuery(IQueriesRepository<UserProfile> userProfilesQuery)
     {
         _userProfilesQuery = userProfilesQuery;
     }
-    public async Task<IEnumerable<Permission>> Execute()
+    public async Task<IEnumerable<UserProfile>> Execute()
     {
         return await _userProfilesQuery.GetAllAsync();
     }
