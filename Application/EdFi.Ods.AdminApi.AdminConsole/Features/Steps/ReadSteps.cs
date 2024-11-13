@@ -4,7 +4,11 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Dynamic;
+using System.Text.Json;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Permissions.Queries;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Steps.Queries;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
 
@@ -18,26 +22,24 @@ public class ReadSteps : IFeature
            .BuildForVersions();
 
         AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/step", GetStep)
+           .WithRouteOptions(b => b.WithResponse<StepModel>(200))
            .BuildForVersions();
     }
 
-    internal Task<IResult> GetSteps()
+    internal async Task<IResult> GetSteps([FromServices] IGetStepsQuery getStepsQuery)
     {
-        using (StreamReader r = new StreamReader("Mockdata/data-steps.json"))
-        {
-            string json = r.ReadToEnd();
-            List<ExpandoObject> result = JsonConvert.DeserializeObject<List<ExpandoObject>>(json);
-            return Task.FromResult(Results.Ok(result));
-        }
+    	var steps = await getStepsQuery.Execute();
+        IEnumerable<JsonDocument> stepsList = steps.Select(i => JsonDocument.Parse(i.Document));
+        return Results.Ok(stepsList);
     }
 
-    internal Task<IResult> GetStep(int id)
+    internal async Task<IResult> GetStep([FromServices] IGetStepQuery getStepQuery, int tenantId)
     {
-        using (StreamReader r = new StreamReader("Mockdata/data-step.json"))
-        {
-            string json = r.ReadToEnd();
-            ExpandoObject result = JsonConvert.DeserializeObject<ExpandoObject>(json);
-            return Task.FromResult(Results.Ok(result));
-        }
+    	var steps = await getStepQuery.Execute(tenantId);
+
+        if (steps != null)
+            return Results.Ok(JsonDocument.Parse(steps.Document));
+
+        return Results.NotFound();
     }
 }

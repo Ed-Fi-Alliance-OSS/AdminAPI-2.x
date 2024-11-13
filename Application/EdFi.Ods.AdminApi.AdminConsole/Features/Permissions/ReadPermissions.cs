@@ -4,7 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Dynamic;
-using EdFi.Ods.AdminApi.AdminConsole.Features.OdsInstances;
 using System.Text.Json;
 using EdFi.Ods.AdminApi.AdminConsole.Features.Permissions;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;

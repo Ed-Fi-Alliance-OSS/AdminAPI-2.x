@@ -26,6 +26,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using FeaturesTenant = EdFi.Ods.AdminApi.AdminConsole.Features.Tenants;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Steps.Queries;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Steps.Commands;
+using EdFi.Ods.AdminApi.AdminConsole.Features.Steps;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services;
 
@@ -85,6 +88,11 @@ public static class ServiceRegistration
         serviceCollection.AddScoped<ICommandRepository<UserProfile>, CommandRepository<UserProfile>>();
         serviceCollection.AddScoped<IQueriesRepository<UserProfile>, QueriesRepository<UserProfile>>();
         #endregion
+
+        #region Step
+        serviceCollection.AddScoped<ICommandRepository<Step>, CommandRepository<Step>>();
+        serviceCollection.AddScoped<IQueriesRepository<Step>, QueriesRepository<Step>>();
+        #endregion
     }
 
     private static void RegisterServices(IServiceCollection serviceCollection)
@@ -117,6 +125,11 @@ public static class ServiceRegistration
         serviceCollection.AddScoped<IGetUserProfileQuery, GetUserProfileQuery>();
         serviceCollection.AddScoped<IGetUserProfilesQuery, GetUserProfilesQuery>();
         #endregion
+        #region Step
+        serviceCollection.AddScoped<IAddStepCommand, AddStepCommand>();
+        serviceCollection.AddScoped<IGetStepQuery, GetStepQuery>();
+        serviceCollection.AddScoped<IGetStepsQuery, GetStepsQuery>();
+        #endregion Step
     }
 
     private static void RegisterValidators(IServiceCollection serviceCollection)
@@ -126,5 +139,6 @@ public static class ServiceRegistration
         serviceCollection.AddTransient<AddInstance.Validator>();
         serviceCollection.AddTransient<AddPermission.Validator>();
         serviceCollection.AddTransient<AddUserProfile.Validator>();
+        serviceCollection.AddTransient<AddStep.Validator>();
     }
 }

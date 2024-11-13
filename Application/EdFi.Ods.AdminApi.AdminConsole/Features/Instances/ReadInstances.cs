@@ -6,7 +6,6 @@
 using System.Linq;
 using System.Net.Http.Json;
 using System.Text.Json;
-using EdFi.Ods.AdminApi.AdminConsole.Features.OdsInstances;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Queries;
 using Microsoft.AspNetCore.Http;
