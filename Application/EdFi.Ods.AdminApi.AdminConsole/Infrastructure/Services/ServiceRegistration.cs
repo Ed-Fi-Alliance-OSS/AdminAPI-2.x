@@ -23,6 +23,8 @@ using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Permissions.Queries
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.UserProfiles.Commands;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.UserProfiles.Queries;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services;
 
@@ -63,20 +65,24 @@ public static class ServiceRegistration
         serviceCollection.AddScoped<IQueriesRepository<HealthCheck>, QueriesRepository<HealthCheck>>();
         #endregion
 
+        #region Instance
+        serviceCollection.AddScoped<ICommandRepository<Instance>, CommandRepository<Instance>>();
+        serviceCollection.AddScoped<IQueriesRepository<Instance>, QueriesRepository<Instance>>();
+        #endregion
 
         #region Tenant
         serviceCollection.AddScoped<ICommandRepository<Tenant>, CommandRepository<Tenant>>();
         serviceCollection.AddScoped<IQueriesRepository<Tenant>, QueriesRepository<Tenant>>();
         #endregion
 
-        #region Instance
-        serviceCollection.AddScoped<ICommandRepository<Instance>, CommandRepository<Instance>>();
-        serviceCollection.AddScoped<IQueriesRepository<Instance>, QueriesRepository<Instance>>();
-        #endregion
-
         #region Permission
         serviceCollection.AddScoped<ICommandRepository<Permission>, CommandRepository<Permission>>();
         serviceCollection.AddScoped<IQueriesRepository<Permission>, QueriesRepository<Permission>>();
+        #endregion
+
+        #region UserProfile
+        serviceCollection.AddScoped<ICommandRepository<UserProfile>, CommandRepository<UserProfile>>();
+        serviceCollection.AddScoped<IQueriesRepository<UserProfile>, QueriesRepository<UserProfile>>();
         #endregion
     }
 
@@ -104,6 +110,12 @@ public static class ServiceRegistration
         serviceCollection.AddScoped<IGetPermissionQuery, GetPermissionQuery>();
         serviceCollection.AddScoped<IGetPermissionsQuery, GetPermissionsQuery>();
         #endregion Permission
+
+        #region UserProfile
+        serviceCollection.AddScoped<IAddUserProfileCommand, AddUserProfileCommand>();
+        serviceCollection.AddScoped<IGetUserProfileQuery, GetUserProfileQuery>();
+        serviceCollection.AddScoped<IGetUserProfilesQuery, GetUserProfilesQuery>();
+        #endregion
     }
 
     private static void RegisterValidators(IServiceCollection serviceCollection)
