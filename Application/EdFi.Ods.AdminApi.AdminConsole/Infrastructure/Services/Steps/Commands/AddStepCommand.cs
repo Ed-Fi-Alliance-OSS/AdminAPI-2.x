@@ -30,23 +30,6 @@ public class AddStepCommand : IAddStepCommand
 
     public async Task<Step> Execute(IAddStepModel step)
     {
-        JsonNode? jnDocument = JsonNode.Parse(step.Document);
-
-        var clientId = jnDocument!["clientId"]?.AsValue().ToString();
-        var clientSecret = jnDocument!["clientSecret"]?.AsValue().ToString();
-
-        var encryptedClientId = string.Empty;
-        var encryptedClientSecret = string.Empty;
-
-        if (!string.IsNullOrEmpty(clientId) && !string.IsNullOrEmpty(clientSecret))
-        {
-            _encryptionService.TryEncrypt(clientId, _encryptionKey, out encryptedClientId);
-            _encryptionService.TryEncrypt(clientSecret, _encryptionKey, out encryptedClientSecret);
-
-            jnDocument!["clientId"] = encryptedClientId;
-            jnDocument!["clientSecret"] = encryptedClientSecret;
-        }
-
         try
         {
             return await _stepCommand.AddAsync(new Step
@@ -54,7 +37,7 @@ public class AddStepCommand : IAddStepCommand
                 InstanceId = step.InstanceId,
                 TenantId = step.TenantId,
                 EdOrgId = step.EdOrgId,
-                Document = jnDocument!.ToJsonString(),
+                Document = step.Document,
             });
         }
         catch (Exception ex)

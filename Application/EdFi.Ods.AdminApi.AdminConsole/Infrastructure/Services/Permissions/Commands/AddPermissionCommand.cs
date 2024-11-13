@@ -30,23 +30,6 @@ public class AddPermissionCommand : IAddPermissionCommand
 
     public async Task<Permission> Execute(IAddPermissionModel permission)
     {
-        JsonNode? jnDocument = JsonNode.Parse(permission.Document);
-
-        var clientId = jnDocument!["clientId"]?.AsValue().ToString();
-        var clientSecret = jnDocument!["clientSecret"]?.AsValue().ToString();
-
-        var encryptedClientId = string.Empty;
-        var encryptedClientSecret = string.Empty;
-
-        if (!string.IsNullOrEmpty(clientId) && !string.IsNullOrEmpty(clientSecret))
-        {
-            _encryptionService.TryEncrypt(clientId, _encryptionKey, out encryptedClientId);
-            _encryptionService.TryEncrypt(clientSecret, _encryptionKey, out encryptedClientSecret);
-
-            jnDocument!["clientId"] = encryptedClientId;
-            jnDocument!["clientSecret"] = encryptedClientSecret;
-        }
-
         try
         {
             return await _permissionCommand.AddAsync(new Permission
@@ -54,7 +37,7 @@ public class AddPermissionCommand : IAddPermissionCommand
                 InstanceId = permission.InstanceId,
                 TenantId = permission.TenantId,
                 EdOrgId = permission.EdOrgId,
-                Document = jnDocument!.ToJsonString(),
+                Document = permission.Document,
             });
         }
         catch (Exception ex)

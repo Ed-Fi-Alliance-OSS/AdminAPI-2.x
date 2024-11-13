@@ -11,32 +11,14 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.PgS
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_Permissions_TenantId",
-                table: "Permissions");
-
-            migrationBuilder.RenameTable(
-                name: "Permissions",
-                newName: "Permissions",
-                newSchema: "adminconsole");
-
             migrationBuilder.AlterColumn<int>(
-                name: "InstanceId",
+                name: "EdOrgId",
                 schema: "adminconsole",
                 table: "Tenants",
                 type: "integer",
-                nullable: false,
+                nullable: true,
                 oldClrType: typeof(int),
-                oldType: "int");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Document",
-                schema: "adminconsole",
-                table: "Permissions",
-                type: "jsonb",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "text");
+                oldType: "integer");
 
             migrationBuilder.CreateTable(
                 name: "Steps",
@@ -75,33 +57,16 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.PgS
                 name: "Steps",
                 schema: "adminconsole");
 
-            migrationBuilder.RenameTable(
-                name: "Permissions",
-                schema: "adminconsole",
-                newName: "Permissions");
-
             migrationBuilder.AlterColumn<int>(
-                name: "InstanceId",
+                name: "EdOrgId",
                 schema: "adminconsole",
                 table: "Tenants",
-                type: "int",
+                type: "integer",
                 nullable: false,
+                defaultValue: 0,
                 oldClrType: typeof(int),
-                oldType: "integer");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Document",
-                table: "Permissions",
-                type: "text",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "jsonb");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Permissions_TenantId",
-                table: "Permissions",
-                column: "TenantId",
-                unique: true);
+                oldType: "integer",
+                oldNullable: true);
         }
     }
 }

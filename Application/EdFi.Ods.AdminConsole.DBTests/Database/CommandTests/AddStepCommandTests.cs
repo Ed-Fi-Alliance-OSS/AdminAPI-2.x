@@ -34,7 +34,7 @@ public class AddStepCommandTests : PlatformUsersContextTestBase
     [Test]
     public void ShouldExecute()
     {
-        var stepDocument = "{\"data\":[],\"type\":\"Response\"}";
+        var stepDocument = "[{\"number\":1,\"description\":\"Step1\",\"startedAt\":\"2022-01-01T09:00:00\",\"completedAt\":\"2022-01-01T09:30:00\",\"status\":\"Completed\"},{\"number\":2,\"description\":\"Step2\",\"startedAt\":\"2022-01-01T09:30:00\",\"completedAt\":\"2022-01-01T09:45:00\",\"status\":\"Completed\"},{\"number\":3,\"description\":\"Step3\",\"startedAt\":\"2022-01-01T09:45:00\",\"completedAt\":\"2022-01-01T10:00:00\",\"status\":\"Completed\"}]";
 
         var encryptionService = new EncryptionService();
         var encryptionKey = Testing.GetEncryptionKeyResolver().GetEncryptionKey();
