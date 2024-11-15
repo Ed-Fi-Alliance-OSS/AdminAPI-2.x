@@ -11,5 +11,6 @@ public class HealthCheck
     public required int InstanceId { get; set; }
     public int EdOrgId { get; set; }
     public required int TenantId { get; set; }
+    [JsonConverter(typeof(StringToJsonDocumentConverter))]
     public required string Document { get; set; }
 }
