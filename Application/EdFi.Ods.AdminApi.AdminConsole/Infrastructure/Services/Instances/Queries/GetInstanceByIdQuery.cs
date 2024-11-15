@@ -9,35 +9,35 @@ using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
 
-namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Steps.Queries;
+namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Queries;
 
-public interface IGetStepQuery
+public interface IGetInstanceByIdQuery
 {
-    Task<Step> Execute(int tenantId);
+    Task<Instance> Execute(int tenantId, int docId);
 }
 
-public class GetStepQuery : IGetStepQuery
+public class GetInstanceByIdQuery : IGetInstanceByIdQuery
 {
-    private readonly IQueriesRepository<Step> _stepQuery;
+    private readonly IQueriesRepository<Instance> _instanceQuery;
     private readonly IEncryptionService _encryptionService;
     private readonly string _encryptionKey;
 
-    public GetStepQuery(IQueriesRepository<Step> stepQuery, IEncryptionKeyResolver encryptionKeyResolver, IEncryptionService encryptionService)
+    public GetInstanceByIdQuery(IQueriesRepository<Instance> instanceQuery, IEncryptionKeyResolver encryptionKeyResolver, IEncryptionService encryptionService)
     {
-        _stepQuery = stepQuery;
+        _instanceQuery = instanceQuery;
         _encryptionKey = encryptionKeyResolver.GetEncryptionKey();
         _encryptionService = encryptionService;
     }
 
-    public async Task<Step> Execute(int tenantId)
+    public async Task<Instance> Execute(int tenantId, int docId)
     {
 
-        var step = await _stepQuery.Query().SingleOrDefaultAsync(step => step.TenantId == tenantId);
+        var instance = await _instanceQuery.Query().SingleOrDefaultAsync(instance => instance.TenantId == tenantId && instance.DocId == docId);
 
-        if (step == null)
+        if (instance == null)
             return null;
 
-        JsonNode? jnDocument = JsonNode.Parse(step.Document);
+        JsonNode? jnDocument = JsonNode.Parse(instance.Document);
 
         var encryptedClientId = jnDocument!["clientId"]?.AsValue().ToString();
         var encryptedClientSecret = jnDocument!["clientSecret"]?.AsValue().ToString();
@@ -54,8 +54,8 @@ public class GetStepQuery : IGetStepQuery
             jnDocument!["clientSecret"] = clientSecret;
         }
 
-        step.Document = jnDocument!.ToJsonString();
+        instance.Document = jnDocument!.ToJsonString();
 
-        return step;
+        return instance;
     }
 }

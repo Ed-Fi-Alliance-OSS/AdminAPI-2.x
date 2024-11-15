@@ -5,12 +5,12 @@
 
 using System.Dynamic;
 using System.Text.Json;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Permissions.Queries;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Steps.Queries;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Newtonsoft.Json;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Features.Steps;
 
@@ -21,7 +21,11 @@ public class ReadSteps : IFeature
         AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/steps", GetSteps)
            .BuildForVersions();
 
-        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/step", GetStep)
+        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/steps/{tenantId}/{id}", GetStepById)
+           .WithRouteOptions(b => b.WithResponse<StepModel>(200))
+           .BuildForVersions();
+
+        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/steps/{tenantId}", GetStepsByTenantId)
            .WithRouteOptions(b => b.WithResponse<StepModel>(200))
            .BuildForVersions();
     }
@@ -29,17 +33,28 @@ public class ReadSteps : IFeature
     internal async Task<IResult> GetSteps([FromServices] IGetStepsQuery getStepsQuery)
     {
     	var steps = await getStepsQuery.Execute();
-        IEnumerable<JsonDocument> stepsList = steps.Select(i => JsonDocument.Parse(i.Document));
-        return Results.Ok(stepsList);
+        return Results.Ok(steps);
     }
 
-    internal async Task<IResult> GetStep([FromServices] IGetStepQuery getStepQuery, int tenantId)
+    internal async Task<IResult> GetStepById([FromServices] IGetStepsByIdQuery GetStepsByIdQuery, int tenantId, int id)
     {
-    	var steps = await getStepQuery.Execute(tenantId);
+        var step = await GetStepsByIdQuery.Execute(tenantId, id);
 
-        if (steps != null)
-            return Results.Ok(JsonDocument.Parse(steps.Document));
+        if (step != null)
+        {
+            return Results.Ok(step);
+        }
+        return Results.NotFound();
+    }
 
+    internal async Task<IResult> GetStepsByTenantId([FromServices] IGetStepsByTenantIdQuery GetStepsByTenantIdQuery, int tenantId)
+    {
+    	var steps = await GetStepsByTenantIdQuery.Execute(tenantId);
+        
+        if (steps.Any())
+        {
+            return Results.Ok(steps);
+        }
         return Results.NotFound();
     }
 }

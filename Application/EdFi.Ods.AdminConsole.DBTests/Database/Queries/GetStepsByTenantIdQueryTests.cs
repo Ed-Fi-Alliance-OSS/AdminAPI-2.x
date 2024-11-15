@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Linq;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApi.AdminConsole.Helpers;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
@@ -14,11 +15,12 @@ using EdFi.Ods.AdminApi.Helpers;
 using Microsoft.Extensions.Options;
 using NUnit.Framework;
 using Shouldly;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace EdFi.Ods.AdminConsole.DBTests.Database.CommandTests;
 
 [TestFixture]
-public class GetStepByIdQueryTests : PlatformUsersContextTestBase
+public class GetStepsByTenantIdQueryTests : PlatformUsersContextTestBase
 {
     private IOptions<AppSettings> _options { get; set; }
 
@@ -54,14 +56,14 @@ public class GetStepByIdQueryTests : PlatformUsersContextTestBase
         Transaction(async dbContext =>
         {
             var repository = new QueriesRepository<Step>(dbContext);
-            var query = new GetStepsByIdQuery(repository, Testing.GetEncryptionKeyResolver(), new EncryptionService());
-            var step = await query.Execute(result.TenantId, result.DocId.Value);
-
-            step.DocId.ShouldBe(result.DocId);
-            step.TenantId.ShouldBe(newStep.TenantId);
-            step.InstanceId.ShouldBe(newStep.InstanceId);
-            step.EdOrgId.ShouldBe(newStep.EdOrgId);
-            step.Document.ShouldBe(newStep.Document);
+            var query = new GetStepsByTenantIdQuery(repository, Testing.GetEncryptionKeyResolver(), new EncryptionService());
+            var steps = await query.Execute(result.TenantId);
+            steps.Count().ShouldBe(1);
+            steps.FirstOrDefault().DocId.ShouldBe(result.DocId);
+            steps.FirstOrDefault().TenantId.ShouldBe(newStep.TenantId);
+            steps.FirstOrDefault().InstanceId.ShouldBe(newStep.InstanceId);
+            steps.FirstOrDefault().EdOrgId.ShouldBe(newStep.EdOrgId);
+            steps.FirstOrDefault().Document.ShouldBe(newStep.Document);
         });
     }
 

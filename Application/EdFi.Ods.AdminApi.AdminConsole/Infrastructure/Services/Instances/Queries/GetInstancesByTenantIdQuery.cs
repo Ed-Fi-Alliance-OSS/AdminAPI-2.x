@@ -7,33 +7,36 @@ using System.Text.Json.Nodes;
 using EdFi.Ods.AdminApi.AdminConsole.Helpers;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repository;
+using Microsoft.EntityFrameworkCore;
 
-namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Steps.Queries;
+namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Queries;
 
-public interface IGetStepsQuery
+public interface IGetInstancesByTenantIdQuery
 {
-    Task<IEnumerable<Step>> Execute();
+    Task<IEnumerable<Instance>> Execute(int tenantId);
 }
 
-public class GetStepsQuery : IGetStepsQuery
+public class GetInstancesByTenantIdQuery : IGetInstancesByTenantIdQuery
 {
-    private readonly IQueriesRepository<Step> _stepQuery;
+    private readonly IQueriesRepository<Instance> _instanceQuery;
     private readonly IEncryptionService _encryptionService;
     private readonly string _encryptionKey;
 
-    public GetStepsQuery(IQueriesRepository<Step> stepQuery, IEncryptionKeyResolver encryptionKeyResolver, IEncryptionService encryptionService)
+    public GetInstancesByTenantIdQuery(IQueriesRepository<Instance> instanceQuery, IEncryptionKeyResolver encryptionKeyResolver, IEncryptionService encryptionService)
     {
-        _stepQuery = stepQuery;
+        _instanceQuery = instanceQuery;
         _encryptionKey = encryptionKeyResolver.GetEncryptionKey();
         _encryptionService = encryptionService;
     }
-    public async Task<IEnumerable<Step>> Execute()
-    {
-        var steps = await _stepQuery.GetAllAsync();
 
-        foreach (var step in steps)
+    public async Task<IEnumerable<Instance>> Execute(int tenantId)
+    {
+
+        var instances = await _instanceQuery.Query().Where(instance => instance.TenantId == tenantId).ToListAsync();
+
+        foreach (var instance in instances)
         {
-            JsonNode? jn = JsonNode.Parse(step.Document);
+            JsonNode? jn = JsonNode.Parse(instance.Document);
 
             var encryptedClientId = jn!["clientId"]?.AsValue().ToString();
             var encryptedClientSecret = jn!["clientSecret"]?.AsValue().ToString();
@@ -50,9 +53,9 @@ public class GetStepsQuery : IGetStepsQuery
                 jn!["clientSecret"] = clientSecret;
             }
 
-            step.Document = jn!.ToJsonString();
+            instance.Document = jn!.ToJsonString();
         }
 
-        return steps.ToList();
+        return instances.ToList();
     }
 }

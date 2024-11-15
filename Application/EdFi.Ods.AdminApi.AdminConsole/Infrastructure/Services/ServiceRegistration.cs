@@ -105,29 +105,36 @@ public static class ServiceRegistration
 
         #region Tenant
         serviceCollection.AddScoped<IAddTenantCommand, AddTenantCommand>();
-        serviceCollection.AddScoped<IGetTenantQuery, GetTenantQuery>();
+        serviceCollection.AddScoped<IGetTenantsQuery, GetTenantsQuery>();
+        serviceCollection.AddScoped<IGetTenantByIdQuery, GetTenantByIdQuery>();
+        serviceCollection.AddScoped<IGetTenantByTenantIdQuery, GetTenantByTenantIdQuery>();
         #endregion
 
         #region Instance
         serviceCollection.AddScoped<IAddInstanceCommand, AddInstanceCommand>();
-        serviceCollection.AddScoped<IGetInstanceQuery, GetInstanceQuery>();
+        serviceCollection.AddScoped<IGetInstanceByIdQuery, GetInstanceByIdQuery>();
+        serviceCollection.AddScoped<IGetInstancesByTenantIdQuery, GetInstancesByTenantIdQuery>();
         serviceCollection.AddScoped<IGetInstancesQuery, GetInstancesQuery>();
         #endregion Instance
 
         #region Permission
         serviceCollection.AddScoped<IAddPermissionCommand, AddPermissionCommand>();
-        serviceCollection.AddScoped<IGetPermissionQuery, GetPermissionQuery>();
+        serviceCollection.AddScoped<IGetPermissionByIdQuery, GetPermissionByIdQuery>();
+        serviceCollection.AddScoped<IGetPermissionsByTenantIdQuery, GetPermissionsByTenantIdQuery>();
         serviceCollection.AddScoped<IGetPermissionsQuery, GetPermissionsQuery>();
         #endregion Permission
 
         #region UserProfile
         serviceCollection.AddScoped<IAddUserProfileCommand, AddUserProfileCommand>();
-        serviceCollection.AddScoped<IGetUserProfileQuery, GetUserProfileQuery>();
+        serviceCollection.AddScoped<IGetUserProfileByIdQuery, GetUserProfileByIdQuery>();
+        serviceCollection.AddScoped<IGetUserProfilesByTenantIdQuery, GetUserProfilesByTenantIdQuery>();
         serviceCollection.AddScoped<IGetUserProfilesQuery, GetUserProfilesQuery>();
         #endregion
+
         #region Step
         serviceCollection.AddScoped<IAddStepCommand, AddStepCommand>();
-        serviceCollection.AddScoped<IGetStepQuery, GetStepQuery>();
+        serviceCollection.AddScoped<IGetStepsByIdQuery, GetStepsByIdQuery>();
+        serviceCollection.AddScoped<IGetStepsByTenantIdQuery, GetStepsByTenantIdQuery>();
         serviceCollection.AddScoped<IGetStepsQuery, GetStepsQuery>();
         #endregion Step
     }

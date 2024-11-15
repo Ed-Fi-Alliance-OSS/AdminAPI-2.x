@@ -25,7 +25,7 @@ public class AddStep: IFeature
         await validator.GuardAsync(request);
         var addedStepResult = await addStepCommand.Execute(request);
 
-        return Results.Created($"/steps/{addedStepResult.DocId}", addedStepResult);
+        return Results.Created($"/steps/{addedStepResult.TenantId}/{addedStepResult.DocId}", addedStepResult);
     }
 
     public class AddStepRequest : IAddStepModel
