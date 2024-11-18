@@ -55,7 +55,7 @@ public class AdminApiAdminConsoleEndpointBuilder
     public void BuildForVersions() {
         BuildForVersions(string.Empty);
     }
-    public void BuildForVersions(string role)
+    public void BuildForVersions(string authorizationPolicy)
     {
         var version = "adminconsole";
         if (_route == null)
@@ -84,9 +84,9 @@ public class AdminApiAdminConsoleEndpointBuilder
         }
         else
         {
-            if (!String.IsNullOrEmpty(role))
+            if (!String.IsNullOrEmpty(authorizationPolicy))
             {
-                builder.RequireAuthorization(role);
+                builder.RequireAuthorization(authorizationPolicy);
             }
             else
             {
