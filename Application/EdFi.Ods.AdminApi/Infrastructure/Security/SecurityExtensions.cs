@@ -8,9 +8,12 @@ using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using EdFi.Ods.AdminApi.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using OpenIddict.Server;
+using Polly;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 using static OpenIddict.Server.OpenIddictServerEvents;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Security;
@@ -86,25 +89,48 @@ public static class SecurityExtensions
             {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(opt =>
-            {
+            })
+            .AddJwtBearer("Local", opt => {
                 opt.Authority = issuer;
                 opt.SaveToken = true;
                 opt.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateAudience = false,
                     ValidateIssuer = true,
-                    ValidateIssuerSigningKey = true,
                     ValidIssuer = issuer,
                     IssuerSigningKey = signingKey
                 };
                 opt.RequireHttpsMetadata = !isDockerEnvironment;
+            })
+            .AddJwtBearer("IdentityProvider", options => {
+                options.Authority = configuration.Get<string>("Authentication:OIDC:Authority");
+                options.Audience = configuration.Get<string>("Authentication:OIDC:ClientId");
+                options.RequireHttpsMetadata = configuration.Get<bool>("Authentication:OIDC:RequireHttpsMetadata");
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = configuration.Get<string>("Authentication:OIDC:Authority"),
+                    ValidateAudience = true,
+                    ValidAudience = configuration.Get<string>("Authentication:OIDC:ClientId"),
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    NameClaimType = "name"
+                };
             });
         services.AddAuthorization(opt =>
         {
             opt.DefaultPolicy = new AuthorizationPolicyBuilder()
-                .RequireClaim(OpenIddictConstants.Claims.Scope, SecurityConstants.Scopes.AdminApiFullAccess)
+                .AddAuthenticationSchemes("Local", "IdentityProvider")
+                .RequireAssertion(context =>
+                        context.User.HasClaim(c => c.Type == OpenIddictConstants.Claims.Scope && c.Value.Contains(SecurityConstants.Scopes.AdminApiFullAccess))
+                    )
                 .Build();
+            // Policy for Admin role
+            opt.AddPolicy("admin_console_full_access", policy => policy.RequireAssertion(context =>
+                        context.User.HasClaim(c => c.Type == OpenIddictConstants.Claims.Scope && c.Value.Contains(SecurityConstants.Scopes.AdminApiFullAccess)) &&
+                        context.User.HasClaim(c => c.Type == OpenIddictConstants.Claims.Scope && c.Value.Contains("edfi_admin_console/full_access"))
+                    )
+               .AddAuthenticationSchemes("Local", "IdentityProvider"));
         });
 
         //Security Endpoints

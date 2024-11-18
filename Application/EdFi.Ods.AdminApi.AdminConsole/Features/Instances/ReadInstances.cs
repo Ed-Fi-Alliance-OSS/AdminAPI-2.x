@@ -19,7 +19,7 @@ public class ReadInstances : IFeature
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/instances", GetInstances)
-            .BuildForVersions();
+            .BuildForVersions("admin_console_full_access");
 
         AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/instances/{tenantId}/{id}", GetInstanceById)
             .WithRouteOptions(b => b.WithResponse<InstanceModel>(200))
