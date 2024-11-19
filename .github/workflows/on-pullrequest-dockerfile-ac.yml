@@ -18,7 +18,6 @@
     DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
     DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
     IMAGE_NAME: ${{ vars.IMAGE_NAME }}
-    IMAGE_TAG: ${{ github.ref_name }}
 
   permissions: read-all
 
@@ -38,6 +37,15 @@
       steps:
         - name: Checkout code
           uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+        - name: Set IMAGE_TAG
+          id: set-image-tag
+          run: |
+            if [ "${{ github.event_name }}" == "pull_request" ]; then
+              echo "IMAGE_TAG=${{ github.base_ref }}" >> $GITHUB_ENV
+            else
+              echo "IMAGE_TAG=${{ github.ref_name }}" >> $GITHUB_ENV
+            fi
 
         - name: Copy application folder to docker context
           if: ${{ matrix.dockerfile.type == 'local' }}
