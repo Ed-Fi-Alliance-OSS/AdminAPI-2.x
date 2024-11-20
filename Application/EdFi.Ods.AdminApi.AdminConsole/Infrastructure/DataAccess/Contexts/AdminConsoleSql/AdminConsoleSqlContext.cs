@@ -6,6 +6,7 @@
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.ModelConfiguration;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsoleSql;
 
@@ -18,6 +19,8 @@ public class AdminConsoleSqlContext : DbContext, IDbContext
     public DbSet<Permission> Permissions { get; set; }
     public DbSet<Tenant> Tenants { get; set; }
     public DbSet<UserProfile> UserProfiles { get; set; }
+
+    public DatabaseFacade DB => this.Database;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

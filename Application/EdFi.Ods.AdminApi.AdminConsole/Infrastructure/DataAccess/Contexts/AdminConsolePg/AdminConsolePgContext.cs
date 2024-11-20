@@ -6,6 +6,8 @@
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.ModelConfiguration;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsolePg;
 
@@ -19,6 +21,8 @@ public class AdminConsolePgContext : DbContext, IDbContext
     public DbSet<Tenant> Tenants { get; set; }
     public DbSet<UserProfile> UserProfiles { get; set; }
 
+    public DatabaseFacade DB => this.Database;
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         const string DbProvider = DbProviders.PostgreSql;
@@ -27,6 +31,5 @@ public class AdminConsolePgContext : DbContext, IDbContext
         modelBuilder.ApplyConfiguration(new PermissionConfiguration(DbProvider));
         modelBuilder.ApplyConfiguration(new TenantConfiguration(DbProvider));
         modelBuilder.ApplyConfiguration(new UserProfileConfiguration(DbProvider));
-
     }
 }

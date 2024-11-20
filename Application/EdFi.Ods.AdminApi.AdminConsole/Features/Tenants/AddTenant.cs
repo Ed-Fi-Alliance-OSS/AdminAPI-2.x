@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Routing;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Features.Tenants;
-internal class AddTenant : IFeature
+public class AddTenant : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
@@ -45,7 +45,7 @@ internal class AddTenant : IFeature
         [Required]
         public string Document { get; set; }
     }
-    internal class Validator : AbstractValidator<AddTenantRequest>
+    public class Validator : AbstractValidator<AddTenantRequest>
     {
         public Validator()
         {

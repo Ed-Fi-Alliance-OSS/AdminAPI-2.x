@@ -5,6 +5,7 @@
 
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts;
 
@@ -20,6 +21,7 @@ public interface IDbContext
 
     DbSet<UserProfile> UserProfiles { get; set; }
 
+    DatabaseFacade DB { get; }
     DbSet<T> Set<T>() where T : class;
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
