@@ -3,15 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsolePg;
-using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsoleSql;
-using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts;
-using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess;
-using EdFi.Ods.AdminApi.Infrastructure.Context;
-using EdFi.Ods.AdminApi.Infrastructure.MultiTenancy;
-using Microsoft.EntityFrameworkCore;
-using System.Runtime.CompilerServices;
-using EdFi.Common.Configuration;
 using log4net;
 
 namespace EdFi.Ods.AdminApi.AdminConsole;

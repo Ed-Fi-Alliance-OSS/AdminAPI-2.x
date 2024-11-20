@@ -3,19 +3,15 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using Autofac.Core;
-using System.Configuration;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts;
-using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsolePg;
-using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsoleSql;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsoleMsSql;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsolePgSql;
 using EdFi.Ods.AdminApi.Infrastructure.Context;
 using EdFi.Ods.AdminApi.Infrastructure.Extensions;
 using EdFi.Ods.AdminApi.Infrastructure.MultiTenancy;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Builder;
 
 namespace EdFi.Ods.AdminApi.AdminConsole;
 
@@ -30,14 +26,14 @@ public static class DatabaseBuilderExtension
         switch (databaseEngine)
         {
             case DbProviders.SqlServer:
-                webApplicationBuilder.Services.AddDbContext<IDbContext, AdminConsoleSqlContext>(
+                webApplicationBuilder.Services.AddDbContext<IDbContext, AdminConsoleMsSqlContext>(
                 (sp, options) =>
                 {
                     options.UseSqlServer(AdminConnectionString(sp, config));
                 });
                 break;
             case DbProviders.PostgreSql:
-                webApplicationBuilder.Services.AddDbContext<IDbContext, AdminConsolePgContext>(
+                webApplicationBuilder.Services.AddDbContext<IDbContext, AdminConsolePgSqlContext>(
                 (sp, options) =>
                 {
                     options.UseNpgsql(AdminConnectionString(sp, config));
@@ -46,19 +42,6 @@ public static class DatabaseBuilderExtension
             default:
                 throw new ArgumentException($"Unexpected DB setup error. Engine '{databaseEngine}' was parsed as valid but is not configured for startup.");
         }
-    }
-
-    public static void ApplyAdminConsoleMigrations(this WebApplicationBuilder webApplicationBuilder)
-    {
-        using var scope = webApplicationBuilder.Services.BuildServiceProvider().CreateScope();
-        var databaseProvider = DbProviders.Parse(webApplicationBuilder.Configuration.GetValue<string>("AppSettings:DatabaseEngine")!);
-        DbContext dbContext = databaseProvider switch
-        {
-            DbProviders.SqlServer => scope.ServiceProvider.GetRequiredService<AdminConsoleSqlContext>(),
-            DbProviders.PostgreSql => scope.ServiceProvider.GetRequiredService<AdminConsolePgContext>(),
-            _ => throw new InvalidOperationException("Invalid database provider.")
-        };
-        dbContext.Database.Migrate();
     }
 
     public static string AdminConnectionString(IServiceProvider serviceProvider, IConfiguration config)

@@ -54,8 +54,8 @@ public class GetUserProfileByIdQueryTests : PlatformUsersContextTestBase
         Transaction(async dbContext =>
         {
             var repository = new QueriesRepository<UserProfile>(dbContext);
-            var query = new GetUserProfileQuery(repository);
-            var userProfile = await query.Execute(result.DocId.Value);
+            var query = new GetUserProfileByIdQuery(repository);
+            var userProfile = await query.Execute(result.TenantId, result.DocId.Value);
 
             userProfile.DocId.ShouldBe(result.DocId);
             userProfile.TenantId.ShouldBe(newUserProfile.TenantId);

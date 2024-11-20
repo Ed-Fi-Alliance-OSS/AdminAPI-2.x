@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApi.AdminConsole.Helpers;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
@@ -50,12 +51,11 @@ public class GetInstanceByIdQueryTests : PlatformUsersContextTestBase
 
             result = await command.Execute(newInstance);
         });
-
         Transaction(async dbContext =>
         {
             var repository = new QueriesRepository<Instance>(dbContext);
-            var query = new GetInstanceQuery(repository, Testing.GetEncryptionKeyResolver(), new EncryptionService());
-            var instance = await query.Execute(result.DocId.Value);
+            var query = new GetInstanceByIdQuery(repository, Testing.GetEncryptionKeyResolver(), new EncryptionService());
+            var instance = await query.Execute(result.TenantId, result.DocId.Value);
 
             instance.DocId.ShouldBe(result.DocId);
             instance.TenantId.ShouldBe(newInstance.TenantId);
@@ -63,6 +63,7 @@ public class GetInstanceByIdQueryTests : PlatformUsersContextTestBase
             instance.EdOrgId.ShouldBe(newInstance.EdOrgId);
             instance.Document.ShouldBe(newInstance.Document);
         });
+
     }
 
     private class TestInstance : IAddInstanceModel

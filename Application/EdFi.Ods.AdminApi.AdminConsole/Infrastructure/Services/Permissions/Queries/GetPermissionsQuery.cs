@@ -18,40 +18,14 @@ public interface IGetPermissionsQuery
 public class GetPermissionsQuery : IGetPermissionsQuery
 {
     private readonly IQueriesRepository<Permission> _permissionQuery;
-    private readonly IEncryptionService _encryptionService;
-    private readonly string _encryptionKey;
 
     public GetPermissionsQuery(IQueriesRepository<Permission> permissionQuery, IEncryptionKeyResolver encryptionKeyResolver, IEncryptionService encryptionService)
     {
         _permissionQuery = permissionQuery;
-        _encryptionKey = encryptionKeyResolver.GetEncryptionKey();
-        _encryptionService = encryptionService;
     }
     public async Task<IEnumerable<Permission>> Execute()
     {
         var permissions = await _permissionQuery.GetAllAsync();
-
-        foreach (var permission in permissions)
-        {
-            JsonNode? jn = JsonNode.Parse(permission.Document);
-
-            var encryptedClientId = jn!["clientId"]?.AsValue().ToString();
-            var encryptedClientSecret = jn!["clientSecret"]?.AsValue().ToString();
-
-            var clientId = string.Empty;
-            var clientSecret = string.Empty;
-
-            if (!string.IsNullOrEmpty(encryptedClientId) && !string.IsNullOrEmpty(encryptedClientSecret))
-            {
-                _encryptionService.TryDecrypt(encryptedClientId, _encryptionKey, out clientId);
-                _encryptionService.TryDecrypt(encryptedClientSecret, _encryptionKey, out clientSecret);
-
-                jn!["clientId"] = clientId;
-                jn!["clientSecret"] = clientSecret;
-            }
-
-            permission.Document = jn!.ToJsonString();
-        }
 
         return permissions.ToList();
     }

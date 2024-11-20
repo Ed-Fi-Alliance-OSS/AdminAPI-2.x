@@ -9,35 +9,35 @@ using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Permissions.Queries;
+namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Queries;
 
-public interface IGetPermissionQuery
+public interface IGetInstanceByIdQuery
 {
-    Task<Permission> Execute(int tenantId);
+    Task<Instance> Execute(int tenantId, int docId);
 }
 
-public class GetPermissionQuery : IGetPermissionQuery
+public class GetInstanceByIdQuery : IGetInstanceByIdQuery
 {
-    private readonly IQueriesRepository<Permission> _permissionQuery;
+    private readonly IQueriesRepository<Instance> _instanceQuery;
     private readonly IEncryptionService _encryptionService;
     private readonly string _encryptionKey;
 
-    public GetPermissionQuery(IQueriesRepository<Permission> permissionQuery, IEncryptionKeyResolver encryptionKeyResolver, IEncryptionService encryptionService)
+    public GetInstanceByIdQuery(IQueriesRepository<Instance> instanceQuery, IEncryptionKeyResolver encryptionKeyResolver, IEncryptionService encryptionService)
     {
-        _permissionQuery = permissionQuery;
+        _instanceQuery = instanceQuery;
         _encryptionKey = encryptionKeyResolver.GetEncryptionKey();
         _encryptionService = encryptionService;
     }
 
-    public async Task<Permission> Execute(int tenantId)
+    public async Task<Instance> Execute(int tenantId, int docId)
     {
 
-        var permission = await _permissionQuery.Query().SingleOrDefaultAsync(permission => permission.TenantId == tenantId);
+        var instance = await _instanceQuery.Query().SingleOrDefaultAsync(instance => instance.TenantId == tenantId && instance.DocId == docId);
 
-        if (permission == null)
+        if (instance == null)
             return null;
 
-        JsonNode? jnDocument = JsonNode.Parse(permission.Document);
+        JsonNode? jnDocument = JsonNode.Parse(instance.Document);
 
         var encryptedClientId = jnDocument!["clientId"]?.AsValue().ToString();
         var encryptedClientSecret = jnDocument!["clientSecret"]?.AsValue().ToString();
@@ -54,8 +54,8 @@ public class GetPermissionQuery : IGetPermissionQuery
             jnDocument!["clientSecret"] = clientSecret;
         }
 
-        permission.Document = jnDocument!.ToJsonString();
+        instance.Document = jnDocument!.ToJsonString();
 
-        return permission;
+        return instance;
     }
 }

@@ -9,17 +9,19 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsolePg;
+namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsolePgSql;
 
-public class AdminConsolePgContext : DbContext, IDbContext
+public class AdminConsolePgSqlContext : DbContext, IDbContext
 {
-    public AdminConsolePgContext(DbContextOptions<AdminConsolePgContext> options) : base(options) { }
+    public AdminConsolePgSqlContext(DbContextOptions<AdminConsolePgSqlContext> options) : base(options) { }
 
     public DbSet<HealthCheck> HealthChecks { get; set; }
     public DbSet<Instance> Instances { get; set; }
     public DbSet<Permission> Permissions { get; set; }
     public DbSet<Tenant> Tenants { get; set; }
     public DbSet<UserProfile> UserProfiles { get; set; }
+
+    public DbSet<Step> Steps { get; set; }
 
     public DatabaseFacade DB => this.Database;
 
@@ -31,5 +33,7 @@ public class AdminConsolePgContext : DbContext, IDbContext
         modelBuilder.ApplyConfiguration(new PermissionConfiguration(DbProvider));
         modelBuilder.ApplyConfiguration(new TenantConfiguration(DbProvider));
         modelBuilder.ApplyConfiguration(new UserProfileConfiguration(DbProvider));
+        modelBuilder.ApplyConfiguration(new StepConfiguration(DbProvider));
+
     }
 }

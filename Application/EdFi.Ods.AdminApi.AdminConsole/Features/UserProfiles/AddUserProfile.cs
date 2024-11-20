@@ -25,7 +25,7 @@ public class AddUserProfile : IFeature
         await validator.GuardAsync(request);
         var addedUserProfileResult = await addUserProfileCommand.Execute(request);
 
-        return Results.Created($"/userprofile/{addedUserProfileResult.DocId}", addedUserProfileResult);
+        return Results.Created($"/userprofile/{addedUserProfileResult.TenantId}/{addedUserProfileResult.DocId}", addedUserProfileResult);
     }
 
     public class AddUserProfileRequest : IAddUserProfileModel

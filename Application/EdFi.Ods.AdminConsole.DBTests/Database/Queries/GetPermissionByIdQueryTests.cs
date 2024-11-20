@@ -54,8 +54,8 @@ public class GetPermissionByIdQueryTests : PlatformUsersContextTestBase
         Transaction(async dbContext =>
         {
             var repository = new QueriesRepository<Permission>(dbContext);
-            var query = new GetPermissionQuery(repository, Testing.GetEncryptionKeyResolver(), new EncryptionService());
-            var permission = await query.Execute(result.DocId.Value);
+            var query = new GetPermissionByIdQuery(repository, Testing.GetEncryptionKeyResolver(), new EncryptionService());
+            var permission = await query.Execute(result.TenantId, result.DocId.Value);
 
             permission.DocId.ShouldBe(result.DocId);
             permission.TenantId.ShouldBe(newPermission.TenantId);
