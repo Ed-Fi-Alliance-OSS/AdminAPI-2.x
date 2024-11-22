@@ -50,5 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EdFi.Ods.AdminApi.AdminConsole\EdFi.Ods.AdminApi.AdminConsole.csproj" />
+    <ProjectReference Include="..\EdFi.Ods.AdminApi.Common\EdFi.Ods.AdminApi.Common.csproj" />
   </ItemGroup>
 </Project>

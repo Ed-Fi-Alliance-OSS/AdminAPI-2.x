@@ -40,4 +40,8 @@
     <Folder Include="Infrastructure\DataAccess\Artifacts\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EdFi.Ods.AdminApi.Common\EdFi.Ods.AdminApi.Common.csproj" />
+  </ItemGroup>
+
 </Project>
