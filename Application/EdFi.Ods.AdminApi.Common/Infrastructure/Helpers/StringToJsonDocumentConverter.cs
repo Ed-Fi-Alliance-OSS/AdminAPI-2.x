@@ -15,14 +15,14 @@ namespace EdFi.Ods.AdminApi.Common.Helpers
 {
     public class StringToJsonDocumentConverter : JsonConverter<string>
     {
-        public override string Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
-            return reader.GetString();
-        }
+#pragma warning disable CS8603 // Possible null reference return.
+        public override string Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => reader.GetString();
+#pragma warning restore CS8603 // Possible null reference return.
 
         public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options)
         {
-            JsonDocument jsonDocument = JsonDocument.Parse(value); jsonDocument.WriteTo(writer);
+            JsonDocument jsonDocument = JsonDocument.Parse(value);
+            jsonDocument.WriteTo(writer);
         }
     }
 }

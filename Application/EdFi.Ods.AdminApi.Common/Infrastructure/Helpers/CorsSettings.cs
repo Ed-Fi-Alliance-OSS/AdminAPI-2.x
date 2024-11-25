@@ -34,6 +34,6 @@ namespace EdFi.Ods.AdminApi.Common.Helpers;
 public class CorsSettings
 {
     public bool EnableCors { get; set; }
-    public string[] AllowedOrigins { get; set; }
+    public string[]? AllowedOrigins { get; set; }
 }
 >>>>>>>> a7de2d9b (Fix CORS settings):Application/EdFi.Ods.AdminApi.Common/Infrastructure/Helpers/CorsSettings.cs
