@@ -7,5 +7,6 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Helpers;
 
 public class AdminConsoleSettings : IEncryptionKeySettings
 {
+    public CorsSettings CorsSettings { get; set; } = new CorsSettings();
     public string EncryptionKey { get; set; } = string.Empty;
 }
