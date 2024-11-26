@@ -506,7 +506,7 @@ The POST operation can be used to create or update resources. In database terms,
 > Body parameter
 
 ```json
-"{\n  \"name\": \"Test-Profile\",\n  \"definition\": \"<Profile name=\\\"Test-Profile\\\"><Resource name=\\\"Resource1\\\"><ReadContentType memberSelection=\\\"IncludeOnly\\\"><Collection name=\\\"Collection1\\\" memberSelection=\\\"IncludeOnly\\\"><Property name=\\\"Property1\\\" /><Property name=\\\"Property2\\\" /></Collection></ReadContentType><WriteContentType memberSelection=\\\"IncludeOnly\\\"><Collection name=\\\"Collection2\\\" memberSelection=\\\"IncludeOnly\\\"><Property name=\\\"Property1\\\" /><Property name=\\\"Property2\\\" /></Collection></WriteContentType></Resource></Profile>\"\n}"
+"{\r\n  \"name\": \"Test-Profile\",\r\n  \"definition\": \"<Profile name=\\\"Test-Profile\\\"><Resource name=\\\"Resource1\\\"><ReadContentType memberSelection=\\\"IncludeOnly\\\"><Collection name=\\\"Collection1\\\" memberSelection=\\\"IncludeOnly\\\"><Property name=\\\"Property1\\\" /><Property name=\\\"Property2\\\" /></Collection></ReadContentType><WriteContentType memberSelection=\\\"IncludeOnly\\\"><Collection name=\\\"Collection2\\\" memberSelection=\\\"IncludeOnly\\\"><Property name=\\\"Property1\\\" /><Property name=\\\"Property2\\\" /></Collection></WriteContentType></Resource></Profile>\"\r\n}"
 ```
 
 <h3 id="creates-profile-based-on-the-supplied-values.-parameters">Parameters</h3>
@@ -580,7 +580,7 @@ The PUT operation is used to update a resource by identifier. If the resource id
 > Body parameter
 
 ```json
-"{\n  \"name\": \"Test-Profile\",\n  \"definition\": \"<Profile name=\\\"Test-Profile\\\"><Resource name=\\\"Resource1\\\"><ReadContentType memberSelection=\\\"IncludeOnly\\\"><Collection name=\\\"Collection1\\\" memberSelection=\\\"IncludeOnly\\\"><Property name=\\\"Property1\\\" /><Property name=\\\"Property2\\\" /></Collection></ReadContentType><WriteContentType memberSelection=\\\"IncludeOnly\\\"><Collection name=\\\"Collection2\\\" memberSelection=\\\"IncludeOnly\\\"><Property name=\\\"Property1\\\" /><Property name=\\\"Property2\\\" /></Collection></WriteContentType></Resource></Profile>\"\n}"
+"{\r\n  \"name\": \"Test-Profile\",\r\n  \"definition\": \"<Profile name=\\\"Test-Profile\\\"><Resource name=\\\"Resource1\\\"><ReadContentType memberSelection=\\\"IncludeOnly\\\"><Collection name=\\\"Collection1\\\" memberSelection=\\\"IncludeOnly\\\"><Property name=\\\"Property1\\\" /><Property name=\\\"Property2\\\" /></Collection></ReadContentType><WriteContentType memberSelection=\\\"IncludeOnly\\\"><Collection name=\\\"Collection2\\\" memberSelection=\\\"IncludeOnly\\\"><Property name=\\\"Property1\\\" /><Property name=\\\"Property2\\\" /></Collection></WriteContentType></Resource></Profile>\"\r\n}"
 ```
 
 <h3 id="updates-profile-based-on-the-resource-identifier.-parameters">Parameters</h3>
@@ -2706,7 +2706,7 @@ AddOdsInstanceRequest
 <a id="tocsaddprofilerequest"></a>
 
 ```json
-"{\n  \"name\": \"Test-Profile\",\n  \"definition\": \"<Profile name=\\\"Test-Profile\\\"><Resource name=\\\"Resource1\\\"><ReadContentType memberSelection=\\\"IncludeOnly\\\"><Collection name=\\\"Collection1\\\" memberSelection=\\\"IncludeOnly\\\"><Property name=\\\"Property1\\\" /><Property name=\\\"Property2\\\" /></Collection></ReadContentType><WriteContentType memberSelection=\\\"IncludeOnly\\\"><Collection name=\\\"Collection2\\\" memberSelection=\\\"IncludeOnly\\\"><Property name=\\\"Property1\\\" /><Property name=\\\"Property2\\\" /></Collection></WriteContentType></Resource></Profile>\"\n}"
+"{\r\n  \"name\": \"Test-Profile\",\r\n  \"definition\": \"<Profile name=\\\"Test-Profile\\\"><Resource name=\\\"Resource1\\\"><ReadContentType memberSelection=\\\"IncludeOnly\\\"><Collection name=\\\"Collection1\\\" memberSelection=\\\"IncludeOnly\\\"><Property name=\\\"Property1\\\" /><Property name=\\\"Property2\\\" /></Collection></ReadContentType><WriteContentType memberSelection=\\\"IncludeOnly\\\"><Collection name=\\\"Collection2\\\" memberSelection=\\\"IncludeOnly\\\"><Property name=\\\"Property1\\\" /><Property name=\\\"Property2\\\" /></Collection></WriteContentType></Resource></Profile>\"\r\n}"
 
 ```
 
@@ -3327,7 +3327,7 @@ EditOdsInstanceRequest
 <a id="tocseditprofilerequest"></a>
 
 ```json
-"{\n  \"name\": \"Test-Profile\",\n  \"definition\": \"<Profile name=\\\"Test-Profile\\\"><Resource name=\\\"Resource1\\\"><ReadContentType memberSelection=\\\"IncludeOnly\\\"><Collection name=\\\"Collection1\\\" memberSelection=\\\"IncludeOnly\\\"><Property name=\\\"Property1\\\" /><Property name=\\\"Property2\\\" /></Collection></ReadContentType><WriteContentType memberSelection=\\\"IncludeOnly\\\"><Collection name=\\\"Collection2\\\" memberSelection=\\\"IncludeOnly\\\"><Property name=\\\"Property1\\\" /><Property name=\\\"Property2\\\" /></Collection></WriteContentType></Resource></Profile>\"\n}"
+"{\r\n  \"name\": \"Test-Profile\",\r\n  \"definition\": \"<Profile name=\\\"Test-Profile\\\"><Resource name=\\\"Resource1\\\"><ReadContentType memberSelection=\\\"IncludeOnly\\\"><Collection name=\\\"Collection1\\\" memberSelection=\\\"IncludeOnly\\\"><Property name=\\\"Property1\\\" /><Property name=\\\"Property2\\\" /></Collection></ReadContentType><WriteContentType memberSelection=\\\"IncludeOnly\\\"><Collection name=\\\"Collection2\\\" memberSelection=\\\"IncludeOnly\\\"><Property name=\\\"Property1\\\" /><Property name=\\\"Property2\\\" /></Collection></WriteContentType></Resource></Profile>\"\r\n}"
 
 ```
 
