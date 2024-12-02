@@ -4,13 +4,18 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Dynamic;
-using System.Text.Json;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Tenants;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Tenants.Queries;
+using EdFi.Ods.AdminApi.Common.Constants;
 using EdFi.Ods.AdminApi.Common.Features;
+using EdFi.Ods.AdminApi.Common.Helpers;
 using EdFi.Ods.AdminApi.Common.Infrastructure;
+using EdFi.Ods.AdminApi.Common.Settings;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Features.Tenants;
@@ -26,10 +31,17 @@ public class ReadTenants : IFeature
            .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
-    internal async Task<IResult> GetTenants(IGetTenantsQuery getTenantQuery)
+    internal async Task<IResult> GetTenants(IGetTenantsQuery getTenantQuery,
+        IAdminConsoleTenantsService adminConsoleTenantsService,
+        IMemoryCache memoryCache)
     {
-        var tenants = await getTenantQuery.Execute();
-        return Results.Ok(tenants);
+        var tenants = await Task.FromResult(memoryCache.Get<List<Tenant>>(AdminConsoleConstants.TENANTS_CACHE_KEY));//getTenantQuery.Execute();
+        if (tenants == null)
+        {
+            tenants = await adminConsoleTenantsService.GetTenantsAsync();
+            memoryCache.Set<List<Tenant>>(AdminConsoleConstants.TENANTS_CACHE_KEY, tenants);
+        }
+        return Results.Ok(tenants!.Select(p => JsonConvert.DeserializeObject<ExpandoObject>(p.Document)));
     }
 
     internal async Task<IResult> GetTenantsById(IGetTenantByIdQuery getTenantQuery, int id)

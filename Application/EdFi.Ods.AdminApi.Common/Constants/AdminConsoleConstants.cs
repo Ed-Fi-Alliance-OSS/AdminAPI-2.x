@@ -3,9 +3,9 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-namespace EdFi.Ods.AdminApi.AdminConsole;
+namespace EdFi.Ods.AdminApi.Common.Constants;
 
-public static class Constants
+public static class AdminConsoleConstants
 {
     public const string ADMINCONSOLE_SETTINGS_KEY = "AdminConsoleSettings";
 
@@ -15,4 +15,6 @@ public static class Constants
     public const string ALLOWED_ORIGINS_CORS_KEY = "CorsSettings:AllowedOrigins";
 
     public const string CORS_POLICY_NAME = "allowAllCorsPolicyName";
+
+    public const string TENANTS_CACHE_KEY = "adminconsole.tenants";
 }

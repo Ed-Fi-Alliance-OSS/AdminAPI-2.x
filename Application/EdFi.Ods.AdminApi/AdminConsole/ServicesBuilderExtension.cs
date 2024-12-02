@@ -9,6 +9,8 @@ using EdFi.Ods.AdminApi.AdminConsole.Infrastructure;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.AutoMapper;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repositories;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Tenants;
+using EdFi.Ods.AdminApi.Common.Settings;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.Options;
@@ -19,17 +21,22 @@ public static class ServicesBuilderExtension
 {
     public static void AddAdminConsoleServices(this WebApplicationBuilder builder)
     {
+        builder.Services.AddHostedService<AdminConsoleBackgroundService>();
+
+        builder.Services.Configure<AppSettingsFile>(builder.Configuration);
+
         builder.Services.Configure<AdminConsoleSettings>(builder.Configuration.GetSection("AdminConsoleSettings"));
         builder.Services.AddAutoMapper(typeof(AdminConsoleMappingProfile));
 
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-        builder.Services.AddTransient<IEncryptionKeySettings>(sp => sp.GetService<IOptions<AdminConsoleSettings>>().Value);
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        builder.Services.AddTransient<IEncryptionKeySettings>(sp => sp.GetService<IOptions<AdminConsoleSettings>>()!.Value);
         builder.Services.AddTransient<IEncryptionKeyResolver, OptionsEncryptionKeyResolver>();
         builder.Services.AddScoped<IEncryptionService, EncryptionService>();
 
+        builder.Services.AddScoped<IAdminConsoleTenantsService, AdminConsoleTenantsService>();
+
         builder.RegisterAdminConsoleServices();
         builder.RegisterAdminConsoleValidators();
+
     }
 
     private static void RegisterAdminConsoleServices(this WebApplicationBuilder builder)

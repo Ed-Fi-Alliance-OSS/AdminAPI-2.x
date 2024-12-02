@@ -9,8 +9,8 @@ using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminCon
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsolePgSql;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Context;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Extensions;
-using EdFi.Ods.AdminApi.Infrastructure.Extensions;
-using EdFi.Ods.AdminApi.Infrastructure.MultiTenancy;
+using EdFi.Ods.AdminApi.Common.Infrastructure.MultiTenancy;
+using EdFi.Ods.AdminApi.Common.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
