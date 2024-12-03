@@ -24,42 +24,34 @@ public class ReadTenants : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiEndpointBuilder.MapGet(endpoints, "/tenants", GetTenants)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/tenants", GetTenantsAsync)
            .BuildForVersions(AdminApiVersions.AdminConsole);
 
-        AdminApiEndpointBuilder.MapGet(endpoints, "/tenants/{tenantId}", GetTenantsByTenantId)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/tenants/{tenantId}", GetTenantsByTenantIdAsync)
            .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
-    internal async Task<IResult> GetTenants(IGetTenantsQuery getTenantQuery,
+    internal async Task<IResult> GetTenantsAsync(IGetTenantsQuery getTenantQuery,
         IAdminConsoleTenantsService adminConsoleTenantsService,
         IMemoryCache memoryCache)
     {
-        var tenants = await Task.FromResult(memoryCache.Get<List<Tenant>>(AdminConsoleConstants.TENANTS_CACHE_KEY));//getTenantQuery.Execute();
-        if (tenants == null)
-        {
-            tenants = await adminConsoleTenantsService.GetTenantsAsync();
-            memoryCache.Set<List<Tenant>>(AdminConsoleConstants.TENANTS_CACHE_KEY, tenants);
-        }
+        var tenants = await adminConsoleTenantsService.GetTenantsAsync(true);
         return Results.Ok(tenants!.Select(p => JsonConvert.DeserializeObject<ExpandoObject>(p.Document)));
     }
 
-    internal async Task<IResult> GetTenantsById(IGetTenantByIdQuery getTenantQuery, int id)
+    internal async Task<IResult> GetTenantsByTenantIdAsync(IAdminConsoleTenantsService adminConsoleTenantsService,
+        IMemoryCache memoryCache, string tenantId)
     {
-        var tenant = await getTenantQuery.Execute(id);
-        if (tenant != null)
-            return Results.Ok(tenant);
-        return Results.NotFound();
-    }
-
-    internal async Task<IResult> GetTenantsByTenantId(IGetTenantByTenantIdQuery getTenantQuery, int tenantId)
-    {
-        var tenants = await getTenantQuery.Execute(tenantId);
-
-        if (tenants.Any())
+        var tenants = await adminConsoleTenantsService.GetTenantsAsync(true);
+        var tenant = tenants.FirstOrDefault(p =>
         {
-            return Results.Ok(tenants);
-        }
+            dynamic t = JsonConvert.DeserializeObject<ExpandoObject>(p.Document)!;
+            return t.tenantId == tenantId;
+        });
+        if (tenant != null)
+            return Results.Ok(JsonConvert.DeserializeObject<ExpandoObject>(tenant.Document));
         return Results.NotFound();
     }
+
+    
 }

@@ -23,7 +23,7 @@ public static class ServicesBuilderExtension
 {
     public static void AddAdminConsoleServices(this WebApplicationBuilder builder)
     {
-        builder.Services.AddHostedService<AdminConsoleBackgroundService>();
+        builder.Services.AddHostedService<TenantBackgroundService>();
 
         builder.Services.Configure<AppSettingsFile>(builder.Configuration);
 
@@ -34,7 +34,7 @@ public static class ServicesBuilderExtension
         builder.Services.AddTransient<IEncryptionKeyResolver, OptionsEncryptionKeyResolver>();
         builder.Services.AddScoped<IEncryptionService, EncryptionService>();
 
-        builder.Services.AddScoped<IAdminConsoleTenantsService, AdminConsoleTenantsService>();
+        builder.Services.AddScoped<IAdminConsoleTenantsService, TenantService>();
 
         builder.RegisterAdminConsoleServices();
         builder.RegisterAdminConsoleValidators();

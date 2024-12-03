@@ -5,6 +5,7 @@
 
 using System.Dynamic;
 using System.Linq;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repositories;
 using EdFi.Ods.AdminApi.Common.Constants;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Helpers;
@@ -24,10 +25,11 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Tenants;
 public interface IAdminConsoleTenantsService
 {
     Task InitializeTenantsAsync();
-    Task<List<TenantEntity>> GetTenantsAsync();
+    Task<List<TenantEntity>> GetTenantsAsync(bool fromCache);
+    Task<TenantEntity?> GetTenantByTenantIdAsync(string tenantId);
 }
 
-public class AdminConsoleTenantsService : IAdminConsoleTenantsService
+public class TenantService : IAdminConsoleTenantsService
 {
     private const string ADMIN_DB_KEY = "EdFi_Admin";
     private readonly IOptions<AppSettingsFile> _options;
@@ -35,9 +37,9 @@ public class AdminConsoleTenantsService : IAdminConsoleTenantsService
     private readonly IQueriesRepository<TenantEntity> _tenantsQueryRepository;
     private readonly ICommandRepository<TenantEntity> _tenantCommandRepository;
     private readonly IMemoryCache _memoryCache;
-    private static readonly ILog _log = LogManager.GetLogger(typeof(AdminConsoleTenantsService));
+    private static readonly ILog _log = LogManager.GetLogger(typeof(TenantService));
 
-    public AdminConsoleTenantsService(IOptionsSnapshot<AppSettingsFile> options,
+    public TenantService(IOptionsSnapshot<AppSettingsFile> options,
         IQueriesRepository<TenantEntity> tenantsQueryRepository,
         ICommandRepository<TenantEntity> tenantRepository,
         IMemoryCache memoryCache)
@@ -167,9 +169,20 @@ public class AdminConsoleTenantsService : IAdminConsoleTenantsService
         await Task.FromResult(_memoryCache.Set(AdminConsoleConstants.TENANTS_CACHE_KEY, resultTenants));
     }
 
-    public async Task<List<TenantEntity>> GetTenantsAsync()
+    public async Task<List<TenantEntity>> GetTenantsAsync(bool fromCache = false)
     {
         List<TenantEntity> results = new List<TenantEntity>();
+
+        if (fromCache)
+        {
+            results = await GetTenantsFromCacheAsync();
+            if (results.Count > 0)
+            {
+                return results;
+            }
+        }
+
+        results = new List<TenantEntity>();
         //check multitenancy
         if (_appSettings.AppSettings.MultiTenancy)
         {
@@ -193,50 +206,21 @@ public class AdminConsoleTenantsService : IAdminConsoleTenantsService
         return results;
     }
 
-}
-
-public class AdminConsoleBackgroundService : BackgroundService
-{
-    private IDisposable _optionsChangedListener;
-    private AppSettingsFile _currentAppSettings;
-    private static readonly ILog _log = LogManager.GetLogger(typeof(AdminConsoleTenantsService));
-    private readonly IServiceScopeFactory _serviceScopeFactory;
-    public AdminConsoleBackgroundService(IOptionsMonitor<AppSettingsFile> optionsMonitor, IServiceScopeFactory serviceScopeFactory)
+    public async Task<TenantEntity?> GetTenantByTenantIdAsync(string tenantId)
     {
-        _serviceScopeFactory = serviceScopeFactory;
-        _optionsChangedListener = optionsMonitor.OnChange(async (opt, listener) => await OnAppSettingsChangedAsync(opt, listener))!;
-        _currentAppSettings = optionsMonitor.CurrentValue;
-    }
-
-    private async Task OnAppSettingsChangedAsync(AppSettingsFile newAppSettings, string? listener)
-    {
-        _currentAppSettings = newAppSettings;
-        using IServiceScope scope = _serviceScopeFactory.CreateScope();
-        _log.Info("appsettings changed");
-
-        IAdminConsoleTenantsService scopedProcessingService =
-            scope.ServiceProvider.GetRequiredService<IAdminConsoleTenantsService>();
-
-        await scopedProcessingService.InitializeTenantsAsync();
-    }
-
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-    {
-        while (!stoppingToken.IsCancellationRequested)
+        var tenants = await GetTenantsAsync();
+        var tenant = tenants.FirstOrDefault(p =>
         {
-            await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
-        }
+            dynamic data = JsonConvert.DeserializeObject<ExpandoObject>(p.Document)!;
+            return (string)data!.tenantId == tenantId;
+        });
+        return tenant;
     }
 
-    public override async Task StopAsync(CancellationToken stoppingToken)
+    private async Task<List<Tenant>> GetTenantsFromCacheAsync()
     {
-        _log.Info("Stopping background");
-        await base.StopAsync(stoppingToken);
-    }
-
-    public override void Dispose()
-    {
-        _optionsChangedListener.Dispose();
-        base.Dispose();
+        var tenants = await Task.FromResult(_memoryCache.Get<List<Tenant>>(AdminConsoleConstants.TENANTS_CACHE_KEY));
+        return tenants ?? new List<TenantEntity>();
     }
 }
+
