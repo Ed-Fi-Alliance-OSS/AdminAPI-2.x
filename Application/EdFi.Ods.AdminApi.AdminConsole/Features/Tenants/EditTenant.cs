@@ -3,9 +3,8 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.ComponentModel.DataAnnotations;
 using System.Dynamic;
-using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Tenants;
+using EdFi.Ods.AdminApi.AdminConsole.Documentation;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Tenants.Commands;
 using EdFi.Ods.AdminApi.Common.Constants;
 using EdFi.Ods.AdminApi.Common.Features;
@@ -15,42 +14,35 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Features.Tenants;
 public class EditTenant : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiEndpointBuilder.MapPut(endpoints, "/tenants", Execute)
+        AdminApiEndpointBuilder.MapPatch(endpoints, "/tenants", Execute)
             .WithRouteOptions(b => b.WithResponseCode(200))
             .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
+    [SwaggerRequestExample(typeof(object), typeof(TenantRequestSwaggerExample))]
     public async Task<IResult> Execute(Validator validator,
         IEditTenantCommand editTenantCommand,
         IMemoryCache memoryCache,
         ExpandoObject request)
     {
-
+        validator.Validate(request);
         await editTenantCommand.ExecuteEditOnBoardingAsync(request);
         memoryCache.Remove(AdminConsoleConstants.TENANTS_CACHE_KEY);
         return Results.Ok();
     }
 
-    public class EditTenantRequest : IEditTenantModel
-    {
-        public string TenantId { get; }
-        public ExpandoObject OnBoarding { get; }
-    }
-
-    public class Validator : AbstractValidator<EditTenantRequest>
+    public class Validator : AbstractValidator<ExpandoObject>
     {
         public Validator()
         {
-            RuleFor(m => m.TenantId)
-                 .NotNull();
-
-            RuleFor(m => m.OnBoarding)
+            RuleFor(m => m)
                  .NotNull()
                  .Must(BeValidDocument).WithMessage("Document must be a valid JSON.");
         }
@@ -62,7 +54,7 @@ public class EditTenant : IFeature
                 Newtonsoft.Json.Linq.JToken.Parse(JsonConvert.SerializeObject(document));
                 return true;
             }
-            catch (Newtonsoft.Json.JsonReaderException)
+            catch (Exception)
             {
                 return false;
             }

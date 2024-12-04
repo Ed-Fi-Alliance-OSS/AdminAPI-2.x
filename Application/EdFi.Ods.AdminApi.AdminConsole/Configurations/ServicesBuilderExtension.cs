@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Reflection;
+using EdFi.Ods.AdminApi.AdminConsole.Documentation;
 using EdFi.Ods.AdminApi.AdminConsole.Helpers;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.AutoMapper;
@@ -16,6 +17,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace EdFi.Ods.AdminApi.AdminConsole;
 
@@ -35,6 +37,9 @@ public static class ServicesBuilderExtension
         builder.Services.AddScoped<IEncryptionService, EncryptionService>();
 
         builder.Services.AddScoped<IAdminConsoleTenantsService, TenantService>();
+
+        //swagger example
+        builder.Services.AddSwaggerExamplesFromAssemblyOf(typeof(TenantRequestSwaggerExample));
 
         builder.RegisterAdminConsoleServices();
         builder.RegisterAdminConsoleValidators();

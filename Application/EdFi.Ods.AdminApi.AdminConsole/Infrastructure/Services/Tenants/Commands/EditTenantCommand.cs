@@ -47,9 +47,3 @@ public class EditTenantCommand : IEditTenantCommand
         return tenant;
     }
 }
-
-public interface IEditTenantModel
-{
-    string TenantId { get; }
-    ExpandoObject OnBoarding { get; }
-}
