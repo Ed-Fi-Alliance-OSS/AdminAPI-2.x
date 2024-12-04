@@ -9,6 +9,7 @@ using EdFi.Ods.AdminApi.Common.Settings;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApi.Common.Infrastructure.MultiTenancy;
@@ -81,7 +82,10 @@ public class TenantResolverMiddleware : IMiddleware
             }
             else
             {
-                if (_options.Value.EnableAdminConsoleAPI)
+                if (_options.Value.EnableAdminConsoleAPI &&
+                    context.Request.Path.Value!.Contains("tenants") &&
+                    context.Request.Path.Value!.Split("/").Length == 3 &&
+                    context.Request.Method == "GET")
                 {
                     await next.Invoke(context);
                 }
