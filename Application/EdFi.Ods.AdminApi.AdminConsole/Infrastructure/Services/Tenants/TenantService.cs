@@ -78,7 +78,7 @@ public class TenantService : IAdminConsoleTenantsService
                     TenantId = ordinalId,
                     Document = document,
                 });
-
+                ordinalId++;
             }
         }
         else
