@@ -4,12 +4,16 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Dynamic;
+using EdFi.Ods.AdminApi.Common.Constants;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Features.Tenants;
 
+[SwaggerSchema]
 public class TenantModel
 {
-    public string TenantId { get; set; }
-    public string EdFiApiDiscoveryUrl { get; set; }
-    public ExpandoObject OnBoarding { get; set; }
+    [SwaggerSchema(Description = AdminConsoleConstants.TenantIdDescription, Nullable = false)]
+    public int TenantId { get; set; }
+    [SwaggerSchema(Description = AdminConsoleConstants.TenantIdDescription, Nullable = false, Format = "{\r\n            \"name\": \"Tenant1\",\r\n            \"edfiApiDiscoveryUrl\": \"https://api.ed-fi.org/v7.2/api\"\r\n        }")]
+    public ExpandoObject Document { get; set; }
 }

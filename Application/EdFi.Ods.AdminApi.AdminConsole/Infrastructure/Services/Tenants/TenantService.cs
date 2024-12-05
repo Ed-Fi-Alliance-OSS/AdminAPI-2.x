@@ -5,6 +5,7 @@
 
 using System.Dynamic;
 using System.Linq;
+using EdFi.Ods.AdminApi.AdminConsole.Features.Tenants;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repositories;
 using EdFi.Ods.AdminApi.Common.Constants;
@@ -25,8 +26,8 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Tenants;
 public interface IAdminConsoleTenantsService
 {
     Task InitializeTenantsAsync();
-    Task<List<TenantEntity>> GetTenantsAsync(bool fromCache);
-    Task<TenantEntity?> GetTenantByTenantIdAsync(string tenantId);
+    Task<List<TenantModel>> GetTenantsAsync(bool fromCache);
+    Task<TenantModel?> GetTenantByTenantIdAsync(int tenantId);
 }
 
 public class TenantService : IAdminConsoleTenantsService
@@ -34,19 +35,13 @@ public class TenantService : IAdminConsoleTenantsService
     private const string ADMIN_DB_KEY = "EdFi_Admin";
     private readonly IOptions<AppSettingsFile> _options;
     protected AppSettingsFile _appSettings;
-    private readonly IQueriesRepository<TenantEntity> _tenantsQueryRepository;
-    private readonly ICommandRepository<TenantEntity> _tenantCommandRepository;
     private readonly IMemoryCache _memoryCache;
     private static readonly ILog _log = LogManager.GetLogger(typeof(TenantService));
 
     public TenantService(IOptionsSnapshot<AppSettingsFile> options,
-        IQueriesRepository<TenantEntity> tenantsQueryRepository,
-        ICommandRepository<TenantEntity> tenantRepository,
         IMemoryCache memoryCache)
     {
         _options = options;
-        _tenantsQueryRepository = tenantsQueryRepository;
-        _tenantCommandRepository = tenantRepository;
         _memoryCache = memoryCache;
         _appSettings = _options.Value;
     }
@@ -54,124 +49,13 @@ public class TenantService : IAdminConsoleTenantsService
     public async Task InitializeTenantsAsync()
     {
         var tenants = await GetTenantsAsync();
-        var resultTenants = new List<TenantEntity>();
-        dynamic adminConsoleTenant = new ExpandoObject();
-        dynamic onBoarding = new ExpandoObject();
-        onBoarding.status = "InProgress";
-        if (tenants.Count() == 0)
-        {
-            //create new data
-            if (_appSettings.AppSettings.MultiTenancy)
-            {
-                //multitenancy
-                foreach (var tenantConfig in _appSettings.Tenants)
-                {
-                    adminConsoleTenant = new ExpandoObject();
-                    adminConsoleTenant.edfiApiDiscoveryUrl = tenantConfig.Value.EdFiApiDiscoveryUrl;
-                    adminConsoleTenant.tenantId = tenantConfig.Key;
-                    adminConsoleTenant.onBoarding = onBoarding;
-                    var dbconnection = tenantConfig.Value.ConnectionStrings.First(p => p.Key == ADMIN_DB_KEY).Value;
-                    if (ConnectionStringHelper.ValidateConnectionString(_appSettings.AppSettings.DatabaseEngine!, dbconnection))
-                    {
-                        _tenantCommandRepository.SwitchConnectionString(dbconnection);
-                        var tenant = await _tenantCommandRepository.AddAsync(
-                            new TenantEntity()
-                            {
-                                Document = JsonConvert.SerializeObject(adminConsoleTenant)
-                            });
-                        await _tenantCommandRepository.SaveChangesAsync();
-                        resultTenants.Add(tenant);
-                    }
-                }
-                _tenantCommandRepository.ResetConnectionString();
-            }
-            else
-            {
-                //single data
-                adminConsoleTenant.edfiApiDiscoveryUrl = _appSettings.EdFiApiDiscoveryUrl;
-                adminConsoleTenant.tenantId = "default";
-                adminConsoleTenant.onBoarding = onBoarding;
-                var tenant = await _tenantCommandRepository.AddAsync(
-                    new TenantEntity()
-                    {
-                        Document = JsonConvert.SerializeObject(adminConsoleTenant)
-                    });
-                await _tenantCommandRepository.SaveChangesAsync();
-
-                resultTenants.Add(tenant);
-            }
-        }
-        else
-        {
-            //check if all are stored
-            if (_appSettings.AppSettings.MultiTenancy)
-            {
-                var tenantsIds = tenants.Select(p =>
-                {
-                    dynamic data = JsonConvert.DeserializeObject<ExpandoObject>(p.Document)!;
-                    return (string)data!.tenantId;
-                });
-
-                //Create tenants not included
-                var tenantsNotIncluded = _appSettings.Tenants.Where(p => !tenantsIds.Contains(p.Key));
-                foreach (var tenantConfig in tenantsNotIncluded)
-                {
-                    adminConsoleTenant = new ExpandoObject();
-                    adminConsoleTenant.edfiApiDiscoveryUrl = tenantConfig.Value.EdFiApiDiscoveryUrl;
-                    adminConsoleTenant.tenantId = tenantConfig.Key;
-                    adminConsoleTenant.onBoarding = onBoarding;
-                    var dbconnection = tenantConfig.Value.ConnectionStrings.First(p => p.Key == ADMIN_DB_KEY).Value;
-                    if (ConnectionStringHelper.ValidateConnectionString(_appSettings.AppSettings.DatabaseEngine!, dbconnection))
-                    {
-                        _tenantCommandRepository.SwitchConnectionString(dbconnection);
-                        var tenant = await _tenantCommandRepository.AddAsync(
-                            new TenantEntity()
-                            {
-                                Document = JsonConvert.SerializeObject(adminConsoleTenant)
-                            });
-                        await _tenantCommandRepository.SaveChangesAsync();
-                        resultTenants.Add(tenant);
-                    }
-                }
-
-                //Update edfiurl
-                var tenantsIncluded = _appSettings.Tenants.Where(p => tenantsIds.Contains(p.Key));
-
-                foreach (var tenantConfig in tenantsIncluded)
-                {
-                    var tenantToUpdate = tenants.FirstOrDefault(p =>
-                    {
-                        dynamic data = JsonConvert.DeserializeObject<ExpandoObject>(p.Document)!;
-                        return (string)data!.tenantId == tenantConfig.Key;
-                    });
-
-                    if (tenantToUpdate != null)
-                    {
-                        adminConsoleTenant = JsonConvert.DeserializeObject<ExpandoObject>(tenantToUpdate.Document)!;
-                        if (adminConsoleTenant!.edfiApiDiscoveryUrl != tenantConfig.Value.EdFiApiDiscoveryUrl)
-                        {
-                            var dbconnection = tenantConfig.Value.ConnectionStrings.First(p => p.Key == ADMIN_DB_KEY).Value;
-                            if (ConnectionStringHelper.ValidateConnectionString(_appSettings.AppSettings.DatabaseEngine!, dbconnection))
-                            {
-                                adminConsoleTenant.edfiApiDiscoveryUrl = tenantConfig.Value.EdFiApiDiscoveryUrl;
-                                tenantToUpdate.Document = JsonConvert.SerializeObject(adminConsoleTenant);
-                                await _tenantsQueryRepository.SaveChangesAsync();
-                            }
-                        }
-                    }
-                }
-
-                _tenantCommandRepository.ResetConnectionString();
-            }
-            resultTenants.AddRange(tenants);
-        }
         //store it in memorycache
-        await Task.FromResult(_memoryCache.Set(AdminConsoleConstants.TENANTS_CACHE_KEY, resultTenants));
+        await Task.FromResult(_memoryCache.Set(AdminConsoleConstants.TenantsCacheKey, tenants));
     }
 
-    public async Task<List<TenantEntity>> GetTenantsAsync(bool fromCache = false)
+    public async Task<List<TenantModel>> GetTenantsAsync(bool fromCache = false)
     {
-        List<TenantEntity> results = new List<TenantEntity>();
+        List<TenantModel> results = new List<TenantModel>();
 
         if (fromCache)
         {
@@ -182,45 +66,55 @@ public class TenantService : IAdminConsoleTenantsService
             }
         }
 
-        results = new List<TenantEntity>();
+        results = new List<TenantModel>();
         //check multitenancy
         if (_appSettings.AppSettings.MultiTenancy)
         {
-            foreach (var tenantConfig in _appSettings.Tenants.Values)
+            var ordinalId = 1;
+            foreach (var tenantConfig in _appSettings.Tenants)
             {
-                var connectionString = tenantConfig.ConnectionStrings.First(p => p.Key == ADMIN_DB_KEY).Value;
-                if (ConnectionStringHelper.ValidateConnectionString(_appSettings.AppSettings.DatabaseEngine!, connectionString))
+                var connectionString = tenantConfig.Value.ConnectionStrings.First(p => p.Key == ADMIN_DB_KEY).Value;
+                if (!ConnectionStringHelper.ValidateConnectionString(_appSettings.AppSettings.DatabaseEngine!, connectionString))
                 {
-                    _tenantsQueryRepository.SwitchConnectionString(connectionString);
-                    var result = await _tenantsQueryRepository.GetAllAsync();
-                    results.AddRange(result);
+                    _log.Warn($"Tenant {tenantConfig.Key} has a wrong connection string for database {ADMIN_DB_KEY}");
+
                 }
+                dynamic document = new ExpandoObject();
+                document.edfiApiDiscoveryUrl = tenantConfig.Value.EdFiApiDiscoveryUrl;
+                document.name = tenantConfig.Key;
+                results.Add(new TenantModel()
+                {
+                    TenantId = ordinalId,
+                    Document = document,
+                });
+
             }
-            _tenantsQueryRepository.ResetConnectionString();
         }
         else
         {
-            var result = await _tenantsQueryRepository.GetAllAsync();
-            results.AddRange(result);
+            dynamic document = new ExpandoObject();
+            document.edfiApiDiscoveryUrl = _appSettings.EdFiApiDiscoveryUrl;
+            document.name = "default";
+            results.Add(new TenantModel()
+            {
+                TenantId = 1,
+                Document = document,
+            });
         }
         return results;
     }
 
-    public async Task<TenantEntity?> GetTenantByTenantIdAsync(string tenantId)
+    public async Task<TenantModel?> GetTenantByTenantIdAsync(int tenantId)
     {
         var tenants = await GetTenantsAsync();
-        var tenant = tenants.FirstOrDefault(p =>
-        {
-            dynamic data = JsonConvert.DeserializeObject<ExpandoObject>(p.Document)!;
-            return (string)data!.tenantId == tenantId;
-        });
+        var tenant = tenants.FirstOrDefault(p => p.TenantId == tenantId);
         return tenant;
     }
 
-    private async Task<List<Tenant>> GetTenantsFromCacheAsync()
+    private async Task<List<TenantModel>> GetTenantsFromCacheAsync()
     {
-        var tenants = await Task.FromResult(_memoryCache.Get<List<Tenant>>(AdminConsoleConstants.TENANTS_CACHE_KEY));
-        return tenants ?? new List<TenantEntity>();
+        var tenants = await Task.FromResult(_memoryCache.Get<List<TenantModel>>(AdminConsoleConstants.TenantsCacheKey));
+        return tenants ?? new List<TenantModel>();
     }
 }
 

@@ -7,14 +7,18 @@ namespace EdFi.Ods.AdminApi.Common.Constants;
 
 public static class AdminConsoleConstants
 {
-    public const string ADMINCONSOLE_SETTINGS_KEY = "AdminConsoleSettings";
+    public const string AdminConsoleSettingsKey = "AdminConsoleSettings";
 
 
-    public const string ENABLE_CORS_KEY = "CorsSettings:EnableCors";
+    public const string EnableCorsKey = "CorsSettings:EnableCors";
 
-    public const string ALLOWED_ORIGINS_CORS_KEY = "CorsSettings:AllowedOrigins";
+    public const string AllowedOriginsCorsKey = "CorsSettings:AllowedOrigins";
 
-    public const string CORS_POLICY_NAME = "allowAllCorsPolicyName";
+    public const string CorsPolicyName = "allowAllCorsPolicyName";
 
-    public const string TENANTS_CACHE_KEY = "adminconsole.tenants";
+    public const string TenantsCacheKey = "adminconsole.tenants";
+
+    public const string TenantIdDescription = "Admin API Tenant Id";
+
+    public const string TenantDocumentDescription = "Tenant Document as JSON object";
 }

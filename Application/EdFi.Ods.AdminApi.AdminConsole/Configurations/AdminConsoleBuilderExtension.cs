@@ -21,9 +21,9 @@ public static class AdminConsoleBuilderExtension
 
     public static void RegisterAdminConsoleCorsDependencies(this WebApplicationBuilder webApplicationBuilder, ILog logger)
     {
-        var corsSettings = webApplicationBuilder.Configuration.GetSection(AdminConsoleConstants.ADMINCONSOLE_SETTINGS_KEY);
-        var enableCors = corsSettings.GetValue<bool>(AdminConsoleConstants.ENABLE_CORS_KEY);
-        var allowedOrigins = corsSettings.GetSection(AdminConsoleConstants.ALLOWED_ORIGINS_CORS_KEY).Get<string[]>();
+        var corsSettings = webApplicationBuilder.Configuration.GetSection(AdminConsoleConstants.AdminConsoleSettingsKey);
+        var enableCors = corsSettings.GetValue<bool>(AdminConsoleConstants.EnableCorsKey);
+        var allowedOrigins = corsSettings.GetSection(AdminConsoleConstants.AllowedOriginsCorsKey).Get<string[]>();
         // Read CORS settings from configuration
         if (enableCors && allowedOrigins != null)
         {
@@ -31,7 +31,7 @@ public static class AdminConsoleBuilderExtension
             {
                 webApplicationBuilder.Services.AddCors(options =>
                 {
-                    options.AddPolicy(AdminConsoleConstants.CORS_POLICY_NAME, policy =>
+                    options.AddPolicy(AdminConsoleConstants.CorsPolicyName, policy =>
                     {
                         policy.WithOrigins(allowedOrigins)
                               .AllowAnyMethod()

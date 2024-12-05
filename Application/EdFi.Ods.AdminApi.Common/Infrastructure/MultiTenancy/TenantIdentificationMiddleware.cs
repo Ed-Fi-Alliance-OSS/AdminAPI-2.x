@@ -83,8 +83,7 @@ public class TenantResolverMiddleware : IMiddleware
             else
             {
                 if (_options.Value.EnableAdminConsoleAPI &&
-                    context.Request.Path.Value!.Contains("tenants") &&
-                    context.Request.Path.Value!.Split("/").Length == 3 &&
+                    context.Request.Path.Value!.Contains("adminconsole/tenants") &&
                     context.Request.Method == "GET")
                 {
                     await next.Invoke(context);

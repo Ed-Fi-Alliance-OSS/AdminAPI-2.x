@@ -34,7 +34,7 @@ public class EditTenant : IFeature
     {
         validator.Validate(request);
         await editTenantCommand.ExecuteEditOnBoardingAsync(request);
-        memoryCache.Remove(AdminConsoleConstants.TENANTS_CACHE_KEY);
+        memoryCache.Remove(AdminConsoleConstants.TenantsCacheKey);
         return Results.Ok();
     }
 
