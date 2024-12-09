@@ -17,12 +17,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using FluentValidation;
-using EdFi.Ods.AdminApi.Infrastructure.MultiTenancy;
+using EdFi.Ods.AdminApi.Common.Infrastructure.MultiTenancy;
 using EdFi.Ods.AdminApi.Common.Helpers;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Context;
 using EdFi.Common.Extensions;
 using EdFi.Ods.AdminApi.Common.Infrastructure;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Extensions;
+using EdFi.Ods.AdminApi.Common.Settings;
+using EdFi.Ods.AdminApi.AdminConsole.Documentation;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 
@@ -31,7 +34,6 @@ public static class WebApplicationBuilderExtensions
     public static void AddServices(this WebApplicationBuilder webApplicationBuilder)
     {
         IConfiguration config = webApplicationBuilder.Configuration;
-
         webApplicationBuilder.Services.Configure<AppSettings>(config.GetSection("AppSettings"));
         EnableMultiTenancySupport(webApplicationBuilder);
         var executingAssembly = Assembly.GetExecutingAssembly();
@@ -146,6 +148,8 @@ public static class WebApplicationBuilderExtensions
             opt.SchemaFilter<SwaggerExcludeSchemaFilter>();
             opt.OperationFilter<SwaggerDefaultParameterFilter>();
             opt.OperationFilter<ProfileRequestExampleFilter>();
+            //using in adminconsole endpoints
+            opt.ExampleFilters();
             opt.EnableAnnotations();
             opt.OrderActionsBy(x =>
             {
