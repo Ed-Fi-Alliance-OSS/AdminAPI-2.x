@@ -3,7 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Ods.AdminApi.AdminConsole.Documentation;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Tenants;
 using EdFi.Ods.AdminApi.Common.Features;
 using EdFi.Ods.AdminApi.Common.Infrastructure;
@@ -31,7 +30,6 @@ public class ReadTenants : IFeature
         return Results.Ok(tenants);
     }
 
-    [SwaggerResponseExample(200, typeof(TenantResponseSwaggerExample))]
     public async Task<IResult> GetTenantsByTenantIdAsync(IAdminConsoleTenantsService adminConsoleTenantsService,
         IMemoryCache memoryCache, int tenantId)
     {

@@ -4,7 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Reflection;
-using EdFi.Ods.AdminApi.AdminConsole.Documentation;
 using EdFi.Ods.AdminApi.AdminConsole.Helpers;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.AutoMapper;
@@ -37,9 +36,6 @@ public static class ServicesBuilderExtension
         builder.Services.AddScoped<IEncryptionService, EncryptionService>();
 
         builder.Services.AddScoped<IAdminConsoleTenantsService, TenantService>();
-
-        //swagger example
-        builder.Services.AddSwaggerExamplesFromAssemblyOf(typeof(TenantRequestSwaggerExample));
 
         builder.RegisterAdminConsoleServices();
         builder.RegisterAdminConsoleValidators();

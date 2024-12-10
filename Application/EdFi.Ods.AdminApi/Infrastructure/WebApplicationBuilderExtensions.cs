@@ -5,26 +5,23 @@
 
 using System.Reflection;
 using EdFi.Admin.DataAccess.Contexts;
+using EdFi.Common.Extensions;
+using EdFi.Ods.AdminApi.Common.Infrastructure;
+using EdFi.Ods.AdminApi.Common.Infrastructure.Context;
+using EdFi.Ods.AdminApi.Common.Infrastructure.Extensions;
+using EdFi.Ods.AdminApi.Common.Infrastructure.MultiTenancy;
+using EdFi.Ods.AdminApi.Common.Settings;
+using EdFi.Ods.AdminApi.Infrastructure.Api;
 using EdFi.Ods.AdminApi.Infrastructure.Documentation;
 using EdFi.Ods.AdminApi.Infrastructure.Security;
-using EdFi.Ods.AdminApi.Infrastructure.Api;
-using EdFi.Ods.AdminApi.Infrastructure.Extensions;
-using EdFi.Security.DataAccess.Contexts;
 using EdFi.Ods.AdminApi.Infrastructure.Services;
+using EdFi.Security.DataAccess.Contexts;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
-using FluentValidation;
-using EdFi.Ods.AdminApi.Common.Infrastructure.MultiTenancy;
-using EdFi.Ods.AdminApi.Common.Helpers;
-using EdFi.Ods.AdminApi.Common.Infrastructure.Context;
-using EdFi.Common.Extensions;
-using EdFi.Ods.AdminApi.Common.Infrastructure;
-using EdFi.Ods.AdminApi.Common.Infrastructure.Extensions;
-using EdFi.Ods.AdminApi.Common.Settings;
-using EdFi.Ods.AdminApi.AdminConsole.Documentation;
 using Swashbuckle.AspNetCore.Filters;
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
@@ -148,8 +145,6 @@ public static class WebApplicationBuilderExtensions
             opt.SchemaFilter<SwaggerExcludeSchemaFilter>();
             opt.OperationFilter<SwaggerDefaultParameterFilter>();
             opt.OperationFilter<ProfileRequestExampleFilter>();
-            //using in adminconsole endpoints
-            opt.ExampleFilters();
             opt.EnableAnnotations();
             opt.OrderActionsBy(x =>
             {
