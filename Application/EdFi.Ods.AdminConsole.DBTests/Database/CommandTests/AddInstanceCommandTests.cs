@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
+using System.Dynamic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
@@ -43,7 +44,7 @@ public class AddInstanceCommandTests : PlatformUsersContextTestBase
             var repository = new CommandRepository<Instance>(dbContext);
             var newInstance = new TestInstance
             {
-                InstanceId = 1,
+                OdsInstanceId = 1,
                 TenantId = 1,
                 EdOrgId = 1,
                 Document = instanceDocument
@@ -60,7 +61,7 @@ public class AddInstanceCommandTests : PlatformUsersContextTestBase
             persistedInstance.Count().ShouldBe(1);
             persistedInstance.First().DocId.ShouldBe(1);
             persistedInstance.First().TenantId.ShouldBe(1);
-            persistedInstance.First().InstanceId.ShouldBe(1);
+            persistedInstance.First().OdsInstanceId.ShouldBe(1);
             persistedInstance.First().EdOrgId.ShouldBe(1);
 
             JsonNode jnDocument = JsonNode.Parse(persistedInstance.First().Document);
@@ -86,8 +87,8 @@ public class AddInstanceCommandTests : PlatformUsersContextTestBase
     {
         public int DocId { get; }
         public int TenantId { get; set; }
-        public int InstanceId { get; set; }
+        public int OdsInstanceId { get; set; }
         public int? EdOrgId { get; set; }
-        public string Document { get; set; }
+        public ExpandoObject Document { get; set; }
     }
 }

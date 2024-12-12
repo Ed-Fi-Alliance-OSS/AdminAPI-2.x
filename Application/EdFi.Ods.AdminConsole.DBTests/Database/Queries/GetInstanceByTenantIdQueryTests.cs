@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
@@ -38,7 +39,7 @@ public class GetInstancesByTenantIdQueryTests : PlatformUsersContextTestBase
 
         var newInstance = new TestInstance
         {
-            InstanceId = 1,
+            OdsInstanceId = 1,
             TenantId = 1,
             EdOrgId = 1,
             Document = instanceDocument
@@ -60,7 +61,7 @@ public class GetInstancesByTenantIdQueryTests : PlatformUsersContextTestBase
             instances.Count().ShouldBe(1);
             instances.FirstOrDefault().DocId.ShouldBe(result.DocId);
             instances.FirstOrDefault().TenantId.ShouldBe(newInstance.TenantId);
-            instances.FirstOrDefault().InstanceId.ShouldBe(newInstance.InstanceId);
+            instances.FirstOrDefault().OdsInstanceId.ShouldBe(newInstance.OdsInstanceId);
             instances.FirstOrDefault().EdOrgId.ShouldBe(newInstance.EdOrgId);
             instances.FirstOrDefault().Document.ShouldBe(newInstance.Document);
         });
@@ -70,8 +71,8 @@ public class GetInstancesByTenantIdQueryTests : PlatformUsersContextTestBase
     {
         public int DocId { get; }
         public int TenantId { get; set; }
-        public int InstanceId { get; set; }
+        public int OdsInstanceId { get; set; }
         public int? EdOrgId { get; set; }
-        public string Document { get; set; }
+        public ExpandoObject Document { get; set; }
     }
 }

@@ -3,6 +3,8 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Collections.Generic;
+using System.Dynamic;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repositories;
@@ -36,7 +38,7 @@ public class GetInstanceByIdQueryTests : PlatformUsersContextTestBase
 
         var newInstance = new TestInstance
         {
-            InstanceId = 1,
+            OdsInstanceId = 1,
             TenantId = 1,
             EdOrgId = 1,
             Document = instanceDocument
@@ -57,7 +59,7 @@ public class GetInstanceByIdQueryTests : PlatformUsersContextTestBase
 
             instance.DocId.ShouldBe(result.DocId);
             instance.TenantId.ShouldBe(newInstance.TenantId);
-            instance.InstanceId.ShouldBe(newInstance.InstanceId);
+            instance.OdsInstanceId.ShouldBe(newInstance.OdsInstanceId);
             instance.EdOrgId.ShouldBe(newInstance.EdOrgId);
             instance.Document.ShouldBe(newInstance.Document);
         });
@@ -68,8 +70,8 @@ public class GetInstanceByIdQueryTests : PlatformUsersContextTestBase
     {
         public int DocId { get; }
         public int TenantId { get; set; }
-        public int InstanceId { get; set; }
+        public int OdsInstanceId { get; set; }
         public int? EdOrgId { get; set; }
-        public string Document { get; set; }
+        public ExpandoObject Document { get; set; }
     }
 }
