@@ -29,10 +29,10 @@ public class GetInstanceByIdQuery : IGetInstanceByIdQuery
         _encryptionService = encryptionService;
     }
 
-    public async Task<Instance> Execute(int tenantId, int docId)
+    public async Task<Instance> Execute(int tenantId, int odsInstanceId)
     {
 
-        var instance = await _instanceQuery.Query().SingleOrDefaultAsync(instance => instance.TenantId == tenantId && instance.DocId == docId);
+        var instance = await _instanceQuery.Query().SingleOrDefaultAsync(instance => instance.TenantId == tenantId && instance.OdsInstanceId == odsInstanceId);
 
         if (instance == null)
             return null;

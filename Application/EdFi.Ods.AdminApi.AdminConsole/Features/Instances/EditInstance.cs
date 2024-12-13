@@ -20,15 +20,15 @@ public class EditInstance : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiEndpointBuilder.MapPut(endpoints, "/instances/{instanceid}", Execute)
+        AdminApiEndpointBuilder.MapPut(endpoints, "/instances/{odsinstanceid}", Execute)
             .WithRouteOptions(b => b.WithResponseCode(200))
             .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
-    public async Task<IResult> Execute(Validator validator, IEditInstanceCommand editInstanceCommand, EditInstanceRequest request, int instanceid)
+    public async Task<IResult> Execute(Validator validator, IEditInstanceCommand editInstanceCommand, EditInstanceRequest request, int odsInstanceId)
     {
         await validator.GuardAsync(request);
-        var instance = await editInstanceCommand.Execute(instanceid, request);
+        var instance = await editInstanceCommand.Execute(odsInstanceId, request);
         return Results.Ok(instance);
     }
 
@@ -40,7 +40,7 @@ public class EditInstance : IFeature
         [Required]
         public int TenantId { get; set; }
         [Required]
-        public string Document { get; set; }
+        public ExpandoObject Document { get; set; }
     }
 
     public class Validator : AbstractValidator<EditInstanceRequest>
@@ -59,14 +59,15 @@ public class EditInstance : IFeature
              .Must(BeValidDocument).WithMessage("Document must be a valid JSON.");
         }
 
-        private bool BeValidDocument(string document)
+        private bool BeValidDocument(ExpandoObject document)
         {
             try
             {
-                JsonDocument.Parse(document);
+                var jDocument = JsonSerializer.Serialize(document);
+                Newtonsoft.Json.Linq.JToken.Parse(jDocument);
                 return true;
             }
-            catch (Newtonsoft.Json.JsonReaderException)
+            catch
             {
                 return false;
             }

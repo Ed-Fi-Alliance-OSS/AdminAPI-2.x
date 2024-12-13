@@ -20,14 +20,14 @@ public class DeleteInstance : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiEndpointBuilder.MapDelete(endpoints, "/instances/{id}", Execute)
-            .WithRouteOptions(b => b.WithResponseCode(200))
+        AdminApiEndpointBuilder.MapDelete(endpoints, "/instances/{odsinstanceid}", Execute)
+            .WithRouteOptions(b => b.WithResponseCode(200, FeatureCommonConstants.DeletedSuccessResponseDescription))
             .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
-    public async Task<IResult> Execute(IDeleteInstanceCommand deleteInstanceCommand, int id)
+    public async Task<IResult> Execute(IDeleteInstanceCommand deleteInstanceCommand, int odsInstanceId)
     {
-        await deleteInstanceCommand.Execute(id);
+        await deleteInstanceCommand.Execute(odsInstanceId);
         return Results.Ok();
     }
 }

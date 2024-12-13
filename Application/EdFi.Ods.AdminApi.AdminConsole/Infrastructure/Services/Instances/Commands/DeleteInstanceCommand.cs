@@ -14,6 +14,7 @@ using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repositories;
 using EdFi.Ods.AdminApi.Common.Features;
 using EdFi.Ods.AdminApi.Common.Infrastructure;
+using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -23,7 +24,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Comma
 
 public interface IDeleteInstanceCommand
 {
-    Task Execute(int id);
+    Task Execute(int OdsInstanceId);
 }
 
 public class DeleteInstanceCommand : IDeleteInstanceCommand
@@ -37,9 +38,9 @@ public class DeleteInstanceCommand : IDeleteInstanceCommand
         _instanceQuery = instanceQuery;
     }
 
-    public async Task Execute(int id)
+    public async Task Execute(int OdsInstanceId)
     {
-        var instance = await _instanceQuery.Query().SingleOrDefaultAsync(w => w.DocId == id);
+        var instance = await _instanceQuery.Query().SingleOrDefaultAsync(w => w.OdsInstanceId == OdsInstanceId) ?? throw new NotFoundException<int>("Instance", OdsInstanceId);
         await _instanceCommand.DeleteAsync(instance);
     }
 }

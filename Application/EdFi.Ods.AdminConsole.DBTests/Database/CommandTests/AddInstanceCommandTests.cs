@@ -6,6 +6,7 @@
 using System;
 using System.Dynamic;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
@@ -36,6 +37,14 @@ public class AddInstanceCommandTests : PlatformUsersContextTestBase
     {
         var instanceDocument = "{\"instanceId\":\"DEF456\",\"tenantId\":\"def456\",\"instanceName\":\"Mock Instance 2\",\"instanceType\":\"Type B\",\"connectionType\":\"Type Y\",\"clientId\":\"CLIENT321\",\"clientSecret\":\"SECRET456\",\"baseUrl\":\"https://localhost/api\",\"authenticationUrl\":\"https://localhost/api/oauth/token\",\"resourcesUrl\":\"https://localhost/api\",\"schoolYears\":[2024,2025],\"isDefault\":false,\"verificationStatus\":null,\"provider\":\"Local\"}";
 
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+            Converters = { new System.Text.Json.Serialization.JsonStringEnumConverter() }
+        };
+
+        ExpandoObject documentExpandObject = JsonSerializer.Deserialize<ExpandoObject>(instanceDocument, options);
+
         var encryptionService = new EncryptionService();
         var encryptionKey = Testing.GetEncryptionKeyResolver().GetEncryptionKey();
 
@@ -47,7 +56,7 @@ public class AddInstanceCommandTests : PlatformUsersContextTestBase
                 OdsInstanceId = 1,
                 TenantId = 1,
                 EdOrgId = 1,
-                Document = instanceDocument
+                Document = documentExpandObject
             };
 
             var command = new AddInstanceCommand(repository, Testing.GetEncryptionKeyResolver(), encryptionService);

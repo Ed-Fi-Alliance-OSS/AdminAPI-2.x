@@ -23,7 +23,7 @@ public class ReadInstances : IFeature
         AdminApiEndpointBuilder.MapGet(endpoints, "/instances", GetInstances)
             .BuildForVersions(AdminApiVersions.AdminConsole);
 
-        AdminApiEndpointBuilder.MapGet(endpoints, "/instances/{tenantId}/{id}", GetInstanceById)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/instances/{tenantId}/{odsinstanceid}", GetInstanceById)
             .WithRouteOptions(b => b.WithResponse<InstanceModel>(200))
             .BuildForVersions(AdminApiVersions.AdminConsole);
 
@@ -38,9 +38,9 @@ public class ReadInstances : IFeature
         return Results.Ok(instances);
     }
 
-    internal async Task<IResult> GetInstanceById([FromServices] IGetInstanceByIdQuery getInstanceQuery, int tenantId, int id)
+    internal async Task<IResult> GetInstanceById([FromServices] IGetInstanceByIdQuery getInstanceQuery, int tenantId, int odsInstanceId)
     {
-        var instance = await getInstanceQuery.Execute(tenantId, id);
+        var instance = await getInstanceQuery.Execute(tenantId, odsInstanceId);
 
         if (instance != null)
             return Results.Ok(instance);

@@ -9,6 +9,7 @@ using EdFi.Ods.AdminApi.AdminConsole.Helpers;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repositories;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Commands;
 
@@ -32,8 +33,15 @@ public class AddInstanceCommand : IAddInstanceCommand
 
     public async Task<Instance> Execute(IAddInstanceModel instance)
     {
+        var cleanedDocument = ExpandoObjectHelper.NormalizeExpandoObject(instance.Document);
 
-        var document = JsonConvert.SerializeObject(instance.Document);
+        var document = JsonConvert.SerializeObject(cleanedDocument, new JsonSerializerSettings
+        {
+            ContractResolver = new DefaultContractResolver(),
+            Converters = new List<JsonConverter> { new ExpandoObjectConverter() },
+            Formatting = Formatting.Indented
+        });
+
         JsonNode? jnDocument = JsonNode.Parse(document);
 
         var clientId = jnDocument!["clientId"]?.AsValue().ToString();
