@@ -36,6 +36,7 @@ public static class ServicesBuilderExtension
         builder.Services.AddScoped<IEncryptionService, EncryptionService>();
 
         builder.Services.AddScoped<IAdminConsoleTenantsService, TenantService>();
+        builder.Services.AddScoped<IAdminConsoleInstancesService, InstanceService>();
 
         builder.RegisterAdminConsoleServices();
         builder.RegisterAdminConsoleValidators();
