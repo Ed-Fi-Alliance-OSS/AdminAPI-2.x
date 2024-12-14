@@ -35,18 +35,22 @@ public static class AdminConsoleExtension
             var tenantId = 1;
             if (options!.Value.AppSettings.MultiTenancy)
             {
-                var tenantConfigurationProvider = scope.ServiceProvider.GetService<ITenantConfigurationProvider>();
-                var tenantConfigurationContextProvider = scope.ServiceProvider.GetService<IContextProvider<TenantConfiguration>>();
                 foreach (var item in options!.Value.Tenants)
                 {
-                    if (tenantConfigurationProvider!.Get().TryGetValue(item.Key, out var tenantConfiguration))
+                    using (var scopeInstances = app.Services.CreateScope())
                     {
-                        //assign connection string to the dbcontext when is multitenant
-                        tenantConfigurationContextProvider!.Set(tenantConfiguration);
-                        IAdminConsoleInstancesService? adminConsoleInstancesService = scope.ServiceProvider.GetService<IAdminConsoleInstancesService>();
-                        if (adminConsoleInstancesService != null)
-                            await adminConsoleInstancesService.InitializeIntancesAsync(tenantId);
-                        tenantId++;
+                        var tenantConfigurationProvider = scopeInstances.ServiceProvider.GetService<ITenantConfigurationProvider>();
+                        var tenantConfigurationContextProvider = scopeInstances.ServiceProvider.GetService<IContextProvider<TenantConfiguration>>();
+                        if (tenantConfigurationProvider!.Get().TryGetValue(item.Key, out var tenantConfiguration))
+                        {
+                            //assign connection string to the dbcontext when is multitenant
+                            tenantConfigurationContextProvider!.Set(tenantConfiguration);
+                            IAdminConsoleInstancesService? adminConsoleInstancesService = scopeInstances.ServiceProvider.GetService<IAdminConsoleInstancesService>();
+
+                            if (adminConsoleInstancesService != null)
+                                await adminConsoleInstancesService.InitializeIntancesAsync(tenantId);
+                            tenantId++;
+                        }
                     }
                 }
             }
