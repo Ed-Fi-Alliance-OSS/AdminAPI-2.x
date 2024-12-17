@@ -48,11 +48,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Infrastructure\DataAccess\Artifacts\" />
+    <ProjectReference Include="..\EdFi.Ods.AdminApi.Common\EdFi.Ods.AdminApi.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EdFi.Ods.AdminApi.Common\EdFi.Ods.AdminApi.Common.csproj" />
+    <None Update="Infrastructure\DataAccess\Artifacts\Security\MsSql\SQL\AdminConsoleClaimsetUp.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
