@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.Security.MsSql
+namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.Security.PgSql
 {
     /// <inheritdoc />
     public partial class AdminConsoleClaimset : Migration
@@ -10,7 +10,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.Sec
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            var sqlFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Infrastructure/DataAccess/Artifacts/Security/MsSql/AdminConsoleClaimsetUp.sql");
+            var sqlFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Infrastructure/DataAccess/Artifacts/Security/PgSql/AdminConsoleClaimsetUp.sql");
             var sqlScript = File.ReadAllText(sqlFile);
             migrationBuilder.Sql(sqlScript);
         }
@@ -18,6 +18,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.Sec
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+
         }
     }
 }
