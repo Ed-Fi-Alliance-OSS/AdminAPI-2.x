@@ -20,7 +20,7 @@ public class EditInstance : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiEndpointBuilder.MapPut(endpoints, "/instances/{odsinstanceid}", Execute)
+        AdminApiEndpointBuilder.MapPatch(endpoints, "/instances/{odsinstanceid}", Execute)
             .WithRouteOptions(b => b.WithResponseCode(200))
             .BuildForVersions(AdminApiVersions.AdminConsole);
     }
@@ -35,11 +35,6 @@ public class EditInstance : IFeature
     public class EditInstanceRequest : IEditInstanceModel
     {
         [Required]
-        public int DocId { get; set; }
-        public int? EdOrgId { get; set; }
-        [Required]
-        public int TenantId { get; set; }
-        [Required]
         public ExpandoObject Document { get; set; }
     }
 
@@ -47,12 +42,6 @@ public class EditInstance : IFeature
     {
         public Validator()
         {
-            RuleFor(m => m.DocId)
-             .NotNull();
-
-            RuleFor(m => m.EdOrgId)
-             .NotNull();
-
             RuleFor(m => m.Document)
              .NotNull()
              .NotEmpty()

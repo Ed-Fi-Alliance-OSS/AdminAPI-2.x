@@ -15,6 +15,8 @@ using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repositories;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore;
+using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Commands
 {
@@ -26,19 +28,20 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Comma
     public class EditInstanceCommand : IEditInstanceCommand
     {
         private readonly ICommandRepository<Instance> _instanceCommand;
+        private readonly IQueriesRepository<Instance> _instanceQuery;
         private readonly IEncryptionService _encryptionService;
         private readonly string _encryptionKey;
 
-        public EditInstanceCommand(ICommandRepository<Instance> instanceCommand, IEncryptionKeyResolver encryptionKeyResolver, IEncryptionService encryptionService)
+        public EditInstanceCommand(ICommandRepository<Instance> instanceCommand, IQueriesRepository<Instance> instanceQuery, IEncryptionKeyResolver encryptionKeyResolver, IEncryptionService encryptionService)
         {
             _instanceCommand = instanceCommand;
+            _instanceQuery = instanceQuery;
             _encryptionKey = encryptionKeyResolver.GetEncryptionKey();
             _encryptionService = encryptionService;
         }
 
-        public async Task<Instance> Execute(int odsinstanceid, IEditInstanceModel instance)
+        public async Task<Instance> Execute(int odsInstanceId, IEditInstanceModel instance)
         {
-
             var cleanedDocument = ExpandoObjectHelper.NormalizeExpandoObject(instance.Document);
 
             var document = JsonConvert.SerializeObject(cleanedDocument, new JsonSerializerSettings
@@ -67,28 +70,22 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Comma
 
             try
             {
-                return await _instanceCommand.UpdateAsync(new Instance
-                {
-                    DocId = instance.DocId,
-                    OdsInstanceId = odsinstanceid,
-                    TenantId = instance.TenantId,
-                    EdOrgId = instance.EdOrgId,
-                    Document = document,
-                });
+                var existingInstance = await _instanceQuery.Query().SingleOrDefaultAsync(w => w.OdsInstanceId == odsInstanceId) ?? throw new NotFoundException<int>("Instance", odsInstanceId);
+
+                existingInstance.Document = document;
+                await _instanceCommand.UpdateAsync(existingInstance);
+                return existingInstance;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                return null;
+                throw;
             }
         }
     }
 
     public interface IEditInstanceModel
     {
-        int DocId { get; }
-        int? EdOrgId { get; }
-        int TenantId { get; }
         ExpandoObject Document { get; }
     }
 }
