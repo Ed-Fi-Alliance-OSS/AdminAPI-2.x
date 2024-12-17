@@ -5,8 +5,9 @@
 
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts;
-using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsoleMsSql;
-using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsolePgSql;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.Admin.MsSql;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.Admin.PgSql;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.Security.MsSql;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Context;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Extensions;
 using EdFi.Ods.AdminApi.Common.Infrastructure.MultiTenancy;
@@ -33,14 +34,19 @@ public static class DatabaseBuilderExtension
                 webApplicationBuilder.Services.AddDbContext<IDbContext, AdminConsoleMsSqlContext>(
                 (sp, options) =>
                 {
-                    options.UseSqlServer(AdminConnectionString(sp, config));
+                    options.UseSqlServer(AdminConnection(sp, config).AdminConnectionString);
+                });
+                webApplicationBuilder.Services.AddDbContext<AdminConsoleSecurityMsSqlContext>(
+                (sp, options) =>
+                {
+                    options.UseSqlServer(AdminConnection(sp, config).SecurityConnectionString);
                 });
                 break;
             case DbProviders.PostgreSql:
                 webApplicationBuilder.Services.AddDbContext<IDbContext, AdminConsolePgSqlContext>(
                 (sp, options) =>
                 {
-                    options.UseNpgsql(AdminConnectionString(sp, config));
+                    options.UseNpgsql(AdminConnection(sp, config).AdminConnectionString);
                 });
                 break;
             default:
@@ -48,11 +54,11 @@ public static class DatabaseBuilderExtension
         }
     }
 
-    public static string AdminConnectionString(IServiceProvider serviceProvider, IConfiguration config)
+    public static TenantConfiguration AdminConnection(IServiceProvider serviceProvider, IConfiguration config)
     {
         var multiTenancyEnabled = config.Get("AppSettings:MultiTenancy", false);
 
-        var adminConnectionString = string.Empty;
+        var connection = new TenantConfiguration();
 
         if (multiTenancyEnabled)
         {
@@ -62,7 +68,9 @@ public static class DatabaseBuilderExtension
             var tenant = tenantContextProvider.Get();
             if (tenant != null && !string.IsNullOrEmpty(tenant.AdminConnectionString))
             {
-                adminConnectionString = tenant.AdminConnectionString;
+                connection.AdminConnectionString = tenant.AdminConnectionString;
+                connection.SecurityConnectionString = tenant.SecurityConnectionString;
+                //adminConnectionString = tenant.AdminConnectionString;
             }
             else
             {
@@ -77,7 +85,7 @@ public static class DatabaseBuilderExtension
                         tenantContextProvider.Set(tenantConfiguration);
                     }
 
-                    adminConnectionString = tenantContextProvider.Get()!.AdminConnectionString;
+                    connection = tenantContextProvider.Get()!;
                 }
                 else
                 {
@@ -87,10 +95,56 @@ public static class DatabaseBuilderExtension
         }
         else
         {
-            adminConnectionString = config.GetConnectionStringByName("EdFi_Admin");
+            //adminConnectionString = config.GetConnectionStringByName("EdFi_Admin");
+            connection.AdminConnectionString = config.GetConnectionStringByName("EdFi_Admin");
+            connection.SecurityConnectionString = config.GetConnectionStringByName("EdFi_Security");
         }
 
-        return adminConnectionString!;
+        return connection!;
     }
 
+    //public static string AdminConnectionString(IServiceProvider serviceProvider, IConfiguration config)
+    //{
+    //    var multiTenancyEnabled = config.Get("AppSettings:MultiTenancy", false);
+
+    //    var adminConnectionString = string.Empty;
+
+    //    if (multiTenancyEnabled)
+    //    {
+    //        var tenantContextProvider = serviceProvider.GetRequiredService<IContextProvider<TenantConfiguration>>();
+    //        var tenantConfigurationProvider = serviceProvider.GetRequiredService<ITenantConfigurationProvider>();
+
+    //        var tenant = tenantContextProvider.Get();
+    //        if (tenant != null && !string.IsNullOrEmpty(tenant.AdminConnectionString))
+    //        {
+    //            adminConnectionString = tenant.AdminConnectionString;
+    //        }
+    //        else
+    //        {
+    //            var tenantSection = serviceProvider.GetRequiredService<IOptionsMonitor<TenantsSection>>();
+    //            var tenants = tenantSection.CurrentValue.Tenants;
+
+    //            if (tenants != null)
+    //            {
+    //                var firstTenant = tenants.FirstOrDefault();
+    //                if (tenantConfigurationProvider.Get().TryGetValue(firstTenant.Key, out var tenantConfiguration))
+    //                {
+    //                    tenantContextProvider.Set(tenantConfiguration);
+    //                }
+
+    //                adminConnectionString = tenantContextProvider.Get()!.AdminConnectionString;
+    //            }
+    //            else
+    //            {
+    //                throw new ArgumentException($"Section Tenants not found");
+    //            }
+    //        }
+    //    }
+    //    else
+    //    {
+    //        adminConnectionString = config.GetConnectionStringByName("EdFi_Admin");
+    //    }
+
+    //    return adminConnectionString!;
+    //}
 }

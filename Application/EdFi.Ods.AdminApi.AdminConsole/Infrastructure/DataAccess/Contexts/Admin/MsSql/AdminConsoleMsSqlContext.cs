@@ -3,12 +3,13 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.ModelConfiguration;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
-namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsoleMsSql;
+namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.Admin.MsSql;
 
 public class AdminConsoleMsSqlContext : DbContext, IDbContext
 {
@@ -21,7 +22,7 @@ public class AdminConsoleMsSqlContext : DbContext, IDbContext
 
     public DbSet<Step> Steps { get; set; }
 
-    public DatabaseFacade DB => this.Database;
+    public DatabaseFacade DB => Database;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -48,7 +48,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Infrastructure\DataAccess\Artifacts\" />
+    <Folder Include="Infrastructure\DataAccess\Artifacts\Security\MsSql\" />
+    <Folder Include="Infrastructure\DataAccess\Artifacts\Security\PgSql\" />
   </ItemGroup>
 
   <ItemGroup>
