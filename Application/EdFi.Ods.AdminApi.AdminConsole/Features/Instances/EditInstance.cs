@@ -21,7 +21,7 @@ public class EditInstance : IFeature
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         AdminApiEndpointBuilder.MapPatch(endpoints, "/instances/{odsinstanceid}", Execute)
-            .WithRouteOptions(b => b.WithResponseCode(200))
+            .WithRouteOptions(b => b.WithResponseCode(204))
             .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
@@ -29,7 +29,7 @@ public class EditInstance : IFeature
     {
         await validator.GuardAsync(request);
         var instance = await editInstanceCommand.Execute(odsInstanceId, request);
-        return Results.Ok(instance);
+        return Results.NoContent();
     }
 
     public class EditInstanceRequest : IEditInstanceModel
