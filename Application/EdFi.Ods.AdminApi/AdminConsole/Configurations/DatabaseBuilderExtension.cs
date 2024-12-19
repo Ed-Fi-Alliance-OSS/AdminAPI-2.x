@@ -7,6 +7,8 @@ using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.Admin.MsSql;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.Admin.PgSql;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.Security.MsSql;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.Security.PgSql;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Context;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Extensions;
 using EdFi.Ods.AdminApi.Common.Infrastructure.MultiTenancy;
@@ -26,17 +28,33 @@ public static class DatabaseBuilderExtension
         switch (databaseEngine)
         {
             case DbProviders.SqlServer:
+                /// Admin
                 webApplicationBuilder.Services.AddDbContext<IDbContext, AdminConsoleMsSqlContext>(
                 (sp, options) =>
                 {
                     options.UseSqlServer(AdminConnection(sp).AdminConnectionString);
                 });
+
+                /// Security
+                webApplicationBuilder.Services.AddDbContext<AdminConsoleSecurityMsSqlContext>(
+                (sp, options) =>
+                {
+                    options.UseSqlServer(AdminConnection(sp).SecurityConnectionString);
+                });
                 break;
             case DbProviders.PostgreSql:
+                /// Admin
                 webApplicationBuilder.Services.AddDbContext<IDbContext, AdminConsolePgSqlContext>(
                 (sp, options) =>
                 {
                     options.UseNpgsql(AdminConnection(sp).AdminConnectionString);
+                });
+
+                /// Security
+                webApplicationBuilder.Services.AddDbContext<AdminConsoleSecurityPgSqlContext>(
+                (sp, options) =>
+                {
+                    options.UseNpgsql(AdminConnection(sp).SecurityConnectionString);
                 });
                 break;
             default:

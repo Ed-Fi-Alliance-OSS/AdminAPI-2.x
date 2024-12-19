@@ -55,6 +55,9 @@
     <None Update="Infrastructure\DataAccess\Artifacts\Security\MsSql\SQL\AdminConsoleClaimsetUp.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Infrastructure\DataAccess\Artifacts\Security\PgSql\SQL\AdminConsoleClaimsetUp.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

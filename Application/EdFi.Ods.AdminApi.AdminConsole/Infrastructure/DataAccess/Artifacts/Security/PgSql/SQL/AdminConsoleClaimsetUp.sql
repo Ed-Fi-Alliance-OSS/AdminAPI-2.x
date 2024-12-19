@@ -16,7 +16,7 @@ BEGIN
         RAISE NOTICE '% claimset exists', claimset_name;
     ELSE
         RAISE NOTICE 'adding % claimset', claimset_name;
-        INSERT INTO dbo.ClaimSets (ClaimSetName, isedfipreset) VALUES (claimset_name, 1);
+        INSERT INTO dbo.ClaimSets (ClaimSetName, isedfipreset) VALUES (claimset_name, True);
     END IF;
 
 -- Configure Ed-Fi ODS Admin Console ClaimSet
