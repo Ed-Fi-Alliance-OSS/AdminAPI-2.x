@@ -13,7 +13,6 @@ using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using OpenIddict.Server;
 using static OpenIddict.Server.OpenIddictServerEvents;
-using Polly;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Security;
 
