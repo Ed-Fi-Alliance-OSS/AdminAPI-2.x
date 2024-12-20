@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using OpenIddict.Server;
 using static OpenIddict.Server.OpenIddictServerEvents;
+using Polly;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Security;
 
@@ -100,12 +101,46 @@ public static class SecurityExtensions
                     IssuerSigningKey = signingKey
                 };
                 opt.RequireHttpsMetadata = !isDockerEnvironment;
+            })
+            .AddJwtBearer("IdentityProvider", options =>
+            {
+                var oidcIssuer = configuration.Get<string>("Authentication:OIDC:Authority");
+                options.Authority = oidcIssuer;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateAudience = false,
+                    ValidateIssuer = true,
+                    ValidateIssuerSigningKey = false,
+                    ValidIssuer = oidcIssuer,
+                    IssuerSigningKeyResolver = (token, securityToken, kid, parameters) =>
+                    {
+#pragma warning disable S4830 // Server certificates should be verified during SSL/TLS connections
+                        var handler = new HttpClientHandler
+                        {
+                            ServerCertificateCustomValidationCallback = (request, cert, chain, errors) => true
+                        };
+#pragma warning restore S4830
+                        // Server certificates should be verified during SSL/TLS connections
+                        // Obtener las claves públicas desde Keycloak
+                        var client = new HttpClient(handler);
+                        var response = client.GetStringAsync(oidcIssuer + "/protocol/openid-connect/certs").Result;
+                        var keys = JsonWebKeySet.Create(response).GetSigningKeys();
+                        return keys;
+                    }
+                };
             });
         services.AddAuthorization(opt =>
         {
             opt.DefaultPolicy = new AuthorizationPolicyBuilder()
+            .AddAuthenticationSchemes("Local", "IdentityProvider")
                 .RequireClaim(OpenIddictConstants.Claims.Scope, SecurityConstants.Scopes.AdminApiFullAccess)
                 .Build();
+            // Policy for Admin role
+            opt.AddPolicy("RequireAdminApiFullAccess", policy =>
+                    policy.RequireAssertion(context =>
+                        context.User.HasClaim(c => c.Type == OpenIddictConstants.Claims.Scope && c.Value == SecurityConstants.Scopes.AdminApiFullAccess))
+            .AddAuthenticationSchemes("Local", "IdentityProvider"));
         });
 
         //Security Endpoints
