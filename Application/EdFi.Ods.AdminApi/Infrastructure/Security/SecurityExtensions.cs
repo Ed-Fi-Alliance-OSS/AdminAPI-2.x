@@ -104,6 +104,7 @@ public static class SecurityExtensions
             .AddJwtBearer("IdentityProvider", options =>
             {
                 var oidcIssuer = configuration.Get<string>("Authentication:OIDC:Authority");
+                var oidcValidationCallback = configuration.Get<bool>("Authentication:OIDC:EnableServerCertificateCustomValidationCallback");
                 options.Authority = oidcIssuer;
                 options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -117,7 +118,7 @@ public static class SecurityExtensions
 #pragma warning disable S4830 // Server certificates should be verified during SSL/TLS connections
                         var handler = new HttpClientHandler
                         {
-                            ServerCertificateCustomValidationCallback = (request, cert, chain, errors) => true
+                            ServerCertificateCustomValidationCallback = (request, cert, chain, errors) => oidcValidationCallback
                         };
 #pragma warning restore S4830
                         // Server certificates should be verified during SSL/TLS connections
