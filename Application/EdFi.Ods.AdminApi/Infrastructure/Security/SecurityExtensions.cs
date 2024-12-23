@@ -87,7 +87,7 @@ public static class SecurityExtensions
             {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(opt =>
+            }).AddJwtBearer("Local", opt =>
             {
                 opt.Authority = issuer;
                 opt.SaveToken = true;
@@ -104,37 +104,44 @@ public static class SecurityExtensions
             .AddJwtBearer("IdentityProvider", options =>
             {
                 var oidcIssuer = configuration.Get<string>("Authentication:OIDC:Authority");
-                var oidcValidationCallback = configuration.Get<bool>("Authentication:OIDC:EnableServerCertificateCustomValidationCallback");
-                options.Authority = oidcIssuer;
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters
+                if (!String.IsNullOrEmpty(oidcIssuer))
                 {
-                    ValidateAudience = false,
-                    ValidateIssuer = true,
-                    ValidateIssuerSigningKey = false,
-                    ValidIssuer = oidcIssuer,
-                    IssuerSigningKeyResolver = (token, securityToken, kid, parameters) =>
+                    var oidcValidationCallback = configuration.Get<bool>("Authentication:OIDC:EnableServerCertificateCustomValidationCallback");
+                    var requireHttpsMetadata = configuration.Get<bool>("Authentication:OIDC:RequireHttpsMetadata");
+                    options.Authority = oidcIssuer;
+                    options.SaveToken = true;
+                    options.RequireHttpsMetadata = requireHttpsMetadata;
+                    options.TokenValidationParameters = new TokenValidationParameters
                     {
-#pragma warning disable S4830 // Server certificates should be verified during SSL/TLS connections
-                        var handler = new HttpClientHandler
+                        ValidateAudience = false,
+                        ValidateIssuer = true,
+                        ValidateIssuerSigningKey = false,
+                        ValidIssuer = oidcIssuer,
+                        IssuerSigningKeyResolver = (token, securityToken, kid, parameters) =>
                         {
-                            ServerCertificateCustomValidationCallback = (request, cert, chain, errors) => oidcValidationCallback
-                        };
+#pragma warning disable S4830 // Server certificates should be verified during SSL/TLS connections
+                            var handler = new HttpClientHandler
+                            {
+                                ServerCertificateCustomValidationCallback = (request, cert, chain, errors) => oidcValidationCallback
+                            };
 #pragma warning restore S4830
-                        // Server certificates should be verified during SSL/TLS connections
-                        // Obtener las claves públicas desde Keycloak
-                        var client = new HttpClient(handler);
-                        var response = client.GetStringAsync(oidcIssuer + "/protocol/openid-connect/certs").Result;
-                        var keys = JsonWebKeySet.Create(response).GetSigningKeys();
-                        return keys;
-                    }
-                };
+                            // Server certificates should be verified during SSL/TLS connections
+                            // Get public keys from keycloak
+                            var client = new HttpClient(handler);
+                            var response = client.GetStringAsync(oidcIssuer + "/protocol/openid-connect/certs").Result;
+                            var keys = JsonWebKeySet.Create(response).GetSigningKeys();
+                            return keys;
+                        }
+                    };
+                }
             });
         services.AddAuthorization(opt =>
         {
             opt.DefaultPolicy = new AuthorizationPolicyBuilder()
             .AddAuthenticationSchemes("Local", "IdentityProvider")
-                .RequireClaim(OpenIddictConstants.Claims.Scope, SecurityConstants.Scopes.AdminApiFullAccess)
+                .RequireAssertion(context =>
+                        context.User.HasClaim(c => c.Type == OpenIddictConstants.Claims.Scope && c.Value.Contains(SecurityConstants.Scopes.AdminApiFullAccess))
+                    )
                 .Build();
             // Policy for Admin role
             opt.AddPolicy("RequireAdminApiFullAccess", policy =>
