@@ -6,26 +6,26 @@
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
 
-namespace EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
+namespace EdFi.Ods.AdminApi.Common.Infrastructure.Database.Commands;
 
-public interface IDeleteOdsInstanceDerivativeCommand
+public interface IDeleteOdsInstanceCommand
 {
     void Execute(int id);
 }
 
-public class DeleteOdsInstanceDerivativeCommand : IDeleteOdsInstanceDerivativeCommand
+public class DeleteOdsInstanceCommand : IDeleteOdsInstanceCommand
 {
     private readonly IUsersContext _context;
 
-    public DeleteOdsInstanceDerivativeCommand(IUsersContext context)
+    public DeleteOdsInstanceCommand(IUsersContext context)
     {
         _context = context;
     }
 
     public void Execute(int id)
     {
-        var odsInstanceDerivative = _context.OdsInstanceDerivatives.SingleOrDefault(v => v.OdsInstanceDerivativeId == id) ?? throw new NotFoundException<int>("odsInstanceDerivative", id);
-        _context.OdsInstanceDerivatives.Remove(odsInstanceDerivative);
+        var odsInstance = _context.OdsInstances.SingleOrDefault(v => v.OdsInstanceId == id) ?? throw new NotFoundException<int>("odsInstance", id);
+        _context.OdsInstances.Remove(odsInstance);
         _context.SaveChanges();
     }
 }

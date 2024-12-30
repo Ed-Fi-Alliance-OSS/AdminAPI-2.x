@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApi.Common.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using Moq;
 using NUnit.Framework;
@@ -79,7 +80,7 @@ public class EditOdsInstanceCommandTests : PlatformUsersContextTestBase
         {
             var changedOdsInstance = usersContext.OdsInstances.Single(v => v.OdsInstanceId == _odsInstanceId);
             changedOdsInstance.Name.ShouldBe(name);
-            changedOdsInstance.InstanceType.ShouldBeEmpty();
+            changedOdsInstance.InstanceType.ShouldBeNullOrEmpty();
             changedOdsInstance.ConnectionString.ShouldBe(connectionString);
         });
     }

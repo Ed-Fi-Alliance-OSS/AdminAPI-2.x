@@ -37,7 +37,10 @@ public static class WebApplicationBuilderExtensions
         webApplicationBuilder.Services.AddAutoMapper(executingAssembly, typeof(AdminApiMappingProfile).Assembly);
         webApplicationBuilder.Services.AddScoped<InstanceContext>();
 
-        foreach (var type in typeof(IMarkerForEdFiOdsAdminApiManagement).Assembly.GetTypes())
+        var adminApiTypes = typeof(IMarkerForEdFiOdsAdminApiManagement).Assembly.GetTypes();
+        var adminApiCommonLibraryTypes = typeof(IMarkerForEdFiOdsAdminAppCommonLibraryManagement).Assembly.GetTypes();
+        var allTypes = adminApiTypes.Concat(adminApiCommonLibraryTypes);
+        foreach (var type in allTypes)
         {
             if (type.IsClass && !type.IsAbstract && (type.IsPublic || type.IsNestedPublic))
             {

@@ -8,6 +8,7 @@ using AutoMapper;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Commands;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Queries;
+using EdFi.Ods.AdminApi.Common.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Features.OdsInstanceContext;
 using EdFi.Ods.AdminApi.Features.OdsInstanceDerivative;
 using EdFi.Ods.AdminApi.Features.ODSInstances;

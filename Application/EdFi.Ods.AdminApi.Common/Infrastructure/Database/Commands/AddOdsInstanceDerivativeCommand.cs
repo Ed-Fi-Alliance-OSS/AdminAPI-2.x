@@ -7,7 +7,7 @@ using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
 
-namespace EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
+namespace EdFi.Ods.AdminApi.Common.Infrastructure.Database.Commands;
 
 public interface IAddOdsInstanceDerivativeCommand
 {
@@ -30,9 +30,9 @@ public class AddOdsInstanceDerivativeCommand : IAddOdsInstanceDerivativeCommand
 
         var odsInstanceDerivative = new OdsInstanceDerivative
         {
-           ConnectionString = newOdsInstanceDerivative.ConnectionString,
-           DerivativeType = newOdsInstanceDerivative.DerivativeType,
-           OdsInstance = odsInstance
+            ConnectionString = newOdsInstanceDerivative.ConnectionString,
+            DerivativeType = newOdsInstanceDerivative.DerivativeType,
+            OdsInstance = odsInstance
         };
         _context.OdsInstanceDerivatives.Add(odsInstanceDerivative);
         _context.SaveChanges();
