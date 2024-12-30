@@ -65,7 +65,7 @@ public class GetInstanceByIdQueryTests : PlatformUsersContextTestBase
         {
             var repository = new QueriesRepository<Instance>(dbContext);
             var query = new GetInstanceByIdQuery(repository, Testing.GetEncryptionKeyResolver(), new EncryptionService());
-            var instance = await query.Execute(result.TenantId, result.OdsInstanceId);
+            var instance = await query.Execute(result.OdsInstanceId);
 
             instance.DocId.ShouldBe(result.DocId);
             instance.TenantId.ShouldBe(newInstance.TenantId);

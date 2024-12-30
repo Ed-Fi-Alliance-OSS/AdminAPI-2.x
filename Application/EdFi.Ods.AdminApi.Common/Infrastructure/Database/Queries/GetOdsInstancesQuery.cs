@@ -7,14 +7,13 @@ using System.Linq.Expressions;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApi.Common.Infrastructure;
+using EdFi.Ods.AdminApi.Common.Infrastructure.Extensions;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Helpers;
 using EdFi.Ods.AdminApi.Common.Settings;
-using EdFi.Ods.AdminApi.Infrastructure.Extensions;
-using EdFi.Ods.AdminApi.Infrastructure.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+namespace EdFi.Ods.AdminApi.Common.Infrastructure.Database.Queries;
 
 public interface IGetOdsInstancesQuery
 {
@@ -37,9 +36,9 @@ public class GetOdsInstancesQuery : IGetOdsInstancesQuery
         _orderByColumnOds = new Dictionary<string, Expression<Func<OdsInstance, object>>>
                     (StringComparer.OrdinalIgnoreCase)
                 {
-                    { SortingColumns.DefaultNameColumn, x => isSQLServerEngine ? EF.Functions.Collate(x.Name, DatabaseEngineEnum.SqlServerCollation) : x.Name },
-                    { SortingColumns.OdsInstanceInstanceTypeColumn, x => isSQLServerEngine ? EF.Functions.Collate(x.InstanceType, DatabaseEngineEnum.SqlServerCollation) : x.InstanceType },
-                    { SortingColumns.DefaultIdColumn, x => x.OdsInstanceId }
+                    { SortingConstants.DefaultNameColumn, x => isSQLServerEngine ? EF.Functions.Collate(x.Name, DatabaseEngineEnum.SqlServerCollation) : x.Name },
+                    { SortingConstants.OdsInstanceInstanceTypeColumn, x => isSQLServerEngine ? EF.Functions.Collate(x.InstanceType, DatabaseEngineEnum.SqlServerCollation) : x.InstanceType },
+                    { SortingConstants.DefaultIdColumn, x => x.OdsInstanceId }
                 };
     }
 

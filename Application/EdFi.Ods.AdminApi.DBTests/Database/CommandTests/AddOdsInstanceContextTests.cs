@@ -11,6 +11,7 @@ using NUnit.Framework;
 using Shouldly;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using EdFi.Ods.AdminApi.Common.Infrastructure.Database.Commands;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.CommandTests;
 

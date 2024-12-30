@@ -6,7 +6,7 @@
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
 
-namespace EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
+namespace EdFi.Ods.AdminApi.Common.Infrastructure.Database.Commands;
 
 public interface IDeleteOdsInstanceContextCommand
 {
