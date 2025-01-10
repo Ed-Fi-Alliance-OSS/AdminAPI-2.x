@@ -8,8 +8,12 @@ using System.Text.Json.Nodes;
 using EdFi.Ods.AdminApi.AdminConsole.Helpers;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repositories;
+using EdFi.Ods.AdminApi.Common.Infrastructure.Database.Services.OdsInstanceContexts;
+using EdFi.Ods.AdminApi.Common.Infrastructure.Database.Services.OdsInstances;
+using EdFi.Ods.AdminApi.Common.Infrastructure.Database.Services.OdsInstanceDerivatives;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using EdFi.Ods.AdminApi.Common.Infrastructure.Helpers;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Commands;
 
@@ -21,28 +25,26 @@ public interface IAddInstanceCommand
 public class AddInstanceCommand : IAddInstanceCommand
 {
     private readonly ICommandRepository<Instance> _instanceCommand;
+    private readonly IOdsInstancesHandler _odsInstancesHandler;
+    private readonly IOdsInstanceContextsHandler _odsInstanceContextsHandler;
+    private readonly IOdsInstanceDerivativesHandler _odsInstanceDerivativesHandler;
     private readonly IEncryptionService _encryptionService;
     private readonly string _encryptionKey;
 
-    public AddInstanceCommand(ICommandRepository<Instance> instanceCommand, IEncryptionKeyResolver encryptionKeyResolver, IEncryptionService encryptionService)
+    public AddInstanceCommand(ICommandRepository<Instance> instanceCommand, IOdsInstancesHandler odsInstancesHandler, IOdsInstanceContextsHandler odsInstanceContextsHandler,
+       IOdsInstanceDerivativesHandler odsInstanceDerivativesHandler, IEncryptionKeyResolver encryptionKeyResolver, IEncryptionService encryptionService)
     {
         _instanceCommand = instanceCommand;
+        _odsInstancesHandler = odsInstancesHandler;
+        _odsInstanceContextsHandler = odsInstanceContextsHandler;
+        _odsInstanceDerivativesHandler = odsInstanceDerivativesHandler;
         _encryptionKey = encryptionKeyResolver.GetEncryptionKey();
         _encryptionService = encryptionService;
     }
 
     public async Task<Instance> Execute(IAddInstanceModel instance)
     {
-        var cleanedDocument = ExpandoObjectHelper.NormalizeExpandoObject(instance.Document);
-
-        var document = JsonConvert.SerializeObject(cleanedDocument, new JsonSerializerSettings
-        {
-            ContractResolver = new DefaultContractResolver(),
-            Converters = new List<JsonConverter> { new ExpandoObjectConverter() },
-            Formatting = Formatting.Indented
-        });
-
-        JsonNode? jnDocument = JsonNode.Parse(document);
+        JsonNode? jnDocument = ExpandoObjectHelper.FormatJson(instance.Document);
 
         var clientId = jnDocument!["clientId"]?.AsValue().ToString();
         var clientSecret = jnDocument!["clientSecret"]?.AsValue().ToString();
@@ -59,11 +61,37 @@ public class AddInstanceCommand : IAddInstanceCommand
             jnDocument!["clientSecret"] = encryptedClientSecret;
         }
 
+        //Handle OdsInstance
+        var resultingOdsInstanceId = _odsInstancesHandler.HandleOdsInstance(instance.OdsInstanceId, jnDocument);
+
+        //Handle OdsInstanceContexts if present in payload
+        var odsInstanceContextsString = jnDocument["odsInstanceContexts"].ToString();
+        if (!string.IsNullOrEmpty(odsInstanceContextsString))
+        {
+            var odsInstanceContexts = System.Text.Json.JsonSerializer.Deserialize<JsonArray>(odsInstanceContextsString);
+            foreach (var odsInstanceContext in odsInstanceContexts)
+            {
+                odsInstanceContext["odsInstanceId"] = resultingOdsInstanceId;
+                _odsInstanceContextsHandler.HandleOdsInstanceContexts(odsInstanceContext!);
+            }
+        }
+        //Handle OdsInstanceDerivatives if present in payload
+        var odsInstanceDerivativesString = jnDocument["odsInstanceDerivatives"].ToString();
+        if (!string.IsNullOrEmpty(odsInstanceDerivativesString))
+        {
+            var odsInstanceDerivatives = System.Text.Json.JsonSerializer.Deserialize<JsonArray>(odsInstanceDerivativesString);
+            foreach (var odsInstanceDerivative in odsInstanceDerivatives)
+            {
+                odsInstanceDerivative["odsInstanceId"] = resultingOdsInstanceId;
+                _odsInstanceDerivativesHandler.HandleOdsInstanceDerivatives(odsInstanceDerivative!);
+            }
+        }
+
         try
         {
             return await _instanceCommand.AddAsync(new Instance
             {
-                OdsInstanceId = instance.OdsInstanceId,
+                OdsInstanceId = resultingOdsInstanceId ?? instance.OdsInstanceId,
                 TenantId = instance.TenantId,
                 EdOrgId = instance.EdOrgId,
                 Document = jnDocument!.ToJsonString(),

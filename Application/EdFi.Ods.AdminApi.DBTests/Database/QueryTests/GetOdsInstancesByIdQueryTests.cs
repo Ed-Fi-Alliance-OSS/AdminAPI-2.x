@@ -4,8 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Admin.DataAccess.Models;
-using EdFi.Ods.AdminApi.Infrastructure.Database.OdsInstances.Queries;
-using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+using EdFi.Ods.AdminApi.Common.Infrastructure.Database.Queries;
 using NUnit.Framework;
 using Shouldly;
 
@@ -17,7 +16,6 @@ public class GetOdsInstanceByIdQueryTests : PlatformUsersContextTestBase
     [Test]
     public void ShouldGetInstanceById()
     {
-       
         Transaction(usersContext =>
         {
             var odsInstance = new OdsInstance
