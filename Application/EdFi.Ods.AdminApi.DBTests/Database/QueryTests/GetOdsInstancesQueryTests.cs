@@ -5,9 +5,7 @@
 
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApi.Common.Infrastructure;
-using EdFi.Ods.AdminApi.Infrastructure;
-using EdFi.Ods.AdminApi.Infrastructure.Database.OdsInstances.Queries;
-using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+using EdFi.Ods.AdminApi.Common.Infrastructure.Database.Queries;
 using NUnit.Framework;
 using Shouldly;
 

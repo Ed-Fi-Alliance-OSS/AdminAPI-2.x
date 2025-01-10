@@ -48,11 +48,17 @@ public static class WebApplicationBuilderExtensions
 
                 var interfaces = concreteClass.GetInterfaces().ToArray();
 
+                var className = concreteClass.Name;
+                if (className == "")
+                {
+                    continue;
+                }
                 if (concreteClass.Namespace != null)
                 {
-                    if (!concreteClass.Namespace.EndsWith("Database.Commands") &&
-                        !concreteClass.Namespace.EndsWith("Database.Queries")
-                        && !concreteClass.Namespace.EndsWith("ClaimSetEditor"))
+                    if (!concreteClass.Namespace.EndsWith("Database.Commands")
+                        && !concreteClass.Namespace.EndsWith("Database.Queries")
+                        && !concreteClass.Namespace.EndsWith("ClaimSetEditor")
+                        && !concreteClass.Namespace.Contains("Database.Services"))
                     {
                         continue;
                     }
