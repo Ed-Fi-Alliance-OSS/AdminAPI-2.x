@@ -17,6 +17,7 @@ using EdFi.Ods.AdminApi.Infrastructure.AutoMapper;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Helpers;
+using static EdFi.Ods.AdminApi.Common.Infrastructure.Database.Services.OdsInstanceContexts.OdsInstanceContextsHandler;
 using OverrideAuthStategyOnClaimSetRequest = EdFi.Ods.AdminApi.Features.ClaimSets.ResourceClaims.EditAuthStrategy.OverrideAuthStategyOnClaimSetRequest;
 using Profile = AutoMapper.Profile;
 
@@ -149,6 +150,10 @@ public class AdminApiMappingProfile : Profile
            .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstance.OdsInstanceId))
            .ForMember(dst => dst.ContextKey, opt => opt.MapFrom(src => src.ContextKey))
            .ForMember(dst => dst.ContextValue, opt => opt.MapFrom(src => src.ContextValue));
+
+        CreateMap<EdFi.Admin.DataAccess.Models.OdsInstanceContext, EditOdsInstanceContextModel>()
+           .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstance.OdsInstanceId))
+           .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.OdsInstanceContextId));
 
         CreateMap<OdsInstance, OdsInstanceDetailModel>()
             .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstanceId))

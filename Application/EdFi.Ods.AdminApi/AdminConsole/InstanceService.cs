@@ -17,6 +17,7 @@ using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using static EdFi.Ods.AdminApi.AdminConsole.Features.Instances.AddInstance;
+using static EdFi.Ods.AdminApi.Common.Infrastructure.Database.Services.OdsInstanceContexts.OdsInstanceContextsHandler;
 
 namespace EdFi.Ods.AdminApi.AdminConsole;
 
@@ -57,7 +58,7 @@ public class InstanceService : IAdminConsoleInstancesService
         var instancesAdminConsole = await _getInstancesQuery.Execute();
         //get odsinstances
         var odsInstances = _mapper.Map<List<OdsInstanceModel>>(_getOdsInstancesQuery.Execute());
-        var odsInstanceContexts = _mapper.Map<List<OdsInstanceContextModel>>(_getOdsInstanceContextsQuery.Execute());
+        var odsInstanceContexts = _mapper.Map<List<EditOdsInstanceContextModel>>(_getOdsInstanceContextsQuery.Execute());
         var odsInstanceDerivatives = _mapper.Map<List<OdsInstanceDerivativeModel>>(_getOdsInstanceDerivativesQuery.Execute());
         foreach (var odsInstance in odsInstances)
         {
