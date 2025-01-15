@@ -225,6 +225,6 @@ sequenceDiagram
 
 ### v4: Cloud Support
 
-> [!INFO]
+> [!NOTE]
 > Placeholder. Assuming that the create database process will differ across the
 > managed database solutions.
