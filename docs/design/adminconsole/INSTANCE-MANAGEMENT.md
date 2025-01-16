@@ -1,62 +1,116 @@
-# Instance Management
+# AdminAPI - Instance Management Worker Design Document
 
-## Objective
+## **Overview**
 
-The goal of this spike is to enhance the endpoints for `Instance` in the Admin Console so that they can handle information flowing into `odsInstance`, `odsInstanceDerivatives`, and `odsInstanceContexts`. This includes processing the provided payload, persisting data to the relevant tables, and ensuring proper references are maintained.
+The purpose of this document is to outline the necessary enhancements and new features required in the AdminAPI to support the Instance Manager and AdminConsole, as described in the provided sequence diagram.
 
-## Expected Payload
+---
 
-```json
-{
-  "instanceId": 1,
-  "tenantId": 1,
-  "document": {
-    "name": "Instance #1 - 2024",
-    "instanceType": null,
-    "odsInstanceContexts": [
+## **Endpoints**
+
+### **1. Existing Endpoints Enhancements**
+
+#### **POST /adminconsole/instances**
+
+- **Purpose**: Accept instance creation requests from the Admin Console.
+- **Enhancements**:
+  - Validate the incoming payload.
+  - Insert data into the `adminconsole.Instance` table.
+  - Respond with `202 Accepted` and include the new jobId created.
+- **Payload**:
+  ```json
+  {
+    "odsInstanceId": 1,
+    "tenantId": 1,
+    "document": {
+      "name": "Instance #1 - 2024",
+      "instanceType": null,
+      "odsInstanceContexts": [
+        {
+          "id": 1,
+          "odsInstanceId": 1,
+          "contextKey": "schoolYearFromRoute",
+          "contextValue": "2024"
+        }
+      ],
+      "odsInstanceDerivatives": [
+        {
+          "id": 1,
+          "odsInstanceId": 2,
+          "derivativeType": "Read"
+        }
+      ]
+    }
+  }
+  ```
+- **Response Format**:
+  ```json
+  {
+    "jobId": "<int>",
+  }
+  ```
+
+---
+
+### **2. New Endpoints**
+
+#### **POST /adminconsole/instances/jobs/start**
+
+- **Purpose**: Start processing jobs from the `adminconsole.Instance` table when the status is `Pending`.
+- **Enhancements**:
+  - Add new column called `Status` to `adminconsole.Instance` table.
+  - Lock rows in the `adminconsole.Instance` table for processing by changing the status to `In Progress`.
+  - Return locked rows with metadata.
+- **Response Format**:
+  ```json
+  {
+    [
       {
-        "id": 1,
-        "InstanceId": 1,
-        "contextKey": "schoolYearFromRoute",
-        "contextValue": "2024"
-      }
-    ],
-    "odsInstanceDerivatives": [
-      {
-        "id": 1,
-        "InstanceId": 2,
-        "derivativeType": "Read"
+      "jobId": "<int>",
+      "metadata": "<Instance Details>"
       }
     ]
   }
-}
-```
+  ```
 
-## Processing Details
+---
 
-1. **OdsInstance**: The `OdsInstance` object will be extracted from the payload and persisted into the table `dbo.OdsInstance`.
-2. **OdsInstanceDerivatives and OdsInstanceContexts**: These entities will follow the same process:
-    - The objects will be extracted from the payload.
-    - Each will reference the newly created `OdsInstance`.
-    - The data will be persisted into their respective tables.
+#### **POST /adminconsole/instances/jobs/{id}/complete**
 
-Both `OdsInstanceDerivatives` and `OdsInstanceContexts` should maintain proper relationships by referencing the newly created `OdsInstance`.
+- **Purpose**: Mark a job as complete and perform transactional updates.
+- **Enhancements**:
+  - Accept a job completion payload.
+  - Add resultant data to tables `OdsInstances`, `OdsInstanceContext`, `OdsInstanceDerivatives` and update `adminconsole.Instance` status column to mark job as `Compelet` within a single transaction.
+  - Roll back on failure.
+  - Respond with `200 Ok`.
 
-## Open Questions
+---
 
-1. **Payload Storage**:
-    - Should the `OdsInstanceDerivatives` and `OdsInstanceContexts` entities be removed from the payload?
-    - Or should the payload be stored as-is, without modifications?
-    
-   **Answer**: Yes, the payload will be stored as-is, maintaining the `OdsInstanceContexts` and `OdsInstanceDerivatives` objects.
+### **Note on Future Enhancements**
 
-2. **Reference Updates**:
-    - When persisting the `OdsInstance` data, a new `OdsInstanceId` will be generated. How should the references in the `OdsInstanceDerivatives` and `OdsInstanceContexts` entities be updated to ensure they point to the newly created `OdsInstance`?
-    
-   **Answer**: Yes, the references for these elements should be updated to ensure data integrity.
+#### **POST /adminconsole/instances/jobs/retry**
 
-## Implementation Details
+- **Purpose**: Retry failed jobs by unlocking rows or resetting their state.
+- **Details**:
 
-1. **Migration of Commands and Queries**: The commands and queries for the domains `OdsInstance`, `OdsInstanceContexts`, and `OdsInstanceDerivatives` were migrated first.
-2. **Service Creation**: Services were created to handle the decision-making for whether the information should be updated or saved. These services were injected into the `AddInstanceCommand` and `EditInstanceCommand` commands, allowing both endpoints to support payloads containing information for `OdsInstance`, `OdsInstanceContexts`, and `OdsInstanceDerivatives`.
-3. **Delete Functionality**: Additionally, the deletion of these three elements was implemented as part of the `DeleteInstanceCommand`. This ensures that all related data is properly handled when an instance is removed.
+  - This endpoint could be introduced later to manage errors and failed jobs more effectively.
+  - It would involve:
+    - Accepting a job ID or criteria to identify failed jobs.
+    - Resetting the lock and state in `adminconsole.Instance`.
+  
+---
+
+## **Database Transactions**
+
+### **Transactional Operations for Job Completion**
+
+The following steps are executed within a transaction:
+1. Insert into `dbo.OdsInstances`.
+2. Insert into `dbo.OdsInstanceContext`.
+3. Insert into `dbo.OdsInstanceDerivative`.
+4. Update the `adminconsole.Instance` table to mark the job as complete.
+5. Commit the transaction.
+
+If any step fails, the transaction rolls back.
+
+---
