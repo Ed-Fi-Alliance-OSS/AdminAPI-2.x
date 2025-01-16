@@ -4,27 +4,31 @@ This document describes the work performed by the Admin API 2 application and
 its associated Health Check Worker for retrieving and storing record counts from
 the ODS/API.
 
-## Context
+## Containers
 
 ```mermaid
 C4Container
     title "Health Check"
 
     System(AdminConsole, "Ed-Fi Admin Console", "A web application for managing ODS/API Deployments")
+    UpdateElementStyle(AdminConsole, $bgColor="silver")
 
     System_Boundary(backend, "Backend Systems") {
 
         Boundary(b0, "Admin API") {
             Container(AdminAPI, "Ed-Fi Admin API 2")
+
             Container(HealthCheck, "Admin API Health<br />Check Worker")
         }
 
         Boundary(b1, "ODS/API") {
             System(OdsApi, "Ed-Fi ODS/API", "A REST API system for<br />educational data interoperability")
+            UpdateElementStyle(OdsApi, $bgColor="silver")
         }
 
         Boundary(b2, "Shared Databases") {
             ContainerDb(Admin, "EdFi_Admin,<br />EdFi_Security")
+            UpdateElementStyle(Admin, $bgColor="silver")
         }
     }
     
@@ -72,7 +76,7 @@ During deployment, Admin API 2 should:
 At application startup, and each time a new instance is created, Admin API 2
 should:
 
-1. Create the necessary `ApiClients` adn `ApiClientOdsInsances` records for the
+1. Create the necessary `ApiClients` and `ApiClientOdsInsances` records for the
    health check worker, and
 2. Synchronize any existing information from `dbo.odsInstances` and related
    tables into Admin API's `Instances` table. This includes storing the
@@ -111,7 +115,43 @@ connection strings in `dbo.OdsInstances`.
 
 ### Reading ODS/API Record Counts
 
-placeholder
+In this case, we will store the client/secret values in Admin API to call some
+of the ODS/API endpoints to generate the returning payload to the Admin Console.
+The payload contains a 'total-count' report of some of the resources, it takes
+the value from the header in ODS/API.
+
+Example:
+
+```http
+https://api.ed-fi.org:443/v7.1/api/data/v3/ed-fi/studentSchoolAssociations?limit=0&totalCount=true
+```
+
+The parameter `totalCount` is important to use because this will return us the count in the header as `total-count`. With this value we can map it to our payload in the field called `studentSchoolAssociations` 
+
+This process has to be called per field of the payload
+
+ODS/API resources to access:
+
+* studentSpecialEducationProgramAssociations
+* studentDisciplineIncidentBehaviorAssociations
+* studentSchoolAssociations
+* studentSchoolAttendanceEvents
+* studentSectionAssociations
+* staffEducationOrganizationAssignmentAssociations
+* staffSectionAssociations
+* courseTranscripts
+* sections
+
+> [!WARNING] Unknown fields
+>
+> * basicReportingPeriodAttendances
+> * reportingPeriodExts
+> * localEducationAgencyId: We are assuming this as Ed Org Id but we are not sure about this
+> * healthy (boolean): We are asumming this as a flag that return true if the above data have been populated correctly and no error from ODS/API
+
+As we have to call multiple endpoints in this one, we are considering use a
+caching approach (maybe the in-memory provided by .NET will be enough). If we
+want to refresh the data we can send a flag to the endpoint to do so.
 
 ### Storing Record Counts
 

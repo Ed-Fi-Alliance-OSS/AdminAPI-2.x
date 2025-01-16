@@ -30,32 +30,27 @@ communication, and the storage layers requirements.
 C4Context
     title System Context for Ed-Fi Admin Console
 
-    Person(User, "Admin Console User", "A system administrator")
-
-    System(AdminConsole, "Ed-Fi Admin Console", "A web application for managing ODS/API Deployments")
-
-    System_Boundary(backend, "Backend Systems") {
-
-        System(AdminAPI, "Ed-Fi Admin API 2 and Workers", "A REST API system for managing administrative data and deployments, plus background worker apps")
-
-        System(OdsApi, "Ed-Fi ODS/API", "A REST API system for educational data interoperability")
-        SystemDb(dbs, "ODS, Admin, and Security")
+    Enterprise_Boundary(edorg, "Education Organization") {
+        Person(User, "Admin Console User", "A system administrator")
     }
-    
+
+    Enterprise_Boundary(edfi, "Ed-Fi ODS/API Platform") {
+        System(AdminConsole, "Ed-Fi Admin Console", "A web application for managing ODS/API Deployments")
+
+        System_Boundary(backend, "Backend Systems") {
+            System(AdminAPI, "Ed-Fi Admin API 2 and Workers", "A REST API system for managing<br />administrative data and deployments,<br />plus background worker apps")
+            System(OdsApi, "Ed-Fi ODS/API", "A REST API system for<br />educational data interoperability")
+        }
+    }
+
     Rel(User, AdminConsole, "Manages instances,<br/>Manages client credentials,<br/>Checks API health")
-    UpdateRelStyle(User, AdminConsole, $offsetX="0", $offsetY="30")
+    UpdateRelStyle(User, AdminConsole, $offsetX="0", $offsetY="-10")
 
     Rel(AdminConsole, AdminAPI, "Issues HTTP requests")
     UpdateRelStyle(AdminConsole, AdminAPI, $offsetY="-40", $offsetX="20")
 
-    Rel(AdminAPI, dbs, "Reads and writes admin/security,<br />Creates ODS instances")
-    UpdateRelStyle(AdminAPI, dbs, $offsetY="0", $offsetX="40")
-
-    Rel(AdminAPI, OdsApi, "Reads")
-    UpdateRelStyle(AdminAPI, OdsApi, $offsetY="-10", $offsetX="-10")
-
-    Rel(OdsApi, dbs, "Reads admin and writes ODS")
-    UpdateRelStyle(OdsApi, dbs, $offsetY="10", $offsetX="80")
+    Rel(AdminAPI, OdsApi, "Reads and<br />configures")
+    UpdateRelStyle(AdminAPI, OdsApi, $offsetY="-20", $offsetX="-30")
 
     UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="1")
 ```

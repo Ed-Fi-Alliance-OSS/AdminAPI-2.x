@@ -4,13 +4,13 @@ This document describes the work performed by the Admin API 2 application and
 its associated Instance Management Worker for creating or deleting database
 instances.
 
-## Context
+## Containers
 
-```mermaid
-C4Container
+```mermaidC4Container
     title "Instance Management"
 
     System(AdminConsole, "Ed-Fi Admin Console", "A web application for managing ODS/API Deployments")
+    UpdateElementStyle(AdminConsole, $bgColor="silver")
 
     System_Boundary(backend, "Backend Systems") {
 
@@ -21,6 +21,8 @@ C4Container
 
         Boundary(b1, "ODS/API") {
             System(OdsApi, "Ed-Fi ODS/API", "A REST API system for<br />educational data interoperability")
+            UpdateElementStyle(OdsApi, $bgColor="silver")
+
             SystemDb(ods3, "EdFi_ODS_<instanceN>")
         }
 
@@ -32,7 +34,7 @@ C4Container
     Rel(AdminConsole, AdminAPI, "Issues HTTP requests")
 
     Rel(Instance, AdminAPI, "Reads instance requests,<br />Write instance status")
-    UpdateRelStyle(Instance, AdminAPI, $offsetY="20", $offsetX="10")
+    UpdateRelStyle(Instance, AdminAPI, $offsetY="50", $offsetX="-10")
 
     Rel(Instance, ods3, "Creates new ODS instances")
     UpdateRelStyle(Instance, ods3, $offsetY="20", $offsetX="-50")
