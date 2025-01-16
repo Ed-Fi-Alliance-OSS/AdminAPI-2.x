@@ -80,7 +80,7 @@ The purpose of this document is to outline the necessary enhancements and new fe
 - **Purpose**: Mark a job as complete and perform transactional updates.
 - **Enhancements**:
   - Accept a job completion payload.
-  - Add resultant data to tables `OdsInstances`, `OdsInstanceContext`, `OdsInstanceDerivatives` and update `adminconsole.Instance` status column to mark job as `Compelet` within a single transaction.
+  - Add resultant data to tables `OdsInstances`, `OdsInstanceContext`, `OdsInstanceDerivatives` and update `adminconsole.Instance` status column to mark job as `Compelete` within a single transaction.
   - Roll back on failure.
   - Respond with `200 Ok`.
 
