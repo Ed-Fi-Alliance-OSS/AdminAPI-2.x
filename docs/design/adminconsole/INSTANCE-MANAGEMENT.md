@@ -2,7 +2,11 @@
 
 This document describes the work performed by the Admin API 2 application and
 its associated Instance Management Worker for creating or deleting database
-instances.
+instances. Additional features and technical requirements are in the [Instance
+Management
+Worker](https://github.com/Ed-Fi-Alliance-OSS/Ed-Fi-Admin-Console-Instance-Management-Worker-Process/blob/main/docs/INSTANCE-MANAGEMENT.md)
+repository. The document below describes Admin API's role in support of the
+worker process.
 
 ## Containers
 
