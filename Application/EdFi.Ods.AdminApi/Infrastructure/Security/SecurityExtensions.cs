@@ -8,6 +8,7 @@ using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using EdFi.Ods.AdminApi.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using OpenIddict.Server;
@@ -104,6 +105,18 @@ public static class SecurityExtensions
         {
             opt.DefaultPolicy = new AuthorizationPolicyBuilder()
                 .RequireClaim(OpenIddictConstants.Claims.Scope, SecurityConstants.Scopes.AdminApiFullAccess)
+                .RequireAssertion(ctx =>
+                {
+                    var claim = ctx.User.Claims.FirstOrDefault(c => c.Type == "Tenant");
+
+                    if (claim is null)
+                        return true; //Single Tenant
+
+                    var httpContext = ctx.Resource as DefaultHttpContext;
+                    var requestTenantHeader = httpContext?.Request.Headers.FirstOrDefault(h => h.Key.Equals("tenant")).Value;
+
+                    return (!string.IsNullOrEmpty(requestTenantHeader) && requestTenantHeader.Value.Equals(claim.Value));
+                })
                 .Build();
         });
 

@@ -5,9 +5,13 @@
 
 using System.Security.Authentication;
 using System.Security.Claims;
+using EdFi.Ods.AdminApi.Infrastructure.Context;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
+using EdFi.Ods.AdminApi.Infrastructure.MultiTenancy;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.VisualBasic;
 using OpenIddict.Abstractions;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace EdFi.Ods.AdminApi.Features.Connect;
 
@@ -57,6 +61,18 @@ public class TokenService : ITokenService
         var identity = new ClaimsIdentity(JwtBearerDefaults.AuthenticationScheme);
         identity.AddClaim(OpenIddictConstants.Claims.Subject, request.ClientId!, OpenIddictConstants.Destinations.AccessToken);
         identity.AddClaim(OpenIddictConstants.Claims.Name, displayName!, OpenIddictConstants.Destinations.AccessToken);
+
+        var permissions = await _applicationManager.GetPermissionsAsync(application);
+        string TenantIdentifier = permissions.FirstOrDefault(permission => permission.StartsWith("tnt")) ?? string.Empty;
+
+        if (!string.IsNullOrEmpty(TenantIdentifier))
+        {
+            identity.AddClaim("Tenant", TenantIdentifier.Split(':').AsEnumerable().ElementAt(1));
+            identity.SetDestinations(static claim => claim switch
+            {
+                _ => [Destinations.AccessToken]
+            });
+        }
 
         var principal = new ClaimsPrincipal(identity);
         principal.SetScopes(requestedScopes);

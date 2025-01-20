@@ -8,6 +8,7 @@ using FluentValidation;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using OpenIddict.Server.AspNetCore;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -35,7 +36,9 @@ public class ConnectController : Controller
     [SwaggerResponse(200, "Application registered successfully.")]
     public async Task<IActionResult> Register([FromForm] RegisterService.RegisterClientRequest request)
     {
-        if (await _registerService.Handle(request))
+        var tenantHeader = Request.Headers.FirstOrDefault(header => header.Key.Equals("tenant"));
+
+        if (await _registerService.Handle(request, tenantHeader.Value))
         {
             return Ok(new { Title = $"Registered client {request.ClientId} successfully.", Status = 200 });
         }
