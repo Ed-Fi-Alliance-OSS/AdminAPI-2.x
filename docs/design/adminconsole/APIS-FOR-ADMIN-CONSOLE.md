@@ -93,22 +93,20 @@ support will be restored in the future when tenants move to a database table.
 See [Tenant Management Data](./TENANT-DATA.md) for information about the
 structure and data of a `tenant` object.
 
-### Instances
+### ODS Instances
 
-**Path segment: `/adminconsole/odsinstances`.**
+**Path segment: `/adminconsole/odsInstances`.**
 
 Supports full create, read, and update operations from the administrative user's
-point of view. Does not support delete. Some data that will be managed with an
-`instance` should not be available to an end-user and will not be included in
-this endpoint. Notably, the `clientId` and `clientSecret` should be empty strings
-when responding to the `odsinstances` endpoint requests.
+point of view. Does not support delete. Some data that will be managed with
+`instance` (described below) should not be available to an end-user and will not
+be included in this endpoint. Notably, the `clientId` and `clientSecret` should
+be empty strings when responding to the `odsinstances` endpoint requests.
 
-> [!WARNING]
-> We must look to see if the Admin Console expects to receive client credentials
-> so that it can directly check a connection to the Ed-Fi API. If that is the
-> case, then we will need to refactor the Admin Console to rely on the Admin API
-> for this verification, since we do not want to expose Ed-Fi API client
-> credentials to the end user.
+See [Instance Management Data](./INSTANCE-DATA.md) for more information about
+this endpoint and its data.
+
+### Instances
 
 **Path segment: `/adminconsole/instances`.**
 
