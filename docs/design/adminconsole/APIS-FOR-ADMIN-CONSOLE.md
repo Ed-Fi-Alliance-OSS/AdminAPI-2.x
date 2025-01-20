@@ -60,10 +60,6 @@ C4Container
 
 ## Solution Design
 
-> [!NOTE]
-> This solution design is reverse engineered from the existing REST interface
-> expectations of the Admin Console application.
-
 We are going to expose the Admin Console endpoints required for the application
 in Admin API 2. It will be hosted as a different definition in Swagger and the
 base path will be `/adminconsole/{resource}`.
@@ -93,6 +89,7 @@ Path segment: `/adminconsole/tenants`.
 Initially, the tenant API will follow the ODS/API's pattern: it will be stored
 in the appsettings file. Hence only the `GET` request is supported; modification
 support will be restored in the future when tenants move to a database table.
+
 See [Tenant Management Data](./TENANT-DATA.md) for information about the
 structure and data of a `tenant` object.
 
@@ -134,3 +131,6 @@ sets the following values on the instance:
   * Started is being set the same initially; in the future there may be a more
     sophisticated process that updates the record as "in progress" with a start
     date.
+
+See [Instance Management Data](./INSTANCE-DATA.md) for more information about
+the structure and data of the two `instance` objects.

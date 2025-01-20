@@ -68,23 +68,46 @@ records in the following tables:
 Managing these tables is Admin API 2's responsibility, not the health check
 worker's responsibility.
 
-During deployment, Admin API 2 should:
+During _deployment_, Admin API 2 should:
 
 1. Create the vendor and application records.
 2. Create the readonly claimset.
 
-At application startup, and each time a new instance is created, Admin API 2
-should:
+The health check worker needs to retrieve client credentials from Admin API 2
+using `GET /adminconsole/instances`. A system administrator could modify the
+`dbo.OdsInstance` and related tables outside of the Admin API 2 application. To
+prevent errors, Admin API 2 should synchronize its own `adminconsole.Instances`
+table with any new records in `dbo.OdsInstances` each time it starts. While
+doing so, it can create client credentials for the Health Check Worker to access
+that instance.
 
-1. Create the necessary `ApiClients` and `ApiClientOdsInstances` records for the
-   health check worker, and
-2. Synchronize any existing information from `dbo.odsInstances` and related
-   tables into Admin API's `Instances` table. This includes storing the
-   credentials from step 1 into the `Instances` table.
+The following diagram shows the startup synchronization process. When inserting
+into `adminconsole.Instances`, set the status to "Completed".
+
+```mermaid
+sequenceDiagram
+    AdminApi ->> EdFi_Admin: SELECT dbo.OdsInstances
+    AdminApi ->> EdFi_Admin: SELECT adminconsole.Instances
+    AdminApi ->> EdFi_Admin: SELECT dbo.Application WHERE name = Ed-Fi Health Check
+
+    loop for each OdsInstance
+        AdminApi ->> AdminApi: Is OdsInstance in Instance list?
+
+        opt no
+            AdminApi ->> EdFi_Admin: BEGIN TRANSACTION
+            AdminApi ->> EdFi_Admin: INSERT adminconsole.Instances
+            AdminApi ->> EdFi_Admin: INSERT dbo.ApiClients
+            AdminApi ->> EdFi_Admin: INSERT dbo.ApiClientOdsInstances
+            AdminApi ->> EdFi_Admin: UPDATE adminconsole.Instances (credentials)
+            AdminApi ->> EdFi_Admin: COMMIT
+        end
+    end
+```
 
 > [!TIP]
-> To the extent possible, this work should use the existing Admin API 2
-> application code for managing these tables.
+> Whenever the [Instance Management Worker](./INSTANCE-MANAGEMENT.md) creates a
+> new ODS database instance, it must also create client credentials. This is shown
+> in that document's sequence diagram.
 
 #### Encryption and Storage of Credentials
 
@@ -122,11 +145,13 @@ the value from the header in ODS/API.
 
 Example:
 
-```http
+```none
 https://api.ed-fi.org:443/v7.1/api/data/v3/ed-fi/studentSchoolAssociations?limit=0&totalCount=true
 ```
 
-The parameter `totalCount` is important to use because this will return us the count in the header as `total-count`. With this value we can map it to our payload in the field called `studentSchoolAssociations` 
+The parameter `totalCount` is important to use because this will return us the
+count in the header as `total-count`. With this value we can map it to our
+payload in the field called `studentSchoolAssociations`.
 
 This process has to be called per field of the payload
 

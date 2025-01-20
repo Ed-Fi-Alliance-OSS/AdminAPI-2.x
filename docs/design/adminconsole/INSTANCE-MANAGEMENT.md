@@ -6,7 +6,8 @@ instances.
 
 ## Containers
 
-```mermaidC4Container
+```mermaid
+C4Container
     title "Instance Management"
 
     System(AdminConsole, "Ed-Fi Admin Console", "A web application for managing ODS/API Deployments")
@@ -65,12 +66,12 @@ Ultimately, the solution needs to be robust for error handling, retries, and for
 extensibility to support cloud-based platforms. These functions will be built
 out incrementally as needed based on feedback from the field:
 
-1. v1: assume single worker running at a time; fail gracefully; require manual
+1. Assume single worker running at a time; fail gracefully; require manual
    intervention when errors occur. Support for "on prem" type of connectivity
    with PostgreSQL and MSSQL. Single Tenant.
-2. v2: Multi tenancy - creating additional Admin and Security databases.
-3. v2: more robust job handling for concurrent execution.
-4. v3: infrastructure for Cloud managed databases (e.g. AWS Aurora, AWS RDS,
+2. Multi tenancy - creating additional Admin and Security databases.
+3. More robust job handling for concurrent execution.
+4. Infrastructure for Cloud managed databases (e.g. AWS Aurora, AWS RDS,
    Azure Cosmos DB, Azure SQL Server, Azure PostgreSQL).
 
 > [!TIP]
@@ -88,7 +89,7 @@ sequenceDiagram
     participant AdminAPI
     participant EdFi_Admin
 
-    Console ->> AdminAPI: POST /adminconsole/instances
+    Console ->> AdminAPI: POST /adminconsole/odsInstances
     AdminAPI ->> EdFi_Admin: INSERT INTO adminconsole.Instance
     AdminAPI -->> Console: 202 Accepted
 
@@ -100,7 +101,7 @@ sequenceDiagram
 
         Worker ->> DbServer: create / copy database from template
 
-        Worker ->> AdminAPI: POST /adminconsole/instances/{id}/created
+        Worker ->> AdminAPI: POST /adminconsole/instances/{id}/completed
 
         AdminAPI ->> EdFi_Admin: BEGIN TRANSACTION
         AdminAPI ->> EdFi_Admin: INSERT INTO dbo.OdsInstances
@@ -126,8 +127,11 @@ sequenceDiagram
 
 The section in blue is in support of the Health Check Worker, which needs client
 credentials for accessing the newly created instance. Admin API 2 will need to
-create and store new credentials each time an instance is created. For more information, see
-[Health Check Worker: Admin API's Responsibilities](./HEALTH-CHECK-WORKER.md#admin-apis-responsibilities)
+create and store new credentials each time an instance is created. Note that the
+credentials are stored in a separate column from the rest of the document
+information, and they should be encrypted. For more information, see [Health
+Check Worker: Admin API's
+Responsibilities](./HEALTH-CHECK-WORKER.md#admin-apis-responsibilities).
 
 ### v2: Multi Tenancy
 
