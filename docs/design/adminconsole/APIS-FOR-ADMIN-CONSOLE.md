@@ -124,8 +124,7 @@ the status of an instance, without having to provide a body. For the given ID,
 sets the following values on the instance:
 
 * `status`: "Completed"
-* `progressPercentage`: 100
-* `startedAt` and `completedAt` set to "now"
+* `completedAt` set to "now"
   * Started is being set the same initially; in the future there may be a more
     sophisticated process that updates the record as "in progress" with a start
     date.

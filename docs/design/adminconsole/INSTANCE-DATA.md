@@ -273,6 +273,8 @@ No modifications will be made in the `dbo.*` tables.
 | TenantId      | int            | no       | Tenant identifier                                            |
 | Document      | JSON / string  | yes      | JSON document containing all but credentials information     |
 | Credentials   | varbinary(500) | no       | Encrypted JSON document with `client_id` and `client_secret` |
+| Status        | string         | no       | Pending, Completed, InProgress, or Error                     |
+| CompletedAt   | datetime       | yes      | Set this value when completed                                |
 
 > [!NOTE]
 > Is `varbinary(500)` sufficient to hold encrypted credentials?
