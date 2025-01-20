@@ -34,8 +34,13 @@ C4Context
         Person(User, "Admin Console User", "A system administrator")
     }
 
+    Enterprise_Boundary(other, "Other Services") {
+        System(Keycloak, "Keycloak", "OpenID Connect authorization provider")
+    }
+
     Enterprise_Boundary(edfi, "Ed-Fi ODS/API Platform") {
         System(AdminConsole, "Ed-Fi Admin Console", "A web application for managing ODS/API Deployments")
+
 
         System_Boundary(backend, "Backend Systems") {
             System(AdminAPI, "Ed-Fi Admin API 2 and Workers", "A REST API system for managing<br />administrative data and deployments,<br />plus background worker apps")
@@ -52,7 +57,10 @@ C4Context
     Rel(AdminAPI, OdsApi, "Reads and<br />configures")
     UpdateRelStyle(AdminAPI, OdsApi, $offsetY="-20", $offsetX="-30")
 
-    UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="1")
+    Rel(User, Keycloak, "Authentication")
+    UpdateRelStyle(User, Keycloak, $offsetX="-20", $offsetY="10")
+
+    UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="2")
 ```
 
 ## Containers
@@ -121,6 +129,9 @@ C4Container
 The API interfaces and the interactions between specific containers are
 described in detail in the following documents:
 
+* [REST API Support for Admin Console](./APIS-FOR-ADMIN-CONSOLE.md)
 * [Instance Management Worker](./INSTANCE-MANAGEMENT.md)
 * [Health Check Worker](./HEALTH-CHECK-WORKER.md)
-* [REST API Support for Admin Console](./APIS-FOR-ADMIN-CONSOLE.md)
+
+Also see [Keycloak Configuration](./KEYCLOAK.md) for more information on using
+Keycloak as the Open ID Connect provider.
