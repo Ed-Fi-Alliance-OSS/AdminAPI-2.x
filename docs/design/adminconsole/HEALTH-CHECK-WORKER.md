@@ -76,7 +76,7 @@ During deployment, Admin API 2 should:
 At application startup, and each time a new instance is created, Admin API 2
 should:
 
-1. Create the necessary `ApiClients` and `ApiClientOdsInsances` records for the
+1. Create the necessary `ApiClients` and `ApiClientOdsInstances` records for the
    health check worker, and
 2. Synchronize any existing information from `dbo.odsInstances` and related
    tables into Admin API's `Instances` table. This includes storing the
