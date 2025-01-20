@@ -2,7 +2,8 @@
 
 This document describes the new interfaces and data storage requirements to be
 fulfilled directly in the Ed-Fi ODS/API Admin API 2 application, in support of
-the Ed-Fi Admin Console.
+the Ed-Fi Admin Console and the two worker processes (Instance Management,
+Health Check).
 
 ## System Context
 
@@ -59,106 +60,77 @@ C4Container
 
 ## Solution Design
 
+> [!NOTE]
+> This solution design is reverse engineered from the existing REST interface
+> expectations of the Admin Console application.
+
 We are going to expose the Admin Console endpoints required for the application
-in Admin API. It will be hosted as a different definition in Swagger and the
-base path  `/adminconsole/{resource}`.
+in Admin API 2. It will be hosted as a different definition in Swagger and the
+base path will be `/adminconsole/{resource}`.
 
-All new endpoints will utilize standard HTTP verbs and response codes. The notes
-below only describe unusual circumstances that differ from default values. This
-table summarizes the new endpoints, which are described in more detail below.
+The original Admin Console source code received by the Ed-Fi Alliance included
+support for several functional areas that will be excluded in the version 1.0
+release of the Ed-Fi Admin Console. The following table lists the functional
+areas and their status. Functions that are included in the release plan will be
+described in more detail below.
 
-| Resource      | Purpose                                                                     | Priority |
-| ------------- | --------------------------------------------------------------------------- | -------- |
-| `instances`   | Supports the end user's need to list and initiate creation of new Instances | High     |
-| `tenants`     | Supports listing and creation of new tenants                                | Medium   |
-| `steps`       | Manages onboarding wizard steps                                             | Low      |
-| `permissions` | Configures application permissions for a user                               | Low      |
-| `userProfile` | Manages user information                                                    | Low      |
+| Function            | Status | Notes                                                          |
+| ------------------- | ------ | -------------------------------------------------------------- |
+| Tenant management   | ✅      | Will still require manual updates to ODS/API's tenant settings |
+| Instance management | ✅      | Asynchronously supported by the Instance Management Worker     |
+| Health check        | ✅      | Asynchronously supported by the Health Check Worker            |
+| Vendors             | ✅      | Directly supporting `dbo.Vendors`                              |
+| Applications        | ✅      | Directly managing `dbo.Applications` (and `dbo.ApiClients`?)   |
+| Claimsets           | ✅      | (Read-only?) list of available claimsets                       |
+| Onboarding Wizard   | ❌      | May restore in the future                                      |
+| User Profile        | ❌      | May restore in the future                                      |
+| Permissions         | ❌      | May restore in the future                                      |
 
-### Resources
+### Tenant Management
 
-#### Instances
+Path segment: `/adminconsole/tenants`.
 
-The Admin Console will issue HTTP requests to:
+Initially, the tenant API will follow the ODS/API's pattern: it will be stored
+in the appsettings file. Hence only the `GET` request is supported; modification
+support will be restored in the future when tenants move to a database table.
+See [Tenant Management Data](./TENANT-DATA.md) for information about the
+structure and data of a `tenant` object.
 
-1. List both existing Instances and newly requested instances. An instance
-   therefore has a status. Statuses will include:
-   * `Pending` - ODS database has not yet been created.
-   * `Creating` - This state will only be available in a future release, when the
-     [Instance Management Worker](./INSTANCE-MANAGEMENT.md) has a job locking
-     mechanism.
-   * `Active` - ODS database has been created and is functional.
-   * `Error` - Some error occurred during database creation.
+### Instances
 
-   > [!NOTE]
-   > The actual terms for status may need to change based on what Admin Console
-   > is already written to accept. These are preliminary names only.
+**Path segment: `/adminconsole/odsinstances`.**
 
-2. Create new instances. In reality, this is a _request to create an instance_,
-   which will be fulfilled by the [Instance Management
-   Worker](./INSTANCE-MANAGEMENT.md).
+Supports full create, read, and update operations from the administrative user's
+point of view. Does not support delete. Some data that will be managed with an
+`instance` should not be available to an end-user and will not be included in
+this endpoint. Notably, the `clientId` and `clientSecret` should be empty strings
+when responding to the `odsinstances` endpoint requests.
 
-At this time there is no need to edit or delete instances.
+> [!WARNING]
+> We must look to see if the Admin Console expects to receive client credentials
+> so that it can directly check a connection to the Ed-Fi API. If that is the
+> case, then we will need to refactor the Admin Console to rely on the Admin API
+> for this verification, since we do not want to expose Ed-Fi API client
+> credentials to the end user.
 
-The Instance Management Worker will also use this endpoint to retrieve
-information on the instances that it needs to create, and write additional
-information back to the system. The Worker will need to process secure
-information that should not be seen by an end user - for example, client
-credentials to support the [Health Check Worker](./HEALTH-CHECK-WORKER.md). For
-this reason, _the resource needs to differentiate the client role when
-authorizing access_.
+**Path segment: `/adminconsole/instances`.**
 
-Detailed functionality is listed below. The "Role" column refers to role-base
-authorization to perform the actions. An authenticated client that tries to
-access an endpoint that is not allowed by their role should receive a 403
-Forbidden response.
+Supports all CRUD operations, for use by the [Instance Management
+Worker](./INSTANCE-MANAGEMENT.md), [Health Check
+Worker](./HEALTH-CHECK-WORKER.md), or a system administrator directly accessing
+the API with appropriate credentials. Must be secured by Role name in the JSON
+Web Token (JWT). Define the role name in appSettings. For more about role
+management, also see [Keycloak Configuration](./KEYCLOAK.md).
 
-| HTTP Request                             | Action                                                   | Auth Role    |
-| ---------------------------------------- | -------------------------------------------------------- | ------------ |
-| `GET /adminconsole/instances`            | Retrieves a page of instances without secure information | Any          |
-| `GET /adminconsole/instances/{id}`       | Retrieves a specific instance without secure information | Any          |
-| `GET /adminconsole/instances/pending`    | Retrieves all instances with pending state               | InstanceMgmt |
-| `POST /adminconsole/instances/{id}/done` | Marks the instance as active and creates new credentials | InstanceMgmt |
+**Path segment: `/adminconsole/instances/{id}/completed`**
 
-The work performed by the `/done` endpoint is described in detail in [Health Check Worker](./HEALTH-CHECK-WORKER.md#admin-apis-responsibilities).
+POST operation for the instance management worker only. Supports updating only
+the status of an instance, without having to provide a body. For the given ID,
+sets the following values on the instance:
 
-#### Tenants
-
-Placeholder for future design. At this time, tenants are defined in the App Settings file.
-
-#### Steps
-
-Placeholder for future design. This work is on hold.
-
-#### Permissions
-
-Placeholder for future design. This work is on hold.
-
-#### UserProfile
-
-Placeholder for future design. This work is on hold.
-
-### Persistence
-
-Tables will be created under the new schema called `adminconsole` in the
-`EdFi_Admin` database. Tables will have the following design:
-
-* Doc ID - integer/PK
-* OdsInstanceId - integer or UUID
-* EdOrgID - integer (optional)
-* UserID - integer (optional)
-* Document - JSONB
-
-We identify the following tables to be created:
-
-* `Instances`
-* `Permissions` - on hold
-* `Steps` - on hold
-* `Tenants` - on hold
-* `UserProfile` - on hold
-
-Some of these examples contain sensitive data such as keys and secrets values, so we are thinking of using an encryption/decryption mechanism to store the JSONB data by means of an AES256 algorithm same as we use in the ODS/API application.
-
-## Mock Data
-
-placeholder
+* `status`: "Completed"
+* `progressPercentage`: 100
+* `startedAt` and `completedAt` set to "now"
+  * Started is being set the same initially; in the future there may be a more
+    sophisticated process that updates the record as "in progress" with a start
+    date.
