@@ -142,7 +142,7 @@ Also supports `GET /adminconsole/odsInstances/{id}`
 
 * Not supported at this time. Respond with `405 Method Not Allowed`.
 
-### GET /adminconosle/instances
+### GET /adminconsole/instances
 
 Also supports `GET /adminconsole/instances/{id}`
 
@@ -161,8 +161,9 @@ Also supports `GET /adminconsole/instances/{id}`
   ```json
   [
     {
-      "odsInstanceId": 1,
       "tenantId": 1,
+      "odsInstanceId": 1,
+      "instanceName": "Instance #1 - 2024",
       "resourceUrl": "http://localhost/2024/api",
       "clientId": "abc123",
       "clientSecret": "d5rftyguht67gyhuijk",
