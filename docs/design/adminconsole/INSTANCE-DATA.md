@@ -262,4 +262,17 @@ Also supports `GET /adminconsole/instances/{id}`
 
 ## Data Storage
 
-_TODO: describe the `adminconsole.Instance` table._
+No modifications will be made in the `dbo.*` tables.
+
+### adminconsole.Instance
+
+| Column Name   | Type           | Nullable | Purpose                                                      |
+| ------------- | -------------- | -------- | ------------------------------------------------------------ |
+| InstanceId    | int            | no       | Auto-incrementing identifier                                 |
+| OdsInstanceId | int            | yes      | Matching value from `dbo.OdsInstances`                       |
+| TenantId      | int            | no       | Tenant identifier                                            |
+| Document      | JSON / string  | yes      | JSON document containing all but credentials information     |
+| Credentials   | varbinary(500) | no       | Encrypted JSON document with `client_id` and `client_secret` |
+
+> [!NOTE]
+> Is `varbinary(500)` sufficient to hold encrypted credentials?
