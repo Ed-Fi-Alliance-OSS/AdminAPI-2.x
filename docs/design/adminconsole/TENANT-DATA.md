@@ -25,7 +25,7 @@ Also supports `GET /adminconsole/tenants/{id}`
       "tenantId": 1,
       "document": {
         "name": "Tenant1",
-        "edfiApiDiscoveryUrl": "http://localhost/api"
+        "discoveryApiUrl": "http://localhost/api"
       }
     }
   ]
