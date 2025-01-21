@@ -166,8 +166,8 @@ Also supports `GET /adminconsole/instances/{id}`
       "instanceId": 1,
       "odsInstanceId": 1,
       "instanceName": "Instance #1 - 2024",
-      "resourceUrl": "http://localhost/api/2024",
-      "discoveryApiUrl": "http://localhost",
+      "resourceUrl": "http://localhost/api/2024/data/v3",
+      "oauthUrl": "http://localhost/api/2024/oauth/token",
       "clientId": "abc123",
       "clientSecret": "d5rftyguht67gyhuijk",
       "status": "Completed"
