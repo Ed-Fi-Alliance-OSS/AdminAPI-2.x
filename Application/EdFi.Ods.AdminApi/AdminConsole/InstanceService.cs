@@ -6,6 +6,7 @@
 using System.Dynamic;
 using AutoMapper;
 using EdFi.Admin.DataAccess.Contexts;
+using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Commands;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Queries;
 using EdFi.Ods.AdminApi.Features.OdsInstanceContext;
@@ -21,7 +22,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole;
 
 public interface IAdminConsoleInstancesService
 {
-    Task InitializeIntancesAsync(int tenantId);
+    Task InitializeInstancesAsync(int tenantId, int applicationId);
 }
 public class InstanceService : IAdminConsoleInstancesService
 {
@@ -30,6 +31,7 @@ public class InstanceService : IAdminConsoleInstancesService
     private readonly IGetOdsInstanceDerivativesQuery _getOdsInstanceDerivativesQuery;
     private readonly IAddInstanceCommand _addInstanceCommand;
     private readonly IGetInstancesQuery _getInstancesQuery;
+    private readonly IGetApiClientIdByApplicationIdQuery _getApiClientIdByApplicationIdQuery;
     private readonly IMapper _mapper;
 
     private static readonly ILog _log = LogManager.GetLogger(typeof(InstanceService));
@@ -40,6 +42,7 @@ public class InstanceService : IAdminConsoleInstancesService
         IGetOdsInstanceDerivativesQuery getOdsInstanceDerivativesQuery,
         IAddInstanceCommand addInstanceCommand,
         IGetInstancesQuery getInstancesQuery,
+        IGetApiClientIdByApplicationIdQuery getApiClientIdByApplicationIdQuery,
         IMapper mapper)
     {
         _getOdsInstancesQuery = getOdsInstancesQuery;
@@ -47,13 +50,15 @@ public class InstanceService : IAdminConsoleInstancesService
         _getOdsInstanceDerivativesQuery = getOdsInstanceDerivativesQuery;
         _addInstanceCommand = addInstanceCommand;
         _getInstancesQuery = getInstancesQuery;
+        _getApiClientIdByApplicationIdQuery = getApiClientIdByApplicationIdQuery;
         _mapper = mapper;
     }
 
-    public async Task InitializeIntancesAsync(int tenantId)
+    public async Task InitializeInstancesAsync(int tenantId, int applicationId)
     {
         //get instances in adminconsole
         var instancesAdminConsole = await _getInstancesQuery.Execute();
+        var apiClient = _mapper.Map<ApiClient>(_getApiClientIdByApplicationIdQuery.Execute(applicationId));
         //get odsinstances
         var odsInstances = _mapper.Map<List<OdsInstanceModel>>(_getOdsInstancesQuery.Execute());
         var odsInstanceContexts = _mapper.Map<List<OdsInstanceContextModel>>(_getOdsInstanceContextsQuery.Execute());
@@ -75,6 +80,10 @@ public class InstanceService : IAdminConsoleInstancesService
                 document.odsInstanceContexts = odsContexts;
                 document.odsInstanceDerivatives = odsDerivatives;
                 addInstanceRequest.Document = document;
+                dynamic apiCredentials = new ExpandoObject();
+                apiCredentials.ClientId = apiClient.Key;
+                apiCredentials.Secret = apiClient.Secret;
+                addInstanceRequest.ApiCredentials = apiCredentials;
                 await _addInstanceCommand.Execute(addInstanceRequest);
             }
         }
