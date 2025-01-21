@@ -153,6 +153,7 @@ Also supports `GET /adminconsole/instances/{id}`
   * Returns a separate object for each ODS Instance Context.
   * The `resourceUrl` is constructed from the tenant's base URL plus instance
     context information.
+  * `odsInstanceId` will be null if the `status` is not "Completed".
   * Respond with 200
 * **Query String**:
   * `?status=` to search by Status.
@@ -162,9 +163,11 @@ Also supports `GET /adminconsole/instances/{id}`
   [
     {
       "tenantId": 1,
+      "instanceId": 1,
       "odsInstanceId": 1,
       "instanceName": "Instance #1 - 2024",
-      "resourceUrl": "http://localhost/2024/api",
+      "resourceUrl": "http://localhost/api/2024",
+      "discoveryApiUrl": "http://localhost",
       "clientId": "abc123",
       "clientSecret": "d5rftyguht67gyhuijk",
       "status": "Completed"
