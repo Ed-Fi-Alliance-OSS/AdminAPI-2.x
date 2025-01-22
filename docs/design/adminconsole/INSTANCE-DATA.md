@@ -26,7 +26,7 @@ Also supports `GET /adminconsole/odsInstances/{id}`
     {
       "odsInstanceId": 1,
       "tenantId": 1,
-      "name": "Instance #1 - 2024",
+      "name": "Instance1",
       "instanceType": "enterprise",
       "baseUrl": "http://localhost/api",
       "odsInstanceContexts": [
