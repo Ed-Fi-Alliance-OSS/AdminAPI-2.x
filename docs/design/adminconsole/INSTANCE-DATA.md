@@ -206,6 +206,7 @@ Also supports `GET /adminconsole/instances/{id}`
 
 > [!NOTE]
 > This endpoint might not be included in the Admin API 2.3 for Admin Console 1.
+> Job support is a low priority for future consideration.
 
 * **Purpose**: Start processing jobs from the `adminconsole.Instance` table.
 * **Description**:
