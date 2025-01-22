@@ -163,6 +163,7 @@ Also supports `GET /adminconsole/instances/{id}`
   [
     {
       "tenantId": 1,
+      "tenantName": "Tenant1",
       "instanceId": 1,
       "odsInstanceId": 1,
       "instanceName": "Instance #1 - 2024",
@@ -244,10 +245,11 @@ Also supports `GET /adminconsole/instances/{id}`
   }
   ```
 
-#### POST /adminconsole/instances/jobs/{id}/completed
+### POST /adminconsole/instances/jobs/{id}/completed
 
 > [!NOTE]
 > This endpoint might not be included in the Admin API 2.3 for Admin Console 1.
+> If it is included, then `/adminconsole/instances/{id}/completed` will be removed.
 
 * **Purpose**: Mark a job as complete and perform transactional updates.
 * **Enhancements**:
@@ -269,6 +271,16 @@ Also supports `GET /adminconsole/instances/{id}`
 No modifications will be made in the `dbo.*` tables.
 
 ### adminconsole.Instance
+
+In the normal flow of work, this table will be populated by Admin Console /
+Admin API _before_ a matching record exists in the `dbo.OdsInstances` table. The
+`Document` column shown below is a flexible JSON object to whatever information
+is necessary to support both the user interface and the creation of records in
+`dbo.OdsInstances`, `dbo.OdsInstanceContext`, and `dbo.OdsInstanceDerivatives`.
+The JSON structure gives the team flexibility for rapid iteration.
+
+Columns that need to be indexed (e.g. `status`) or updated by worker processes
+should be real columns, instead of embedding them in the JSON data.
 
 | Column Name   | Type           | Nullable | Purpose                                                      |
 | ------------- | -------------- | -------- | ------------------------------------------------------------ |
