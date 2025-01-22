@@ -40,14 +40,16 @@ public class AddInstanceCommand : IAddInstanceCommand
         {
             ContractResolver = new DefaultContractResolver(),
             Converters = new List<JsonConverter> { new ExpandoObjectConverter() },
-            Formatting = Formatting.Indented
+            Formatting = Formatting.Indented,
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
         });
 
         var apiCredentialsDocument = JsonConvert.SerializeObject(cleanedApiCredencials, new JsonSerializerSettings
         {
             ContractResolver = new DefaultContractResolver(),
             Converters = new List<JsonConverter> { new ExpandoObjectConverter() },
-            Formatting = Formatting.Indented
+            Formatting = Formatting.Indented,
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
         });
 
         JsonNode? jnDocument = JsonNode.Parse(document);

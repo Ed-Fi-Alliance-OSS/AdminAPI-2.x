@@ -12,16 +12,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
-public interface IGetApplicationByNameAndClaimset
+public interface IGetApplicationByNameAndClaimsetQuery
 {
     Application? Execute(string applicationName, string claimset);
 }
 
-public class GetApplicationByNameAndClaimset : IGetApplicationByNameAndClaimset
+public class GetApplicationByNameAndClaimsetQuery : IGetApplicationByNameAndClaimsetQuery
 {
     private readonly IUsersContext _context;
 
-    public GetApplicationByNameAndClaimset(IUsersContext context)
+    public GetApplicationByNameAndClaimsetQuery(IUsersContext context)
     {
         _context = context;
     }

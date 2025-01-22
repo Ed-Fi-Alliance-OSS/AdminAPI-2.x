@@ -85,7 +85,7 @@ public class InstanceService : IAdminConsoleInstancesService
                         ApiClient = apiClient,
                         OdsInstance = odsInstanceValue
                     };
-                    _addApiClientOdsInstanceCommand.Execute(newApiClientOdsInstance);
+                    apiClientOdsInstance = _addApiClientOdsInstanceCommand.Execute(newApiClientOdsInstance);
                 }
                 //create
                 AddInstanceRequest addInstanceRequest = new AddInstanceRequest();
@@ -98,7 +98,12 @@ public class InstanceService : IAdminConsoleInstancesService
                 document.instanceType = odsInstance.InstanceType;
                 document.odsInstanceContexts = odsContexts;
                 document.odsInstanceDerivatives = odsDerivatives;
-                
+                document.apiClientOdsInstance = new
+                {
+                    ApiClientOdsInstanceId = apiClientOdsInstance.ApiClientOdsInstanceId,
+                    ApiClient_ApiClientId = apiClientOdsInstance.ApiClient.ApiClientId,
+                    OdsInstance_OdsInstanceId = apiClientOdsInstance.OdsInstance.OdsInstanceId
+                };
                 addInstanceRequest.Document = document;
                 dynamic apiCredentials = new ExpandoObject();
                 apiCredentials.ClientId = apiClient.Key;
