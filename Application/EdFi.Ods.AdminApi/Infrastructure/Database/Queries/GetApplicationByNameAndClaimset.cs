@@ -5,6 +5,7 @@
 
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.Common.Infrastructure;
 using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
 using Microsoft.EntityFrameworkCore;
@@ -31,7 +32,7 @@ public class GetApplicationByNameAndClaimset : IGetApplicationByNameAndClaimset
             .Include(a => a.ApplicationEducationOrganizations)
             .Include(a => a.Profiles)
             .Include(a => a.Vendor)
-            .SingleOrDefault(app => app.ApplicationName == applicationName);
+            .SingleOrDefault(app => app.ApplicationName == applicationName && app.ClaimSetName == claimset);
         return application;
     }
 }
