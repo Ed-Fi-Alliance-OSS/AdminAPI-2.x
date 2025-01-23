@@ -22,7 +22,11 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.Adm
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-
+            migrationBuilder.DropColumn(
+                name: "ApiCredentials",
+                schema: "adminconsole",
+                table: "Instances"
+             );
         }
     }
 }
