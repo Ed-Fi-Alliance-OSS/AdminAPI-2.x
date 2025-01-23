@@ -149,14 +149,18 @@ Also supports `GET /adminconsole/instances/{id}`
 * **Purpose**: Provide instance list for the worker applications.
 * **Description**:
   * Reads from the `adminconsole.Instance` table.
-  * Must be authorized with an appropriate Role name in the token.
+  * Must be authorized with an appropriate Role name in the token: `clientId`
+    and `clientSecret` must be left blank when this endpoint is accessed by an
+    Admin Console user.
   * Returns a separate object for each ODS Instance Context.
   * The `resourceUrl` is constructed from the tenant's base URL plus instance
     context information.
   * `odsInstanceId` will be null if the `status` is not "Completed".
+  * Return all values without the need for paging.
   * Respond with 200
-* **Query String**:
-  * `?status=` to search by Status.
+* **Query String Parameters**:
+  * `status` to search by Status.
+  * `tenantName` to search by Tenant
 * **Response Format**:
 
   ```json
