@@ -12,6 +12,8 @@ using EdFi.Ods.AdminApi.Features.OdsInstanceContext;
 using EdFi.Ods.AdminApi.Features.OdsInstanceDerivative;
 using EdFi.Ods.AdminApi.Features.ODSInstances;
 using EdFi.Ods.AdminApi.Features.Profiles;
+using EdFi.Ods.AdminApi.Features.ResourceClaimActionAuthStrategies;
+using EdFi.Ods.AdminApi.Features.ResourceClaimActions;
 using EdFi.Ods.AdminApi.Features.Vendors;
 using EdFi.Ods.AdminApi.Infrastructure.AutoMapper;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
@@ -155,5 +157,9 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
             .ForMember(dst => dst.OdsInstanceDerivatives, opt => opt.MapFrom(src => src.OdsInstanceDerivatives))
             .ForMember(dst => dst.OdsInstanceContexts, opt => opt.MapFrom(src => src.OdsInstanceContexts));
+
+        CreateMap<EdFi.Security.DataAccess.Models.ResourceClaimActionAuthorizationStrategies, ResourceClaimActionAuthStrategyModel>();
+        CreateMap<EdFi.Security.DataAccess.Models.ResourceClaimAction, ResourceClaimActionModel>();
+
     }
 }
