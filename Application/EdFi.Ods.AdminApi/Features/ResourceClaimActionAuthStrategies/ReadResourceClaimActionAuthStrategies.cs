@@ -6,31 +6,23 @@
 using AutoMapper;
 using EdFi.Ods.AdminApi.Common.Features;
 using EdFi.Ods.AdminApi.Common.Infrastructure;
-using EdFi.Ods.AdminApi.Features.ClaimSets;
-using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
-using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
-using EdFi.Ods.AdminApi.Infrastructure.Extensions;
-using EdFi.Ods.AdminApi.Infrastructure.Helpers;
 
-namespace EdFi.Ods.AdminApi.Features.ResourceClaims;
+namespace EdFi.Ods.AdminApi.Features.ResourceClaimActionAuthStrategies;
 
 public class ReadResourceClaimActionAuthStrategies : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiEndpointBuilder.MapGet(endpoints, "/resourceClaimActionAuthStrategies ", GetResourceClaims)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/resourceClaimActionAuthStrategies", GetResourceClaimActionAuthorizationStrategies)
             .WithDefaultSummaryAndDescription()
-            .WithRouteOptions(b => b.WithResponse<List<ResourceClaimModel>>(200))
+            .WithRouteOptions(b => b.WithResponse<List<ResourceClaimActionAuthStrategyModel>>(200))
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    internal Task<IResult> GetResourceClaims(IGetResourceClaimsQuery getResourceClaimsQuery, IMapper mapper, [AsParameters] CommonQueryParams commonQueryParams, int? id, string? name)
+    internal Task<IResult> GetResourceClaimActionAuthorizationStrategies(IGetResourceClaimActionAuthorizationStrategiesQuery getResourceClaimActionAuthorizationStrategiesQuery, IMapper mapper, [AsParameters] CommonQueryParams commonQueryParams)
     {
-        var resourceClaims = mapper.Map<List<ResourceClaimModel>>(getResourceClaimsQuery.Execute(
-            commonQueryParams,
-            id, name));
-
+        var resourceClaims = mapper.Map<List<ResourceClaimActionAuthStrategyModel>>(getResourceClaimActionAuthorizationStrategiesQuery.Execute(commonQueryParams));
         return Task.FromResult(Results.Ok(resourceClaims));
     }
 }
