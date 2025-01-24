@@ -4,7 +4,9 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Security.Cryptography;
+using EdFi.Ods.AdminApi.AdminConsole;
 using EdFi.Ods.AdminApi.Infrastructure.Providers.Interfaces;
+using log4net;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Providers;
 
@@ -20,6 +22,13 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Providers;
 public class Aes256SymmetricStringEncryptionProvider : ISymmetricStringEncryptionProvider
 {
 
+    private readonly ILog _logger;
+
+    public Aes256SymmetricStringEncryptionProvider()
+    {
+        _logger = LogManager.GetLogger(typeof(Aes256SymmetricStringEncryptionProvider));
+    }
+
     /// <summary>
     /// Encrypt the specified string value using the specified key.
     /// </summary>
@@ -32,10 +41,14 @@ public class Aes256SymmetricStringEncryptionProvider : ISymmetricStringEncryptio
     {
         // Incorporates code from https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.aes?view=net-6.0
         if (string.IsNullOrWhiteSpace(value))
+        {
             throw new ArgumentException("Input value cannot be null or whitespace.", nameof(value));
+        }
 
         if (key == null || key.Length != 32)
+        {
             throw new ArgumentException("Key must be 256 bits (32 bytes) in length.", nameof(key));
+        }
 
         using Aes aesInstance = Aes.Create();
 
@@ -88,10 +101,14 @@ public class Aes256SymmetricStringEncryptionProvider : ISymmetricStringEncryptio
     {
         // Includes code from https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.aes?view=net-6.0
         if (string.IsNullOrWhiteSpace(value))
+        {
             throw new ArgumentException("Input value cannot be null or whitespace.", nameof(value));
+        }
 
         if (key == null || key.Length != 32)
+        {
             throw new ArgumentException("Key must be 256 bits (32 bytes) in length.", nameof(key));
+        }
 
         string[] inputParts = value.Split('|');
 
@@ -114,10 +131,10 @@ public class Aes256SymmetricStringEncryptionProvider : ISymmetricStringEncryptio
             encryptedBytes = Convert.FromBase64String(base64EncryptedBytes);
             hashValue = Convert.FromBase64String(base64HashValue);
         }
-        catch
+        catch (Exception e)
         {
-            output = null;
-            return false;
+            _logger.Error("Unable to convert encryption key from Base 64 String.", e);
+            throw new ArgumentException("Unable to convert key from Base 64 String.", nameof(key));
         }
 
         bool signatureIsValid = IsHmacSignatureValid();
