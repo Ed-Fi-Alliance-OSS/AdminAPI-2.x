@@ -9,6 +9,9 @@ namespace EdFi.Ods.AdminApi.Features.ResourceClaimActionAuthStrategies
     {
         public int ResourceClaimActionAuthorizationStrategyId { get; set; }
         public int ResourceClaimActionId { get; set; }
+        public string ActionName { get; set; } = string.Empty;
+        public string ResourceName { get; set; } = string.Empty;
         public int AuthorizationStrategyId { get; set; }
+        public string AuthorizationStrategyName { get; set; } = string.Empty;
     }
 }
