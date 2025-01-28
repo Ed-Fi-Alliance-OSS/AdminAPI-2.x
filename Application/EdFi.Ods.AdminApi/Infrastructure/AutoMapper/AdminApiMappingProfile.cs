@@ -158,8 +158,14 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.OdsInstanceDerivatives, opt => opt.MapFrom(src => src.OdsInstanceDerivatives))
             .ForMember(dst => dst.OdsInstanceContexts, opt => opt.MapFrom(src => src.OdsInstanceContexts));
 
-        CreateMap<EdFi.Security.DataAccess.Models.ResourceClaimActionAuthorizationStrategies, ResourceClaimActionAuthStrategyModel>();
-        CreateMap<EdFi.Security.DataAccess.Models.ResourceClaimAction, ResourceClaimActionModel>();
+        CreateMap<EdFi.Security.DataAccess.Models.ResourceClaimActionAuthorizationStrategies, ResourceClaimActionAuthStrategyModel>()
+            .ForMember(dst => dst.ResourceName, opt => opt.MapFrom(src => src.ResourceClaimAction.ResourceClaim.ResourceName))
+            .ForMember(dst => dst.ActionName, opt => opt.MapFrom(src => src.ResourceClaimAction.Action.ActionName))
+            .ForMember(dst => dst.AuthorizationStrategyName, opt => opt.MapFrom(src => src.AuthorizationStrategy.DisplayName));
+
+        CreateMap<EdFi.Security.DataAccess.Models.ResourceClaimAction, ResourceClaimActionModel>()
+            .ForMember(dst => dst.ResourceClaimName, opt => opt.MapFrom(src => src.ResourceClaim.ResourceName))
+            .ForMember(dst => dst.ActionName, opt => opt.MapFrom(src => src.Action.ActionName));
 
     }
 }

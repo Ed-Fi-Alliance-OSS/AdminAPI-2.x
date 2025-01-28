@@ -10,6 +10,7 @@ using EdFi.Ods.AdminApi.Infrastructure.Extensions;
 using EdFi.Ods.AdminApi.Infrastructure.Helpers;
 using EdFi.Security.DataAccess.Contexts;
 using EdFi.Security.DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
@@ -42,7 +43,13 @@ public class GetResourceClaimActionAuthorizationStrategiesQuery : IGetResourceCl
     {
         Expression<Func<ResourceClaimActionAuthorizationStrategies, object>> columnToOrderBy = _orderByColumns.GetColumnToOrderBy(commonQueryParams.OrderBy);
 
-        return _securityContext.ResourceClaimActionAuthorizationStrategies.OrderByColumn(columnToOrderBy, commonQueryParams.IsDescending)
+        return _securityContext.ResourceClaimActionAuthorizationStrategies
+            .Include(i => i.AuthorizationStrategy)
+            .Include(i => i.ResourceClaimAction)
+                .ThenInclude(i => i.ResourceClaim)
+            .Include(i => i.ResourceClaimAction)
+                .ThenInclude(i => i.Action)
+            .OrderByColumn(columnToOrderBy, commonQueryParams.IsDescending)
             .Paginate(commonQueryParams.Offset, commonQueryParams.Limit, _options)
             .ToList();
     }

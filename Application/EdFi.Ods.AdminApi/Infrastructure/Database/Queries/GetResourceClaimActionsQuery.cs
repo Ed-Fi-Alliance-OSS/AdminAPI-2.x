@@ -44,7 +44,10 @@ public class GetResourceClaimActionsQuery : IGetResourceClaimActionsQuery
     {
         Expression<Func<ResourceClaimAction, object>> columnToOrderBy = _orderByColumns.GetColumnToOrderBy(commonQueryParams.OrderBy);
 
-        return _securityContext.ResourceClaimActions.OrderByColumn(columnToOrderBy, commonQueryParams.IsDescending)
+        return _securityContext.ResourceClaimActions
+            .Include(i => i.ResourceClaim)
+            .Include(i => i.Action)
+            .OrderByColumn(columnToOrderBy, commonQueryParams.IsDescending)
             .Paginate(commonQueryParams.Offset, commonQueryParams.Limit, _options)
             .ToList();
     }
