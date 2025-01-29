@@ -21,8 +21,7 @@ public class ReadResourceClaimActions : IFeature
 
     internal Task<IResult> GetResourceClaimsActions(IGetResourceClaimActionsQuery getResourceClaimActionsQuery, IMapper mapper, [AsParameters] CommonQueryParams commonQueryParams)
     {
-        var resourceClaims = mapper.Map<List<ResourceClaimActionModel>>(getResourceClaimActionsQuery.Execute(commonQueryParams));
-
-        return Task.FromResult(Results.Ok(resourceClaims));
+        var resourceClaimActions = getResourceClaimActionsQuery.Execute(commonQueryParams);
+        return Task.FromResult(Results.Ok(resourceClaimActions));
     }
 }

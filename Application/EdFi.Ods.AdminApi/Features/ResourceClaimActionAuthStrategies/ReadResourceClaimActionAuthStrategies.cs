@@ -19,9 +19,9 @@ public class ReadResourceClaimActionAuthStrategies : IFeature
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    internal Task<IResult> GetResourceClaimActionAuthorizationStrategies(IGetResourceClaimActionAuthorizationStrategiesQuery getResourceClaimActionAuthorizationStrategiesQuery, IMapper mapper, [AsParameters] CommonQueryParams commonQueryParams)
+    internal Task<IResult> GetResourceClaimActionAuthorizationStrategies(IGetResourceClaimActionAuthorizationStrategiesQuery getResourceClaimActionAuthorizationStrategiesQuery, [AsParameters] CommonQueryParams commonQueryParams)
     {
-        var resourceClaims = mapper.Map<List<ResourceClaimActionAuthStrategyModel>>(getResourceClaimActionAuthorizationStrategiesQuery.Execute(commonQueryParams));
+        var resourceClaims = getResourceClaimActionAuthorizationStrategiesQuery.Execute(commonQueryParams);
         return Task.FromResult(Results.Ok(resourceClaims));
     }
 }

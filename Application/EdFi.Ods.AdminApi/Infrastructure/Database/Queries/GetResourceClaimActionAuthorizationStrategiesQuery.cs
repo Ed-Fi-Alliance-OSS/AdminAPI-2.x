@@ -12,43 +12,67 @@ using EdFi.Security.DataAccess.Contexts;
 using EdFi.Security.DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Polly;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
 public interface IGetResourceClaimActionAuthorizationStrategiesQuery
 {
-    public List<ResourceClaimActionAuthorizationStrategies> Execute(CommonQueryParams commonQueryParams);
+    public List<ResourceClaimActionAuthStrategyModel> Execute(CommonQueryParams commonQueryParams);
 }
 
 public class GetResourceClaimActionAuthorizationStrategiesQuery : IGetResourceClaimActionAuthorizationStrategiesQuery
 {
     private readonly ISecurityContext _securityContext;
     private readonly IOptions<AppSettings> _options;
-    private readonly Dictionary<string, Expression<Func<ResourceClaimActionAuthorizationStrategies, object>>> _orderByColumns;
+    private readonly Dictionary<string, Expression<Func<ResourceClaimActionAuthStrategyModel, object>>> _orderByColumns;
 
     public GetResourceClaimActionAuthorizationStrategiesQuery(ISecurityContext securityContext, IOptions<AppSettings> options)
     {
         _securityContext = securityContext;
         _options = options;
-        _orderByColumns = new Dictionary<string, Expression<Func<ResourceClaimActionAuthorizationStrategies, object>>>
+        _orderByColumns = new Dictionary<string, Expression<Func<ResourceClaimActionAuthStrategyModel, object>>>
             (StringComparer.OrdinalIgnoreCase)
         {
-            { SortingColumns.DefaultIdColumn, x => x.ResourceClaimActionAuthorizationStrategyId },
-            { nameof(ResourceClaimActionAuthStrategyModel.ResourceClaimActionId), x => x.ResourceClaimActionId },
-            { nameof(ResourceClaimActionAuthStrategyModel.AuthorizationStrategyId), x => x.AuthorizationStrategyId}
+            { SortingColumns.DefaultIdColumn, x => x.ResourceClaimId },
+            { nameof(ResourceClaimActionAuthStrategyModel.ResourceClaimName), x => x.ResourceClaimName }
         };
     }
 
-    public List<ResourceClaimActionAuthorizationStrategies> Execute(CommonQueryParams commonQueryParams)
+    public List<ResourceClaimActionAuthStrategyModel> Execute(CommonQueryParams commonQueryParams)
     {
-        Expression<Func<ResourceClaimActionAuthorizationStrategies, object>> columnToOrderBy = _orderByColumns.GetColumnToOrderBy(commonQueryParams.OrderBy);
+        Expression<Func<ResourceClaimActionAuthStrategyModel, object>> columnToOrderBy = _orderByColumns.GetColumnToOrderBy(commonQueryParams.OrderBy);
 
         return _securityContext.ResourceClaimActionAuthorizationStrategies
-            .Include(i => i.AuthorizationStrategy)
-            .Include(i => i.ResourceClaimAction)
-                .ThenInclude(i => i.ResourceClaim)
-            .Include(i => i.ResourceClaimAction)
-                .ThenInclude(i => i.Action)
+            // Group by ResourceClaimId and ResourceName to structure the JSON correctly
+            .GroupBy(gb => new
+            {
+                gb.ResourceClaimAction.ResourceClaimId,
+                gb.ResourceClaimAction.ResourceClaim.ResourceName
+            })
+            .Select(group => new ResourceClaimActionAuthStrategyModel
+            {
+                ResourceClaimId = group.Key.ResourceClaimId,
+                ResourceClaimName = group.Key.ResourceName,
+                // Group by ActionId and ActionName to create a list of actions within the resource
+                AuthorizationStrategiesForActions = group.GroupBy(gb => new
+                {
+                    gb.ResourceClaimAction.Action.ActionId,
+                    gb.ResourceClaimAction.Action.ActionName
+                })
+                .Select(groupedActions => new ActionWithAuthorizationStrategy
+                {
+                    ActionId = groupedActions.Key.ActionId,
+                    ActionName = groupedActions.Key.ActionName,
+                    // For each action, get the associated authorization strategies
+                    AuthorizationStrategies = groupedActions.Select(resourceClaimActionAuthorizationStrategies =>
+                    new AuthorizationStrategyModelForAction
+                    {
+                        AuthStrategyId = resourceClaimActionAuthorizationStrategies.AuthorizationStrategy.AuthorizationStrategyId,
+                        AuthStrategyName = resourceClaimActionAuthorizationStrategies.AuthorizationStrategy.AuthorizationStrategyName,
+                    }).ToList()
+                }).ToList()
+            })
             .OrderByColumn(columnToOrderBy, commonQueryParams.IsDescending)
             .Paginate(commonQueryParams.Offset, commonQueryParams.Limit, _options)
             .ToList();

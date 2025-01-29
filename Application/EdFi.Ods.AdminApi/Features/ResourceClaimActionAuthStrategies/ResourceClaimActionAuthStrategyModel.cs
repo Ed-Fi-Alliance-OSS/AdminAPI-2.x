@@ -7,11 +7,23 @@ namespace EdFi.Ods.AdminApi.Features.ResourceClaimActionAuthStrategies
 {
     public class ResourceClaimActionAuthStrategyModel
     {
-        public int ResourceClaimActionAuthorizationStrategyId { get; set; }
-        public int ResourceClaimActionId { get; set; }
+        public int ResourceClaimId { get; set; }
+        public string ResourceClaimName { get; set; } = string.Empty;
+
+        public IReadOnlyList<ActionWithAuthorizationStrategy> AuthorizationStrategiesForActions { get; set; } = new List<ActionWithAuthorizationStrategy>();
+    }
+
+    public class ActionWithAuthorizationStrategy
+    {
+        public int ActionId { get; set; }
         public string ActionName { get; set; } = string.Empty;
-        public string ResourceName { get; set; } = string.Empty;
-        public int AuthorizationStrategyId { get; set; }
-        public string AuthorizationStrategyName { get; set; } = string.Empty;
+        public IReadOnlyList<AuthorizationStrategyModelForAction> AuthorizationStrategies { get; set; } = new List<AuthorizationStrategyModelForAction>();
+
+    }
+
+    public class AuthorizationStrategyModelForAction
+    {
+        public int AuthStrategyId { get; set; }
+        public string AuthStrategyName { get; set; } = string.Empty;
     }
 }
