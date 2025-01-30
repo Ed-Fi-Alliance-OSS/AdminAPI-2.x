@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using EdFi.Ods.AdminApi.Features.ResourceClaimActions;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Security.DataAccess.Models;
@@ -20,17 +21,16 @@ public class GetResourceClaimActionsQueryTests : SecurityDataTestBase
     public void ShouldGetResourceClaimActions()
     {
         var skip = 0;
-        ResourceClaimAction[] results = null;
+        ResourceClaimActionModel[] results = null;
         using var securityContext = TestContext;
         var actions = SetupActions().Select(s => s.ActionId).ToArray();
         var resourceClaimId = SetupResourceClaims().FirstOrDefault().ResourceClaimId;
         var testResourceClaimActions = SetupResourceClaimActions(actions, resourceClaimId);
         var query = new GetResourceClaimActionsQuery(securityContext, Testing.GetAppSettings());
         results = query.Execute(new CommonQueryParams(skip, Testing.DefaultPageSizeLimit)).ToArray();
-        results.Length.ShouldBe(testResourceClaimActions.Count);
-        results.Select(x => x.ValidationRuleSetName).ShouldBe(testResourceClaimActions.Select(x => x.ValidationRuleSetName), true);
-        results.Select(x => x.ResourceClaimId).ShouldBe(testResourceClaimActions.Select(x => x.ResourceClaimId), true);
-        results.Select(x => x.ActionId).ShouldBe(testResourceClaimActions.Select(x => x.ActionId), true);
+        results.SelectMany(x => x.Actions).Count().ShouldBe(testResourceClaimActions.Count);
+        results.Select(x => x.ResourceClaimId).ShouldBe(testResourceClaimActions.Select(s => s.ResourceClaimId).Distinct(), true);
+        results.Select(x => x.ResourceName).ShouldBe(testResourceClaimActions.Select(x => x.ResourceClaim.ResourceName).Distinct(), true);
     }
 
     [Test]
@@ -39,21 +39,26 @@ public class GetResourceClaimActionsQueryTests : SecurityDataTestBase
         var offset = 1;
         var limit = 2;
 
-        ResourceClaimAction[] results = null;
+        ResourceClaimActionModel[] results = null;
         using var securityContext = TestContext;
         //Set actions
         var actions = SetupActions().Select(s => s.ActionId).ToArray();
         //Set resourceClaims
-        var resourceClaimId = SetupResourceClaims().FirstOrDefault().ResourceClaimId;
+        var resourceClaims = SetupResourceClaims(4);
 
+        foreach (var resourceClaim in resourceClaims)
+        {
+            var testResourceClaimActions = SetupResourceClaimActions(actions, resourceClaim.ResourceClaimId);
+        }
         //Add ResourceClaimActions
-        var testResourceClaimActions = SetupResourceClaimActions(actions, resourceClaimId);
         var query = new GetResourceClaimActionsQuery(securityContext, Testing.GetAppSettings());
         results = query.Execute(new CommonQueryParams(offset, limit)).ToArray();
 
         results.Length.ShouldBe(2);
-        results[0].ValidationRuleSetName.ShouldBe("Test2");
-        results[1].ValidationRuleSetName.ShouldBe("Test3");
+        results[0].ResourceName.ShouldBe("TestResourceClaim2.00");
+        results[1].ResourceName.ShouldBe("TestResourceClaim3.00");
+        results[0].Actions.Any().ShouldBe(true);
+        results[1].Actions.Any().ShouldBe(true);
     }
 
     private IReadOnlyCollection<ResourceClaimAction> SetupResourceClaimActions(int[] actions, int resourceClaimId)
