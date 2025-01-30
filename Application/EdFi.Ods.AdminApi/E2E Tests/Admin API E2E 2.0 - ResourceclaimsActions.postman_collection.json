@@ -1,0 +1,464 @@
+{
+	"info": {
+		"_postman_id": "fc8b75b9-efbc-4c45-8b88-267014e15afa",
+		"name": "Admin API E2E 2.0 - ResourceclaimsActions",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "646458"
+	},
+	"item": [
+		{
+			"name": "v2",
+			"item": [
+				{
+					"name": "ResourceclaimsActions",
+					"item": [
+						{
+							"name": "ResourceclaimsActions",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET ResourceClaims: Status code is OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"const response = pm.response.json();",
+											"",
+											"pm.test(\"GET ResourceClaimsActions: Response matches success format\", function () {",
+											"    pm.expect(response[0]).to.have.property(\"resourceClaimActionId\");",
+											"    pm.expect(response[0]).to.have.property(\"resourceClaimId\");",
+											"    pm.expect(response[0]).to.have.property(\"actionId\");",
+											"    pm.expect(response[0]).to.have.property(\"validationRuleSetName\");",
+											"});",
+											"",
+											"const GetResourceClaimsActionsSchema = {",
+											"  \"type\": \"array\",",
+											"  \"items\": [",
+											"    {",
+											"      \"type\": \"object\",",
+											"      \"properties\": {",
+											"        \"resourceClaimActionId\": {",
+											"          \"type\": \"integer\"",
+											"        },",
+											"        \"resourceClaimId\": {",
+											"          \"type\": \"integer\"",
+											"        },",
+											"        \"actionId\": {",
+											"          \"type\": \"integer\"",
+											"        },",
+											"        \"validationRuleSetName\": {",
+											"          \"type\": \"null\"",
+											"        }",
+											"      },",
+											"      \"required\": [",
+											"        \"resourceClaimActionId\",",
+											"        \"resourceClaimId\",",
+											"        \"actionId\",",
+											"        \"validationRuleSetName\"",
+											"      ]",
+											"    }",
+											"  ]",
+											"}",
+											"",
+											"pm.test(\"GET ResourceClaimsActions: Validation Schema Response\", () => {",
+											"    pm.response.to.have.jsonSchema(GetResourceClaimsActionsSchema);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/resourceClaimActions?offset={{offset}}&limit={{limit}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"resourceClaimActions"
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "{{offset}}"
+										},
+										{
+											"key": "limit",
+											"value": "{{limit}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ResourceclaimsActions - Without Limit and Offset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET ResourceClaims: Status code is OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"const response = pm.response.json();",
+											"",
+											"pm.test(\"GET ResourceClaimsActions: Response matches success format\", function () {",
+											"    pm.expect(response[0]).to.have.property(\"resourceClaimActionId\");",
+											"    pm.expect(response[0]).to.have.property(\"resourceClaimId\");",
+											"    pm.expect(response[0]).to.have.property(\"actionId\");",
+											"    pm.expect(response[0]).to.have.property(\"validationRuleSetName\");",
+											"});",
+											"",
+											"const GetResourceClaimsActionsSchema = {",
+											"  \"type\": \"array\",",
+											"  \"items\": [",
+											"    {",
+											"      \"type\": \"object\",",
+											"      \"properties\": {",
+											"        \"resourceClaimActionId\": {",
+											"          \"type\": \"integer\"",
+											"        },",
+											"        \"resourceClaimId\": {",
+											"          \"type\": \"integer\"",
+											"        },",
+											"        \"actionId\": {",
+											"          \"type\": \"integer\"",
+											"        },",
+											"        \"validationRuleSetName\": {",
+											"          \"type\": \"null\"",
+											"        }",
+											"      },",
+											"      \"required\": [",
+											"        \"resourceClaimActionId\",",
+											"        \"resourceClaimId\",",
+											"        \"actionId\",",
+											"        \"validationRuleSetName\"",
+											"      ]",
+											"    }",
+											"  ]",
+											"}",
+											"",
+											"pm.test(\"GET ResourceClaimsActions: Validation Schema Response\", () => {",
+											"    pm.response.to.have.jsonSchema(GetResourceClaimsActionsSchema);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/resourceClaimActions",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"resourceClaimActions"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ResourceclaimsActions - Without Offset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET ResourceClaims: Status code is OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"const response = pm.response.json();",
+											"",
+											"pm.test(\"GET ResourceClaimsActions: Response matches success format\", function () {",
+											"    pm.expect(response[0]).to.have.property(\"resourceClaimActionId\");",
+											"    pm.expect(response[0]).to.have.property(\"resourceClaimId\");",
+											"    pm.expect(response[0]).to.have.property(\"actionId\");",
+											"    pm.expect(response[0]).to.have.property(\"validationRuleSetName\");",
+											"});",
+											"",
+											"const GetResourceClaimsActionsSchema = {",
+											"  \"type\": \"array\",",
+											"  \"items\": [",
+											"    {",
+											"      \"type\": \"object\",",
+											"      \"properties\": {",
+											"        \"resourceClaimActionId\": {",
+											"          \"type\": \"integer\"",
+											"        },",
+											"        \"resourceClaimId\": {",
+											"          \"type\": \"integer\"",
+											"        },",
+											"        \"actionId\": {",
+											"          \"type\": \"integer\"",
+											"        },",
+											"        \"validationRuleSetName\": {",
+											"          \"type\": \"null\"",
+											"        }",
+											"      },",
+											"      \"required\": [",
+											"        \"resourceClaimActionId\",",
+											"        \"resourceClaimId\",",
+											"        \"actionId\",",
+											"        \"validationRuleSetName\"",
+											"      ]",
+											"    }",
+											"  ]",
+											"}",
+											"",
+											"pm.test(\"GET ResourceClaimsActions: Validation Schema Response\", () => {",
+											"    pm.response.to.have.jsonSchema(GetResourceClaimsActionsSchema);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/resourceClaimActions?limit={{limit}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"resourceClaimActions"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "{{limit}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ResourceclaimsActions - Without Limit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET ResourceClaims: Status code is OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"const response = pm.response.json();",
+											"",
+											"pm.test(\"GET ResourceClaimsActions: Response matches success format\", function () {",
+											"    pm.expect(response[0]).to.have.property(\"resourceClaimActionId\");",
+											"    pm.expect(response[0]).to.have.property(\"resourceClaimId\");",
+											"    pm.expect(response[0]).to.have.property(\"actionId\");",
+											"    pm.expect(response[0]).to.have.property(\"validationRuleSetName\");",
+											"});",
+											"",
+											"const GetResourceClaimsActionsSchema = {",
+											"  \"type\": \"array\",",
+											"  \"items\": [",
+											"    {",
+											"      \"type\": \"object\",",
+											"      \"properties\": {",
+											"        \"resourceClaimActionId\": {",
+											"          \"type\": \"integer\"",
+											"        },",
+											"        \"resourceClaimId\": {",
+											"          \"type\": \"integer\"",
+											"        },",
+											"        \"actionId\": {",
+											"          \"type\": \"integer\"",
+											"        },",
+											"        \"validationRuleSetName\": {",
+											"          \"type\": \"null\"",
+											"        }",
+											"      },",
+											"      \"required\": [",
+											"        \"resourceClaimActionId\",",
+											"        \"resourceClaimId\",",
+											"        \"actionId\",",
+											"        \"validationRuleSetName\"",
+											"      ]",
+											"    }",
+											"  ]",
+											"}",
+											"",
+											"pm.test(\"GET ResourceClaimsActions: Validation Schema Response\", () => {",
+											"    pm.response.to.have.jsonSchema(GetResourceClaimsActionsSchema);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/resourceClaimActions?offset={{offset}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"resourceClaimActions"
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "{{offset}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"function generateClientSecret() {",
+					"    const minLength = 32;",
+					"    const maxLength = 128;",
+					"    let result = '';",
+					"    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';",
+					"    const specialCharacters = '!@#$%^&*()_+{}:\"<>?|[];\\',./`~';",
+					"    const length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;",
+					"",
+					"    result += randomChar('abcdefghijklmnopqrstuvwxyz');",
+					"    result += randomChar('ABCDEFGHIJKLMNOPQRSTUVWXYZ');",
+					"    result += randomChar('0123456789');",
+					"    result += randomChar(specialCharacters);",
+					"",
+					"    for (let i = result.length; i < length; i++) {",
+					"        const charactersPlusSpecial = characters + specialCharacters;",
+					"        result += charactersPlusSpecial.charAt(Math.floor(Math.random() * charactersPlusSpecial.length));",
+					"    }",
+					"",
+					"    return shuffleString(result);",
+					"}",
+					"",
+					"function randomChar(str) {",
+					"    return str.charAt(Math.floor(Math.random() * str.length));",
+					"}",
+					"",
+					"function shuffleString(str) {",
+					"    const array = str.split('');",
+					"    for (let i = array.length - 1; i > 0; i--) {",
+					"        const j = Math.floor(Math.random() * (i + 1));",
+					"        [array[i], array[j]] = [array[j], array[i]];",
+					"    }",
+					"    return array.join('');",
+					"}",
+					"",
+					"let guid = pm.variables.replaceIn('{{$guid}}');",
+					"let client_secret =  generateClientSecret();",
+					"",
+					"let header = {",
+					"    'Content-Type': 'application/x-www-form-urlencoded'",
+					"};",
+					"",
+					"if (pm.variables.get(\"isMultitenant\") == \"true\") {",
+					"    header['Tenant'] = `${pm.variables.get(\"tenant1\")}`;",
+					"    pm.request.headers.upsert({key: 'Tenant', value: `${pm.variables.get(\"tenant1\")}` });",
+					"}",
+					"",
+					"pm.sendRequest({",
+					"    url: `${pm.variables.get(\"API_URL\")}/connect/register`,",
+					"    method: 'POST',",
+					"    header: header,",
+					"    body: {",
+					"        mode: 'urlencoded',",
+					"        urlencoded: [",
+					"            {key: 'ClientId', value: guid },",
+					"            {key: 'ClientSecret', value: client_secret },",
+					"            {key: 'DisplayName', value: guid }",
+					"        ]",
+					"    }",
+					"},",
+					"    (err, res) => {",
+					"        error = res.json().error",
+					"        if(error) {",
+					"            throw res.json().error_description",
+					"        }",
+					"",
+					"pm.sendRequest({",
+					"    url: `${pm.variables.get(\"API_URL\")}/connect/token`,",
+					"    method: 'POST',",
+					"    header: header,",
+					"    body: {",
+					"        mode: 'urlencoded',",
+					"        urlencoded: [",
+					"            {key: 'client_id', value: guid },",
+					"            {key: 'client_secret', value: client_secret },",
+					"            {key: 'grant_type', value: \"client_credentials\"},",
+					"            {key: 'scope', value: \"edfi_admin_api/full_access\"}",
+					"        ]",
+					"    }",
+					"},",
+					"    (err, res) => {",
+					"        error = res.json().error",
+					"        if(error) {",
+					"            throw res.json().error_description",
+					"        }",
+					"        pm.collectionVariables.set(\"TOKEN\", res.json().access_token)",
+					"});",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "TOKEN",
+			"value": ""
+		}
+	]
+}
