@@ -18,7 +18,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
 public interface IGetResourceClaimActionsQuery
 {
-    public List<ResourceClaimActionModel> Execute(CommonQueryParams commonQueryParams);
+    public IReadOnlyList<ResourceClaimActionModel> Execute(CommonQueryParams commonQueryParams);
 }
 
 public class GetResourceClaimActionsQuery : IGetResourceClaimActionsQuery
@@ -40,7 +40,7 @@ public class GetResourceClaimActionsQuery : IGetResourceClaimActionsQuery
         };
     }
 
-    public List<ResourceClaimActionModel> Execute(CommonQueryParams commonQueryParams)
+    public IReadOnlyList<ResourceClaimActionModel> Execute(CommonQueryParams commonQueryParams)
     {
         Expression<Func<ResourceClaimActionModel, object>> columnToOrderBy = _orderByColumns.GetColumnToOrderBy(commonQueryParams.OrderBy);
 
