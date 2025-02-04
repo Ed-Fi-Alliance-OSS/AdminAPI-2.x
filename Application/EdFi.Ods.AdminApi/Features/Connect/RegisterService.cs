@@ -3,19 +3,22 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Text.RegularExpressions;
 using EdFi.Ods.AdminApi.Infrastructure;
+using EdFi.Ods.AdminApi.Infrastructure.Context;
+using EdFi.Ods.AdminApi.Infrastructure.MultiTenancy;
 using EdFi.Ods.AdminApi.Infrastructure.Security;
 using FluentValidation;
 using FluentValidation.Results;
+using Microsoft.Extensions.Primitives;
 using OpenIddict.Abstractions;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Text.RegularExpressions;
 
 namespace EdFi.Ods.AdminApi.Features.Connect;
 
 public interface IRegisterService
 {
-    Task<bool> Handle(RegisterService.RegisterClientRequest request);
+    Task<bool> Handle(RegisterService.RegisterClientRequest request, string? tenantIdentifier);
 }
 
 public class RegisterService : IRegisterService
@@ -31,7 +34,7 @@ public class RegisterService : IRegisterService
         _applicationManager = applicationManager;
     }
 
-    public async Task<bool> Handle(RegisterClientRequest request)
+    public async Task<bool> Handle(RegisterClientRequest request, string? tenantIdentifier)
     {
         if (!await RegistrationIsEnabledOrNecessary())
             return false;
@@ -54,6 +57,11 @@ public class RegisterService : IRegisterService
                 OpenIddictConstants.Permissions.Prefixes.Scope + SecurityConstants.Scopes.AdminApiFullAccess
             },
         };
+
+        if (!string.IsNullOrEmpty(tenantIdentifier))
+        {
+            application.Permissions.Add($"tnt:{tenantIdentifier}");
+        }
 
         await _applicationManager.CreateAsync(application);
         return true;
