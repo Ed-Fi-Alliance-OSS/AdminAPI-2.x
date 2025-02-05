@@ -138,6 +138,31 @@ COPY --from=build /app .
 CMD ["cron", "-f"]
 ```
 
+### Add Docker compose for Development
+
+The `health-check-svs.yml` docker compose file provides a simple way to test building the image and logging the output.
+
+This might be moved or modified in the future to better support a multi-container environment.
+
+```yml
+version: "3.9"
+
+services:
+  health-check-service:
+    build:
+      context: ../
+      dockerfile: Docker/Dockerfile
+    volumes:
+      - service-logs:/var/log/achealthsvc.log
+    env_file:
+      - .env
+
+volumes:
+  service-logs:
+    name: health-check-service-logs
+
+```
+
 ## Testing Strategy
 
 The Docker file takes advantage of crontab file by piping the output of th cron executable to a log file. To ensure the executable is running, this log file is inspected to ensure the output from running the application is piped to the `achealthsvc.log` log file.
