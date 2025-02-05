@@ -18,7 +18,11 @@ For the purpose of the design, we assume that each of these workers can publish 
 
 ## Design Overview
 
-This design starts by stating clear assumptions and considerations when determining the solution. A recommendation follows, outlining suggested steps for running the workers on a schedule in a container environment using crontab. Following the recommendation is a testing strategy for ensuring the crontab task is running and logging,
+This design starts by stating clear assumptions and considerations about the problem statement and environment when determining the solution.
+
+A recommendation follows, outlining suggested steps for running the workers on a schedule in a container environment using crontab. This involves modifying a Docker file to support cron, as well as adding logs and environment variables to inject into the container.
+
+Following the recommendation is a testing strategy for ensuring the crontab task is running and logging.
 
 ## Design Details
 
