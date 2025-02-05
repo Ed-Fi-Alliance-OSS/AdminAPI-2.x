@@ -13,7 +13,7 @@
 					"name": "ResourceClaimActionAuthStrategies",
 					"item": [
 						{
-							"name": "resourceClaimActionAuthStrategies",
+							"name": "ResourceClaimActionAuthStrategies",
 							"event": [
 								{
 									"listen": "test",
@@ -121,7 +121,7 @@
 							"response": []
 						},
 						{
-							"name": "resourceClaimActionAuthStrategies - Without Limit and Offset",
+							"name": "ResourceClaimActionAuthStrategies - Without Limit and Offset",
 							"event": [
 								{
 									"listen": "test",
@@ -210,7 +210,7 @@
 							"response": []
 						},
 						{
-							"name": "resourceClaimActionAuthStrategies - Without Offset",
+							"name": "ResourceClaimActionAuthStrategies - Without Offset",
 							"event": [
 								{
 									"listen": "test",
@@ -314,7 +314,7 @@
 							"response": []
 						},
 						{
-							"name": "resourceClaimActionAuthStrategies - Without Limit",
+							"name": "ResourceClaimActionAuthStrategies - Without Limit",
 							"event": [
 								{
 									"listen": "test",
