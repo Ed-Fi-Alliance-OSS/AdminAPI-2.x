@@ -22,7 +22,9 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Model
         ICollection<OdsInstanceContextModel> OdsInstanceContexts { get; }
         ICollection<OdsInstanceDerivativeModel> OdsInstanceDerivatives { get; }
 
-        byte[]? Credetials { get; }
+        [JsonIgnore]
+        string? Credetials { get; }
+        
         public string? Status { get; set; }
     }
 

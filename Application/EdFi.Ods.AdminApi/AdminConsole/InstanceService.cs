@@ -80,7 +80,7 @@ public class InstanceService : IAdminConsoleInstancesService
                 dynamic apiCredentials = new ExpandoObject();
                 apiCredentials.ClientId = apiClient.Key;
                 apiCredentials.Secret = apiClient.Secret;
-                addInstanceRequest.Credetials = System.Text.Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(apiCredentials));
+                addInstanceRequest.Credetials = JsonConvert.SerializeObject(apiCredentials);
 
                 var odsContexts = _mapper.Map<List<Infrastructure.Services.Instances.Models.OdsInstanceContextModel>>(odsInstanceContexts.Where(x => x.OdsInstance.OdsInstanceId == odsInstance.OdsInstanceId));
                 var odsDerivatives = _mapper.Map<List<Infrastructure.Services.Instances.Models.OdsInstanceDerivativeModel>>(odsInstanceDerivatives.Where(x => x.OdsInstance.OdsInstanceId == odsInstance.OdsInstanceId));
