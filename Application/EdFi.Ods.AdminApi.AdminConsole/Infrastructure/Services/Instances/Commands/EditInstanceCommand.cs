@@ -17,74 +17,114 @@ using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
 using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Models;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Commands
 {
     public interface IEditInstanceCommand
     {
-        Task<Instance> Execute(int odsinstanceid, IEditInstanceModel instance);
+        Task<Instance> Execute(int odsinstanceid, IInstanceRequestModel instance);
     }
 
     public class EditInstanceCommand : IEditInstanceCommand
     {
         private readonly ICommandRepository<Instance> _instanceCommand;
         private readonly IQueriesRepository<Instance> _instanceQuery;
-        private readonly IEncryptionService _encryptionService;
-        private readonly string _encryptionKey;
+        private readonly IDbContext _dbContext;
 
-        public EditInstanceCommand(ICommandRepository<Instance> instanceCommand, IQueriesRepository<Instance> instanceQuery, IEncryptionKeyResolver encryptionKeyResolver, IEncryptionService encryptionService)
+        public EditInstanceCommand(ICommandRepository<Instance> instanceCommand, IQueriesRepository<Instance> instanceQuery, IDbContext dbContext)
         {
             _instanceCommand = instanceCommand;
             _instanceQuery = instanceQuery;
-            _encryptionKey = encryptionKeyResolver.GetEncryptionKey();
-            _encryptionService = encryptionService;
+            _dbContext = dbContext;
         }
 
-        public async Task<Instance> Execute(int odsInstanceId, IEditInstanceModel instance)
+        public async Task<Instance> Execute(int id, IInstanceRequestModel instance)
         {
-            var cleanedDocument = ExpandoObjectHelper.NormalizeExpandoObject(instance.Document);
+            var existingInstance = await _instanceQuery.Query().SingleOrDefaultAsync(w => w.Id == id) ?? throw new NotFoundException<int>("Instance", id);
 
-            var document = JsonConvert.SerializeObject(cleanedDocument, new JsonSerializerSettings
-            {
-                ContractResolver = new DefaultContractResolver(),
-                Converters = new List<JsonConverter> { new ExpandoObjectConverter() },
-                Formatting = Formatting.Indented
-            });
-
-            JsonNode? jnDocument = JsonNode.Parse(document);
-
-            var clientId = jnDocument!["clientId"]?.AsValue().ToString();
-            var clientSecret = jnDocument!["clientSecret"]?.AsValue().ToString();
-
-            var encryptedClientId = string.Empty;
-            var encryptedClientSecret = string.Empty;
-
-            if (!string.IsNullOrEmpty(clientId) && !string.IsNullOrEmpty(clientSecret))
-            {
-                _encryptionService.TryEncrypt(clientId, _encryptionKey, out encryptedClientId);
-                _encryptionService.TryEncrypt(clientSecret, _encryptionKey, out encryptedClientSecret);
-
-                jnDocument!["clientId"] = encryptedClientId;
-                jnDocument!["clientSecret"] = encryptedClientSecret;
-            }
-
-            try
-            {
-                var existingInstance = await _instanceQuery.Query().SingleOrDefaultAsync(w => w.OdsInstanceId == odsInstanceId) ?? throw new NotFoundException<int>("Instance", odsInstanceId);
-
-                existingInstance.Document = document;
-                await _instanceCommand.UpdateAsync(existingInstance);
-                return existingInstance;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
+            existingInstance.OdsInstanceId = instance.OdsInstanceId;
+            existingInstance.TenantId = instance.TenantId;
+            existingInstance.InstanceName = instance.Name;
+            existingInstance.InstanceType = instance.InstanceType;
+            await UpdateOdsInstanceDerivativesAsync(id, instance.OdsInstanceDerivatives);
+            await UpdateOdsInstanceContextsAsync(id, instance.OdsInstanceContexts);
+            await _instanceCommand.UpdateAsync(existingInstance);
+            return existingInstance;
         }
-    }
 
-    public interface IEditInstanceModel
-    {
-        ExpandoObject Document { get; }
+        public async Task UpdateOdsInstanceDerivativesAsync(int id, ICollection<OdsInstanceDerivativeModel> updatedList)
+        {
+            var existingList = await _dbContext.OdsInstanceDerivatives
+                .Where(d => d.Id == id)
+                .ToListAsync();
+
+            if (updatedList.Count == 1 && existingList.Count == 1)
+            {
+                var updatedDerivative = updatedList.FirstOrDefault();
+                if (updatedDerivative != null)
+                {
+                    existingList[0].DerivativeType = Enum.Parse<DerivativeType>(updatedDerivative.DerivativeType);
+                }
+            }
+            else
+            {
+                foreach (var updatedDerivative in updatedList)
+                {
+                    var existingDerivative = existingList
+                        .FirstOrDefault(e => e.DerivativeType == Enum.Parse<DerivativeType>(updatedDerivative.DerivativeType));
+
+                    if (existingDerivative == null)
+                    {
+                        _dbContext.OdsInstanceDerivatives.Add(new OdsInstanceDerivative
+                        {
+                            InstanceId = id,
+                            DerivativeType = Enum.Parse<DerivativeType>(updatedDerivative.DerivativeType)
+                        });
+                    }
+                }
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateOdsInstanceContextsAsync(int id, ICollection<OdsInstanceContextModel> updatedContexts)
+        {
+            var existingContexts = await _dbContext.OdsInstanceContexts
+                .Where(c => c.InstanceId == id)
+                .ToListAsync();
+
+            if (updatedContexts.Count == 1 && existingContexts.Count == 1)
+            {
+                existingContexts[0].ContextKey = updatedContexts.FirstOrDefault().ContextKey;
+                existingContexts[0].ContextValue = updatedContexts.FirstOrDefault().ContextValue;
+            }
+            else
+            {
+                foreach (var updatedContext in updatedContexts)
+                {
+                    var existingContext = existingContexts
+                        .FirstOrDefault(e => e.ContextKey == updatedContext.ContextKey);
+
+                    if (existingContext == null)
+                    {
+                        _dbContext.OdsInstanceContexts.Add(new OdsInstanceContext
+                        {
+                            InstanceId = id,
+                            ContextKey = updatedContext.ContextKey,
+                            ContextValue = updatedContext.ContextValue
+                        });
+                    }
+                    else
+                    {
+                        existingContext.ContextValue = updatedContext.ContextValue;
+                    }
+                }
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
+
     }
 }
