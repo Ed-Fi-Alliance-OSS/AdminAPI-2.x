@@ -1,0 +1,48 @@
+### KeyCloak auth 
+# @name admin
+POST https://localhost/auth/realms/myrealm/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=password&client_id=ac&username=myuser&password=123456
+
+### Get Vendors with key cloak token
+@auth_header_admin=Authorization: bearer {{admin.response.body.$.access_token}}
+
+GET https://localhost/adminapi/v2/vendors?offset=0&limit=25&direction=Descending
+content-type: application/json
+tenant: tenant1
+Authorization: bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJFR280NEFvb2tOWVJQM0VacVlzaE4zX0hIZDQ2OWZ1cFcxcVMxWi1BZGhnIn0.eyJleHAiOjE3Mzk1Mzk4MjcsImlhdCI6MTczOTUzOTUyNiwianRpIjoiNDAyN2Y3MmMtNTdmNS00ZTBiLTgwNGEtN2FlNDU3MGMxZjJkIiwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3QvYXV0aC9yZWFsbXMvbXlyZWFsbSIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiI3N2M1ZTE4Zi02OTg3LTQxYzMtYWU5Zi1iNmM5MTM1ZDg0NzkiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJhYyIsInNpZCI6Ijg4OTlmZGQwLWNiOTQtNGEyZi1iZmM3LTJiMDU1MTAxMTUzOCIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiaHR0cHM6Ly9sb2NhbGhvc3QvZWRmaWNvbnNvbGUvdjIuMy92Ny4yL2RzNC9zYWFzL3R4LyIsIioiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbXlyZWFsbSIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIGVkZmlfYWRtaW5fYXBpL2Z1bGxfYWNjZXNzIHByb2ZpbGUgZWRmaWFkbWluL2Z1bGwtYWNjZXNzIG9wZW5pZCIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkFDVXNlciBBQ1VzZXIiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJteXVzZXIiLCJnaXZlbl9uYW1lIjoiQUNVc2VyIiwiZmFtaWx5X25hbWUiOiJBQ1VzZXIifQ.h9DaH0r4UWeh8OwOG7deBRjGeH2w12-YBce3HtneCKBikJmCD5aKyoJ2QHnlXF8Sd8eAT8hta9Pp6dgSj4CLUrpjUHglYqq0PhnaoalP1Z_PabfjklKAXNkSoo50nyN6wgcleoEnjPMcXTUelgPZUbkAFJldYnxIM4pWiccZlnQ_E6voWk0jMGV7moOt67v0egVqVj2IkyZ9NOmFJ_GdXqe9BXDnzirUbNEkKibIr24M9bEvXhX3bw4wE1jUVS_xBDBVGp6ZUbqCs083e6Np8ZxRh6BamZVZQbB0C9dFP0mHmxDJNIzzkayv-h_p6cjBsrvoNyC1pI7Sd6LwmzPusw
+# {{auth_header_admin}}
+
+
+### Get OdsInstances
+
+GET https://localhost/adminapi/v2/odsInstances
+content-type: application/json
+tenant: tenant1
+{{auth_header_admin}}
+
+### POST OdsInstances
+
+POST https://localhost/adminapi/v2/odsInstances
+content-type: application/json
+{{auth_header_admin}}
+tenant: tenant1
+
+{
+    "name": "Test-OdsInstance-2",
+    "instanceType": "OdsInstance",
+    "connectionString": "Data Source=.\\;Initial Catalog=EdFi_Admin_Test;Integrated Security=True;Trusted_Connection=true;Encrypt=True;TrustServerCertificate=True"
+}
+
+### PUT OdsInstances
+
+PUT https://localhost:7214/v2/odsInstances/2
+content-type: application/json
+{{auth_header_admin}}
+
+{
+    "name": "Test-OdsInstance-1-m1",
+    "instanceType": "OdsInstance",
+    "connectionString": ""
+}

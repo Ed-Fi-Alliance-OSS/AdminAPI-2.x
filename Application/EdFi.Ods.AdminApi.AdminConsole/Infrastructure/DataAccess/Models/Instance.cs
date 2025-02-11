@@ -21,6 +21,11 @@ public class Instance
 
     public ICollection<OdsInstanceContext> OdsInstanceContexts { get; set; } = new List<OdsInstanceContext>();
     public ICollection<OdsInstanceDerivative> OdsInstanceDerivatives { get; set; } = new List<OdsInstanceDerivative>();
+
+    public Instance()
+    {
+        Status = OdsInstanceId.HasValue && OdsInstanceId > 0 ? InstanceStatus.Completed : InstanceStatus.Pending;
+    }
 }
 
 public enum InstanceStatus
