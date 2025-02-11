@@ -5,18 +5,14 @@
 
 using System.Dynamic;
 using AutoMapper;
-using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Commands;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Queries;
-using EdFi.Ods.AdminApi.Features.OdsInstanceContext;
-using EdFi.Ods.AdminApi.Features.OdsInstanceDerivative;
 using EdFi.Ods.AdminApi.Features.ODSInstances;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using log4net;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using static EdFi.Ods.AdminApi.AdminConsole.Features.Instances.AddInstance;
 
 namespace EdFi.Ods.AdminApi.AdminConsole;
@@ -69,48 +65,30 @@ public class InstanceService : IAdminConsoleInstancesService
         //get odsinstances
         var odsInstancesList = _getOdsInstancesQuery.Execute();
         var odsInstances = _mapper.Map<List<OdsInstanceModel>>(odsInstancesList);
-        var odsInstanceContexts = _mapper.Map<List<OdsInstanceContextModel>>(_getOdsInstanceContextsQuery.Execute());
-        var odsInstanceDerivatives = _mapper.Map<List<OdsInstanceDerivativeModel>>(_getOdsInstanceDerivativesQuery.Execute());
+        var odsInstanceContexts = _getOdsInstanceContextsQuery.Execute();
+        var odsInstanceDerivatives = _getOdsInstanceDerivativesQuery.Execute();
         foreach (var odsInstance in odsInstances)
         {
             //check if exist
             if (!instancesAdminConsole.Any(x => x.OdsInstanceId == odsInstance.OdsInstanceId))
             {
-                var apiClientOdsInstance = _getApiClientOdsInstanceQuery.Execute(apiClient.ApiClientId, odsInstance.OdsInstanceId);
-                if (apiClientOdsInstance == null)
-                {
-                    var odsInstanceValue = odsInstancesList.SingleOrDefault(o => o.OdsInstanceId == odsInstance.OdsInstanceId);
-                    ApiClientOdsInstance newApiClientOdsInstance = new ApiClientOdsInstance
-                    {
-                        ApiClient = apiClient,
-                        OdsInstance = odsInstanceValue
-                    };
-                    apiClientOdsInstance = _addApiClientOdsInstanceCommand.Execute(newApiClientOdsInstance);
-                }
                 //create
                 AddInstanceRequest addInstanceRequest = new AddInstanceRequest();
                 addInstanceRequest.OdsInstanceId = odsInstance.OdsInstanceId;
                 addInstanceRequest.TenantId = tenantId;
-                var odsContexts = odsInstanceContexts.Where(x => x.OdsInstanceId == odsInstance.OdsInstanceId);
-                var odsDerivatives = odsInstanceDerivatives.Where(x => x.OdsInstanceId == odsInstance.OdsInstanceId);
-                dynamic document = new ExpandoObject();
-                document.name = odsInstance.Name;
-                document.instanceType = odsInstance.InstanceType;
-                document.odsInstanceContexts = odsContexts;
-                document.odsInstanceDerivatives = odsDerivatives;
-                document.apiClientOdsInstance = new
-                {
-                    ApiClientOdsInstanceId = apiClientOdsInstance.ApiClientOdsInstanceId,
-                    ApiClient_ApiClientId = apiClientOdsInstance.ApiClient.ApiClientId,
-                    OdsInstance_OdsInstanceId = apiClientOdsInstance.OdsInstance.OdsInstanceId
-                };
-                addInstanceRequest.Document = document;
+                addInstanceRequest.InstanceType = odsInstance.InstanceType;
+                addInstanceRequest.Name = odsInstance.Name;
+
                 dynamic apiCredentials = new ExpandoObject();
                 apiCredentials.ClientId = apiClient.Key;
                 apiCredentials.Secret = apiClient.Secret;
-                addInstanceRequest.ApiCredentials = apiCredentials;
-                await _addInstanceCommand.Execute(addInstanceRequest);
+                addInstanceRequest.Credetials = JsonConvert.SerializeObject(apiCredentials);
 
+                var odsContexts = _mapper.Map<List<Infrastructure.Services.Instances.Models.OdsInstanceContextModel>>(odsInstanceContexts.Where(x => x.OdsInstance.OdsInstanceId == odsInstance.OdsInstanceId));
+                var odsDerivatives = _mapper.Map<List<Infrastructure.Services.Instances.Models.OdsInstanceDerivativeModel>>(odsInstanceDerivatives.Where(x => x.OdsInstance.OdsInstanceId == odsInstance.OdsInstanceId));
+                addInstanceRequest.OdsInstanceContexts = odsContexts;
+                addInstanceRequest.OdsInstanceDerivatives = odsDerivatives;
+                await _addInstanceCommand.Execute(addInstanceRequest);
             }
         }
         _log.Info("Instances have been created in the AdminConsole tables");
