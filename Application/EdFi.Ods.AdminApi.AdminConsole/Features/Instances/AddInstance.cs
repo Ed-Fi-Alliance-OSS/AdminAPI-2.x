@@ -39,8 +39,6 @@ public class AddInstance : IFeature
 
     public class AddInstanceRequest : IInstanceRequestModel
     {
-        public int OdsInstanceId { get; set; }
-
         public int TenantId { get; set; }
 
         public string? Name { get; set; }
@@ -56,5 +54,8 @@ public class AddInstance : IFeature
 
         [JsonIgnore]
         public string? Status { get; set; }
+
+        [JsonIgnore]
+        public int OdsInstanceId { get; set; }
     }
 }

@@ -32,7 +32,6 @@ public class EditInstance : IFeature
 
     public class EditInstanceRequest : IInstanceRequestModel
     {
-        public int OdsInstanceId { get; set; }
 
         public int TenantId { get; set; }
 
@@ -49,5 +48,8 @@ public class EditInstance : IFeature
 
         [JsonIgnore]
         public string? Status { get; set; }
+
+        [JsonIgnore]
+        public int OdsInstanceId { get; set; }
     }
 }

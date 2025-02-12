@@ -9,7 +9,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Features.Instances;
 
 public class InstanceModel
 {
-    public int? OdsInstanceId { get; set; }
+    public int Id { get; set; }
     public int TenantId { get; set; }
     public string Name { get; set; }
     public string InstanceType { get; set; }
