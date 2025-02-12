@@ -36,7 +36,8 @@ public class AddInstanceCommand : IAddInstanceCommand
             TenantId = instance.TenantId,
             InstanceName = instance.Name ?? string.Empty,
             InstanceType = instance.InstanceType,
-            Credentials = Convert.FromBase64String(instance.Credetials ?? string.Empty), // Fix for type conversion
+            Credentials = instance.Credetials,
+            Status = Enum.TryParse<InstanceStatus>(instance.Status, out var status) ? status : InstanceStatus.Pending,
             OdsInstanceContexts = instance.OdsInstanceContexts.Select(s => new OdsInstanceContext
             {
                 TenantId = instance.TenantId,

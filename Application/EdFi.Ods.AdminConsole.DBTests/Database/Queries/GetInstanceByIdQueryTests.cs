@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repositories;
@@ -81,6 +82,12 @@ public class GetInstanceByIdQueryTests : PlatformUsersContextTestBase
         public ICollection<OdsInstanceContextModel> OdsInstanceContexts { get; set; }
 
         public ICollection<OdsInstanceDerivativeModel> OdsInstanceDerivatives { get; set; }
+
+        [JsonIgnore]
+        public byte[] Credetials { get; set; }
+
+        [JsonIgnore]
+        public string Status { get; set; }
 
     }
 }

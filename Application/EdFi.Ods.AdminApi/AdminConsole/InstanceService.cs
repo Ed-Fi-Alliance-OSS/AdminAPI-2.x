@@ -6,6 +6,7 @@
 using System.Dynamic;
 using AutoMapper;
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Commands;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Queries;
 using EdFi.Ods.AdminApi.Features.ODSInstances;
@@ -27,10 +28,8 @@ public class InstanceService : IAdminConsoleInstancesService
     private readonly IGetOdsInstanceContextsQuery _getOdsInstanceContextsQuery;
     private readonly IGetOdsInstanceDerivativesQuery _getOdsInstanceDerivativesQuery;
     private readonly IAddInstanceCommand _addInstanceCommand;
-    private readonly IAddApiClientOdsInstanceCommand _addApiClientOdsInstanceCommand;
     private readonly IGetInstancesQuery _getInstancesQuery;
     private readonly IGetApiClientIdByApplicationIdQuery _getApiClientIdByApplicationIdQuery;
-    private readonly IGetApiClientOdsInstanceQuery _getApiClientOdsInstanceQuery;
     private readonly IMapper _mapper;
 
     private static readonly ILog _log = LogManager.GetLogger(typeof(InstanceService));
@@ -52,8 +51,6 @@ public class InstanceService : IAdminConsoleInstancesService
         _addInstanceCommand = addInstanceCommand;
         _getInstancesQuery = getInstancesQuery;
         _getApiClientIdByApplicationIdQuery = getApiClientIdByApplicationIdQuery;
-        _getApiClientOdsInstanceQuery = getApiClientOdsInstanceQuery;
-        _addApiClientOdsInstanceCommand = addApiClientOdsInstanceCommand;
         _mapper = mapper;
     }
 
@@ -78,11 +75,12 @@ public class InstanceService : IAdminConsoleInstancesService
                 addInstanceRequest.TenantId = tenantId;
                 addInstanceRequest.InstanceType = odsInstance.InstanceType;
                 addInstanceRequest.Name = odsInstance.Name;
+                addInstanceRequest.Status = nameof(InstanceStatus.Completed);
 
                 dynamic apiCredentials = new ExpandoObject();
                 apiCredentials.ClientId = apiClient.Key;
                 apiCredentials.Secret = apiClient.Secret;
-                addInstanceRequest.Credetials = JsonConvert.SerializeObject(apiCredentials);
+                addInstanceRequest.Credetials = System.Text.Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(apiCredentials));
 
                 var odsContexts = _mapper.Map<List<Infrastructure.Services.Instances.Models.OdsInstanceContextModel>>(odsInstanceContexts.Where(x => x.OdsInstance.OdsInstanceId == odsInstance.OdsInstanceId));
                 var odsDerivatives = _mapper.Map<List<Infrastructure.Services.Instances.Models.OdsInstanceDerivativeModel>>(odsInstanceDerivatives.Where(x => x.OdsInstance.OdsInstanceId == odsInstance.OdsInstanceId));
