@@ -123,7 +123,7 @@ public static class SecurityExtensions
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateAudience = false,
-                        ValidateIssuer = true,
+                        ValidateIssuer = configuration.Get<bool>("Authentication:OIDC:ValidateIssuer"),
                         ValidateIssuerSigningKey = false,
                         ValidIssuer = oidcIssuer,
                         IssuerSigningKeyResolver = (token, securityToken, kid, parameters) =>
@@ -137,6 +137,7 @@ public static class SecurityExtensions
                             // Server certificates should be verified during SSL/TLS connections
                             // Get public keys from keycloak
                             var client = new HttpClient(handler);
+                            Console.WriteLine("Issuer" + oidcIssuer);
                             var response = client.GetStringAsync(oidcIssuer + "/protocol/openid-connect/certs").Result;
                             var keys = JsonWebKeySet.Create(response).GetSigningKeys();
                             return keys;
