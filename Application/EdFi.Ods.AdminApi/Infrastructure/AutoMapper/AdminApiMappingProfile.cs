@@ -166,16 +166,7 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dest => dest.Actions, opt => opt.Ignore());//Action is ignore as we build it manually
             
         CreateMap<Instance, InstanceModel>()
-            .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstanceId))
-            .ForMember(dst => dst.TenantId, opt => opt.MapFrom(src => src.TenantId))
-            .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.InstanceName))
-            .ForMember(dst => dst.InstanceType, opt => opt.MapFrom(src => src.InstanceType))
-            .ForMember(dst => dst.BaseUrl, opt => opt.MapFrom(src => src.BaseUrl))
-            .ForMember(dst => dst.OdsInstanceContexts, opt => opt.MapFrom(src => src.OdsInstanceContexts))
-            .ForMember(dst => dst.OdsInstanceDerivatives, opt => opt.MapFrom(src => src.OdsInstanceDerivatives));
-
-        CreateMap<Instance, InstanceModel>()
-            .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstanceId))
+            .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dst => dst.TenantId, opt => opt.MapFrom(src => src.TenantId))
             .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.InstanceName))
             .ForMember(dst => dst.InstanceType, opt => opt.MapFrom(src => src.InstanceType))
