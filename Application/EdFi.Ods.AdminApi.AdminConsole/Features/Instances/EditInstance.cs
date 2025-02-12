@@ -47,6 +47,9 @@ public class EditInstance : IFeature
         public string? Status { get; set; }
         
         [JsonIgnore]
-        public string? Credetials { get; set; }
+        public byte[]? Credetials { get; set; }
+
+        [JsonIgnore]
+        public string? Status { get; set; }
     }
 }
