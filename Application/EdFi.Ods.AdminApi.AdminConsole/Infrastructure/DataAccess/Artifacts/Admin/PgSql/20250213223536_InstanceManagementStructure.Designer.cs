@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.Admin.PgSql
 {
     [DbContext(typeof(AdminConsolePgSqlContext))]
-    [Migration("20250210180429_InstanceManagementStructure")]
+    [Migration("20250213223536_InstanceManagementStructure")]
     partial class InstanceManagementStructure
     {
         /// <inheritdoc />
@@ -121,13 +121,13 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.Adm
 
                     b.Property<string>("ContextKey")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("ContextValue")
                         .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<int>("InstanceId")
                         .HasColumnType("integer");

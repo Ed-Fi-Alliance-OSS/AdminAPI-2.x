@@ -18,7 +18,7 @@ public class OdsInstanceContextConfiguration : IEntityTypeConfiguration<OdsInsta
         entity.HasKey(e => e.Id);
         entity.Property(e => e.Id).ValueGeneratedOnAdd();
         entity.Property(e => e.TenantId).IsRequired();
-        entity.Property(e => e.ContextKey).HasMaxLength(255).IsRequired();
-        entity.Property(e => e.ContextValue).HasMaxLength(1000);
+        entity.Property(e => e.ContextKey).HasMaxLength(50).IsRequired();
+        entity.Property(e => e.ContextValue).HasMaxLength(50);
     }
 }

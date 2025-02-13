@@ -1,10 +1,9 @@
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.Admin.PgSql
+namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.Admin.MsSql
 {
     /// <inheritdoc />
     public partial class InstanceManagementStructure : Migration
@@ -42,16 +41,16 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.Adm
                 name: "OdsInstanceId",
                 schema: "adminconsole",
                 table: "Instances",
-                type: "integer",
+                type: "int",
                 nullable: true,
                 oldClrType: typeof(int),
-                oldType: "integer");
+                oldType: "int");
 
             migrationBuilder.AddColumn<string>(
                 name: "BaseUrl",
                 schema: "adminconsole",
                 table: "Instances",
-                type: "character varying(250)",
+                type: "nvarchar(250)",
                 maxLength: 250,
                 nullable: true);
 
@@ -59,21 +58,21 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.Adm
                 name: "CompletedAt",
                 schema: "adminconsole",
                 table: "Instances",
-                type: "timestamp with time zone",
+                type: "datetime2",
                 nullable: true);
 
             migrationBuilder.AddColumn<byte[]>(
                 name: "Credentials",
                 schema: "adminconsole",
                 table: "Instances",
-                type: "BYTEA",
+                type: "VARBINARY(500)",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
                 name: "InstanceName",
                 schema: "adminconsole",
                 table: "Instances",
-                type: "character varying(100)",
+                type: "nvarchar(100)",
                 maxLength: 100,
                 nullable: false,
                 defaultValue: "");
@@ -82,7 +81,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.Adm
                 name: "InstanceType",
                 schema: "adminconsole",
                 table: "Instances",
-                type: "character varying(100)",
+                type: "nvarchar(100)",
                 maxLength: 100,
                 nullable: true);
 
@@ -90,7 +89,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.Adm
                 name: "OAuthUrl",
                 schema: "adminconsole",
                 table: "Instances",
-                type: "character varying(250)",
+                type: "nvarchar(250)",
                 maxLength: 250,
                 nullable: true);
 
@@ -98,7 +97,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.Adm
                 name: "ResourceUrl",
                 schema: "adminconsole",
                 table: "Instances",
-                type: "character varying(250)",
+                type: "nvarchar(250)",
                 maxLength: 250,
                 nullable: true);
 
@@ -106,7 +105,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.Adm
                 name: "Status",
                 schema: "adminconsole",
                 table: "Instances",
-                type: "character varying(50)",
+                type: "nvarchar(50)",
                 maxLength: 50,
                 nullable: false,
                 defaultValue: "");
@@ -116,12 +115,12 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.Adm
                 schema: "adminconsole",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    TenantId = table.Column<int>(type: "integer", nullable: false),
-                    ContextKey = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    ContextValue = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
-                    InstanceId = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TenantId = table.Column<int>(type: "int", nullable: false),
+                    ContextKey = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    ContextValue = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    InstanceId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -140,11 +139,11 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.Adm
                 schema: "adminconsole",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    TenantId = table.Column<int>(type: "integer", nullable: false),
-                    DerivativeType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    InstanceId = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TenantId = table.Column<int>(type: "int", nullable: false),
+                    DerivativeType = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    InstanceId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -243,18 +242,18 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.Adm
                 name: "OdsInstanceId",
                 schema: "adminconsole",
                 table: "Instances",
-                type: "integer",
+                type: "int",
                 nullable: false,
                 defaultValue: 0,
                 oldClrType: typeof(int),
-                oldType: "integer",
+                oldType: "int",
                 oldNullable: true);
 
             migrationBuilder.AddColumn<string>(
                 name: "Document",
                 schema: "adminconsole",
                 table: "Instances",
-                type: "jsonb",
+                type: "nvarchar(max)",
                 nullable: false,
                 defaultValue: "");
 
@@ -262,7 +261,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.Adm
                 name: "EdOrgId",
                 schema: "adminconsole",
                 table: "Instances",
-                type: "integer",
+                type: "int",
                 nullable: true);
 
             migrationBuilder.CreateIndex(
