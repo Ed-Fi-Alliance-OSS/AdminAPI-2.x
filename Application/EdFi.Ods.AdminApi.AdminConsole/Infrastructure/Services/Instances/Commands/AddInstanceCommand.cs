@@ -38,13 +38,13 @@ public class AddInstanceCommand : IAddInstanceCommand
             InstanceType = instance.InstanceType,
             Credentials = instance.Credetials,
             Status = Enum.TryParse<InstanceStatus>(instance.Status, out var status) ? status : InstanceStatus.Pending,
-            OdsInstanceContexts = instance.OdsInstanceContexts.Select(s => new OdsInstanceContext
+            OdsInstanceContexts = instance.OdsInstanceContexts?.Select(s => new OdsInstanceContext
             {
                 TenantId = instance.TenantId,
                 ContextKey = s.ContextKey,
                 ContextValue = s.ContextValue,
             }).ToList(),
-            OdsInstanceDerivatives = instance.OdsInstanceDerivatives.Select(s => new OdsInstanceDerivative
+            OdsInstanceDerivatives = instance.OdsInstanceDerivatives?.Select(s => new OdsInstanceDerivative
             {
                 TenantId = instance.TenantId,
                 DerivativeType = Enum.Parse<DerivativeType>(s.DerivativeType, true),

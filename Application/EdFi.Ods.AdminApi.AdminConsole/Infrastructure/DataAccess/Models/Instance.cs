@@ -19,8 +19,8 @@ public class Instance
     public byte[]? Credentials { get; set; }
     public DateTime? CompletedAt { get; set; }
 
-    public ICollection<OdsInstanceContext> OdsInstanceContexts { get; set; } = new List<OdsInstanceContext>();
-    public ICollection<OdsInstanceDerivative> OdsInstanceDerivatives { get; set; } = new List<OdsInstanceDerivative>();
+    public ICollection<OdsInstanceContext>? OdsInstanceContexts { get; set; }
+    public ICollection<OdsInstanceDerivative>? OdsInstanceDerivatives { get; set; }
 }
 
 public enum InstanceStatus

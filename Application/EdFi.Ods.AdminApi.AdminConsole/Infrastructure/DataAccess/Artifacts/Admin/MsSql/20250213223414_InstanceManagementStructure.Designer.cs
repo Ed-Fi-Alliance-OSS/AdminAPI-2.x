@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.Admin.MsSql
 {
     [DbContext(typeof(AdminConsoleMsSqlContext))]
-    [Migration("20250210180339_InstanceManagementStructure")]
+    [Migration("20250213223414_InstanceManagementStructure")]
     partial class InstanceManagementStructure
     {
         /// <inheritdoc />
@@ -121,13 +121,13 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.Adm
 
                     b.Property<string>("ContextKey")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("ContextValue")
                         .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("InstanceId")
                         .HasColumnType("int");
