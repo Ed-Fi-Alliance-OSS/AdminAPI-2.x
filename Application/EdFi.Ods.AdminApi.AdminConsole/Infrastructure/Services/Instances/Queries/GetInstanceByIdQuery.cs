@@ -25,12 +25,12 @@ public class GetInstanceByIdQuery : IGetInstanceByIdQuery
         _instanceQuery = instanceQuery;
     }
 
-    public async Task<Instance> Execute(int odsInstanceId)
+    public async Task<Instance> Execute(int id)
     {
         var instance = await _instanceQuery.Query()
             .Include(i => i.OdsInstanceContexts)
             .Include(i => i.OdsInstanceDerivatives)
-            .SingleOrDefaultAsync(instance => instance.OdsInstanceId == odsInstanceId);
+            .SingleOrDefaultAsync(instance => instance.Id == id);
 
         if (instance == null)
             return null;
