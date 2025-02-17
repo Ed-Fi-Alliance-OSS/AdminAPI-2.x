@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "e3216ed3-0648-42a0-962f-a38e5aecc4ca",
+		"_postman_id": "35330333-01aa-4853-ab2f-2be6e8b71d84",
 		"name": "Admin API E2E 2.0 - ResourceClaimActionAuthStrategies",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
-		"_exporter_id": "22794466"
+		"_exporter_id": "42411115"
 	},
 	"item": [
 		{
@@ -34,7 +34,10 @@
 											"        \"resourceClaimId\": {",
 											"          \"type\": \"integer\"",
 											"        },",
-											"        \"resourceClaimName\": {",
+											"        \"resourceName\": {",
+											"          \"type\": \"string\"",
+											"        },",
+											"        \"claimName\" : {",
 											"          \"type\": \"string\"",
 											"        },",
 											"        \"authorizationStrategiesForActions\": {",
@@ -78,7 +81,8 @@
 											"      },",
 											"      \"required\": [",
 											"        \"resourceClaimId\",",
-											"        \"resourceClaimName\"",
+											"        \"resourceName\",",
+											"        \"claimName\"",
 											"      ]",
 											"    }",
 											"  ]",
@@ -142,7 +146,10 @@
 											"        \"resourceClaimId\": {",
 											"          \"type\": \"integer\"",
 											"        },",
-											"        \"resourceClaimName\": {",
+											"        \"resourceName\": {",
+											"          \"type\": \"string\"",
+											"        },",
+											"        \"claimName\" : {",
 											"          \"type\": \"string\"",
 											"        },",
 											"        \"authorizationStrategiesForActions\": {",
@@ -186,7 +193,8 @@
 											"      },",
 											"      \"required\": [",
 											"        \"resourceClaimId\",",
-											"        \"resourceClaimName\"",
+											"        \"resourceName\",",
+											"        \"claimName\"",
 											"      ]",
 											"    }",
 											"  ]",
@@ -231,7 +239,10 @@
 											"        \"resourceClaimId\": {",
 											"          \"type\": \"integer\"",
 											"        },",
-											"        \"resourceClaimName\": {",
+											"        \"resourceName\": {",
+											"          \"type\": \"string\"",
+											"        },",
+											"        \"claimName\" : {",
 											"          \"type\": \"string\"",
 											"        },",
 											"        \"authorizationStrategiesForActions\": {",
@@ -275,7 +286,8 @@
 											"      },",
 											"      \"required\": [",
 											"        \"resourceClaimId\",",
-											"        \"resourceClaimName\"",
+											"        \"resourceName\",",
+											"        \"claimName\"",
 											"      ]",
 											"    }",
 											"  ]",
@@ -335,7 +347,10 @@
 											"        \"resourceClaimId\": {",
 											"          \"type\": \"integer\"",
 											"        },",
-											"        \"resourceClaimName\": {",
+											"        \"resourceName\": {",
+											"          \"type\": \"string\"",
+											"        },",
+											"        \"claimName\" : {",
 											"          \"type\": \"string\"",
 											"        },",
 											"        \"authorizationStrategiesForActions\": {",
@@ -379,7 +394,8 @@
 											"      },",
 											"      \"required\": [",
 											"        \"resourceClaimId\",",
-											"        \"resourceClaimName\"",
+											"        \"resourceName\",",
+											"        \"claimName\"",
 											"      ]",
 											"    }",
 											"  ]",
@@ -411,6 +427,237 @@
 										{
 											"key": "offset",
 											"value": "{{offset}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ResourceClaimActionAuthStrategies filter by resourceName",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET ResourceClaimActionAuthStrategies: Status code is OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"const response = pm.response.json();",
+											"",
+											"const GetResourceClaimActionAuthStrategiesActionsSchema = {",
+											"  \"type\": \"array\",",
+											"  \"items\": [",
+											"    {",
+											"      \"type\": \"object\",",
+											"      \"properties\": {",
+											"        \"resourceClaimId\": {",
+											"          \"type\": \"integer\"",
+											"        },",
+											"        \"resourceName\": {",
+											"          \"type\": \"string\"",
+											"        },",
+											"        \"claimName\" : {",
+											"          \"type\": \"string\"",
+											"        },",
+											"        \"authorizationStrategiesForActions\": {",
+											"          \"type\": \"array\",",
+											"          \"items\": [",
+											"          {",
+											"            \"type\": \"object\",",
+											"            \"properties\": {",
+											"              \"actionId\": {",
+											"                \"type\": \"integer\"",
+											"              },",
+											"              \"actionName\": {",
+											"                \"type\": \"string\"",
+											"              },",
+											"              \"authorizationStrategies\": {",
+											"                \"type\": \"array\",",
+											"                \"items\": [",
+											"                {",
+											"                  \"type\": \"object\",",
+											"                  \"properties\": {",
+											"                    \"authStrategyId\": {",
+											"                      \"type\": \"integer\"",
+											"                    },",
+											"                    \"authStrategyName\": {",
+											"                      \"type\": \"string\"",
+											"                    }",
+											"                  },",
+											"                  \"required\": [",
+											"                    \"authStrategyId\",",
+											"                    \"authStrategyName\"",
+											"                  ]",
+											"                }]",
+											"              }",
+											"            },",
+											"            \"required\": [",
+											"                \"actionId\",",
+											"                \"actionName\"",
+											"            ]",
+											"          }]",
+											"        }",
+											"      },",
+											"      \"required\": [",
+											"        \"resourceClaimId\",",
+											"        \"resourceName\",",
+											"        \"claimName\"",
+											"      ]",
+											"    }",
+											"  ]",
+											"}",
+											"",
+											"pm.test(\"GET ResourceClaimActionAuthStrategies: Validation Schema Response\", () => {",
+											"    pm.response.to.have.jsonSchema(GetResourceClaimActionAuthStrategiesActionsSchema);",
+											"});",
+											"",
+											"pm.test(\"GET ResourceClaimActionAuthStrategies: Response result includes resource claim action\", function () {",
+											"    const results = pm.response.json();",
+											"    pm.expect(results).to.have.lengthOf(1);",
+											"});",
+											"",
+											"pm.test(\"GET ResourceClaimActionAuthStrategies: Response result contains requested resource claim action\", function () {",
+											"    const results = pm.response.json();",
+											"    pm.expect(results[0].resourceName).to.eql(pm.collectionVariables.get(\"RESOURCENAMEFILTER\"));",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/resourceClaimActionAuthStrategies?resourceName={{RESOURCENAMEFILTER}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"resourceClaimActionAuthStrategies"
+									],
+									"query": [
+										{
+											"key": "resourceName",
+											"value": "{{RESOURCENAMEFILTER}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ResourceClaimActionAuthStrategies filter by non-existing resourceName",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET ResourceClaimActionAuthStrategies: Status code is OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"const response = pm.response.json();",
+											"",
+											"const GetResourceClaimActionAuthStrategiesActionsSchema = {",
+											"  \"type\": \"array\",",
+											"  \"items\": [",
+											"    {",
+											"      \"type\": \"object\",",
+											"      \"properties\": {",
+											"        \"resourceClaimId\": {",
+											"          \"type\": \"integer\"",
+											"        },",
+											"        \"resourceName\": {",
+											"          \"type\": \"string\"",
+											"        },",
+											"        \"claimName\" : {",
+											"          \"type\": \"string\"",
+											"        },",
+											"        \"authorizationStrategiesForActions\": {",
+											"          \"type\": \"array\",",
+											"          \"items\": [",
+											"          {",
+											"            \"type\": \"object\",",
+											"            \"properties\": {",
+											"              \"actionId\": {",
+											"                \"type\": \"integer\"",
+											"              },",
+											"              \"actionName\": {",
+											"                \"type\": \"string\"",
+											"              },",
+											"              \"authorizationStrategies\": {",
+											"                \"type\": \"array\",",
+											"                \"items\": [",
+											"                {",
+											"                  \"type\": \"object\",",
+											"                  \"properties\": {",
+											"                    \"authStrategyId\": {",
+											"                      \"type\": \"integer\"",
+											"                    },",
+											"                    \"authStrategyName\": {",
+											"                      \"type\": \"string\"",
+											"                    }",
+											"                  },",
+											"                  \"required\": [",
+											"                    \"authStrategyId\",",
+											"                    \"authStrategyName\"",
+											"                  ]",
+											"                }]",
+											"              }",
+											"            },",
+											"            \"required\": [",
+											"                \"actionId\",",
+											"                \"actionName\"",
+											"            ]",
+											"          }]",
+											"        }",
+											"      },",
+											"      \"required\": [",
+											"        \"resourceClaimId\",",
+											"        \"resourceName\",",
+											"        \"claimName\"",
+											"      ]",
+											"    }",
+											"  ]",
+											"}",
+											"",
+											"pm.test(\"GET ResourceClaimActionAuthStrategies: Validation Schema Response\", () => {",
+											"    pm.response.to.have.jsonSchema(GetResourceClaimActionAuthStrategiesActionsSchema);",
+											"});",
+											"",
+											"pm.test(\"GET ResourceClaimActionAuthStrategies: Response result not includes claim action\", function () {",
+											"    const results = pm.response.json();",
+											"    pm.expect(results).to.have.lengthOf(0);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/resourceClaimActionAuthStrategies?resourceName=test",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"resourceClaimActionAuthStrategies"
+									],
+									"query": [
+										{
+											"key": "resourceName",
+											"value": "test"
 										}
 									]
 								}
@@ -538,6 +785,11 @@
 		{
 			"key": "TOKEN",
 			"value": ""
+		},
+		{
+			"key": "RESOURCENAMEFILTER",
+			"value": "",
+			"type": "string"
 		}
 	]
 }

@@ -17,7 +17,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
 public interface IGetResourceClaimActionAuthorizationStrategiesQuery
 {
-    public IReadOnlyList<ResourceClaimActionAuthStrategyModel> Execute(CommonQueryParams commonQueryParams, string? resourceClaimName);
+    public IReadOnlyList<ResourceClaimActionAuthStrategyModel> Execute(CommonQueryParams commonQueryParams, string? resourceName);
 }
 
 public class GetResourceClaimActionAuthorizationStrategiesQuery : IGetResourceClaimActionAuthorizationStrategiesQuery
@@ -39,13 +39,13 @@ public class GetResourceClaimActionAuthorizationStrategiesQuery : IGetResourceCl
         };
     }
 
-    public IReadOnlyList<ResourceClaimActionAuthStrategyModel> Execute(CommonQueryParams commonQueryParams, string? resourceClaimName)
+    public IReadOnlyList<ResourceClaimActionAuthStrategyModel> Execute(CommonQueryParams commonQueryParams, string? resourceName)
     {
         Expression<Func<ResourceClaimActionAuthStrategyModel, object>> columnToOrderBy = _orderByColumns.GetColumnToOrderBy(commonQueryParams.OrderBy);
 
         return _securityContext.ResourceClaimActionAuthorizationStrategies
             // Group by ResourceClaimId and ResourceName to structure the JSON correctly
-            .Where(w => resourceClaimName == null || w.ResourceClaimAction.ResourceClaim.ResourceName == resourceClaimName)
+            .Where(w => resourceName == null || w.ResourceClaimAction.ResourceClaim.ResourceName == resourceName)
             .GroupBy(gb => new
             {
                 gb.ResourceClaimAction.ResourceClaimId,
