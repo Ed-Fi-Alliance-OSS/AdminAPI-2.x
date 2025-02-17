@@ -20,9 +20,9 @@ public class ReadResourceClaimActions : IFeature
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    internal Task<IResult> GetResourceClaimsActions(IGetResourceClaimActionsQuery getResourceClaimActionsQuery, IMapper mapper, [AsParameters] CommonQueryParams commonQueryParams)
+    internal Task<IResult> GetResourceClaimsActions(IGetResourceClaimActionsQuery getResourceClaimActionsQuery, IMapper mapper, [AsParameters] CommonQueryParams commonQueryParams, string? resourceClaimName)
     {
-        var resourceClaimActions = getResourceClaimActionsQuery.Execute(commonQueryParams);
+        var resourceClaimActions = getResourceClaimActionsQuery.Execute(commonQueryParams, resourceClaimName);
         return Task.FromResult(Results.Ok(resourceClaimActions));
     }
 }
