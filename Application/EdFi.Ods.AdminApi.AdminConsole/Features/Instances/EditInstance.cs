@@ -43,8 +43,6 @@ public class EditInstance : IFeature
 
         public ICollection<OdsInstanceDerivativeModel> OdsInstanceDerivatives { get; set; }
 
-        public string? Status { get; set; }
-        
         [JsonIgnore]
         public byte[]? Credetials { get; set; }
 
