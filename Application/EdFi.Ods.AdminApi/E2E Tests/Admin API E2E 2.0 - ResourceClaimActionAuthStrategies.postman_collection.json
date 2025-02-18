@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "35330333-01aa-4853-ab2f-2be6e8b71d84",
+		"_postman_id": "171c155d-9801-45f4-a4ca-18bba1fd8fca",
 		"name": "Admin API E2E 2.0 - ResourceClaimActionAuthStrategies",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
-		"_exporter_id": "42411115"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "646458"
 	},
 	"item": [
 		{
@@ -213,7 +213,16 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v2/resourceClaimActionAuthStrategies"
+								"url": {
+									"raw": "{{API_URL}}/v2/resourceClaimActionAuthStrategies",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"resourceClaimActionAuthStrategies"
+									]
+								}
 							},
 							"response": []
 						},
@@ -434,7 +443,7 @@
 							"response": []
 						},
 						{
-							"name": "ResourceClaimActionAuthStrategies filter by resourceName",
+							"name": "ResourceClaimActionAuthStrategies -  Filter by resourceName",
 							"event": [
 								{
 									"listen": "test",
@@ -552,7 +561,7 @@
 							"response": []
 						},
 						{
-							"name": "ResourceClaimActionAuthStrategies filter by non-existing resourceName",
+							"name": "ResourceClaimActionAuthStrategies - Filter by non-existing resourceName",
 							"event": [
 								{
 									"listen": "test",
@@ -671,9 +680,13 @@
 	],
 	"auth": {
 		"type": "bearer",
-		"bearer": {
-			"token": "{{TOKEN}}"
-		}
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{TOKEN}}",
+				"type": "string"
+			}
+		]
 	},
 	"event": [
 		{
@@ -788,7 +801,7 @@
 		},
 		{
 			"key": "RESOURCENAMEFILTER",
-			"value": "",
+			"value": "candidate",
 			"type": "string"
 		}
 	]
