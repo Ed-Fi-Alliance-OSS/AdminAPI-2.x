@@ -646,7 +646,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/resourceClaimActionAuthStrategies?resourceName=test",
+									"raw": "{{API_URL}}/v2/resourceClaimActionAuthStrategies?resourceName=asfdafagasc",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -657,7 +657,7 @@
 									"query": [
 										{
 											"key": "resourceName",
-											"value": "test"
+											"value": "asfdafagasc"
 										}
 									]
 								}

@@ -501,7 +501,6 @@
 											"",
 											"pm.test(\"GET ResourceClaimsActions: Response result includes resource claim action\", function () {",
 											"    const results = pm.response.json();",
-											"    console.log(results);",
 											"    pm.expect(results).to.have.lengthOf(0);",
 											"});",
 											""
@@ -515,7 +514,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/resourceClaimActions?resourceName=test",
+									"raw": "{{API_URL}}/v2/resourceClaimActions?resourceName=asfafdcasx",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -526,7 +525,7 @@
 									"query": [
 										{
 											"key": "resourceName",
-											"value": "test"
+											"value": "asfafdcasx"
 										}
 									]
 								}
