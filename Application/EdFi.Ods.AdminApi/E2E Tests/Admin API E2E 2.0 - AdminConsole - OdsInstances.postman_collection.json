@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "baf5be3b-7f7b-44c6-929a-88fb5632e6d8",
+		"_postman_id": "52a4a6d0-3f32-4eca-8a5b-78368a350077",
 		"name": "Admin API E2E 2.0 - AdminConsole - OdsInstances",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
-		"_exporter_id": "42411115"
+		"_exporter_id": "22794466"
 	},
 	"item": [
 		{
@@ -54,6 +54,91 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\r\n  \"tenantId\": 1,\r\n  \"name\": \"Instance #1 - 2024\",\r\n  \"instanceType\": \"enterprise\",\r\n  \"odsInstanceContexts\": [\r\n    {\r\n      \"contextKey\": \"schoolYearFromRoute\",\r\n      \"contextValue\": \"2024\"\r\n    }\r\n  ],\r\n  \"odsInstanceDerivatives\": [\r\n    {\r\n      \"derivativeType\": \"ReadReplica\"\r\n    }\r\n  ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{API_URL}}/adminconsole/odsInstances"
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstances Without OdsInstanceContext",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST AdminConsole OdsInstances: Status code is Accepted\", function () {\r",
+											"    pm.response.to.have.status(202);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"tenantId\": 1,\r\n  \"name\": \"Instance #1 - 2024 without OdsInstanceContext\",\r\n  \"instanceType\": \"enterprise\",\r\n  \"odsInstanceDerivatives\": [\r\n    {\r\n      \"derivativeType\": \"ReadReplica\"\r\n    }\r\n  ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{API_URL}}/adminconsole/odsInstances"
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstances Without OdsInstanceDerivative",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST AdminConsole OdsInstances: Status code is Accepted\", function () {\r",
+											"    pm.response.to.have.status(202);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"tenantId\": 1,\r\n  \"name\": \"Instance #1 - 2024 without OdsInstanceDerivative\",\r\n  \"instanceType\": \"enterprise\",\r\n  \"odsInstanceContexts\": [\r\n    {\r\n      \"contextKey\": \"schoolYearFromRoute\",\r\n      \"contextValue\": \"2024\"\r\n    }\r\n  ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -315,6 +400,224 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\r\n  \"tenantId\": 1,\r\n  \"name\": \"updated Instance #1 - 2024\",\r\n  \"instanceType\": \"updated enterprise\",\r\n  \"odsInstanceContexts\": [\r\n    {\r\n      \"contextKey\": \"schoolYearFromRoute\",\r\n      \"contextValue\": \"2025\"\r\n    }\r\n  ],\r\n  \"odsInstanceDerivatives\": [\r\n    {\r\n      \"derivativeType\": \"Snapshot\"\r\n    }\r\n  ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{API_URL}}/adminconsole/odsInstances/{{AdminConsoleCreatedOdsInstanceId}}"
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstances Remove OdsInstanceContext",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"PUT AdminConsole OdsInstances: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(204);\r",
+											"});\r",
+											"\r",
+											"let header = {\r",
+											"    \"Content-Type\": \"application/json\",\r",
+											"    \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+											"};\r",
+											"\r",
+											"if (pm.variables.get(\"isMultitenant\") == \"true\") {\r",
+											"    header['Tenant'] = `${pm.variables.get(\"tenant1\")}`;\r",
+											"}\r",
+											"\r",
+											"pm.sendRequest({\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/adminconsole/odsInstances/${pm.collectionVariables.get(\"AdminConsoleCreatedOdsInstanceId\")}`,\r",
+											"  method: 'GET',\r",
+											"  header: header\r",
+											"},\r",
+											"function (odsInstanceErr, odsInstanceResponse) {\r",
+											"  if(odsInstanceErr) \r",
+											"  { \r",
+											"    console.log(\"Error :\", odsInstanceErr); \r",
+											"  } \r",
+											"  const result = odsInstanceResponse.json();\r",
+											"  pm.test(\"PUT AdminConsole OdsInstances: Response includes updated AdminConsole OdsInstances\", function () {\r",
+											"    pm.expect(result.name).to.equal(\"updated Instance #1 - 2024\");\r",
+											"    pm.expect(result.instanceType).to.equal(\"updated enterprise\");\r",
+											"\r",
+											"    pm.expect(result.odsInstanceContexts.length).to.equal(0);\r",
+											"\r",
+											"    pm.expect(result.odsInstanceDerivatives.length).to.be.greaterThan(0);\r",
+											"   });\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"tenantId\": 1,\r\n  \"name\": \"updated Instance #1 - 2024\",\r\n  \"instanceType\": \"updated enterprise\",\r\n  \"odsInstanceDerivatives\": [\r\n    {\r\n      \"derivativeType\": \"Snapshot\"\r\n    }\r\n  ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{API_URL}}/adminconsole/odsInstances/{{AdminConsoleCreatedOdsInstanceId}}"
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstances Remove OdsInstanceDerivative",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"PUT AdminConsole OdsInstances: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(204);\r",
+											"});\r",
+											"\r",
+											"let header = {\r",
+											"    \"Content-Type\": \"application/json\",\r",
+											"    \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+											"};\r",
+											"\r",
+											"if (pm.variables.get(\"isMultitenant\") == \"true\") {\r",
+											"    header['Tenant'] = `${pm.variables.get(\"tenant1\")}`;\r",
+											"}\r",
+											"\r",
+											"pm.sendRequest({\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/adminconsole/odsInstances/${pm.collectionVariables.get(\"AdminConsoleCreatedOdsInstanceId\")}`,\r",
+											"  method: 'GET',\r",
+											"  header: header\r",
+											"},\r",
+											"function (odsInstanceErr, odsInstanceResponse) {\r",
+											"  if(odsInstanceErr) \r",
+											"  { \r",
+											"    console.log(\"Error :\", odsInstanceErr); \r",
+											"  } \r",
+											"  const result = odsInstanceResponse.json();\r",
+											"  pm.test(\"PUT AdminConsole OdsInstances: Response includes updated AdminConsole OdsInstances\", function () {\r",
+											"    pm.expect(result.name).to.equal(\"updated Instance #1 - 2024\");\r",
+											"    pm.expect(result.instanceType).to.equal(\"updated enterprise\");\r",
+											"\r",
+											"    pm.expect(result.odsInstanceContexts.length).to.equal(0);\r",
+											"\r",
+											"    pm.expect(result.odsInstanceDerivatives.length).to.equal(0);\r",
+											"   });\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"tenantId\": 1,\r\n  \"name\": \"updated Instance #1 - 2024\",\r\n  \"instanceType\": \"updated enterprise\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{API_URL}}/adminconsole/odsInstances/{{AdminConsoleCreatedOdsInstanceId}}"
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstances Adding Back Both",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"PUT AdminConsole OdsInstances: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(204);\r",
+											"});\r",
+											"\r",
+											"let header = {\r",
+											"    \"Content-Type\": \"application/json\",\r",
+											"    \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+											"};\r",
+											"\r",
+											"if (pm.variables.get(\"isMultitenant\") == \"true\") {\r",
+											"    header['Tenant'] = `${pm.variables.get(\"tenant1\")}`;\r",
+											"}\r",
+											"\r",
+											"pm.sendRequest({\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/adminconsole/odsInstances/${pm.collectionVariables.get(\"AdminConsoleCreatedOdsInstanceId\")}`,\r",
+											"  method: 'GET',\r",
+											"  header: header\r",
+											"},\r",
+											"function (odsInstanceErr, odsInstanceResponse) {\r",
+											"  if(odsInstanceErr) \r",
+											"  { \r",
+											"    console.log(\"Error :\", odsInstanceErr); \r",
+											"  } \r",
+											"  const result = odsInstanceResponse.json();\r",
+											"  pm.test(\"PUT AdminConsole OdsInstances: Response includes updated AdminConsole OdsInstances\", function () {\r",
+											"    pm.expect(result.name).to.equal(\"updated Instance #1 - 2024\");\r",
+											"    pm.expect(result.instanceType).to.equal(\"updated enterprise\");\r",
+											"\r",
+											"    pm.expect(result.odsInstanceContexts.length).to.be.greaterThan(0);\r",
+											"    pm.expect(result.odsInstanceContexts[0].contextValue).to.equal(\"2026\");\r",
+											"\r",
+											"    pm.expect(result.odsInstanceDerivatives.length).to.be.greaterThan(0);\r",
+											"    pm.expect(result.odsInstanceDerivatives[0].derivativeType).to.equal(\"ReadReplica\");\r",
+											"   });\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"tenantId\": 1,\r\n  \"name\": \"updated Instance #1 - 2024\",\r\n  \"instanceType\": \"updated enterprise\",\r\n  \"odsInstanceContexts\": [\r\n    {\r\n      \"contextKey\": \"schoolYearFromRoute\",\r\n      \"contextValue\": \"2026\"\r\n    }\r\n  ],\r\n  \"odsInstanceDerivatives\": [\r\n    {\r\n      \"derivativeType\": \"ReadReplica\"\r\n    }\r\n  ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
