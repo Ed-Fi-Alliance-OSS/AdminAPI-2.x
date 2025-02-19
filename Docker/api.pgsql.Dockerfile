@@ -15,7 +15,7 @@ LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
 # Disable the globaliztion invariant mode (set in base image)
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 ARG ADMIN_API_VERSION
-ENV ADMIN_API_VERSION=${ADMIN_API_VERSION}
+ENV ADMIN_API_VERSION="${ADMIN_API_VERSION:-2.2.0}"
 ENV ASPNETCORE_HTTP_PORTS=80
 
 WORKDIR /app
