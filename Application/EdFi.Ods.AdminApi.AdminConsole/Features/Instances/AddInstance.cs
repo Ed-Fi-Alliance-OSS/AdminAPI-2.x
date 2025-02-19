@@ -50,7 +50,7 @@ public class AddInstance : IFeature
         public ICollection<OdsInstanceDerivativeModel>? OdsInstanceDerivatives { get; set; }
 
         [JsonIgnore]
-        public byte[]? Credetials { get; set; }
+        public byte[]? Credentials { get; set; }
 
         [JsonIgnore]
         public string? Status { get; set; }
