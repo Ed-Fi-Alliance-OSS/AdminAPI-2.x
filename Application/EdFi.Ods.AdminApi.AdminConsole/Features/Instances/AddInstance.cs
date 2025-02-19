@@ -45,9 +45,9 @@ public class AddInstance : IFeature
 
         public string? InstanceType { get; set; }
 
-        public ICollection<OdsInstanceContextModel> OdsInstanceContexts { get; set; }
+        public ICollection<OdsInstanceContextModel>? OdsInstanceContexts { get; set; }
 
-        public ICollection<OdsInstanceDerivativeModel> OdsInstanceDerivatives { get; set; }
+        public ICollection<OdsInstanceDerivativeModel>? OdsInstanceDerivatives { get; set; }
 
         [JsonIgnore]
         public byte[]? Credetials { get; set; }
@@ -57,5 +57,8 @@ public class AddInstance : IFeature
 
         [JsonIgnore]
         public int OdsInstanceId { get; set; }
+
+        [JsonIgnore]
+        public int Id { get; set; }
     }
 }

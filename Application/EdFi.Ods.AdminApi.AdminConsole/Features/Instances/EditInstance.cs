@@ -10,6 +10,7 @@ using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Validator
 using EdFi.Ods.AdminApi.Common.Features;
 using EdFi.Ods.AdminApi.Common.Infrastructure;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Features.Instances;
@@ -23,8 +24,9 @@ public class EditInstance : IFeature
             .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
-    public async Task<IResult> Execute(InstanceValidator validator, IEditInstanceCommand editInstanceCommand, EditInstanceRequest request, int id)
+    public async Task<IResult> Execute(InstanceValidator validator, IEditInstanceCommand editInstanceCommand, [FromBody] EditInstanceRequest request, int id)
     {
+        request.Id = id;
         await validator.GuardAsync(request);
         var instance = await editInstanceCommand.Execute(id, request);
         return Results.NoContent();
@@ -35,13 +37,13 @@ public class EditInstance : IFeature
 
         public int TenantId { get; set; }
 
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
-        public string InstanceType { get; set; }
+        public string? InstanceType { get; set; }
 
-        public ICollection<OdsInstanceContextModel> OdsInstanceContexts { get; set; }
+        public ICollection<OdsInstanceContextModel>? OdsInstanceContexts { get; set; }
 
-        public ICollection<OdsInstanceDerivativeModel> OdsInstanceDerivatives { get; set; }
+        public ICollection<OdsInstanceDerivativeModel>? OdsInstanceDerivatives { get; set; }
 
         [JsonIgnore]
         public byte[]? Credetials { get; set; }
@@ -51,5 +53,8 @@ public class EditInstance : IFeature
 
         [JsonIgnore]
         public int OdsInstanceId { get; set; }
+
+        [JsonIgnore]
+        public int Id { get; set; }
     }
 }

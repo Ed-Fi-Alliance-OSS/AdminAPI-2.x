@@ -84,5 +84,8 @@ public class AddInstanceCommandTests : PlatformUsersContextTestBase
 
         [JsonIgnore]
         public string Status { get; set; }
+
+        [JsonIgnore]
+        public int Id { get; set; }
     }
 }

@@ -48,78 +48,61 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Comma
             existingInstance.TenantId = instance.TenantId;
             existingInstance.InstanceName = instance.Name;
             existingInstance.InstanceType = instance.InstanceType;
-            await UpdateOdsInstanceDerivativesAsync(id, instance.OdsInstanceDerivatives);
-            await UpdateOdsInstanceContextsAsync(id, instance.OdsInstanceContexts);
+            await UpdateOdsInstanceDerivativesAsync(id, instance.TenantId, instance.OdsInstanceDerivatives);
+            await UpdateOdsInstanceContextsAsync(id, instance.TenantId, instance.OdsInstanceContexts);
             await _instanceCommand.UpdateAsync(existingInstance);
             return existingInstance;
         }
 
-        public async Task UpdateOdsInstanceDerivativesAsync(int id, ICollection<OdsInstanceDerivativeModel> updatedList)
+        public async Task UpdateOdsInstanceDerivativesAsync(int id, int tenantId, ICollection<OdsInstanceDerivativeModel>? updatedOdsInstanceDerivatives)
         {
-            var existingList = await _dbContext.OdsInstanceDerivatives
-                .Where(d => d.Id == id)
+            var existingOdsInstanceDerivatives = await _dbContext.OdsInstanceDerivatives
+                .Where(d => d.InstanceId == id)
                 .ToListAsync();
 
-            if (updatedList.Count == 1 && existingList.Count == 1)
+            if (updatedOdsInstanceDerivatives == null)
             {
-                var updatedDerivative = updatedList.FirstOrDefault();
-                if (updatedDerivative != null)
-                {
-                    existingList[0].DerivativeType = Enum.Parse<DerivativeType>(updatedDerivative.DerivativeType);
-                }
+                _dbContext.OdsInstanceDerivatives.RemoveRange(existingOdsInstanceDerivatives);
             }
             else
             {
-                foreach (var updatedDerivative in updatedList)
+                _dbContext.OdsInstanceDerivatives.RemoveRange(existingOdsInstanceDerivatives);
+                foreach (var updatedItem in updatedOdsInstanceDerivatives)
                 {
-                    var existingDerivative = existingList
-                        .FirstOrDefault(e => e.DerivativeType == Enum.Parse<DerivativeType>(updatedDerivative.DerivativeType));
-
-                    if (existingDerivative == null)
+                    _dbContext.OdsInstanceDerivatives.Add(new OdsInstanceDerivative
                     {
-                        _dbContext.OdsInstanceDerivatives.Add(new OdsInstanceDerivative
-                        {
-                            InstanceId = id,
-                            DerivativeType = Enum.Parse<DerivativeType>(updatedDerivative.DerivativeType)
-                        });
-                    }
+                        InstanceId = id,
+                        TenantId = tenantId,
+                        DerivativeType = Enum.Parse<DerivativeType>(updatedItem.DerivativeType)
+                    });
                 }
             }
 
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task UpdateOdsInstanceContextsAsync(int id, ICollection<OdsInstanceContextModel> updatedContexts)
+        public async Task UpdateOdsInstanceContextsAsync(int id, int tenantId, ICollection<OdsInstanceContextModel>? updatedOdsInstanceContexts)
         {
-            var existingContexts = await _dbContext.OdsInstanceContexts
+            var existingOdsInstanceContexts = await _dbContext.OdsInstanceContexts
                 .Where(c => c.InstanceId == id)
                 .ToListAsync();
 
-            if (updatedContexts.Count == 1 && existingContexts.Count == 1)
+            if (updatedOdsInstanceContexts == null)
             {
-                existingContexts[0].ContextKey = updatedContexts.FirstOrDefault().ContextKey;
-                existingContexts[0].ContextValue = updatedContexts.FirstOrDefault().ContextValue;
+                _dbContext.OdsInstanceContexts.RemoveRange(existingOdsInstanceContexts);
             }
             else
             {
-                foreach (var updatedContext in updatedContexts)
+                _dbContext.OdsInstanceContexts.RemoveRange(existingOdsInstanceContexts);
+                foreach (var updatedContext in updatedOdsInstanceContexts)
                 {
-                    var existingContext = existingContexts
-                        .FirstOrDefault(e => e.ContextKey == updatedContext.ContextKey);
-
-                    if (existingContext == null)
+                    _dbContext.OdsInstanceContexts.Add(new OdsInstanceContext
                     {
-                        _dbContext.OdsInstanceContexts.Add(new OdsInstanceContext
-                        {
-                            InstanceId = id,
-                            ContextKey = updatedContext.ContextKey,
-                            ContextValue = updatedContext.ContextValue
-                        });
-                    }
-                    else
-                    {
-                        existingContext.ContextValue = updatedContext.ContextValue;
-                    }
+                        InstanceId = id,
+                        TenantId = tenantId,
+                        ContextKey = updatedContext.ContextKey,
+                        ContextValue = updatedContext.ContextValue
+                    });
                 }
             }
 

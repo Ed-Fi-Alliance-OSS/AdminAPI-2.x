@@ -15,6 +15,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Model
 {
     public interface IInstanceRequestModel
     {
+        int Id { get; set; }
         int OdsInstanceId { get; }
         int TenantId { get; }
         string? Name { get; }
