@@ -43,8 +43,8 @@ public class InstanceValidator : AbstractValidator<IInstanceRequestModel>
     {
         var tenantId = instance.TenantId;
         var existingInstance = await _instanceQuery.Query()
-            .FirstOrDefaultAsync(i => i.InstanceName == instanceName && i.TenantId == tenantId, cancellationToken);
-        return existingInstance == null || existingInstance.Id == instance.OdsInstanceId;
+            .FirstOrDefaultAsync(i => i.InstanceName == instanceName && i.TenantId == tenantId && i.Id != instance.Id, cancellationToken);
+        return existingInstance == null;
     }
 }
 
