@@ -31,7 +31,10 @@ services:
       additional_contexts:
          assets: ../../../../
       dockerfile: dev.mssql.Dockerfile
+      args:
+        ADMIN_API_VERSION: "${ADMIN_API_VERSION:-2.2.0}"
     environment:
+      ADMIN_API_VERSION: ${ADMIN_API_VERSION}
       ADMIN_MSSQL_HOST: db-admin
       SQLSERVER_ADMIN_DATASOURCE: db-admin
       SQLSERVER_SECURITY_DATASOURCE: db-admin
