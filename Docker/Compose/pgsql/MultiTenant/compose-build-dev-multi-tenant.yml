@@ -77,7 +77,10 @@ services:
       additional_contexts:
         assets: ../../../../
       dockerfile: dbadmin.Dockerfile
+      args:
+        ADMIN_API_VERSION: "${ADMIN_API_VERSION:-2.2.0}"
     environment:
+      ADMIN_API_VERSION: ${ADMIN_API_VERSION}
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
     ports:
@@ -93,7 +96,10 @@ services:
       additional_contexts:
         assets: ../../../../
       dockerfile: dbadmin.Dockerfile
+      args:
+        ADMIN_API_VERSION: "${ADMIN_API_VERSION:-2.2.0}"
     environment:
+      ADMIN_API_VERSION: ${ADMIN_API_VERSION}
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
     ports:
