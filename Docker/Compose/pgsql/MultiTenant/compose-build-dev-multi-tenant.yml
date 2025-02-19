@@ -31,7 +31,10 @@ services:
       additional_contexts:
         assets: ../../../../
       dockerfile: dev.pgsql.Dockerfile
+      args:
+        ADMIN_API_VERSION: "${ADMIN_API_VERSION:-2.2.0}"
     environment:
+      ADMIN_API_VERSION: ${ADMIN_API_VERSION}
       POSTGRES_PORT: 5432
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
