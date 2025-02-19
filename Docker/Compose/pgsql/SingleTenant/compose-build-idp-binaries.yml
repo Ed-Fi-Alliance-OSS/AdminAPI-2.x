@@ -68,7 +68,10 @@ services:
     build:
       context: ../../../Settings/DB-Admin/pgsql/
       dockerfile: Dockerfile
+      args:
+        ADMIN_API_VERSION: "${ADMIN_API_VERSION:-2.2.0}"
     environment:
+      ADMIN_API_VERSION: ${ADMIN_API_VERSION}
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
     ports:
