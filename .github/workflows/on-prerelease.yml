@@ -298,7 +298,9 @@ jobs:
           context: "{{defaultContext}}:Docker"
           cache-from: type=registry,ref=${{ env.IMAGE_NAME }}:pre
           cache-to: type=inline
-          build-args: VERSION=${{ steps.prepare-tags.outputs.VERSION }}
+          build-args: |
+            VERSION=${{ steps.prepare-tags.outputs.VERSION }}
+            ADMIN_API_VERSION=${{ steps.prepare-tags.outputs.VERSION }}
           file: api.pgsql.Dockerfile
           tags: ${{ steps.prepare-tags.outputs.APITAGS }}
           labels: ${{ steps.metaapi.outputs.labels }}
