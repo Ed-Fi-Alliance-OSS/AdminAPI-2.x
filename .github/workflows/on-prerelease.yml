@@ -318,7 +318,7 @@ jobs:
           context: "{{defaultContext}}:Docker/Settings/DB-Admin/pgsql"
           cache-from: type=registry,ref=${{ env.DATABASE_IMAGE_NAME }}:pre
           cache-to: type=inline
-          build-args: VERSION=${{ steps.prepare-tags.outputs.VERSION }}
+          build-args: ADMIN_API_VERSION=${{ steps.prepare-tags.outputs.VERSION }}
           file: Dockerfile
           tags: ${{ steps.prepare-tags.outputs.DBTAGS }}
           labels: ${{ steps.metadatabase.outputs.labels }}
