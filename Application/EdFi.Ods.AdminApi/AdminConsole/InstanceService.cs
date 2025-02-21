@@ -57,9 +57,10 @@ public class InstanceService : IAdminConsoleInstancesService
     public async Task InitializeInstancesAsync(int tenantId, int applicationId)
     {
         //get instances in adminconsole
-        var instancesAdminConsole = await _getInstancesQuery.Execute();
-        var apiClient = _mapper.Map<ApiClient>(_getApiClientIdByApplicationIdQuery.Execute(applicationId));
+        var instancesAdminConsole = await _getInstancesQuery.Execute(null);
+
         //get odsinstances
+
         var odsInstancesList = _getOdsInstancesQuery.Execute();
         var odsInstances = _mapper.Map<List<OdsInstanceModel>>(odsInstancesList);
         var odsInstanceContexts = _getOdsInstanceContextsQuery.Execute();
@@ -76,6 +77,8 @@ public class InstanceService : IAdminConsoleInstancesService
                 addInstanceRequest.InstanceType = odsInstance.InstanceType;
                 addInstanceRequest.Name = odsInstance.Name;
                 addInstanceRequest.Status = nameof(InstanceStatus.Completed);
+
+                var apiClient = _mapper.Map<ApiClient>(_getApiClientIdByApplicationIdQuery.Execute(applicationId));
 
                 dynamic apiCredentials = new ExpandoObject();
                 apiCredentials.ClientId = apiClient.Key;
