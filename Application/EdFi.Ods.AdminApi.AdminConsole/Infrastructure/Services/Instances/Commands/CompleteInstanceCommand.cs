@@ -69,6 +69,7 @@ public class CompleteInstanceCommand : ICompleteInstanceCommand
                 var odsInstanceDerivative = new Admin.DataAccess.Models.OdsInstanceDerivative()
                 {
                     DerivativeType = adminConsoleOdsInstanceDerivatives.DerivativeType.ToString(),
+                    ConnectionString = string.Empty
                 };
                 newOdsInstance.OdsInstanceDerivatives.Add(odsInstanceDerivative);
             }
@@ -87,7 +88,7 @@ public class CompleteInstanceCommand : ICompleteInstanceCommand
         if (application == null)
             throw new Exception("Vendor not found.");
 
-        var apiClient = new Admin.DataAccess.Models.ApiClient(true)
+        var apiClient = new ApiClient(true)
         {
             Name = _options.ApplicationName,
             KeyStatus = "Active",
@@ -103,46 +104,39 @@ public class CompleteInstanceCommand : ICompleteInstanceCommand
     {
         var transaction = _instanceCommand.BeginTransaction();
 
-        try
-        {
-            var adminConsoleInstance = await _instanceQuery.Query().Include(w => w.OdsInstanceContexts).Include(w => w.OdsInstanceDerivatives)
-                .SingleOrDefaultAsync(w => w.Id == id) ?? throw new NotFoundException<int>("Instance", id);
+        var adminConsoleInstance = await _instanceQuery.Query().Include(w => w.OdsInstanceContexts).Include(w => w.OdsInstanceDerivatives)
+            .SingleOrDefaultAsync(w => w.Id == id) ?? throw new NotFoundException<int>("Instance", id);
 
-            if (adminConsoleInstance.Status == InstanceStatus.Completed)
-                return adminConsoleInstance;
-
-            var newOdsInstance = NewOdsInstance(adminConsoleInstance);
-            var newApiClient = await NewApiClient();
-
-            var apiClientOdsInstance = new ApiClientOdsInstance()
-            {
-                ApiClient = newApiClient,
-                OdsInstance = newOdsInstance
-            };
-
-            _context.ApiClients.Add(newApiClient);
-            _context.OdsInstances.Add(newOdsInstance);
-            _context.ApiClientOdsInstances.Add(apiClientOdsInstance);
-            _context.SaveChanges();
-
-            adminConsoleInstance.Status = InstanceStatus.Completed;
-
-            dynamic apiCredentials = new ExpandoObject();
-            apiCredentials.ClientId = newApiClient.Key;
-            apiCredentials.Secret = newApiClient.Secret;
-            adminConsoleInstance.Credentials = System.Text.Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(apiCredentials));
-
-            await _instanceCommand.UpdateAsync(adminConsoleInstance);
-            await _instanceCommand.SaveChangesAsync();
-
-            await transaction.CommitAsync();
-
+        if (adminConsoleInstance.Status == InstanceStatus.Completed)
             return adminConsoleInstance;
-        }
-        catch (Exception ex)
+
+        var newOdsInstance = NewOdsInstance(adminConsoleInstance);
+        var newApiClient = await NewApiClient();
+
+        var apiClientOdsInstance = new ApiClientOdsInstance()
         {
-            await transaction.RollbackToSavepointAsync("");
-            throw new Exception();
-        }
+            ApiClient = newApiClient,
+            OdsInstance = newOdsInstance
+        };
+
+        _context.ApiClients.Add(newApiClient);
+        _context.OdsInstances.Add(newOdsInstance);
+        _context.ApiClientOdsInstances.Add(apiClientOdsInstance);
+        _context.SaveChanges();
+
+        adminConsoleInstance.OdsInstanceId = newOdsInstance.OdsInstanceId;
+        adminConsoleInstance.Status = InstanceStatus.Completed;
+
+        dynamic apiCredentials = new ExpandoObject();
+        apiCredentials.ClientId = newApiClient.Key;
+        apiCredentials.Secret = newApiClient.Secret;
+        adminConsoleInstance.Credentials = System.Text.Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(apiCredentials));
+
+        await _instanceCommand.UpdateAsync(adminConsoleInstance);
+        await _instanceCommand.SaveChangesAsync();
+
+        await transaction.CommitAsync();
+
+        return adminConsoleInstance;
     }
 }

@@ -20,7 +20,7 @@ public class EditInstance : IFeature
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         AdminApiEndpointBuilder.MapPut(endpoints, "/odsInstances/{id}", Execute)
-            .WithRouteOptions(b => b.WithResponseCode(202))
+            .WithRouteOptions(b => b.WithResponseCode(204))
             .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
