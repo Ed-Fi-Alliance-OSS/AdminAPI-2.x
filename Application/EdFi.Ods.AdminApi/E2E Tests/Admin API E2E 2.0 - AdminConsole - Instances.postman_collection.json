@@ -184,7 +184,7 @@
 							"response": []
 						},
 						{
-							"name": "Instances - Pending",
+							"name": "OdsInstances - Pending",
 							"event": [
 								{
 									"listen": "test",
@@ -253,7 +253,7 @@
 							"response": []
 						},
 						{
-							"name": "Instances - Completed",
+							"name": "OdsInstances - Completed",
 							"event": [
 								{
 									"listen": "test",
