@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "fcd4e28c-0ba6-412d-b318-9180f831997d",
-		"name": "Admin API E2E 2.0 - AdminConsole - Instances - ADMINAPI-1154",
+		"name": "Admin API E2E 2.0 - AdminConsole - Instances - ADMINAPI-1152",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "42536960"
 	},
@@ -127,121 +127,6 @@
 							"response": []
 						},
 						{
-							"name": "Instances",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"GET Instances: Status code is OK\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"});\r",
-											"\r",
-											"const response = pm.response.json();\r",
-											"const results = pm.response.json();\r",
-											"\r",
-											"pm.test(\"GET Instances: Response result includes Instances\", function () {\r",
-											"    const results = pm.response.json();\r",
-											"    pm.expect(results.length).to.be.greaterThan(0);   \r",
-											"\r",
-											"    if (results[0].id){\r",
-											"        pm.collectionVariables.set(\"CreatedInstanceId\", results[0].id);\r",
-											"    }\r",
-											"});\r",
-											"\r",
-											"const GetInstancesSchema = {\r",
-											"  \"type\": \"array\",\r",
-											"  \"items\": [\r",
-											"    {\r",
-											"      \"type\": \"object\",\r",
-											"      \"properties\": {\r",
-											"        \"tenantId\": {\r",
-											"          \"type\": \"integer\"\r",
-											"        },\r",
-											"        \"tenantName\": {\r",
-											"          \"type\": \"string\"\r",
-											"        },\r",
-											"        \"instanceId\": {\r",
-											"          \"type\": \"integer\"\r",
-											"        },\r",
-											"        \"odsInstanceId\": {\r",
-											"          \"type\": \"integer\"\r",
-											"        },\r",
-											"        \"instanceName\": {\r",
-											"          \"type\": \"string\"\r",
-											"        },\r",
-											"        \"resourceUrl\": {\r",
-											"          \"type\": \"string\"\r",
-											"        },\r",
-											"        \"oauthUrl\": {\r",
-											"          \"type\": \"string\"\r",
-											"        },\r",
-											"        \"clientId\": {\r",
-											"          \"type\": \"string\"\r",
-											"        },\r",
-											"        \"clientSecret\": {\r",
-											"          \"type\": \"string\"\r",
-											"        },\r",
-											"        \"status\": {\r",
-											"          \"type\": \"string\"\r",
-											"        },\r",
-											"      },\r",
-											"      \"required\": [\r",
-											"        \"tenantId\",\r",
-											"        \"tenantName\",\r",
-											"        \"instanceId\",\r",
-											"        \"odsInstanceId\"\r",
-											"      ]\r",
-											"    }\r",
-											"  ]\r",
-											"}\r",
-											"\r",
-											"pm.test(\"GET Instances: Validation Schema Response\", () => {\r",
-											"    pm.response.to.have.jsonSchema(GetInstancesSchema);\r",
-											"});\r",
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								},
-								{
-									"listen": "prerequest",
-									"script": {
-										"packages": {},
-										"type": "text/javascript"
-									}
-								}
-							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{API_URL}}/adminconsole/instances",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"adminconsole",
-										"instances"
-									]
-								}
-							},
-							"response": []
-						},
-						{
 							"name": "Instance by Id",
 							"event": [
 								{
@@ -325,73 +210,6 @@
 									"script": {
 										"exec": [
 											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{API_URL}}/adminconsole/instances/{{CreatedInstanceId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"adminconsole",
-										"instances",
-										"{{CreatedInstanceId}}"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Instance by Id - Not Found - Different Tenant",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"if (pm.variables.get(\"isMultitenant\") == \"true\") {\r",
-											"    // restore Tenant Header\r",
-											"    header['Tenant'] = `${pm.variables.get(\"tenant1\")}`;\r",
-											"    pm.request.headers.upsert({key: 'Tenant', value: `${pm.variables.get(\"tenant1\")}` });\r",
-											"\r",
-											"    pm.test(\"GET Instances: Status code is 404\", function () {\r",
-											"        pm.response.to.have.status(404);\r",
-											"    });\r",
-											"}"
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								},
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"if (pm.variables.get(\"isMultitenant\") == \"true\") {\r",
-											"    header['Tenant'] = `${pm.variables.get(\"tenant2\")}`;\r",
-											"    pm.request.headers.upsert({key: 'Tenant', value: `${pm.variables.get(\"tenant1\")}` });\r",
-											"}\r",
-											"else{\r",
-											"    console.log(\"Request not sent: The system is not configured for multi-tenant.\");\r",
-											"}"
 										],
 										"type": "text/javascript",
 										"packages": {}
@@ -579,6 +397,306 @@
 									"script": {
 										"exec": [
 											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/adminconsole/instances?status=completed",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"adminconsole",
+										"instances"
+									],
+									"query": [
+										{
+											"key": "status",
+											"value": "completed"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Instances - Different Tenant",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.variables.get(\"isMultitenant\") == \"true\") {\r",
+											"    // restore Tenant Header\r",
+											"    header['Tenant'] = `${pm.variables.get(\"tenant1\")}`;\r",
+											"    pm.request.headers.upsert({key: 'Tenant', value: `${pm.variables.get(\"tenant1\")}` });\r",
+											"\r",
+											"    pm.test(\"GET Instances: Status code is OK\", function () {\r",
+											"        pm.response.to.have.status(200);\r",
+											"    });\r",
+											"\r",
+											"    const response = pm.response.json();\r",
+											"\r",
+											"    pm.test(\"GET Instances: Response result should be empty\", function () {\r",
+											"        const results = pm.response.json();\r",
+											"        pm.expect(results.length).to.equal(0);\r",
+											"    });\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"if (pm.variables.get(\"isMultitenant\") == \"true\") {\r",
+											"    header['Tenant'] = `${pm.variables.get(\"tenant2\")}`;\r",
+											"    pm.request.headers.upsert({key: 'Tenant', value: `${pm.variables.get(\"tenant2\")}` });\r",
+											"}\r",
+											"else{\r",
+											"    console.log(\"Request not sent: The system is not configured for multi-tenant.\");\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/adminconsole/instances",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"adminconsole",
+										"instances"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Instance by Id - Not Found - Different Tenant",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.variables.get(\"isMultitenant\") == \"true\") {\r",
+											"    // restore Tenant Header\r",
+											"    header['Tenant'] = `${pm.variables.get(\"tenant1\")}`;\r",
+											"    pm.request.headers.upsert({key: 'Tenant', value: `${pm.variables.get(\"tenant1\")}` });\r",
+											"\r",
+											"    pm.test(\"GET Instances: Status code is 404\", function () {\r",
+											"        pm.response.to.have.status(404);\r",
+											"    });\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"if (pm.variables.get(\"isMultitenant\") == \"true\") {\r",
+											"    header['Tenant'] = `${pm.variables.get(\"tenant2\")}`;\r",
+											"    pm.request.headers.upsert({key: 'Tenant', value: `${pm.variables.get(\"tenant2\")}` });\r",
+											"}\r",
+											"else{\r",
+											"    console.log(\"Request not sent: The system is not configured for multi-tenant.\");\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/adminconsole/instances/{{CreatedInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"adminconsole",
+										"instances",
+										"{{CreatedInstanceId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Instances - Pending - Different Tenant",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.variables.get(\"isMultitenant\") == \"true\") {\r",
+											"    // restore Tenant Header\r",
+											"    header['Tenant'] = `${pm.variables.get(\"tenant1\")}`;\r",
+											"    pm.request.headers.upsert({key: 'Tenant', value: `${pm.variables.get(\"tenant1\")}` });\r",
+											"\r",
+											"    pm.test(\"GET Instances: Status code is OK\", function () {\r",
+											"        pm.response.to.have.status(200);\r",
+											"    });\r",
+											"\r",
+											"    const response = pm.response.json();\r",
+											"\r",
+											"    pm.test(\"GET Instances: Response result should be empty\", function () {\r",
+											"        const results = pm.response.json();\r",
+											"        pm.expect(results.length).to.equal(0);\r",
+											"    });\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"if (pm.variables.get(\"isMultitenant\") == \"true\") {\r",
+											"    header['Tenant'] = `${pm.variables.get(\"tenant2\")}`;\r",
+											"    pm.request.headers.upsert({key: 'Tenant', value: `${pm.variables.get(\"tenant2\")}` });\r",
+											"}\r",
+											"else{\r",
+											"    console.log(\"Request not sent: The system is not configured for multi-tenant.\");\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/adminconsole/instances?status=pending",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"adminconsole",
+										"instances"
+									],
+									"query": [
+										{
+											"key": "status",
+											"value": "pending"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Instances - Completed - Different Tenant",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.variables.get(\"isMultitenant\") == \"true\") {\r",
+											"    // restore Tenant Header\r",
+											"    header['Tenant'] = `${pm.variables.get(\"tenant1\")}`;\r",
+											"    pm.request.headers.upsert({key: 'Tenant', value: `${pm.variables.get(\"tenant1\")}` });\r",
+											"\r",
+											"    pm.test(\"GET Instances: Status code is OK\", function () {\r",
+											"        pm.response.to.have.status(200);\r",
+											"    });\r",
+											"\r",
+											"    const results = pm.response.json();\r",
+											"\r",
+											"    pm.test(\"GET Instances: Response result should be empty\", function () {\r",
+											"        const results = pm.response.json();\r",
+											"        pm.expect(results.length).to.equal(0);\r",
+											"    });\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"if (pm.variables.get(\"isMultitenant\") == \"true\") {\r",
+											"    header['Tenant'] = `${pm.variables.get(\"tenant2\")}`;\r",
+											"    pm.request.headers.upsert({key: 'Tenant', value: `${pm.variables.get(\"tenant2\")}` });\r",
+											"}\r",
+											"else{\r",
+											"    console.log(\"Request not sent: The system is not configured for multi-tenant.\");\r",
+											"}"
 										],
 										"type": "text/javascript",
 										"packages": {}
