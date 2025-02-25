@@ -30,9 +30,9 @@ public class ReadWorkerInstance : IFeature
             .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
-    internal async Task<IResult> GetInstances(IMapper mapper, [FromServices] IGetInstancesQuery getInstancesQuery)
+    internal async Task<IResult> GetInstances(IMapper mapper, [FromServices] IGetInstancesQuery getInstancesQuery, string? tenantName, string? status)
     {
-        var instances = await getInstancesQuery.Execute();
+        var instances = await getInstancesQuery.Execute(tenantName, status);
         var instanceModels = mapper.Map<List<InstanceWorkerModel>>(instances);
         return Results.Ok(instanceModels);
     }

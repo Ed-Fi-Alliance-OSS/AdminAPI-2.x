@@ -13,7 +13,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Queri
 
 public interface IGetInstancesQuery
 {
-    Task<IEnumerable<Instance>> Execute();
+    Task<IEnumerable<Instance>> Execute(string? tenantName = null, string? status = null);
 }
 
 public class GetInstancesQuery : IGetInstancesQuery
@@ -28,12 +28,27 @@ public class GetInstancesQuery : IGetInstancesQuery
         _encryptionKey = encryptionKeyResolver.GetEncryptionKey();
         _encryptionService = encryptionService;
     }
-    public async Task<IEnumerable<Instance>> Execute()
+    public async Task<IEnumerable<Instance>> Execute(string? tenantName, string? status)
     {
-        return await _instanceQuery.Query()
+        var query = _instanceQuery.Query()
             .Include(i => i.OdsInstanceContexts)
             .Include(i => i.OdsInstanceDerivatives)
-            .AsNoTracking()
-            .ToListAsync();
+            .AsNoTracking();
+
+        if (!string.IsNullOrEmpty(tenantName))
+        {
+            query = query.Where(i => i.TenantName == tenantName);
+        }
+
+        if (!string.IsNullOrEmpty(status))
+        {
+            if(!Enum.TryParse<InstanceStatus>(status, true, out var statusEnum))
+            {
+                throw new ArgumentException($"'{status}' is invalid state. Allowed values: {string.Join(", ", Enum.GetNames(typeof(InstanceStatus)))}");
+            }
+            query = query.Where(i => i.Status == statusEnum);
+        }
+
+        return await query.ToListAsync();
     }
 }
