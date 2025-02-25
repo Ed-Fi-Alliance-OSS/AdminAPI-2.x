@@ -149,8 +149,6 @@ The `health-check-svs.yml` docker compose file provides a simple way to test bui
 This might be moved or modified in the future to better support a multi-container environment.
 
 ```yml
-version: "3.9"
-
 services:
   health-check-service:
     build:
@@ -173,16 +171,33 @@ The Docker file takes advantage of crontab file by piping the output of th cron 
 
 To verify the schedule, a user can build the image using the Dockerfile and docker-compose included in the `/Docker/` directory.
 
-`docker compose -f .\Docker\health-check-svc.yml up`
+`docker compose -f .\Docker\health-check-svc.yml --env-file .env up`
 
-Can check that the job is in the table of jobs to run
+where `.env` is the target system environment file.
+
+Note: the `-d` flag can be appended if the system administrator desired to detach the process from the terminal and run in the background.
+
+To check that the job is in the table of jobs, run:
 `$ crontab -l`
 
 To verify the environment variables can be seen, in the container, once can use the `env` command from a connected shell, and inspect the values returned.
 
 ## Additional Notes
 
-This holds any additional questions or comments that do not fit into the design spec above.
+### Adhoc / single execution
+
+There might be an instance where a system administrator may choose to run this process in an ad-hoc fashion. In this case, the administrator should execute a build directly on the target system, followed by running the generated dll file.
+
+This process will resemble the following:
+
+Build
+`dotnet restore && dotnet publish -c Release -o /app`
+
+Change directory
+`cd /app`
+
+Run the dll
+`dotnet EdFi.AdminConsole.HealthCheckService.dll`
 
 ### Outstanding Questions
 
