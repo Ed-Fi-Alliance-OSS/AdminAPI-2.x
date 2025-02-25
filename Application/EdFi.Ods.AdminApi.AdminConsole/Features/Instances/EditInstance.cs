@@ -37,7 +37,7 @@ public class EditInstance : IFeature
 
         public int TenantId { get; set; }
 
-        public string? Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         public string? InstanceType { get; set; }
 

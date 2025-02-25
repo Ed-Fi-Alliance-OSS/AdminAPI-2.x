@@ -49,7 +49,7 @@ public class AddStepCommandTests : PlatformUsersContextTestBase
                 Document = stepDocument
             };
 
-            var command = new AddStepCommand(repository, Testing.GetEncryptionKeyResolver(), encryptionService);
+            var command = new AddStepCommand(repository);
 
             var result = await command.Execute(newStep);
         });

@@ -13,7 +13,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Permissions.Que
 
 public interface IGetPermissionByIdQuery
 {
-    Task<Permission> Execute(int tenantId, int DocId);
+    Task<Permission?> Execute(int tenantId, int DocId);
 }
 
 public class GetPermissionByIdQuery : IGetPermissionByIdQuery
@@ -25,7 +25,7 @@ public class GetPermissionByIdQuery : IGetPermissionByIdQuery
         _permissionQuery = permissionQuery;
     }
 
-    public async Task<Permission> Execute(int tenantId, int DocId)
+    public async Task<Permission?> Execute(int tenantId, int DocId)
     {
         var permission = await _permissionQuery.Query().SingleOrDefaultAsync(permission => permission.TenantId == tenantId && permission.DocId == DocId);
         return permission;

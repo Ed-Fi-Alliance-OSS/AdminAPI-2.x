@@ -28,7 +28,7 @@ public class EncryptionService : IEncryptionService
             encryptedText = Encrypt(plainText, encryptionKey);
             return true;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
         }
 
@@ -48,7 +48,7 @@ public class EncryptionService : IEncryptionService
             decryptedText = Decrypt(encryptedText, encryptionKey);
             return true;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
         }
 

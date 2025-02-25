@@ -12,7 +12,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Permissions.Com
 
 public interface IAddPermissionCommand
 {
-    Task<Permission> Execute(IAddPermissionModel permission);
+    Task<Permission?> Execute(IAddPermissionModel permission);
 }
 
 public class AddPermissionCommand : IAddPermissionCommand
@@ -28,7 +28,7 @@ public class AddPermissionCommand : IAddPermissionCommand
         _encryptionService = encryptionService;
     }
 
-    public async Task<Permission> Execute(IAddPermissionModel permission)
+    public async Task<Permission?> Execute(IAddPermissionModel permission)
     {
         try
         {

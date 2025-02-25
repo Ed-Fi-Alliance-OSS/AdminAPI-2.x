@@ -45,7 +45,7 @@ public class GetStepByIdQueryTests : PlatformUsersContextTestBase
         Transaction(async dbContext =>
         {
             var repository = new CommandRepository<Step>(dbContext);
-            var command = new AddStepCommand(repository, Testing.GetEncryptionKeyResolver(), new EncryptionService());
+            var command = new AddStepCommand(repository);
 
             result = await command.Execute(newStep);
         });
