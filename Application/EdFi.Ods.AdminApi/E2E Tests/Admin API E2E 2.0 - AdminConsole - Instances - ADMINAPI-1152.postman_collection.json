@@ -438,6 +438,189 @@
 							"response": []
 						},
 						{
+							"name": "Instances by TenantName",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET Instances: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const results = pm.response.json();\r",
+											"\r",
+											"pm.test(\"GET Instances: Response result includes instances\", function () {\r",
+											"    pm.expect(results.length).to.be.greaterThan(0);\r",
+											"});\r",
+											"\r",
+											"if(results[0].Id) {\r",
+											"    pm.collectionVariables.set(\"CreatedOdsInstanceId\", results[0].Id);\r",
+											"}\r",
+											"\r",
+											"const GetInstancesSchema = {\r",
+											"  \"type\": \"array\",\r",
+											"  \"items\": [\r",
+											"    {\r",
+											"      \"type\": \"object\",\r",
+											"      \"properties\": {\r",
+											"        \"tenantId\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"tenantName\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"instanceId\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"odsInstanceId\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"instanceName\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"resourceUrl\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"oauthUrl\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"clientId\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"clientSecret\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"status\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"      },\r",
+											"      \"required\": [\r",
+											"        \"tenantId\",\r",
+											"        \"tenantName\",\r",
+											"        \"instanceId\",\r",
+											"        \"odsInstanceId\"\r",
+											"      ]\r",
+											"    }\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET OdsInstances: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetInstancesSchema);\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/adminconsole/instances?tenantname=tenant1",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"adminconsole",
+										"instances"
+									],
+									"query": [
+										{
+											"key": "tenantname",
+											"value": "tenant1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Instances by TenantName Not Found",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET Instances: Status code is 404\", function () {\r",
+											"        pm.response.to.have.status(404);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/adminconsole/instances?tenantname=tenant2",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"adminconsole",
+										"instances"
+									],
+									"query": [
+										{
+											"key": "tenantname",
+											"value": "tenant2"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Instances - Different Tenant",
 							"event": [
 								{
@@ -731,189 +914,6 @@
 										{
 											"key": "status",
 											"value": "completed"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Instances by TenantName",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"GET Instances: Status code is OK\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"});\r",
-											"\r",
-											"const results = pm.response.json();\r",
-											"\r",
-											"pm.test(\"GET Instances: Response result includes instances\", function () {\r",
-											"    pm.expect(results.length).to.be.greaterThan(0);\r",
-											"});\r",
-											"\r",
-											"if(results[0].Id) {\r",
-											"    pm.collectionVariables.set(\"CreatedOdsInstanceId\", results[0].Id);\r",
-											"}\r",
-											"\r",
-											"const GetInstancesSchema = {\r",
-											"  \"type\": \"array\",\r",
-											"  \"items\": [\r",
-											"    {\r",
-											"      \"type\": \"object\",\r",
-											"      \"properties\": {\r",
-											"        \"tenantId\": {\r",
-											"          \"type\": \"integer\"\r",
-											"        },\r",
-											"        \"tenantName\": {\r",
-											"          \"type\": \"string\"\r",
-											"        },\r",
-											"        \"instanceId\": {\r",
-											"          \"type\": \"integer\"\r",
-											"        },\r",
-											"        \"odsInstanceId\": {\r",
-											"          \"type\": \"integer\"\r",
-											"        },\r",
-											"        \"instanceName\": {\r",
-											"          \"type\": \"string\"\r",
-											"        },\r",
-											"        \"resourceUrl\": {\r",
-											"          \"type\": \"string\"\r",
-											"        },\r",
-											"        \"oauthUrl\": {\r",
-											"          \"type\": \"string\"\r",
-											"        },\r",
-											"        \"clientId\": {\r",
-											"          \"type\": \"string\"\r",
-											"        },\r",
-											"        \"clientSecret\": {\r",
-											"          \"type\": \"string\"\r",
-											"        },\r",
-											"        \"status\": {\r",
-											"          \"type\": \"string\"\r",
-											"        },\r",
-											"      },\r",
-											"      \"required\": [\r",
-											"        \"tenantId\",\r",
-											"        \"tenantName\",\r",
-											"        \"instanceId\",\r",
-											"        \"odsInstanceId\"\r",
-											"      ]\r",
-											"    }\r",
-											"  ]\r",
-											"}\r",
-											"\r",
-											"pm.test(\"GET OdsInstances: Validation Schema Response\", () => {\r",
-											"    pm.response.to.have.jsonSchema(GetInstancesSchema);\r",
-											"});\r",
-											"\r",
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								},
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{API_URL}}/adminconsole/instances?tenantname=tenant1",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"adminconsole",
-										"instances"
-									],
-									"query": [
-										{
-											"key": "tenantname",
-											"value": "tenant1"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Instances by TenantName Not Found",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"GET Instances: Status code is 404\", function () {\r",
-											"        pm.response.to.have.status(404);\r",
-											"});"
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								},
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{API_URL}}/adminconsole/instances?tenantname=tenant2",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"adminconsole",
-										"instances"
-									],
-									"query": [
-										{
-											"key": "tenantname",
-											"value": "tenant2"
 										}
 									]
 								}
