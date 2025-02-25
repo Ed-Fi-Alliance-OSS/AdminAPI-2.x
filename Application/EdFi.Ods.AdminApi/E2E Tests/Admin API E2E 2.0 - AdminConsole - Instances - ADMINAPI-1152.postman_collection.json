@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "fcd4e28c-0ba6-412d-b318-9180f831997d",
+		"_postman_id": "a031d486-2006-4340-8d8f-115bd00984ba",
 		"name": "Admin API E2E 2.0 - AdminConsole - Instances - ADMINAPI-1152",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "42536960"
@@ -121,6 +121,129 @@
 										"instances",
 										"{{AdminConsoleCreatedOdsInstanceId}}",
 										"completed"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Instances",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET Instances: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const results = pm.response.json();\r",
+											"\r",
+											"pm.test(\"GET Instances: Response result includes instances\", function () {\r",
+											"    pm.expect(results.length).to.be.greaterThan(0);\r",
+											"});\r",
+											"\r",
+											"if(results[0].Id) {\r",
+											"    pm.collectionVariables.set(\"CreatedOdsInstanceId\", results[0].Id);\r",
+											"}\r",
+											"\r",
+											"const GetInstancesSchema = {\r",
+											"  \"type\": \"array\",\r",
+											"  \"items\": [\r",
+											"    {\r",
+											"      \"type\": \"object\",\r",
+											"      \"properties\": {\r",
+											"        \"tenantId\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"tenantName\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"instanceId\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"odsInstanceId\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"instanceName\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"resourceUrl\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"oauthUrl\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"clientId\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"clientSecret\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"status\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"      },\r",
+											"      \"required\": [\r",
+											"        \"tenantId\",\r",
+											"        \"tenantName\",\r",
+											"        \"instanceId\",\r",
+											"        \"odsInstanceId\"\r",
+											"      ]\r",
+											"    }\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET OdsInstances: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetInstancesSchema);\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/adminconsole/instances?status=completed",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"adminconsole",
+										"instances"
+									],
+									"query": [
+										{
+											"key": "status",
+											"value": "completed"
+										}
 									]
 								}
 							},
@@ -915,6 +1038,134 @@
 											"key": "status",
 											"value": "completed"
 										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Instances - Expired Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST Instances: Status code is Unauthorized\", function () {\r",
+											"    pm.response.to.have.status(401);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{EXPIREDTOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/adminconsole/instances",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"adminconsole",
+										"instances"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Instances  - Invalid Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST Instances: Status code is Unauthorized\", function () {\r",
+											"    pm.response.to.have.status(401);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{INVALIDTOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/adminconsole/instances",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"adminconsole",
+										"instances"
 									]
 								}
 							},
