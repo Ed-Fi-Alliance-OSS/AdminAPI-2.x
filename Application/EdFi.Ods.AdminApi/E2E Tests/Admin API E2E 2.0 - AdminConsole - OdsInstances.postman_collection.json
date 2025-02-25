@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "52a4a6d0-3f32-4eca-8a5b-78368a350077",
+		"_postman_id": "9865b627-cbcd-4a72-b22c-8918918e094a",
 		"name": "Admin API E2E 2.0 - AdminConsole - OdsInstances",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
-		"_exporter_id": "22794466"
+		"_exporter_id": "42411115"
 	},
 	"item": [
 		{
@@ -53,7 +53,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"tenantId\": 1,\r\n  \"name\": \"Instance #1 - 2024\",\r\n  \"instanceType\": \"enterprise\",\r\n  \"odsInstanceContexts\": [\r\n    {\r\n      \"contextKey\": \"schoolYearFromRoute\",\r\n      \"contextValue\": \"2024\"\r\n    }\r\n  ],\r\n  \"odsInstanceDerivatives\": [\r\n    {\r\n      \"derivativeType\": \"ReadReplica\"\r\n    }\r\n  ]\r\n}",
+									"raw": "{\r\n  \"tenantId\": 1,\r\n  \"tenantName\": \"Test\",\r\n  \"name\": \"Instance #1 - 2024\",\r\n  \"instanceType\": \"enterprise\",\r\n  \"odsInstanceContexts\": [\r\n    {\r\n      \"contextKey\": \"schoolYearFromRoute\",\r\n      \"contextValue\": \"2024\"\r\n    }\r\n  ],\r\n  \"odsInstanceDerivatives\": [\r\n    {\r\n      \"derivativeType\": \"ReadReplica\"\r\n    }\r\n  ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -442,7 +442,7 @@
 											"  } \r",
 											"  const result = odsInstanceResponse.json();\r",
 											"  pm.test(\"PUT AdminConsole OdsInstances: Response includes updated AdminConsole OdsInstances\", function () {\r",
-											"    pm.expect(result.name).to.equal(\"updated Instance #1 - 2024\");\r",
+											"    pm.expect(result.name).to.equal(\"updated Instance #2 - 2024\");\r",
 											"    pm.expect(result.instanceType).to.equal(\"updated enterprise\");\r",
 											"\r",
 											"    pm.expect(result.odsInstanceContexts.length).to.equal(0);\r",
@@ -471,7 +471,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"tenantId\": 1,\r\n  \"name\": \"updated Instance #1 - 2024\",\r\n  \"instanceType\": \"updated enterprise\",\r\n  \"odsInstanceDerivatives\": [\r\n    {\r\n      \"derivativeType\": \"Snapshot\"\r\n    }\r\n  ]\r\n}",
+									"raw": "{\r\n  \"tenantId\": 1,\r\n  \"tenantName\": \"Test\",\r\n  \"name\": \"updated Instance #2 - 2024\",\r\n  \"instanceType\": \"updated enterprise\",\r\n  \"odsInstanceDerivatives\": [\r\n    {\r\n      \"derivativeType\": \"Snapshot\"\r\n    }\r\n  ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -514,7 +514,7 @@
 											"  } \r",
 											"  const result = odsInstanceResponse.json();\r",
 											"  pm.test(\"PUT AdminConsole OdsInstances: Response includes updated AdminConsole OdsInstances\", function () {\r",
-											"    pm.expect(result.name).to.equal(\"updated Instance #1 - 2024\");\r",
+											"    pm.expect(result.name).to.equal(\"updated Instance #3 - 2024\");\r",
 											"    pm.expect(result.instanceType).to.equal(\"updated enterprise\");\r",
 											"\r",
 											"    pm.expect(result.odsInstanceContexts.length).to.equal(0);\r",
@@ -543,7 +543,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"tenantId\": 1,\r\n  \"name\": \"updated Instance #1 - 2024\",\r\n  \"instanceType\": \"updated enterprise\"\r\n}",
+									"raw": "{\r\n  \"tenantId\": 1,\r\n  \"tenantName\": \"Test\",\r\n  \"name\": \"updated Instance #3 - 2024\",\r\n  \"instanceType\": \"updated enterprise\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -586,7 +586,7 @@
 											"  } \r",
 											"  const result = odsInstanceResponse.json();\r",
 											"  pm.test(\"PUT AdminConsole OdsInstances: Response includes updated AdminConsole OdsInstances\", function () {\r",
-											"    pm.expect(result.name).to.equal(\"updated Instance #1 - 2024\");\r",
+											"    pm.expect(result.name).to.equal(\"updated Instance #4 - 2024\");\r",
 											"    pm.expect(result.instanceType).to.equal(\"updated enterprise\");\r",
 											"\r",
 											"    pm.expect(result.odsInstanceContexts.length).to.be.greaterThan(0);\r",
@@ -617,7 +617,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"tenantId\": 1,\r\n  \"name\": \"updated Instance #1 - 2024\",\r\n  \"instanceType\": \"updated enterprise\",\r\n  \"odsInstanceContexts\": [\r\n    {\r\n      \"contextKey\": \"schoolYearFromRoute\",\r\n      \"contextValue\": \"2026\"\r\n    }\r\n  ],\r\n  \"odsInstanceDerivatives\": [\r\n    {\r\n      \"derivativeType\": \"ReadReplica\"\r\n    }\r\n  ]\r\n}",
+									"raw": "{\r\n  \"tenantId\": 1,\r\n  \"tenantName\": \"Test\",\r\n  \"name\": \"updated Instance #4 - 2024\",\r\n  \"instanceType\": \"updated enterprise\",\r\n  \"odsInstanceContexts\": [\r\n    {\r\n      \"contextKey\": \"schoolYearFromRoute\",\r\n      \"contextValue\": \"2026\"\r\n    }\r\n  ],\r\n  \"odsInstanceDerivatives\": [\r\n    {\r\n      \"derivativeType\": \"ReadReplica\"\r\n    }\r\n  ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
