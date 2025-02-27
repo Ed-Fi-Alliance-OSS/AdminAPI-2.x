@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "a031d486-2006-4340-8d8f-115bd00984ba",
+		"_postman_id": "50fc3e73-2c92-4e7b-b6ca-ebbc23cd3d25",
 		"name": "Admin API E2E 2.0 - AdminConsole - Instances - ADMINAPI-1152",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "42536960"
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "40101658"
 	},
 	"item": [
 		{
@@ -159,9 +159,6 @@
 											"        \"tenantName\": {\r",
 											"          \"type\": \"string\"\r",
 											"        },\r",
-											"        \"instanceId\": {\r",
-											"          \"type\": \"integer\"\r",
-											"        },\r",
 											"        \"odsInstanceId\": {\r",
 											"          \"type\": \"integer\"\r",
 											"        },\r",
@@ -187,7 +184,6 @@
 											"      \"required\": [\r",
 											"        \"tenantId\",\r",
 											"        \"tenantName\",\r",
-											"        \"instanceId\",\r",
 											"        \"odsInstanceId\"\r",
 											"      ]\r",
 											"    }\r",
@@ -265,58 +261,47 @@
 											"\r",
 											"pm.test(\"GET Instance By Id: Response result includes Instance\", function () {\r",
 											"    const results = pm.response.json();\r",
-											"    pm.expect(results.length).to.be.greaterThan(0);   \r",
-											"\r",
-											"    if (results[0].id){\r",
-											"        pm.collectionVariables.set(\"CreatedInstanceId\", results[0].id);\r",
+											"    if (results.id){\r",
+											"        pm.collectionVariables.set(\"CreatedInstanceId\", results.id);\r",
 											"    }\r",
 											"});\r",
 											"\r",
 											"const GetInstancesSchema = {\r",
-											"  \"type\": \"array\",\r",
-											"  \"items\": [\r",
-											"    {\r",
-											"      \"type\": \"object\",\r",
-											"      \"properties\": {\r",
+											"    \"type\": \"object\",\r",
+											"    \"properties\": {\r",
 											"        \"tenantId\": {\r",
-											"          \"type\": \"integer\"\r",
+											"        \"type\": \"integer\"\r",
 											"        },\r",
 											"        \"tenantName\": {\r",
-											"          \"type\": \"string\"\r",
-											"        },\r",
-											"        \"instanceId\": {\r",
-											"          \"type\": \"integer\"\r",
+											"        \"type\": \"string\"\r",
 											"        },\r",
 											"        \"odsInstanceId\": {\r",
-											"          \"type\": \"integer\"\r",
+											"        \"type\": \"integer\"\r",
 											"        },\r",
 											"        \"instanceName\": {\r",
-											"          \"type\": \"string\"\r",
+											"        \"type\": \"string\"\r",
 											"        },\r",
 											"        \"resourceUrl\": {\r",
-											"          \"type\": \"string\"\r",
+											"        \"type\": \"string\"\r",
 											"        },\r",
 											"        \"oauthUrl\": {\r",
-											"          \"type\": \"string\"\r",
+											"        \"type\": \"string\"\r",
 											"        },\r",
 											"        \"clientId\": {\r",
-											"          \"type\": \"string\"\r",
+											"        \"type\": \"string\"\r",
 											"        },\r",
 											"        \"clientSecret\": {\r",
-											"          \"type\": \"string\"\r",
+											"        \"type\": \"string\"\r",
 											"        },\r",
 											"        \"status\": {\r",
-											"          \"type\": \"string\"\r",
+											"        \"type\": \"string\"\r",
 											"        },\r",
-											"      },\r",
-											"      \"required\": [\r",
+											"    },\r",
+											"    \"required\": [\r",
 											"        \"tenantId\",\r",
 											"        \"tenantName\",\r",
-											"        \"instanceId\",\r",
 											"        \"odsInstanceId\"\r",
-											"      ]\r",
-											"    }\r",
-											"  ]\r",
+											"    ]\r",
 											"}\r",
 											"\r",
 											"pm.test(\"GET Instances: Validation Schema Response\", () => {\r",
@@ -470,9 +455,6 @@
 											"        \"tenantName\": {\r",
 											"          \"type\": \"string\"\r",
 											"        },\r",
-											"        \"instanceId\": {\r",
-											"          \"type\": \"integer\"\r",
-											"        },\r",
 											"        \"odsInstanceId\": {\r",
 											"          \"type\": \"integer\"\r",
 											"        },\r",
@@ -498,7 +480,6 @@
 											"      \"required\": [\r",
 											"        \"tenantId\",\r",
 											"        \"tenantName\",\r",
-											"        \"instanceId\",\r",
 											"        \"odsInstanceId\"\r",
 											"      ]\r",
 											"    }\r",
@@ -593,9 +574,6 @@
 											"        \"tenantName\": {\r",
 											"          \"type\": \"string\"\r",
 											"        },\r",
-											"        \"instanceId\": {\r",
-											"          \"type\": \"integer\"\r",
-											"        },\r",
 											"        \"odsInstanceId\": {\r",
 											"          \"type\": \"integer\"\r",
 											"        },\r",
@@ -621,7 +599,6 @@
 											"      \"required\": [\r",
 											"        \"tenantId\",\r",
 											"        \"tenantName\",\r",
-											"        \"instanceId\",\r",
 											"        \"odsInstanceId\"\r",
 											"      ]\r",
 											"    }\r",
@@ -1080,7 +1057,7 @@
 											"key": "token",
 											"value": "{{EXPIREDTOKEN}}",
 											"type": "string"
-										}
+									}
 									]
 								},
 								"method": "GET",
@@ -1144,7 +1121,7 @@
 											"key": "token",
 											"value": "{{INVALIDTOKEN}}",
 											"type": "string"
-										}
+									}
 									]
 								},
 								"method": "GET",
@@ -1327,7 +1304,7 @@
 				"key": "token",
 				"value": "{{TOKEN}}",
 				"type": "string"
-			}
+		}
 		]
 	},
 	"event": [
@@ -1453,6 +1430,10 @@
 			"key": "INVALIDTOKEN",
 			"value": "0123456789",
 			"type": "string"
+		},
+		{
+			"key": "CreatedInstanceId",
+			"value": ""
 		}
 	]
 }

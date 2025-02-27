@@ -22,7 +22,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Features.WorkerInstances
         public string? oAuthUrl { get; set; }
         public string? ClientId { get; set; }
         public string? ClientSecret { get; set; }
-        public InstanceStatus Status { get; set; }
+        public string? Status { get; set; }
     }
 
     public class InstanceWorkerModelDTO
