@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "6a8135a3-f87b-431d-b3da-d26d4c0e2161",
+		"_postman_id": "1fabb178-1a29-4702-877c-71a0f11314ca",
 		"name": "Admin API E2E 2.0 - AdminConsole - Instances",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
-		"_exporter_id": "22794466"
+		"_exporter_id": "40101658"
 	},
 	"item": [
 		{
@@ -53,7 +53,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"tenantId\": 1,\r\n  \"name\": \"Instance test #1 - 2024 {{$guid}}\",\r\n  \"instanceType\": \"enterprise\",\r\n  \"odsInstanceContexts\": [\r\n    {\r\n      \"contextKey\": \"schoolYearFromRoute\",\r\n      \"contextValue\": \"2024\"\r\n    }\r\n  ],\r\n  \"odsInstanceDerivatives\": [\r\n    {\r\n      \"derivativeType\": \"ReadReplica\"\r\n    }\r\n  ]\r\n}",
+									"raw": "{\r\n  \"tenantId\": 1,\r\n  \"tenantName\": \"tenant1\",\r\n  \"name\": \"Instance test #1 - 2024 {{$guid}}\",\r\n  \"instanceType\": \"enterprise\",\r\n  \"odsInstanceContexts\": [\r\n    {\r\n      \"contextKey\": \"schoolYearFromRoute\",\r\n      \"contextValue\": \"2024\"\r\n    }\r\n  ],\r\n  \"odsInstanceDerivatives\": [\r\n    {\r\n      \"derivativeType\": \"ReadReplica\"\r\n    }\r\n  ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
