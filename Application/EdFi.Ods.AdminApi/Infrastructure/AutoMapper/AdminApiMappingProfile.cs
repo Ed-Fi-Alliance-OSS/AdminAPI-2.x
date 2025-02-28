@@ -183,7 +183,7 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.TenantName, opt => opt.MapFrom(src => src.TenantName))
             .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstanceId))
             .ForMember(dst => dst.InstanceName, opt => opt.MapFrom(src => src.InstanceName))
-            .ForMember(dst => dst.ResourceUrl, opt => opt.MapFrom(src => src.ResourceUrl))
+            .ForMember(dst => dst.ResourceUrl, opt => opt.MapFrom(src => src.ResourceUrl ?? string.Empty))
             .ForMember(dst => dst.oAuthUrl, opt => opt.MapFrom(src => src.OAuthUrl))
             .ForMember(dst => dst.Status, opt => opt.MapFrom(src => Enum.GetName(src.Status)))
             .AfterMap((src, dst) =>
