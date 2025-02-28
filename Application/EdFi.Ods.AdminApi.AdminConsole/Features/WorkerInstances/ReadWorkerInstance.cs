@@ -34,11 +34,7 @@ public class ReadWorkerInstance : IFeature
     {
         var instances = await getInstancesQuery.Execute(tenantName, status);
         var instanceModels = mapper.Map<List<InstanceWorkerModel>>(instances);
-        if (instanceModels.Any())
-        {
-            return Results.Ok(instanceModels);
-        }
-        return Results.NotFound();
+        return Results.Ok(instanceModels);
     }
 
     internal async Task<IResult> GetInstanceById(IMapper mapper, [FromServices] IGetInstanceByIdQuery getInstanceByIdQuery, int Id)

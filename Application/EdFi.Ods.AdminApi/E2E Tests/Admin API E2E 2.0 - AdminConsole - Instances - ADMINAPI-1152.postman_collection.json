@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "50fc3e73-2c92-4e7b-b6ca-ebbc23cd3d25",
+		"_postman_id": "eba398db-3ef9-46a3-88db-140aa910e325",
 		"name": "Admin API E2E 2.0 - AdminConsole - Instances - ADMINAPI-1152",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
 		"_exporter_id": "40101658"
@@ -60,16 +60,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/adminconsole/odsInstances",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"adminconsole",
-										"odsInstances"
-									]
-								}
+								"url": "{{API_URL}}/adminconsole/odsInstances"
 							},
 							"response": []
 						},
@@ -111,18 +102,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleCreatedOdsInstanceId}}/completed",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"adminconsole",
-										"instances",
-										"{{AdminConsoleCreatedOdsInstanceId}}",
-										"completed"
-									]
-								}
+								"url": "{{API_URL}}/adminconsole/instances/{{AdminConsoleCreatedOdsInstanceId}}/completed"
 							},
 							"response": []
 						},
@@ -339,17 +319,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/adminconsole/instances/{{CreatedInstanceId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"adminconsole",
-										"instances",
-										"{{CreatedInstanceId}}"
-									]
-								}
+								"url": "{{API_URL}}/adminconsole/instances/{{CreatedInstanceId}}"
 							},
 							"response": []
 						},
@@ -667,8 +637,13 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"GET Instances: Status code is 404\", function () {\r",
-											"        pm.response.to.have.status(404);\r",
+											"pm.test(\"GET Instances: Status code is 200\", function () {\r",
+											"        pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"GET Instances: Response most be empty\", function () {\r",
+											"    const results = pm.response.json();\r",
+											"    pm.expect(results.length).to.equal(0);\r",
 											"});"
 										],
 										"type": "text/javascript",
@@ -781,16 +756,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/adminconsole/instances",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"adminconsole",
-										"instances"
-									]
-								}
+								"url": "{{API_URL}}/adminconsole/instances"
 							},
 							"response": []
 						},
@@ -847,17 +813,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/adminconsole/instances/{{CreatedInstanceId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"adminconsole",
-										"instances",
-										"{{CreatedInstanceId}}"
-									]
-								}
+								"url": "{{API_URL}}/adminconsole/instances/{{CreatedInstanceId}}"
 							},
 							"response": []
 						},
@@ -1052,13 +1008,13 @@
 							"request": {
 								"auth": {
 									"type": "bearer",
-									"bearer": [
-										{
+									"bearer": {
+										"0": {
 											"key": "token",
 											"value": "{{EXPIREDTOKEN}}",
 											"type": "string"
+										}
 									}
-									]
 								},
 								"method": "GET",
 								"header": [],
@@ -1071,16 +1027,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/adminconsole/instances",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"adminconsole",
-										"instances"
-									]
-								}
+								"url": "{{API_URL}}/adminconsole/instances"
 							},
 							"response": []
 						},
@@ -1116,13 +1063,13 @@
 							"request": {
 								"auth": {
 									"type": "bearer",
-									"bearer": [
-										{
+									"bearer": {
+										"0": {
 											"key": "token",
 											"value": "{{INVALIDTOKEN}}",
 											"type": "string"
+										}
 									}
-									]
 								},
 								"method": "GET",
 								"header": [],
@@ -1135,16 +1082,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/adminconsole/instances",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"adminconsole",
-										"instances"
-									]
-								}
+								"url": "{{API_URL}}/adminconsole/instances"
 							},
 							"response": []
 						},
@@ -1278,17 +1216,7 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v2/odsInstances/{{CreatedOdsInstanceId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"odsInstances",
-										"{{CreatedOdsInstanceId}}"
-									]
-								}
+								"url": "{{API_URL}}/v2/odsInstances/{{CreatedOdsInstanceId}}"
 							},
 							"response": []
 						}

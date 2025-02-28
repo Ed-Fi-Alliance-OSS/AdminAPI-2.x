@@ -18,6 +18,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Features.WorkerInstances
         public int TenantId { get; set; }
         public string TenantName { get; set; }
         public int OdsInstanceId { get; set; }
+        public string InstanceName { get; set; }
         public string? ResourceUrl { get; set; }
         public string? oAuthUrl { get; set; }
         public string? ClientId { get; set; }
