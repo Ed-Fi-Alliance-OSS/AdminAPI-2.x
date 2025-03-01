@@ -31,7 +31,7 @@ public class ReadInstances : IFeature
 
     internal async Task<IResult> GetInstances(IMapper mapper, [FromServices] IGetInstancesQuery getInstancesQuery, string? status)
     {
-        var instances = await getInstancesQuery.Execute(status);
+        var instances = await getInstancesQuery.Execute(status: status);
         var instanceModels = mapper.Map<List<InstanceModel>>(instances);
         return Results.Ok(instanceModels);
     }
