@@ -5,10 +5,12 @@
 
 using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Extensions;
+using EdFi.Ods.AdminApi.Common.Infrastructure.Security;
 using EdFi.Ods.AdminApi.Features.Connect;
 using EdFi.Ods.AdminApi.Infrastructure.Documentation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using OpenIddict.Server;
@@ -103,6 +105,7 @@ public static class SecurityExtensions
                     ValidateIssuer = true,
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = issuer,
+                    RoleClaimType = "realm_access.roles",
                     IssuerSigningKey = signingKey
                 };
                 opt.RequireHttpsMetadata = !isDockerEnvironment;
@@ -123,6 +126,7 @@ public static class SecurityExtensions
                         ValidateIssuer = true,
                         ValidateIssuerSigningKey = false,
                         ValidIssuer = oidcIssuer,
+                        RoleClaimType = "realm_access.roles",
                         IssuerSigningKeyResolver = (token, securityToken, kid, parameters) =>
                         {
 #pragma warning disable S4830 // Server certificates should be verified during SSL/TLS connections
@@ -160,6 +164,7 @@ public static class SecurityExtensions
                         ValidateIssuer = configuration.Get<bool>("Authentication:OIDC:ValidateIssuer"),
                         ValidateIssuerSigningKey = false,
                         ValidIssuer = oidcIssuer,
+                        RoleClaimType = "realm_access.roles",
                         IssuerSigningKeyResolver = (token, securityToken, kid, parameters) =>
                         {
 #pragma warning disable S4830 // Server certificates should be verified during SSL/TLS connections
@@ -171,7 +176,6 @@ public static class SecurityExtensions
                             // Server certificates should be verified during SSL/TLS connections
                             // Get public keys from keycloak
                             var client = new HttpClient(handler);
-                            Console.WriteLine("Issuer" + oidcIssuer);
                             var response = client.GetStringAsync(oidcIssuer + "/protocol/openid-connect/certs").Result;
                             var keys = JsonWebKeySet.Create(response).GetSigningKeys();
                             return keys;
@@ -181,7 +185,6 @@ public static class SecurityExtensions
             });
         }
 
-
         services.AddAuthorization(opt =>
         {
             opt.DefaultPolicy = new AuthorizationPolicyBuilder()
@@ -190,12 +193,18 @@ public static class SecurityExtensions
                         context.User.HasClaim(c => c.Type == OpenIddictConstants.Claims.Scope && c.Value.Contains(SecurityConstants.Scopes.AdminApiFullAccess))
                     )
                 .Build();
+            foreach (var policy in AuthorizationPolicies.Policies)
+            {
+                opt.AddPolicy(policy.PolicyName, policyBuilder =>
+                    policyBuilder.Requirements.Add(policy.RolesAuthorizationRequirement));
+            }
             // Policy for Admin role
             opt.AddPolicy("RequireAdminApiFullAccess", policy =>
                     policy.RequireAssertion(context =>
                         context.User.HasClaim(c => c.Type == OpenIddictConstants.Claims.Scope && c.Value == SecurityConstants.Scopes.AdminApiFullAccess))
             .AddAuthenticationSchemes("Local", "IdentityProvider"));
         });
+        services.AddSingleton<IAuthorizationHandler, RolesAuthorizationHandler>();
         // Controllers to hide from Swagger conditionally
         var controllerNamesToHide = new List<string> { "ConnectController" };
         //Security Endpoints
