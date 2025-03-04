@@ -288,6 +288,29 @@ Also supports `GET /adminconsole/instances/{id}`
 
 * Not supported at this time. Respond with `405 Method Not Allowed`.
 
+### POST /adminconsole/instances/{id}/deleted
+
+* **Purpose**: Marks the given `adminconsole.Instance` record as "Deleted".  
+* **Description**:  
+  * Responds with `204 No Content` if the record is already marked as "Deleted" or if the operations described below succeed.  
+  * Responds with `404 Not Found` if the specified ID does not exist.  
+  * As described in [Instance Management Worker](./INSTANCE-MANAGEMENT.md), this action performs the following operations in a single database transaction if the status is not already "Deleted":  
+    * Delete the corresponding record from `dbo.OdsInstances`.  
+    * If applicable, delete related records from `dbo.OdsInstanceContexts` and `dbo.OdsInstanceDerivatives`.  
+    * Delete associated records from `dbo.ApiClients` and `dbo.ApiClientOdsInstances`.  
+    * Update the `adminconsole.Instance` record to:  
+      * **Status** = "Deleted".  
+
+### POST /adminconsole/instances/{id}/deleteFailed  
+
+* **Purpose**: Marks the given `adminconsole.Instance` record as "Delete_Failed" if the database drop operation performed by the Instance Management Worker has failed.  
+* **Description**:  
+  * Responds with `204 No Content` if the record is already marked as "Delete_Failed" or if the operation succeeds.  
+  * Responds with `404 Not Found` if the specified ID does not exist.  
+  * As described in [Instance Management Worker](./INSTANCE-MANAGEMENT.md), this action updates the `adminconsole.Instance` record to:  
+    * **Status** = "Delete_Failed".  
+
+
 ## Data Storage
 
 No modifications will be made in the `dbo.*` tables.
