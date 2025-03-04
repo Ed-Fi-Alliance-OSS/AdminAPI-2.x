@@ -10,6 +10,7 @@ using EdFi.Ods.AdminApi.Common.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Extensions;
+using EdFi.Ods.AdminApi.Common.Infrastructure.Security;
 
 namespace EdFi.Ods.AdminApi.Common.Infrastructure;
 
@@ -32,6 +33,7 @@ public class AdminApiEndpointBuilder
     private readonly List<Action<RouteHandlerBuilder>> _routeOptions = new();
     private readonly string _pluralResourceName;
     private bool _allowAnonymous = false;
+    private IEnumerable<string> _authorizationPolicies = new List<string>();
 
     public static AdminApiEndpointBuilder MapGet(IEndpointRouteBuilder endpoints, string route, Delegate handler)
         => new(endpoints, HttpVerb.GET, route, handler);
@@ -48,10 +50,33 @@ public class AdminApiEndpointBuilder
     public static AdminApiEndpointBuilder MapDelete(IEndpointRouteBuilder endpoints, string route, Delegate handler)
         => new(endpoints, HttpVerb.DELETE, route, handler);
 
+    /// <summary>
+    /// Includes the specified authorization policy in the endpoint.
+    /// </summary>
+    /// <param name="authorizationPolicies">List of authorization Policies to validate</param>
+    /// <returns></returns>
+    public AdminApiEndpointBuilder RequireAuthorization(IEnumerable<PolicyDefinition> authorizationPolicies)
+    {
+        _authorizationPolicies = authorizationPolicies.Select(policy => policy.PolicyName).ToList();
+        return this;
+    }
+
+    /// <summary>
+    /// Includes the specified authorization policy in the endpoint.
+    /// </summary>
+    /// <param name="authorizationPolicies">List of authorization Policies to validate</param>
+    /// <returns></returns>
+    public AdminApiEndpointBuilder RequireAuthorization(PolicyDefinition authorizationPolicies)
+    {
+        _authorizationPolicies = new List<string>() { authorizationPolicies.PolicyName };
+        return this;
+    }
+
     public void BuildForVersions(params AdminApiVersions.AdminApiVersion[] versions)
     {
         BuildForVersions(string.Empty, versions);
     }
+
     public void BuildForVersions(string authorizationPolicy, params AdminApiVersions.AdminApiVersion[] versions)
     {
         if (versions.Length == 0)
@@ -84,7 +109,11 @@ public class AdminApiEndpointBuilder
             }
             else
             {
-                if (string.IsNullOrWhiteSpace(authorizationPolicy))
+                if (_authorizationPolicies != null && _authorizationPolicies.Count() > 0)
+                {
+                    builder.RequireAuthorization(_authorizationPolicies.ToArray());
+                }
+                else if (!string.IsNullOrWhiteSpace(authorizationPolicy))
                 {
                     builder.RequireAuthorization(authorizationPolicy);
                 }
