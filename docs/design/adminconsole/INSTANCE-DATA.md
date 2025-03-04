@@ -140,7 +140,24 @@ Also supports `GET /adminconsole/odsInstances/{id}`
 
 ### DELETE /adminconsole/odsInstances/{id}
 
-* Not supported at this time. Respond with `405 Method Not Allowed`.
+* **Purpose**: Mark an instance for deletion.  
+* **Description**:  
+  * Updates the status of the instance to `PENDING_DELETE`.  
+  * This operation performs a soft delete by updating the status field; the record remains in the table.  
+  * Does not immediately remove the instance; it is scheduled for deletion in other related systems.  
+  * The instance must have a status of `COMPLETED` before it can be marked as `PENDING_DELETE`.  
+  * Responds with `204 No Content`.  
+
+* **Validation**:  
+  * The instance must exist.  
+  * The current status must be `COMPLETED`. If not, the request is rejected with `409 Conflict`.  
+
+* **Response Codes**:  
+  * `204 No Content` – The instance was successfully marked for deletion.  
+  * `404 Not Found` – The specified instance does not exist.  
+  * `409 Conflict` – The instance cannot be deleted because it is not in a `COMPLETED` state.  
+ 
+ 
 
 ### GET /adminconsole/instances
 

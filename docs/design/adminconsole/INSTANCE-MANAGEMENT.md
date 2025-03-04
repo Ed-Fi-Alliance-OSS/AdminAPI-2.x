@@ -86,6 +86,8 @@ out incrementally as needed based on feedback from the field:
 
 ### v1: Single Worker
 
+### New Instance
+
 ```mermaid
 sequenceDiagram
     actor Console as Admin Console
@@ -126,6 +128,47 @@ sequenceDiagram
 
     AdminAPI -->> Worker: 200 OK
 ```
+### Delete Instance
+
+```mermaid
+sequenceDiagram
+    actor Console
+    actor Worker
+    participant AdminAPI
+    participant EdFi_Admin
+    participant DbServer
+
+    Console ->> AdminAPI: DELETE /adminconsole/odsInstances/{id}
+    AdminAPI ->> EdFi_Admin: UPDATE adminconsole.Instance SET status = "PENDING_DELETE"
+    AdminAPI -->> Console: 204 Ok
+
+    Worker ->> AdminAPI: GET /adminconsole/instances?status=PENDING_DELETE
+    AdminAPI ->> EdFi_Admin: Fetch instances with status=PENDING_DELETE
+    EdFi_Admin -->> AdminAPI: List of instances
+
+    AdminAPI -->> Worker: List of instances
+
+    loop For each instance in list
+        Worker ->> DbServer: Drop database
+
+        alt Drop successful
+            Worker ->> AdminAPI: POST /adminconsole/instances/{id}/deleted
+
+            AdminAPI ->> EdFi_Admin: BEGIN TRANSACTION
+            AdminAPI --> EdFi_Admin: UPDATE Status = DELETED FROM adminconsole.Instance Status
+            AdminAPI ->> EdFi_Admin: DELETE FROM dbo.OdsInstanceDerivative
+            AdminAPI ->> EdFi_Admin: DELETE FROM dbo.OdsInstanceContext
+            AdminAPI ->> EdFi_Admin: DELETE FROM dbo.OdsInstances
+            AdminAPI ->> EdFi_Admin: COMMIT TRANSACTION
+
+            AdminAPI -->> Worker: 200 OK
+        else Drop failed
+            Worker ->> AdminAPI: POST /adminconsole/instances/{id}/deleteFailed
+            AdminAPI --> EdFi_Admin: UPDATE Status = DELETE_FAILED FROM adminconsole.Instance Status
+        end
+    end
+```
+
 
 #### Health Check Client Credentials
 
