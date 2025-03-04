@@ -460,7 +460,8 @@ function RestartAdminApiContainer {
 }
 
 function BuildAdminApiDevDockerImage {
-    &docker build -t adminapi-dev --no-cache -f "$dockerRoot/dev.pgsql.Dockerfile" .
+    $assets = Resolve-Path "./Application"
+    &docker build -t adminapi-dev --build-context assets=$assets --no-cache -f "$dockerRoot/dev.pgsql.Dockerfile" .
 }
 
 function RunAdminApiDevDockerContainer {
