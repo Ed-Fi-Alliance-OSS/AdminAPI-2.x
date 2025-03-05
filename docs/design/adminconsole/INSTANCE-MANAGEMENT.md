@@ -177,6 +177,7 @@ sequenceDiagram
             AdminAPI ->> EdFi_Admin: DELETE FROM dbo.OdsInstanceDerivative
             AdminAPI ->> EdFi_Admin: DELETE FROM dbo.OdsInstanceContext
             AdminAPI ->> EdFi_Admin: DELETE FROM dbo.OdsInstances
+            AdminAPI ->> EdFi_Admin: DELETE FROM dbo.ApiClients and dbo.ApiClientOdsInstances
             AdminAPI ->> EdFi_Admin: COMMIT TRANSACTION
 
             AdminAPI -->> Worker: 204 OK

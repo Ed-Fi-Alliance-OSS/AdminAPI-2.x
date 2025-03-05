@@ -157,7 +157,7 @@ Also supports `GET /adminconsole/odsInstances/{id}`
   * The current status must be `COMPLETED`. If not, the request is rejected with `409 Conflict`.
 
 * **Response Codes**:
-  * `204 No Content` – The instance was successfully marked for deletion.
+  * `202 Accepted` – The instance was successfully marked for deletion.
   * `404 Not Found` – The specified instance does not exist.
   * `409 Conflict` – The instance cannot be deleted because it is not in a `COMPLETED` state.
 
