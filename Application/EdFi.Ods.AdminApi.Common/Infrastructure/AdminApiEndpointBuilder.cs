@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Extensions;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Security;
+using System.Data;
+using System.Collections.Generic;
 
 namespace EdFi.Ods.AdminApi.Common.Infrastructure;
 
@@ -109,6 +111,14 @@ public class AdminApiEndpointBuilder
             }
             else
             {
+                var rolesPolicy = new List<PolicyDefinition> { VersionRoleMapping.DefaultRolePolicy };
+
+                if (VersionRoleMapping.RolesByVersion.TryGetValue(version, out var defaultPolicies))
+                {
+                    rolesPolicy.Add(defaultPolicies);
+                }
+                builder.RequireAuthorization(rolesPolicy.Select(policy => policy.PolicyName).ToArray());
+
                 if (_authorizationPolicies != null && _authorizationPolicies.Count() > 0)
                 {
                     builder.RequireAuthorization(_authorizationPolicies.ToArray());

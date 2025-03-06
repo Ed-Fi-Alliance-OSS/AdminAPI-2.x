@@ -193,7 +193,7 @@ public static class SecurityExtensions
                         context.User.HasClaim(c => c.Type == OpenIddictConstants.Claims.Scope && c.Value.Contains(SecurityConstants.Scopes.AdminApiFullAccess))
                     )
                 .Build();
-            foreach (var policy in AuthorizationPolicies.Policies)
+            foreach (var policy in AuthorizationPolicies.RolePolicies)
             {
                 opt.AddPolicy(policy.PolicyName, policyBuilder =>
                     policyBuilder.Requirements.Add(policy.RolesAuthorizationRequirement));

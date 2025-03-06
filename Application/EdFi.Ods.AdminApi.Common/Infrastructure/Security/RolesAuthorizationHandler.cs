@@ -6,18 +6,30 @@
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using System.Text.Json;
+using Microsoft.Extensions.Configuration;
+using System.Configuration;
+using EdFi.Ods.AdminApi.Common.Settings;
+using System.Linq;
 
 namespace EdFi.Ods.AdminApi.Common.Infrastructure.Security
 {
     public class RolesAuthorizationHandler : AuthorizationHandler<RolesAuthorizationRequirement>
     {
+        private readonly IConfiguration _configuration;
+
+        public RolesAuthorizationHandler(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, RolesAuthorizationRequirement requirement)
         {
             var user = context.User;
-            var realmAccessClaim = user.FindFirst(c => c.Type == "realm_access");
-            if (realmAccessClaim != null)
+            var roleClaimAttribute = _configuration.GetValue<string>("AppSettings:roleClaimAttribute");
+            var realmAccessClaim = user.FindAll(c => c.Type == roleClaimAttribute);
+            if (realmAccessClaim != null && requirement?.Roles?.Count() > 0)
             {
-                var roles = JsonDocument.Parse(realmAccessClaim.Value).RootElement.GetProperty("roles").EnumerateArray().Select(r => r.GetString()).ToList();
+                var roles = realmAccessClaim.Select(c => c.Value).ToList();
                 foreach (var role in requirement.Roles)
                 {
                     if (roles.Contains(role))
