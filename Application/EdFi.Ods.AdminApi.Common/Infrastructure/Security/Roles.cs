@@ -7,16 +7,10 @@ namespace EdFi.Ods.AdminApi.Common.Infrastructure.Security
 {
     public static class Roles
     {
-        public static readonly RoleDefinition SystemAdministratorRole
-            = new RoleDefinition("admin", "System Administrator");
-        public static readonly RoleDefinition AdminConsoleAdministratorRole
-            = new RoleDefinition("admin-console-administrator", "AdminConsole System Administrator");
+        public static readonly RoleDefinition AdminApiClientRole
+            = new RoleDefinition("adminapi-client", "AminApi Client");
         public static readonly RoleDefinition AdminConsoleUserRole
-            = new RoleDefinition("admin-console-user", "AdminConsole Regular User");
-        public static readonly RoleDefinition AdminConsoleInstanceWorkerRole
-            = new RoleDefinition("admin-console-instance-worker", "AdminConsole InstanceWorker");
-        public static readonly RoleDefinition AdminConsoleHealthWorkerRole
-            = new RoleDefinition("admin-console-healthcheck-worker", "AdminConsole Healthcheck Worker");
+            = new RoleDefinition("adminconsole-user", "AdminConsole User");
     }
     public class RoleDefinition
     {

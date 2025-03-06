@@ -19,8 +19,7 @@ public class ReadTenants : IFeature
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         AdminApiEndpointBuilder.MapGet(endpoints, "/tenants", GetTenantsAsync)
-           .RequireAuthorization(AuthorizationPolicies.AdminConsoleAdministratorPolicy)
-           .BuildForVersions(AdminApiVersions.AdminConsole);
+            .BuildForVersions(AdminApiVersions.AdminConsole);
 
         AdminApiEndpointBuilder.MapGet(endpoints, "/tenants/{tenantId}", GetTenantsByTenantIdAsync)
            .BuildForVersions(AdminApiVersions.AdminConsole);
