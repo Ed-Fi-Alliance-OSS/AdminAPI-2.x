@@ -22,9 +22,11 @@ jobs:
     permissions:
       checks: write
       pull-requests: write
+
       # only needed for private repository
       # contents: read
       # issues: read
+
     steps:
       - name: Download and Extract Artifacts
         uses: dawidd6/action-download-artifact@80620a5d27ce0ae443b965134db88467fc607b43 # v7
