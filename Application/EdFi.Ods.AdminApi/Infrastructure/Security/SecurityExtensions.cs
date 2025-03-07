@@ -191,7 +191,15 @@ public static class SecurityExtensions
             opt.DefaultPolicy = new AuthorizationPolicyBuilder()
             .AddAuthenticationSchemes()
                 .RequireAssertion(context =>
-                        !context.HasSucceeded && context.User.HasClaim(c => c.Type == OpenIddictConstants.Claims.Scope && c.Value.Contains(AuthorizationPolicies.DefaultScopePolicy.Scope))
+                        !context.HasSucceeded
+                        && context.User.HasClaim(c
+                            => c.Type == OpenIddictConstants.Claims.Scope
+                            && c.Value.Split(' ')
+                            .ToList()
+                            .Exists(scopeValue
+                                => string.Equals(scopeValue, AuthorizationPolicies.DefaultScopePolicy.Scope, StringComparison.OrdinalIgnoreCase)
+                            )
+                        )
                     )
                 .Build();
             foreach (var policy in AuthorizationPolicies.RolePolicies)
@@ -204,8 +212,15 @@ public static class SecurityExtensions
                 opt.AddPolicy(scope.PolicyName, policy =>
                 {
                     policy.RequireAssertion(context =>
-                        context.User.HasClaim(c => c.Type == OpenIddictConstants.Claims.Scope && c.Value.Contains(scope.Scope))
-                    );
+                        context.User.HasClaim(c
+                        => c.Type == OpenIddictConstants.Claims.Scope
+                        && c.Value.Split(' ')
+                            .ToList()
+                            .Exists(scopeValue
+                                => string.Equals(scopeValue, scope.Scope, StringComparison.OrdinalIgnoreCase)
+                                    || string.Equals(scopeValue, AuthorizationPolicies.DefaultScopePolicy.Scope, StringComparison.OrdinalIgnoreCase)
+                            )
+                    ));
                 });
             }
 
