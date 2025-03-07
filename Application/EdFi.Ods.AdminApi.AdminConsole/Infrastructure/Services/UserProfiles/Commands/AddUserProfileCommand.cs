@@ -12,7 +12,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.UserProfiles.Co
 
 public interface IAddUserProfileCommand
 {
-    Task<UserProfile> Execute(IAddUserProfileModel userProfile);
+    Task<UserProfile> Execute(IAddUserProfileModel newUserProfile);
 }
 
 public class AddUserProfileCommand : IAddUserProfileCommand

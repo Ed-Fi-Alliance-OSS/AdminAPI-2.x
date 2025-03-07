@@ -24,7 +24,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Comma
 {
     public interface IEditInstanceCommand
     {
-        Task<Instance> Execute(int odsinstanceid, IInstanceRequestModel instance);
+        Task<Instance> Execute(int id, IInstanceRequestModel instance);
     }
 
     public class EditInstanceCommand : IEditInstanceCommand

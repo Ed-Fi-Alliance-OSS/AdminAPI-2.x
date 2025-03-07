@@ -12,7 +12,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.HealthChecks.Qu
 
 public interface IGetHealthCheckQuery
 {
-    Task<HealthCheck?> Execute(int docId);
+    Task<HealthCheck?> Execute(int tenantId);
 }
 
 public class GetHealthCheckQuery : IGetHealthCheckQuery

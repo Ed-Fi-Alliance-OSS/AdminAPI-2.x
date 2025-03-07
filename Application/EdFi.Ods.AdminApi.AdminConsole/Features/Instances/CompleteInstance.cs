@@ -30,7 +30,7 @@ public class CompleteInstance : IFeature
             if (instanceid < 1)
                 return Results.BadRequest("Instance Id not valid.");
 
-            var completedInstanceResult = await completeInstanceCommand.Execute(instanceid);
+            await completeInstanceCommand.Execute(instanceid);
 
             return Results.NoContent();
         }

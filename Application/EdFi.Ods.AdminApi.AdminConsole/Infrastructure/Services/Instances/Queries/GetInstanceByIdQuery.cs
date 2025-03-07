@@ -13,7 +13,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Queri
 
 public interface IGetInstanceByIdQuery
 {
-    Task<Instance?> Execute(int odsInstanceId);
+    Task<Instance?> Execute(int id);
 }
 
 public class GetInstanceByIdQuery : IGetInstanceByIdQuery
