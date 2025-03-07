@@ -3,6 +3,8 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Data;
+
 namespace EdFi.Ods.AdminApi.Common.Infrastructure.Security
 {
     public static class AuthorizationPolicies
@@ -11,7 +13,7 @@ namespace EdFi.Ods.AdminApi.Common.Infrastructure.Security
         private static readonly IEnumerable<string> _adminApiClientRole = new List<string> { Roles.AdminApiClientRole.RoleName };
         private static readonly IEnumerable<string> _adminConsoleUserRole = _adminApiClientRole
             .Concat(new List<string> { Roles.AdminConsoleUserRole.RoleName }).ToList();
-        // Create the policies by role
+        // Create policies by role
         public static readonly PolicyDefinition AdminApiClientPolicy = new PolicyDefinition("AdminApiClient", _adminApiClientRole);
         public static readonly PolicyDefinition AdminConsoleUserPolicy = new PolicyDefinition("AdminConsoleUserPolicy", _adminConsoleUserRole);
 
@@ -21,12 +23,24 @@ namespace EdFi.Ods.AdminApi.Common.Infrastructure.Security
             DefaultRolePolicy,
             AdminConsoleUserPolicy
         };
+        // Create policies by scope
+        public static readonly PolicyDefinition AdminApiFullAccessScopePolicy = new PolicyDefinition("AdminApiFullAccessScopePolicy", SecurityConstants.Scopes.AdminApiFullAccess);
+        public static readonly PolicyDefinition AdminApiTenantAccessScopePolicy = new PolicyDefinition("AdminApiTenantAccessScopePolicy", SecurityConstants.Scopes.AdminApiTenantAccess);
+        public static readonly PolicyDefinition AdminApiWorkerScopePolicy = new PolicyDefinition("AdminApiWorkerScopePolicy", SecurityConstants.Scopes.AdminApiWorker);
+        public static readonly PolicyDefinition DefaultScopePolicy = AdminApiFullAccessScopePolicy;
+        public static readonly IEnumerable<PolicyDefinition> ScopePolicies = new List<PolicyDefinition>
+        {
+            AdminApiFullAccessScopePolicy,
+            AdminApiTenantAccessScopePolicy,
+            AdminApiWorkerScopePolicy
+        };
     }
 
     public class PolicyDefinition
     {
         public string PolicyName { get; }
         public IEnumerable<string> Roles { get; }
+        public string Scope { get; }
         public RolesAuthorizationRequirement RolesAuthorizationRequirement { get; }
 
         public PolicyDefinition(string policyName, IEnumerable<string> roles)
@@ -34,6 +48,15 @@ namespace EdFi.Ods.AdminApi.Common.Infrastructure.Security
             PolicyName = policyName;
             Roles = roles;
             RolesAuthorizationRequirement = new RolesAuthorizationRequirement(roles);
+            Scope = string.Empty;
+        }
+
+        public PolicyDefinition(string policyName, string scope)
+        {
+            PolicyName = policyName;
+            Scope = scope;
+            Roles = new List<string>();
+            RolesAuthorizationRequirement = new RolesAuthorizationRequirement(Roles);
         }
         public override string ToString()
         {

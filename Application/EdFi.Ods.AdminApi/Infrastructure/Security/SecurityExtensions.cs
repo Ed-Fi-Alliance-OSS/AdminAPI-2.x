@@ -65,8 +65,9 @@ public static class SecurityExtensions
                     }
                     opt.AddSigningKey(signingKey);
                 }
-
                 opt.RegisterScopes(SecurityConstants.Scopes.AdminApiFullAccess);
+                opt.RegisterScopes(SecurityConstants.Scopes.AdminApiTenantAccess);
+                opt.RegisterScopes(SecurityConstants.Scopes.AdminApiWorker);
                 var aspNetCoreBuilder = opt.UseAspNetCore().EnableTokenEndpointPassthrough();
                 if (isDockerEnvironment)
                 {
@@ -190,7 +191,7 @@ public static class SecurityExtensions
             opt.DefaultPolicy = new AuthorizationPolicyBuilder()
             .AddAuthenticationSchemes()
                 .RequireAssertion(context =>
-                        context.User.HasClaim(c => c.Type == OpenIddictConstants.Claims.Scope && c.Value.Contains(SecurityConstants.Scopes.AdminApiFullAccess))
+                        !context.HasSucceeded && context.User.HasClaim(c => c.Type == OpenIddictConstants.Claims.Scope && c.Value.Contains(AuthorizationPolicies.DefaultScopePolicy.Scope))
                     )
                 .Build();
             foreach (var policy in AuthorizationPolicies.RolePolicies)
@@ -198,11 +199,17 @@ public static class SecurityExtensions
                 opt.AddPolicy(policy.PolicyName, policyBuilder =>
                     policyBuilder.Requirements.Add(policy.RolesAuthorizationRequirement));
             }
-            // Policy for Admin role
-            opt.AddPolicy("RequireAdminApiFullAccess", policy =>
+            foreach (var scope in AuthorizationPolicies.ScopePolicies)
+            {
+                opt.AddPolicy(scope.PolicyName, policy =>
+                {
                     policy.RequireAssertion(context =>
-                        context.User.HasClaim(c => c.Type == OpenIddictConstants.Claims.Scope && c.Value == SecurityConstants.Scopes.AdminApiFullAccess))
-            .AddAuthenticationSchemes("Local", "IdentityProvider"));
+                        context.User.HasClaim(c => c.Type == OpenIddictConstants.Claims.Scope && c.Value.Contains(scope.Scope))
+                    );
+                });
+            }
+
+
         });
         services.AddSingleton<IAuthorizationHandler, RolesAuthorizationHandler>();
         // Controllers to hide from Swagger conditionally

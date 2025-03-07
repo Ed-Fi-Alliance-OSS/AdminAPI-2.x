@@ -11,6 +11,7 @@ using EdFi.Ods.AdminApi.Common.Infrastructure.Context;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Database;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Extensions;
 using EdFi.Ods.AdminApi.Common.Infrastructure.MultiTenancy;
+using EdFi.Ods.AdminApi.Common.Infrastructure.Security;
 using EdFi.Ods.AdminApi.Common.Settings;
 using EdFi.Ods.AdminApi.Infrastructure.Api;
 using EdFi.Ods.AdminApi.Infrastructure.Documentation;
@@ -108,6 +109,8 @@ public static class WebApplicationBuilderExtensions
                             Scopes = new Dictionary<string, string>
                             {
                                 { SecurityConstants.Scopes.AdminApiFullAccess, "Unrestricted access to all Admin API endpoints" },
+                                { SecurityConstants.Scopes.AdminApiTenantAccess, "Access for tenant Administrators" },
+                                { SecurityConstants.Scopes.AdminApiWorker, "Restricted access for Worker processes" },
                             }
                         },
                     },
