@@ -23,8 +23,8 @@ public class GetInstancesQuery : IGetInstancesQuery
     {
         _instanceQuery = instanceQuery;
     }
-    
-    public async Task<IEnumerable<Instance>> Execute(string? tenantName, string? status)
+
+    public async Task<IEnumerable<Instance>> Execute(string? tenantName = null, string? status = null)
     {
         var query = _instanceQuery.Query()
             .Include(i => i.OdsInstanceContexts)
@@ -38,7 +38,7 @@ public class GetInstancesQuery : IGetInstancesQuery
 
         if (!string.IsNullOrEmpty(status))
         {
-            if(!Enum.TryParse<InstanceStatus>(status, true, out var statusEnum))
+            if (!Enum.TryParse<InstanceStatus>(status, true, out var statusEnum))
             {
                 throw new ArgumentException($"'{status}' is invalid state. Allowed values: {string.Join(", ", Enum.GetNames(typeof(InstanceStatus)))}");
             }

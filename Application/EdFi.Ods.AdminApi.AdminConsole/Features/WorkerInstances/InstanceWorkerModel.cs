@@ -26,7 +26,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Features.WorkerInstances
         public string? Status { get; set; }
     }
 
-    public class InstanceWorkerModelDTO
+    public class InstanceWorkerModelDto
     {
         public string? ClientId { get; set; }
         public string? Secret { get; set; }

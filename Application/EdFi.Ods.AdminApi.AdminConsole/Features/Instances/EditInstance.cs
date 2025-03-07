@@ -28,7 +28,7 @@ public class EditInstance : IFeature
     {
         request.Id = id;
         await validator.GuardAsync(request);
-        var instance = await editInstanceCommand.Execute(id, request);
+        await editInstanceCommand.Execute(id, request);
         return Results.NoContent();
     }
 
