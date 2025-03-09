@@ -14,8 +14,25 @@ public static class SecurityConstants
 
     public static class Scopes
     {
-        public const string AdminApiFullAccess = "edfi_admin_api/full_access";
-        public const string AdminApiTenantAccess = "edfi_admin_api/tenant_access";
-        public const string AdminApiWorker = "edfi_admin_api/worker";
+        public static readonly ScopeDefinition AdminApiFullAccess = new ScopeDefinition("edfi_admin_api/full_access", "Full access to the Admin API");
+        public static readonly ScopeDefinition AdminApiTenantAccess = new ScopeDefinition("edfi_admin_api/tenant_access", "Access to a specific tenant");
+        public static readonly ScopeDefinition AdminApiWorker = new ScopeDefinition("edfi_admin_api/worker", "Worker access to the Admin API");
+
+        public static IEnumerable<ScopeDefinition> AllScopes = new List<ScopeDefinition>
+        {
+            AdminApiFullAccess,
+            AdminApiTenantAccess,
+            AdminApiWorker
+        };
+    }
+    public class ScopeDefinition
+    {
+        public string Scope { get; }
+        public string ScopeDescription { get; }
+        public ScopeDefinition(string scope, string scopeDescription)
+        {
+            Scope = scope;
+            ScopeDescription = scopeDescription;
+        }
     }
 }
