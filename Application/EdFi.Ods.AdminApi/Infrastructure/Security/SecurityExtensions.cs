@@ -37,7 +37,7 @@ public static class SecurityExtensions
         var signingKey = string.IsNullOrEmpty(signingKeyValue)
             ? null
             : new SymmetricSecurityKey(Convert.FromBase64String(signingKeyValue));
-
+        var validateIssuerSigningKey = configuration.Get<bool>("Authentication:ValidateIssuerSigningKey");
         services
             .AddOpenIddict()
             .AddCore(opt =>
@@ -105,7 +105,7 @@ public static class SecurityExtensions
                 {
                     ValidateAudience = false,
                     ValidateIssuer = true,
-                    ValidateIssuerSigningKey = true,
+                    ValidateIssuerSigningKey = validateIssuerSigningKey,
                     ValidIssuer = issuer,
                     RoleClaimType = "realm_access.roles",
                     IssuerSigningKey = signingKey
@@ -126,7 +126,7 @@ public static class SecurityExtensions
                     {
                         ValidateAudience = false,
                         ValidateIssuer = true,
-                        ValidateIssuerSigningKey = false,
+                        ValidateIssuerSigningKey = validateIssuerSigningKey,
                         ValidIssuer = oidcIssuer,
                         RoleClaimType = "realm_access.roles",
                         IssuerSigningKeyResolver = (token, securityToken, kid, parameters) =>
@@ -164,7 +164,7 @@ public static class SecurityExtensions
                     {
                         ValidateAudience = false,
                         ValidateIssuer = configuration.Get<bool>("Authentication:OIDC:ValidateIssuer"),
-                        ValidateIssuerSigningKey = false,
+                        ValidateIssuerSigningKey = validateIssuerSigningKey,
                         ValidIssuer = oidcIssuer,
                         RoleClaimType = "realm_access.roles",
                         IssuerSigningKeyResolver = (token, securityToken, kid, parameters) =>
