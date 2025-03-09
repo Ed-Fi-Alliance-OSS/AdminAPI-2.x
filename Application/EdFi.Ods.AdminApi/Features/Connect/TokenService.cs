@@ -55,15 +55,14 @@ public class TokenService : ITokenService
             throw new AuthenticationException(DENIED_AUTHENTICATION_MESSAGE);
 
         var displayName = await _applicationManager.GetDisplayNameAsync(application);
-        if(_configuration == null)
-            Console.WriteLine("Configuration is null");
         var identity = new ClaimsIdentity(JwtBearerDefaults.AuthenticationScheme);
         identity.AddClaim(OpenIddictConstants.Claims.Subject, request.ClientId!, OpenIddictConstants.Destinations.AccessToken);
         identity.AddClaim(OpenIddictConstants.Claims.Name, displayName!, OpenIddictConstants.Destinations.AccessToken);
         var roles = Roles.AllRoles.Select(obj => obj.RoleName).ToList();
+        var rolesClaim = _configuration?.GetValue<string>("AppSettings:roleClaimAttribute") ?? "roles";
         foreach (var role in roles)
         {
-            identity.AddClaim(new Claim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", role, OpenIddictConstants.Destinations.AccessToken));
+            identity.AddClaim(new Claim(rolesClaim, role, OpenIddictConstants.Destinations.AccessToken));
         }
         var principal = new ClaimsPrincipal(identity);
         principal.SetScopes(requestedScopes);

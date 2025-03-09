@@ -11,8 +11,7 @@ namespace EdFi.Ods.AdminApi.Common.Infrastructure.Security
     {
         // Define the roles that are used in the application
         private static readonly IEnumerable<string> _adminApiClientRole = new List<string> { Roles.AdminApiClientRole.RoleName };
-        private static readonly IEnumerable<string> _adminConsoleUserRole = _adminApiClientRole
-            .Concat(new List<string> { Roles.AdminConsoleUserRole.RoleName }).ToList();
+        private static readonly IEnumerable<string> _adminConsoleUserRole = new List<string> { Roles.AdminConsoleUserRole.RoleName };
         // Create policies by role
         public static readonly PolicyDefinition AdminApiClientPolicy = new PolicyDefinition("AdminApiClient", _adminApiClientRole);
         public static readonly PolicyDefinition AdminConsoleUserPolicy = new PolicyDefinition("AdminConsoleUserPolicy", _adminConsoleUserRole);
