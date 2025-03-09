@@ -65,9 +65,10 @@ public static class SecurityExtensions
                     }
                     opt.AddSigningKey(signingKey);
                 }
-                opt.RegisterScopes(SecurityConstants.Scopes.AdminApiFullAccess);
-                opt.RegisterScopes(SecurityConstants.Scopes.AdminApiTenantAccess);
-                opt.RegisterScopes(SecurityConstants.Scopes.AdminApiWorker);
+                foreach (var scope in SecurityConstants.Scopes.AllScopes)
+                {
+                    opt.RegisterScopes(scope.Scope);
+                }
                 var aspNetCoreBuilder = opt.UseAspNetCore().EnableTokenEndpointPassthrough();
                 if (isDockerEnvironment)
                 {

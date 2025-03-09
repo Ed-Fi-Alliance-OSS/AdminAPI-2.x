@@ -52,10 +52,13 @@ public class RegisterService : IRegisterService
             Permissions =
             {
                 OpenIddictConstants.Permissions.Endpoints.Token,
-                OpenIddictConstants.Permissions.GrantTypes.ClientCredentials,
-                OpenIddictConstants.Permissions.Prefixes.Scope + SecurityConstants.Scopes.AdminApiFullAccess
+                OpenIddictConstants.Permissions.GrantTypes.ClientCredentials
             },
         };
+        foreach (var scopeValue in SecurityConstants.Scopes.AllScopes)
+        {
+            application.Permissions.Add(OpenIddictConstants.Permissions.Prefixes.Scope + scopeValue.Scope);
+        }
 
         await _applicationManager.CreateAsync(application);
         return true;
