@@ -55,7 +55,7 @@
       "composites" : {
         "realm" : [ "create-realm" ],
         "client" : {
-          "myrealm-realm" : [ "view-identity-providers", "query-realms", "manage-authorization", "view-clients", "query-clients", "manage-identity-providers", "create-client", "impersonation", "view-events", "manage-clients", "manage-events", "view-users", "query-groups", "view-realm", "view-authorization", "manage-realm", "query-users", "manage-users" ],
+          "edfi-admin-console-realm" : [ "view-identity-providers", "query-realms", "manage-authorization", "view-clients", "query-clients", "manage-identity-providers", "create-client", "impersonation", "view-events", "manage-clients", "manage-events", "view-users", "query-groups", "view-realm", "view-authorization", "manage-realm", "query-users", "manage-users" ],
           "master-realm" : [ "manage-realm", "view-identity-providers", "view-events", "query-realms", "view-clients", "view-realm", "manage-events", "manage-authorization", "view-users", "query-users", "manage-identity-providers", "view-authorization", "impersonation", "query-clients", "create-client", "manage-clients", "query-groups", "manage-users" ]
         }
       },
@@ -102,7 +102,7 @@
       "attributes" : { }
     } ],
     "client" : {
-      "myrealm-realm" : [ {
+      "edfi-admin-console-realm" : [ {
         "id" : "35bcb9c8-4ee9-412f-b21d-26043cca36dc",
         "name" : "manage-clients",
         "description" : "${role_manage-clients}",
@@ -141,7 +141,7 @@
         "composite" : true,
         "composites" : {
           "client" : {
-            "myrealm-realm" : [ "query-groups", "query-users" ]
+            "edfi-admin-console-realm" : [ "query-groups", "query-users" ]
           }
         },
         "clientRole" : true,
@@ -186,7 +186,7 @@
         "composite" : true,
         "composites" : {
           "client" : {
-            "myrealm-realm" : [ "query-clients" ]
+            "edfi-admin-console-realm" : [ "query-clients" ]
           }
         },
         "clientRole" : true,
@@ -733,8 +733,8 @@
     "optionalClientScopes" : [ "address", "phone", "offline_access", "microprofile-jwt" ]
   }, {
     "id" : "36d7d2dd-1d86-4c0b-beb1-083a4f24afcc",
-    "clientId" : "myrealm-realm",
-    "name" : "myrealm Realm",
+    "clientId" : "edfi-admin-console-realm",
+    "name" : "Ed-Fi Admin Console Realm",
     "surrogateAuthRequired" : false,
     "enabled" : true,
     "alwaysDisplayInConsole" : false,
@@ -2065,7 +2065,7 @@
   }
 }, {
   "id" : "debc13fa-cc4a-48a4-adc7-64790f086ba8",
-  "realm" : "myrealm",
+  "realm" : "edfi-admin-console",
   "notBefore" : 0,
   "defaultSignatureAlgorithm" : "RS256",
   "revokeRefreshToken" : false,
@@ -2120,7 +2120,7 @@
       "attributes" : { }
     }, {
       "id" : "299c058e-116f-4259-96d8-83ba720b3411",
-      "name" : "default-roles-myrealm",
+      "name" : "default-roles-edfi-admin-console",
       "description" : "${role_default-roles}",
       "composite" : true,
       "composites" : {
@@ -2142,7 +2142,7 @@
       "attributes" : { }
     } ],
     "client" : {
-      "ac" : [ ],
+      "admin-console" : [ ],
       "realm-management" : [ {
         "id" : "9cd73fd8-d11d-4710-98b1-8d1b26547ca6",
         "name" : "view-identity-providers",
@@ -2403,7 +2403,7 @@
   "groups" : [ ],
   "defaultRole" : {
     "id" : "299c058e-116f-4259-96d8-83ba720b3411",
-    "name" : "default-roles-myrealm",
+    "name" : "default-roles-edfi-admin-console",
     "description" : "${role_default-roles}",
     "composite" : true,
     "clientRole" : false,
@@ -2460,22 +2460,22 @@
     } ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
-    "realmRoles" : [ "default-roles-myrealm" ],
+    "realmRoles" : [ "default-roles-edfi-admin-console" ],
     "notBefore" : 0,
     "groups" : [ ]
   } ],
   "scopeMappings" : [ {
     "clientScope" : "edfi_admin_api/full_access",
-    "roles" : [ "default-roles-myrealm" ]
+    "roles" : [ "default-roles-edfi-admin-console" ]
   }, {
     "clientScope" : "offline_access",
     "roles" : [ "offline_access" ]
   }, {
     "clientScope" : "edfiadmin/full-access",
-    "roles" : [ "default-roles-myrealm" ]
+    "roles" : [ "default-roles-edfi-admin-console" ]
   }, {
     "clientScope" : "openid",
-    "roles" : [ "default-roles-myrealm" ]
+    "roles" : [ "default-roles-edfi-admin-console" ]
   } ],
   "clientScopeMappings" : {
     "account" : [ {
@@ -2485,8 +2485,8 @@
   },
   "clients" : [ {
     "id" : "7ad9909d-cf22-49c2-a29c-e496687fcd84",
-    "clientId" : "ac",
-    "name" : "",
+    "clientId" : "admin-console",
+    "name" : "Ed-Fi Admin Console Web Client",
     "description" : "",
     "rootUrl" : "https://localhost/edficonsole/v2.3/v7.2/ds4/saas/tx/",
     "adminUrl" : "https://localhost/edficonsole/v2.3/v7.2/ds4/saas/tx/",
@@ -2525,12 +2525,12 @@
     "clientId" : "account",
     "name" : "${client_account}",
     "rootUrl" : "${authBaseUrl}",
-    "baseUrl" : "/realms/myrealm/account/",
+    "baseUrl" : "/realms/edfi-admin-console/account/",
     "surrogateAuthRequired" : false,
     "enabled" : true,
     "alwaysDisplayInConsole" : false,
     "clientAuthenticatorType" : "client-secret",
-    "redirectUris" : [ "/realms/myrealm/account/*" ],
+    "redirectUris" : [ "/realms/edfi-admin-console/account/*" ],
     "webOrigins" : [ ],
     "notBefore" : 0,
     "bearerOnly" : false,
@@ -2556,12 +2556,12 @@
     "clientId" : "account-console",
     "name" : "${client_account-console}",
     "rootUrl" : "${authBaseUrl}",
-    "baseUrl" : "/realms/myrealm/account/",
+    "baseUrl" : "/realms/edfi-admin-console/account/",
     "surrogateAuthRequired" : false,
     "enabled" : true,
     "alwaysDisplayInConsole" : false,
     "clientAuthenticatorType" : "client-secret",
-    "redirectUris" : [ "/realms/myrealm/account/*" ],
+    "redirectUris" : [ "/realms/edfi-admin-console/account/*" ],
     "webOrigins" : [ ],
     "notBefore" : 0,
     "bearerOnly" : false,
@@ -2684,12 +2684,12 @@
     "clientId" : "security-admin-console",
     "name" : "${client_security-admin-console}",
     "rootUrl" : "${authAdminUrl}",
-    "baseUrl" : "/admin/myrealm/console/",
+    "baseUrl" : "/admin/edfi-admin-console/console/",
     "surrogateAuthRequired" : false,
     "enabled" : true,
     "alwaysDisplayInConsole" : false,
     "clientAuthenticatorType" : "client-secret",
-    "redirectUris" : [ "/admin/myrealm/console/*" ],
+    "redirectUris" : [ "/admin/edfi-admin-console/console/*" ],
     "webOrigins" : [ "+" ],
     "notBefore" : 0,
     "bearerOnly" : false,

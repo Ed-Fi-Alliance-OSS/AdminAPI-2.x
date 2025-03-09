@@ -11,6 +11,8 @@ namespace EdFi.Ods.AdminApi.Common.Infrastructure.Security
             = new RoleDefinition("adminapi-client", "AminApi Client");
         public static readonly RoleDefinition AdminConsoleUserRole
             = new RoleDefinition("adminconsole-user", "AdminConsole User");
+        public static readonly IEnumerable<RoleDefinition> AllRoles
+            = new List<RoleDefinition> { AdminApiClientRole, AdminConsoleUserRole };
     }
     public class RoleDefinition
     {
