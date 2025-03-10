@@ -24,7 +24,7 @@ public class AddPermission : IFeature
       .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
-    public async Task<IResult> Execute(Validator validator, IAddPermissionCommand addPermissionCommand, AddPermissionRequest request)
+    public static async Task<IResult> Execute(Validator validator, IAddPermissionCommand addPermissionCommand, AddPermissionRequest request)
     {
         await validator.GuardAsync(request);
         var addedPermissionResult = await addPermissionCommand.Execute(request);
@@ -67,7 +67,7 @@ public class AddPermission : IFeature
              .Must(BeValidDocument).WithMessage("Document must be a valid JSON.");
         }
 
-        private bool BeValidDocument(string document)
+        private static bool BeValidDocument(string document)
         {
             try
             {

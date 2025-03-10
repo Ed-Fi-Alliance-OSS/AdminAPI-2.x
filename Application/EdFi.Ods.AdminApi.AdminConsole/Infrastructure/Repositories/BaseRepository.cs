@@ -9,7 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repositories;
 
+#pragma warning disable S2326 // Unused type parameters should be removed
 public interface IBaseRepository<T> where T : class
+#pragma warning restore S2326 // Unused type parameters should be removed
 {
     void SwitchConnectionString(string connectionString);
     void ResetConnectionString();

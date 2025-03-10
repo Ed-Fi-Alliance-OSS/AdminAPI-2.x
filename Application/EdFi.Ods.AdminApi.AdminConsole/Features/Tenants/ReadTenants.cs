@@ -24,13 +24,13 @@ public class ReadTenants : IFeature
            .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
-    public async Task<IResult> GetTenantsAsync(IAdminConsoleTenantsService adminConsoleTenantsService, IMemoryCache memoryCache)
+    public static async Task<IResult> GetTenantsAsync(IAdminConsoleTenantsService adminConsoleTenantsService, IMemoryCache memoryCache)
     {
         var tenants = await adminConsoleTenantsService.GetTenantsAsync(true);
         return Results.Ok(tenants);
     }
 
-    public async Task<IResult> GetTenantsByTenantIdAsync(IAdminConsoleTenantsService adminConsoleTenantsService,
+    public static async Task<IResult> GetTenantsByTenantIdAsync(IAdminConsoleTenantsService adminConsoleTenantsService,
         IMemoryCache memoryCache, int tenantId)
     {
         var tenant = await adminConsoleTenantsService.GetTenantByTenantIdAsync(tenantId);
