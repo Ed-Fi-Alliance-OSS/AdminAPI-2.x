@@ -56,6 +56,12 @@ C4Container
     UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="2")
 ```
 
+
+> [!TIP]
+> The below diagram uses the postgres database engine and may vary with the SQL Server engine. If your 
+> database engine is SQL Server and you would like to use our experimental compose files use the following
+> link for more details.
+
 ## Functional Requirements
 
 Users will need the ability to perform the following operations for ODS database
