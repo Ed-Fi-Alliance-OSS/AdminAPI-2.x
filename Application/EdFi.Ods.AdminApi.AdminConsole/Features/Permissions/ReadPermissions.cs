@@ -35,13 +35,13 @@ public class ReadPermissions : IFeature
             .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
-    internal async Task<IResult> GetPermissions([FromServices] IGetPermissionsQuery getPermissionQuery)
+    internal static async Task<IResult> GetPermissions([FromServices] IGetPermissionsQuery getPermissionQuery)
     {
         var permissions = await getPermissionQuery.Execute();
         return Results.Ok(permissions);
     }
 
-    internal async Task<IResult> GetPermissionById([FromServices] IGetPermissionByIdQuery getPermissionQuery, int tenantId, int id)
+    internal static async Task<IResult> GetPermissionById([FromServices] IGetPermissionByIdQuery getPermissionQuery, int tenantId, int id)
     {
         var permission = await getPermissionQuery.Execute(tenantId, id);
 
@@ -51,7 +51,7 @@ public class ReadPermissions : IFeature
         return Results.NotFound();
     }
 
-    internal async Task<IResult> GetPermissionsByTenantId([FromServices] IGetPermissionsByTenantIdQuery getPermissionQuery, int tenantId)
+    internal static async Task<IResult> GetPermissionsByTenantId([FromServices] IGetPermissionsByTenantIdQuery getPermissionQuery, int tenantId)
     {
         var permissions = await getPermissionQuery.Execute(tenantId);
         if (permissions.Any())

@@ -29,14 +29,14 @@ public class ReadInstances : IFeature
             .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
-    internal async Task<IResult> GetInstances(IMapper mapper, [FromServices] IGetInstancesQuery getInstancesQuery, string? status)
+    internal static async Task<IResult> GetInstances(IMapper mapper, [FromServices] IGetInstancesQuery getInstancesQuery, string? status)
     {
         var instances = await getInstancesQuery.Execute(status: status);
         var instanceModels = mapper.Map<List<InstanceModel>>(instances);
         return Results.Ok(instanceModels);
     }
 
-    internal async Task<IResult> GetInstanceById(IMapper mapper, [FromServices] IGetInstanceByIdQuery getInstanceByIdQuery, int Id)
+    internal static async Task<IResult> GetInstanceById(IMapper mapper, [FromServices] IGetInstanceByIdQuery getInstanceByIdQuery, int Id)
     {
         var instance = await getInstanceByIdQuery.Execute(Id);
         if (instance != null)

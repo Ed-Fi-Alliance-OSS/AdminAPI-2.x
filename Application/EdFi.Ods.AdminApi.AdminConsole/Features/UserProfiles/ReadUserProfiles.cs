@@ -31,7 +31,7 @@ public class ReadUserProfiles : IFeature
             .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
-    internal async Task<IResult> GetUserProfileById(IMapper mapper, IGetUserProfileByIdQuery getUserProfileQuery, int tenantId, int id)
+    internal static async Task<IResult> GetUserProfileById(IMapper mapper, IGetUserProfileByIdQuery getUserProfileQuery, int tenantId, int id)
     {
         var userProfile = await getUserProfileQuery.Execute(tenantId, id);
         if (userProfile != null)
@@ -39,13 +39,13 @@ public class ReadUserProfiles : IFeature
         return Results.NotFound();
     }
 
-    internal async Task<IResult> GetUserProfiles(IMapper mapper, IGetUserProfilesQuery getUserProfilesQuery)
+    internal static async Task<IResult> GetUserProfiles(IMapper mapper, IGetUserProfilesQuery getUserProfilesQuery)
     {
         var userProfiles = await getUserProfilesQuery.Execute();
         return Results.Ok(userProfiles);
     }
 
-    internal async Task<IResult> GetUserProfilesByTenant(IMapper mapper, IGetUserProfilesByTenantIdQuery getUserProfilesQuery, int tenantId)
+    internal static async Task<IResult> GetUserProfilesByTenant(IMapper mapper, IGetUserProfilesByTenantIdQuery getUserProfilesQuery, int tenantId)
     {
         var userProfiles = await getUserProfilesQuery.Execute(tenantId);
         if (userProfiles.Any())

@@ -29,7 +29,7 @@ public class AddInstance : IFeature
       .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
-    public async Task<IResult> Execute(InstanceValidator validator, IAddInstanceCommand addInstanceCommand, [FromBody] AddInstanceRequest request)
+    public static async Task<IResult> Execute(InstanceValidator validator, IAddInstanceCommand addInstanceCommand, [FromBody] AddInstanceRequest request)
     {
         await validator.GuardAsync(request);
         var addedInstanceResult = await addInstanceCommand.Execute(request);
@@ -42,7 +42,7 @@ public class AddInstance : IFeature
         public int TenantId { get; set; }
 
         public string TenantName { get; set; } = string.Empty;
-        
+
         public string Name { get; set; } = string.Empty;
 
         public string? InstanceType { get; set; }

@@ -24,17 +24,17 @@ public class ReadHealthcheck : IFeature
       .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
-    internal async Task<IResult> GetHealthcheck(IMapper mapper, IGetHealthCheckQuery getHealthCheckQuery, int tenantId)
+    internal static async Task<IResult> GetHealthcheck(IMapper mapper, IGetHealthCheckQuery getHealthCheckQuery, int tenantId)
     {
         var healthChecks = await getHealthCheckQuery.Execute(tenantId);
-        if(healthChecks != null)
+        if (healthChecks != null)
         {
             return Results.Ok(healthChecks);
         }
         return Results.NotFound();
     }
 
-    internal async Task<IResult> GetHealthchecks(IMapper mapper, IGetHealthChecksQuery getHealthChecksQuery)
+    internal static async Task<IResult> GetHealthchecks(IMapper mapper, IGetHealthChecksQuery getHealthChecksQuery)
     {
         var healthChecks = await getHealthChecksQuery.Execute();
         return Results.Ok(healthChecks);
