@@ -3,7 +3,7 @@
 Possible options can be found here
 https://docs.ed-fi.org/reference/docker#2b-microsoft-sql-server
 
-The 3rd option might be the best one. It uses by default Sql Server Express due to lack of license, but clients can set its own key and version setting the environment variable MSSQL_PID.
+The 3rd option might be the best one. It uses by default Sql Server Express due to lack of license, but clients can set its own key and version using the environment variable MSSQL_PID.
 
 ## Docker Compose
 
