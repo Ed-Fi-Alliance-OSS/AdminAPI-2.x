@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdFi.Ods.AdminApi.Common", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdFi.Ods.AdminApi.Common.UnitTests", "EdFi.Ods.AdminApi.Common.UnitTests\EdFi.Ods.AdminApi.Common.UnitTests.csproj", "{D0B566A2-000E-48FC-9CD0-702F7A00CA76}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdFi.Ods.AdminApi.AdminConsole.UnitTests", "EdFi.Ods.AdminApi.AdminConsole.UnitTests\EdFi.Ods.AdminApi.AdminConsole.UnitTests.csproj", "{7C919128-B651-4756-8625-A8F7882FA9A4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,14 @@ Global
 		{D0B566A2-000E-48FC-9CD0-702F7A00CA76}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D0B566A2-000E-48FC-9CD0-702F7A00CA76}.Release|x64.ActiveCfg = Release|Any CPU
 		{D0B566A2-000E-48FC-9CD0-702F7A00CA76}.Release|x64.Build.0 = Release|Any CPU
+		{7C919128-B651-4756-8625-A8F7882FA9A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C919128-B651-4756-8625-A8F7882FA9A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C919128-B651-4756-8625-A8F7882FA9A4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7C919128-B651-4756-8625-A8F7882FA9A4}.Debug|x64.Build.0 = Debug|Any CPU
+		{7C919128-B651-4756-8625-A8F7882FA9A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C919128-B651-4756-8625-A8F7882FA9A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C919128-B651-4756-8625-A8F7882FA9A4}.Release|x64.ActiveCfg = Release|Any CPU
+		{7C919128-B651-4756-8625-A8F7882FA9A4}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
