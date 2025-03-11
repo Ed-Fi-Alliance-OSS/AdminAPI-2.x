@@ -76,10 +76,9 @@
 param(
     # Command to execute, defaults to "Build".
     [string]
-    [ValidateSet("Clean", "Build", "GenerateOpenAPIAndMD", "BuildAndPublish", "UnitTest", "IntegrationTest"
-        , "UnitAndIntegration", "PackageApi", "Push", "BuildAndTest", "BuildAndDeployToAdminApiDockerContainer"
-        , "BuildAndRunAdminApiDevDocker", "RunAdminApiDevDockerContainer", "RunAdminApiDevDockerCompose"
-        , "Run", "CopyToDockerContext", "RemoveDockerContextFiles")]
+    [ValidateSet("Clean", "Build", "GenerateOpenAPIAndMD", "BuildAndPublish", "UnitTest", "IntegrationTest", "PackageApi"
+        , "Push", "BuildAndTest", "BuildAndDeployToAdminApiDockerContainer"
+        , "BuildAndRunAdminApiDevDocker", "RunAdminApiDevDockerContainer", "RunAdminApiDevDockerCompose", "Run", "CopyToDockerContext", "RemoveDockerContextFiles")]
     $Command = "Build",
 
     # Assembly and package version number for Admin API. The current package number is
@@ -145,7 +144,6 @@ $appCommonPackageName = "EdFi.Installer.AppCommon"
 $appCommonPackageVersion = "3.0.0"
 
 # Code coverage analysis
-#$thresholdCoverage = 80
 $script:coverageOutputFile = "coverage.cobertura.xml"
 $script:targetDir = "coveragereport"
 
