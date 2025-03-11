@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repositories;
 
-public interface ICommandRepository<T> : IBaseRepository<T> where T : class
+public interface ICommandRepository<T> : IBaseRepository where T : class
 {
     Task<T> AddAsync(T entity);
     Task<T> UpdateAsync(T entity);

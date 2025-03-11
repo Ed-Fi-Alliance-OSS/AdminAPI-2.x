@@ -9,16 +9,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repositories;
 
-#pragma warning disable S2326 // Unused type parameters should be removed
-public interface IBaseRepository<T> where T : class
-#pragma warning restore S2326 // Unused type parameters should be removed
+public interface IBaseRepository
 {
     void SwitchConnectionString(string connectionString);
     void ResetConnectionString();
     Task SaveChangesAsync();
 }
 
-public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
+public abstract class BaseRepository<T> : IBaseRepository where T : class
 {
     protected readonly IDbContext _context;
     protected DbSet<T> _dbSet;
