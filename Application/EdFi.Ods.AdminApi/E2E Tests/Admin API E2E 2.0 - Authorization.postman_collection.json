@@ -62,6 +62,10 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
+									"if (pm.variables.get(\"isMultitenant\") == \"true\") {\r",
+									"    header['Tenant'] = `${pm.variables.get(\"tenant1\")}`;\r",
+									"    pm.request.headers.upsert({key: 'Tenant', value: `${pm.variables.get(\"tenant1\")}` });\r",
+									"}\r",
 									"pm.collectionVariables.set(\"RegisteredClientId\", pm.variables.replaceIn('{{$guid}}'));\r",
 									"pm.collectionVariables.set(\"RegisteredClientSecret\", pm.variables.replaceIn('TKN{{$guid}}'));\r",
 									""
@@ -165,7 +169,10 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									""
+									"if (pm.variables.get(\"isMultitenant\") == \"true\") {\r",
+									"    header['Tenant'] = `${pm.variables.get(\"tenant1\")}`;\r",
+									"    pm.request.headers.upsert({key: 'Tenant', value: `${pm.variables.get(\"tenant1\")}` });\r",
+									"}"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -269,6 +276,19 @@
 								"type": "text/javascript",
 								"packages": {}
 							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (pm.variables.get(\"isMultitenant\") == \"true\") {\r",
+									"    header['Tenant'] = `${pm.variables.get(\"tenant1\")}`;\r",
+									"    pm.request.headers.upsert({key: 'Tenant', value: `${pm.variables.get(\"tenant1\")}` });\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
 						}
 					],
 					"request": {
@@ -357,6 +377,19 @@
 								"type": "text/javascript",
 								"packages": {}
 							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (pm.variables.get(\"isMultitenant\") == \"true\") {\r",
+									"    header['Tenant'] = `${pm.variables.get(\"tenant1\")}`;\r",
+									"    pm.request.headers.upsert({key: 'Tenant', value: `${pm.variables.get(\"tenant1\")}` });\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
 						}
 					],
 					"request": {
@@ -410,6 +443,19 @@
 									"pm.test(\"GET ClaimSets: Status code is 403 for Tenant Access\", function () {\r",
 									"    pm.response.to.have.status(403);\r",
 									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (pm.variables.get(\"isMultitenant\") == \"true\") {\r",
+									"    header['Tenant'] = `${pm.variables.get(\"tenant1\")}`;\r",
+									"    pm.request.headers.upsert({key: 'Tenant', value: `${pm.variables.get(\"tenant1\")}` });\r",
+									"}"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -502,6 +548,19 @@
 								"type": "text/javascript",
 								"packages": {}
 							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (pm.variables.get(\"isMultitenant\") == \"true\") {\r",
+									"    header['Tenant'] = `${pm.variables.get(\"tenant1\")}`;\r",
+									"    pm.request.headers.upsert({key: 'Tenant', value: `${pm.variables.get(\"tenant1\")}` });\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
 						}
 					],
 					"request": {
@@ -556,6 +615,19 @@
 									"    pm.response.to.have.status(403);\r",
 									"});\r",
 									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (pm.variables.get(\"isMultitenant\") == \"true\") {\r",
+									"    header['Tenant'] = `${pm.variables.get(\"tenant1\")}`;\r",
+									"    pm.request.headers.upsert({key: 'Tenant', value: `${pm.variables.get(\"tenant1\")}` });\r",
+									"}"
 								],
 								"type": "text/javascript",
 								"packages": {}
