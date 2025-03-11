@@ -65,7 +65,7 @@ public class TenantService : IAdminConsoleTenantsService
                 var connectionString = tenantConfig.Value.ConnectionStrings.First(p => p.Key == ADMIN_DB_KEY).Value;
                 if (!ConnectionStringHelper.ValidateConnectionString(_appSettings.AppSettings.DatabaseEngine!, connectionString))
                 {
-                    _log.WarnFormat("Tenant {Key} has a wrong connection string for database {ADMIN_DB_KEY}", tenantConfig.Key, ADMIN_DB_KEY);
+                    _log.WarnFormat("Tenant {Key} has an invalid connection string for database {ADMIN_DB_KEY}", tenantConfig.Key, ADMIN_DB_KEY);
 
                 }
                 dynamic document = new ExpandoObject();
