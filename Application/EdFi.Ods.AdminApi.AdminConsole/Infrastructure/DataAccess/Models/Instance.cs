@@ -9,6 +9,7 @@ public class Instance
 {
     public int Id { get; set; }
     public int TenantId { get; set; }
+    public string TenantName { get; set; } = string.Empty;
     public int? OdsInstanceId { get; set; }
     public string InstanceName { get; set; } = string.Empty;
     public string? InstanceType { get; set; }
@@ -28,6 +29,9 @@ public enum InstanceStatus
     Pending,
     Completed,
     InProgress,
+    Pending_Delete,
+    Deleted,
+    Delete_Failed,
     Error
 }
 
