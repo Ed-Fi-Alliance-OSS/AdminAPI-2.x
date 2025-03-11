@@ -76,9 +76,10 @@
 param(
     # Command to execute, defaults to "Build".
     [string]
-    [ValidateSet("Clean", "Build", "GenerateOpenAPIAndMD", "BuildAndPublish", "UnitTest", "IntegrationTest", "PackageApi"
-        , "Push", "BuildAndTest", "BuildAndDeployToAdminApiDockerContainer"
-        , "BuildAndRunAdminApiDevDocker", "RunAdminApiDevDockerContainer", "RunAdminApiDevDockerCompose", "Run", "CopyToDockerContext", "RemoveDockerContextFiles")]
+    [ValidateSet("Clean", "Build", "GenerateOpenAPIAndMD", "BuildAndPublish", "UnitTest", "IntegrationTest"
+        , "UnitAndIntegration", "PackageApi", "Push", "BuildAndTest", "BuildAndDeployToAdminApiDockerContainer"
+        , "BuildAndRunAdminApiDevDocker", "RunAdminApiDevDockerContainer", "RunAdminApiDevDockerCompose"
+        , "Run", "CopyToDockerContext", "RemoveDockerContextFiles")]
     $Command = "Build",
 
     # Assembly and package version number for Admin API. The current package number is
@@ -119,7 +120,11 @@ param(
 
     # Only required with local builds and testing.
     [switch]
-    $IsLocalBuild
+    $IsLocalBuild,
+
+    # Option to run coverlet for code coverage analysis, only applicable when running tests
+    [switch]
+    $RunCoverageAnalysis
 )
 
 $Env:MSBUILDDISABLENODEREUSE = "1"
@@ -138,6 +143,13 @@ $maintainers = "Ed-Fi Alliance, LLC and contributors"
 
 $appCommonPackageName = "EdFi.Installer.AppCommon"
 $appCommonPackageVersion = "3.0.0"
+
+# Code coverage analysis
+#$thresholdCoverage = 80
+$script:coverageOutputFile = "coverage.cobertura.xml"
+$script:targetDir = "coveragereport"
+
+$script:RunCoverageAnalysis = $RunCoverageAnalysis
 
 Import-Module -Name "$PSScriptRoot/eng/build-helpers.psm1" -Force
 Import-Module -Name "$PSScriptRoot/eng/package-manager.psm1" -Force
@@ -181,21 +193,31 @@ function Compile {
 
 function GenerateOpenAPI {
     Invoke-Execute {
-        cd $solutionRoot/EdFi.Ods.AdminApi/
+        Push-Location $solutionRoot/EdFi.Ods.AdminApi/
         $outputOpenAPI = "../../docs/api-specifications/openapi-yaml/admin-api-$APIVersion.yaml"
         $dllPath = "./bin/Release/net8.0/EdFi.Ods.AdminApi.dll"
-        dotnet tool run swagger tofile --output $outputOpenAPI --yaml $dllPath v2
-        cd ..\..
+
+        try {
+            dotnet tool run swagger tofile --output $outputOpenAPI --yaml $dllPath v2
+        }
+        finally {
+            Pop-Location
+        }
     }
 }
 
 function GenerateOpenAPIAdminConsole {
     Invoke-Execute {
-        cd $solutionRoot/EdFi.Ods.AdminApi/
+        Push-Location $solutionRoot/EdFi.Ods.AdminApi/
         $outputOpenAPI = "../../docs/api-specifications/openapi-yaml/admin-api-console-$APIVersion.yaml"
         $dllPath = "./bin/Release/net8.0/EdFi.Ods.AdminApi.dll"
-        dotnet tool run swagger tofile --output $outputOpenAPI --yaml $dllPath adminconsole
-        cd ..\..
+
+        try {
+            dotnet tool run swagger tofile --output $outputOpenAPI --yaml $dllPath adminconsole
+        }
+        finally {
+            Pop-Location
+        }
     }
 }
 
@@ -230,8 +252,8 @@ function RunTests {
         $Filter
     )
 
-    $testAssemblyPath = "$solutionRoot/$Filter/bin/$Configuration/"
-    $testAssemblies = Get-ChildItem -Path $testAssemblyPath -Filter "$Filter.dll" -Recurse
+    $testAssemblyPath = "$solutionRoot/$Filter/"
+    $testAssemblies = Get-ChildItem -Path $testAssemblyPath -Filter "$Filter.csproj" -Recurse
 
     if ($testAssemblies.Length -eq 0) {
         Write-Output "no test assemblies found in $testAssemblyPath"
@@ -240,10 +262,33 @@ function RunTests {
     $testAssemblies | ForEach-Object {
         Write-Output "Executing: dotnet test $($_)"
         Invoke-Execute {
+
+            $coverageArgs = ""
+
+            if ($script:RunCoverageAnalysis) {
+                $coverageArgs = "--collect:""XPlat Code Coverage"""
+            }
+
             dotnet test $_ `
+                $coverageArgs `
                 --logger "trx;LogFileName=$($_).trx" `
                 --nologo
         }
+    }
+
+    if ($script:RunCoverageAnalysis) {
+
+    }
+}
+
+function GenerateCoverageReport {
+    param (
+        [string]
+        $Filter = "**"
+    )
+
+    Invoke-Execute {
+        reportgenerator -reports:"Application/$Filter/TestResults/**/*.cobertura.xml" -targetdir:"$script:targetDir" -reporttypes:Html
     }
 }
 
@@ -530,7 +575,6 @@ function Invoke-PushPackage {
     Invoke-Step { PushPackage }
 }
 
-
 Invoke-Main {
     if ($IsLocalBuild) {
         $nugetExePath = Install-NugetCli
@@ -546,12 +590,28 @@ Invoke-Main {
             Invoke-Publish
         }
         Run { Invoke-Run }
-        UnitTest { Invoke-UnitTestSuite }
-        IntegrationTest { Invoke-IntegrationTestSuite }
+        UnitTest {
+            Invoke-UnitTestSuite
+
+            if ($script:RunCoverageAnalysis) {
+                Invoke-Step { GenerateCoverageReport }
+            }
+        }
+        IntegrationTest {
+            Invoke-IntegrationTestSuite
+
+            if ($script:RunCoverageAnalysis) {
+                Invoke-Step { GenerateCoverageReport }
+            }
+        }
         BuildAndTest {
             Invoke-Build
             Invoke-UnitTestSuite
             Invoke-IntegrationTestSuite
+
+            if ($script:RunCoverageAnalysis) {
+                Invoke-Step { GenerateCoverageReport }
+            }
         }
         Package { Invoke-BuildPackage }
         PackageApi { Invoke-BuildApiPackage }
