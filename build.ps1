@@ -273,10 +273,6 @@ function RunTests {
                 --nologo
         }
     }
-
-    if ($script:RunCoverageAnalysis) {
-
-    }
 }
 
 function GenerateCoverageReport {
