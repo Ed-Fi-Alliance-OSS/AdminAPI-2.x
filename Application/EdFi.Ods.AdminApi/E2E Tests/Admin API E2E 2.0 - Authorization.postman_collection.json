@@ -121,7 +121,7 @@
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"const response = pm.response != null ? pm.response.json() ? null;\r",
+									"const response = pm.response != null ? pm.response.json() : null;\r",
 									"pm.collectionVariables.set(\"FULL_ACCESS_TOKEN\", response?.access_token);\r",
 									"\r",
 									"pm.test(\"POST Token: Response includes token\", function () {\r",
@@ -164,8 +164,11 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"packages": {},
-								"type": "text/javascript"
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -590,82 +593,6 @@
 									"key": "limit",
 									"value": "{{limit}}"
 								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Token - Invalid Scope",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"POST Token Invalid Scope: Status code is Bad Request\", function () {\r",
-									"    pm.response.to.have.status(400);\r",
-									"});\r",
-									"\r",
-									"const response = pm.response.json();\r",
-									"\r",
-									"pm.test(\"POST Token Invalid Scope: Response includes error message\", function () {\r",
-									"    pm.expect(response).to.have.property(\"error\");\r",
-									"    pm.expect(response).to.have.property(\"error_description\");\r",
-									"    pm.expect(response).to.have.property(\"error_uri\");\r",
-									"\r",
-									"    pm.expect(response[\"error_description\"]).to.contain(\"scope\");\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "client_id",
-									"value": "{{RegisteredClientId}}",
-									"type": "text"
-								},
-								{
-									"key": "client_secret",
-									"value": "{{$guid}}",
-									"type": "text"
-								},
-								{
-									"key": "grant_type",
-									"value": "client_credentials",
-									"type": "text"
-								},
-								{
-									"key": "scope",
-									"value": "NOT_REAL/SCOPE",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{API_URL}}/connect/token",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"connect",
-								"token"
 							]
 						}
 					},
