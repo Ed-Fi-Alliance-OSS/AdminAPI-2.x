@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repositories;
 
-public interface IQueriesRepository<T> : IBaseRepository<T> where T : class
+public interface IQueriesRepository<T> : IBaseRepository where T : class
 {
     Task<IEnumerable<T>> GetAllAsync();
     IQueryable<T> Query();
