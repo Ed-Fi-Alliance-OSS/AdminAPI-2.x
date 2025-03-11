@@ -57,11 +57,6 @@ C4Container
 ```
 
 
-> [!TIP]
-> The above diagram uses the postgres database engine and may vary with the SQL Server engine. If your 
-> database engine is SQL Server and you would like to use our experimental compose files use the following
-> link for more details [ODS MSSQL Databases](https://github.com/Ed-Fi-Alliance-OSS/AdminAPI-2.x/blob/AC-149/docs/design/adminconsole/ODS-SQLSERVER.md).
-
 ## Functional Requirements
 
 Users will need the ability to perform the following operations for ODS database
