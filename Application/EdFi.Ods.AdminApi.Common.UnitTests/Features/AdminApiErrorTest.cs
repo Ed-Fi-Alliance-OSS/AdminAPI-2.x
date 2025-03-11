@@ -6,7 +6,6 @@
 using EdFi.Ods.AdminApi.Common.Features;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 using Shouldly;
 using Results = FluentValidation.Results;
 
