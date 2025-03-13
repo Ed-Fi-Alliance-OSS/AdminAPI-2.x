@@ -24,7 +24,7 @@ public class EditInstance : IFeature
             .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
-    public async Task<IResult> Execute(InstanceValidator validator, IEditInstanceCommand editInstanceCommand, [FromBody] EditInstanceRequest request, int id)
+    public static async Task<IResult> Execute(InstanceValidator validator, IEditInstanceCommand editInstanceCommand, [FromBody] EditInstanceRequest request, int id)
     {
         request.Id = id;
         await validator.GuardAsync(request);

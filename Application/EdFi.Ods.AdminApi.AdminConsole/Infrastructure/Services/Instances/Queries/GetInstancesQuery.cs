@@ -3,7 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Ods.AdminApi.AdminConsole.Helpers;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -15,14 +14,9 @@ public interface IGetInstancesQuery
     Task<IEnumerable<Instance>> Execute(string? tenantName = null, string? status = null);
 }
 
-public class GetInstancesQuery : IGetInstancesQuery
+public class GetInstancesQuery(IQueriesRepository<Instance> instanceQuery) : IGetInstancesQuery
 {
-    private readonly IQueriesRepository<Instance> _instanceQuery;
-
-    public GetInstancesQuery(IQueriesRepository<Instance> instanceQuery)
-    {
-        _instanceQuery = instanceQuery;
-    }
+    private readonly IQueriesRepository<Instance> _instanceQuery = instanceQuery;
 
     public async Task<IEnumerable<Instance>> Execute(string? tenantName = null, string? status = null)
     {

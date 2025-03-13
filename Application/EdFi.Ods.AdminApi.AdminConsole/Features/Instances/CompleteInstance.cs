@@ -23,7 +23,7 @@ public class CompleteInstance : IFeature
             .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
-    public async Task<IResult> Handle(ICompleteInstanceCommand completeInstanceCommand, int instanceid)
+    public static async Task<IResult> Handle(ICompleteInstanceCommand completeInstanceCommand, int instanceid)
     {
         try
         {

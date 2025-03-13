@@ -21,19 +21,13 @@ public interface IAdminConsoleTenantsService
     Task<TenantModel?> GetTenantByTenantIdAsync(int tenantId);
 }
 
-public class TenantService : IAdminConsoleTenantsService
+public class TenantService(IOptionsSnapshot<AppSettingsFile> options,
+    IMemoryCache memoryCache) : IAdminConsoleTenantsService
 {
     private const string ADMIN_DB_KEY = "EdFi_Admin";
-    protected AppSettingsFile _appSettings;
-    private readonly IMemoryCache _memoryCache;
+    protected AppSettingsFile _appSettings = options.Value;
+    private readonly IMemoryCache _memoryCache = memoryCache;
     private static readonly ILog _log = LogManager.GetLogger(typeof(TenantService));
-
-    public TenantService(IOptionsSnapshot<AppSettingsFile> options,
-        IMemoryCache memoryCache)
-    {
-        _memoryCache = memoryCache;
-        _appSettings = options.Value;
-    }
 
     public async Task InitializeTenantsAsync()
     {
@@ -55,7 +49,7 @@ public class TenantService : IAdminConsoleTenantsService
             }
         }
 
-        results = new List<TenantModel>();
+        results = [];
         //check multitenancy
         if (_appSettings.AppSettings.MultiTenancy)
         {
@@ -65,7 +59,7 @@ public class TenantService : IAdminConsoleTenantsService
                 var connectionString = tenantConfig.Value.ConnectionStrings.First(p => p.Key == ADMIN_DB_KEY).Value;
                 if (!ConnectionStringHelper.ValidateConnectionString(_appSettings.AppSettings.DatabaseEngine!, connectionString))
                 {
-                    _log.WarnFormat("Tenant {Key} has a wrong connection string for database {ADMIN_DB_KEY}", tenantConfig.Key, ADMIN_DB_KEY);
+                    _log.WarnFormat("Tenant {Key} has an invalid connection string for database {ADMIN_DB_KEY}", tenantConfig.Key, ADMIN_DB_KEY);
 
                 }
                 dynamic document = new ExpandoObject();
@@ -103,7 +97,7 @@ public class TenantService : IAdminConsoleTenantsService
     private async Task<List<TenantModel>> GetTenantsFromCacheAsync()
     {
         var tenants = await Task.FromResult(_memoryCache.Get<List<TenantModel>>(AdminConsoleConstants.TenantsCacheKey));
-        return tenants ?? new List<TenantModel>();
+        return tenants ?? [];
     }
 }
 
