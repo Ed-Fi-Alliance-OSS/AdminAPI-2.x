@@ -9,9 +9,11 @@ using System.Text.Json;
 using AutoMapper;
 using EdFi.Ods.AdminApi.AdminConsole.Features.Instances;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Commands;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Queries;
 using EdFi.Ods.AdminApi.Common.Features;
 using EdFi.Ods.AdminApi.Common.Infrastructure;
+using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -22,19 +24,30 @@ public class WorkerInstanceDeleted : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiEndpointBuilder.MapGet(endpoints, "/adminconsole/instances/{id}/deleted", WorkerInstanceDeletedById)
-            .WithRouteOptions(b => b.WithResponse<InstanceModel>(200))
+        AdminApiEndpointBuilder.MapGet(endpoints, "/instances/{id}/deleted", Handle)
+            .WithRouteOptions(b => b.WithResponseCode(204))
+            .WithRouteOptions(b => b.WithResponseCode(400))
+            .WithRouteOptions(b => b.WithResponseCode(404))
             .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
-    internal async Task<IResult> WorkerInstanceDeletedById([FromServices] IGetInstanceByIdQuery getInstanceByIdQuery, int Id)
+    internal static async Task<IResult> Handle([FromServices] IDeletedInstanceCommand deletedInstanceCommand, int id)
     {
-        //var instance = await getInstanceByIdQuery.Execute(Id);
-        //if (instance != null)
-        //{
-        //    var model = mapper.Map<InstanceWorkerModel>(instance);
-        //    return Results.Ok(model);
-        //}
-        //return Results.NotFound();
+        try
+        {
+            if (id < 1)
+                return Results.BadRequest("Instance Id not valid.");
+
+            await deletedInstanceCommand.Execute(id);
+            return Results.NoContent();
+        }
+        catch (NotFoundException<int> ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return Results.BadRequest(ex.Message);
+        }
     }
 }
