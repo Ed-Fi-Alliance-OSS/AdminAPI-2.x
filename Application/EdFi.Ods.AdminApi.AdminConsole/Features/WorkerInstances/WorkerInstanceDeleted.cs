@@ -24,7 +24,7 @@ public class WorkerInstanceDeleted : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiEndpointBuilder.MapGet(endpoints, "/instances/{id}/deleted", Handle)
+        AdminApiEndpointBuilder.MapPost(endpoints, "/instances/{id}/deleted", Handle)
             .WithRouteOptions(b => b.WithResponseCode(204))
             .WithRouteOptions(b => b.WithResponseCode(400))
             .WithRouteOptions(b => b.WithResponseCode(404))
