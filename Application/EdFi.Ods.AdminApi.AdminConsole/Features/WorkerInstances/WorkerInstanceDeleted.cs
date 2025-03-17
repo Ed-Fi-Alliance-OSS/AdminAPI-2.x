@@ -31,7 +31,7 @@ public class WorkerInstanceDeleted : IFeature
             .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
-    internal static async Task<IResult> Handle([FromServices] IDeletedInstanceCommand deletedInstanceCommand, int id)
+    internal static async Task<IResult> Handle([FromServices] IDeletedInstanceCommand deletedInstanceCommand, [FromRoute] int id)
     {
         try
         {

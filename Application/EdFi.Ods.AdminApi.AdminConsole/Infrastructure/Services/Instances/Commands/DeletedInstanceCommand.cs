@@ -71,7 +71,6 @@ public class DeletedInstanceCommand : IDeletedInstanceCommand
             adminConsoleInstance.Status = InstanceStatus.Deleted;
 
             await _instanceCommand.UpdateAsync(adminConsoleInstance);
-            await _instanceCommand.SaveChangesAsync();
             scope.Complete();
         }
         catch (Exception)
