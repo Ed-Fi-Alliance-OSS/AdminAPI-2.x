@@ -74,6 +74,59 @@
 							"response": []
 						},
 						{
+							"name": "Complete OdsInstance",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST Admin Console ODS Instances Completed: Status code is No Content\", function () {\r",
+											"    pm.response.to.have.status(204);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleCreatedOdsInstanceId}}/completed",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"adminconsole",
+										"instances",
+										"{{AdminConsoleCreatedOdsInstanceId}}",
+										"completed"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "OdsInstances Without OdsInstanceContext",
 							"event": [
 								{
