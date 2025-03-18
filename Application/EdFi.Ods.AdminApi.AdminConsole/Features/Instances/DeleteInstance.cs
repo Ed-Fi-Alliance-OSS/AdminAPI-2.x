@@ -28,7 +28,7 @@ public class DeleteInstance : IFeature
     {
         await validator.ValidateAsync(id);
         await changeStatusInstanceCommand.Execute(id);
-        return await Task.FromResult(Results.AcceptedAtRoute());
+        return Results.StatusCode(StatusCodes.Status202Accepted);
     }
 }
 
