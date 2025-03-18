@@ -53,7 +53,7 @@ public class TokenService(IOpenIddictApplicationManager applicationManager, ICon
         identity.AddClaim(OpenIddictConstants.Claims.Subject, request.ClientId!, OpenIddictConstants.Destinations.AccessToken);
         identity.AddClaim(OpenIddictConstants.Claims.Name, displayName!, OpenIddictConstants.Destinations.AccessToken);
         var roles = Roles.AllRoles.Select(obj => obj.RoleName).ToList();
-        var rolesClaim = _configuration?.GetValue<string>("AppSettings:roleClaimAttribute") ?? "roles";
+        var rolesClaim = _configuration?.GetValue<string>("AppSettings:RoleClaimAttribute") ?? "roles";
         foreach (var role in roles)
         {
             identity.AddClaim(new Claim(rolesClaim, role, OpenIddictConstants.Destinations.AccessToken));
