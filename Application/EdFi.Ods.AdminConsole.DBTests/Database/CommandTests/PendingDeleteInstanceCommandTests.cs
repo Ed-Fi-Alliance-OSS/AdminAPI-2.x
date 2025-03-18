@@ -13,9 +13,11 @@ using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repositories;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Commands;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Models;
+using EdFi.Ods.AdminApi.Common.Constants;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Database;
 using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
+using FluentValidation;
 using NUnit.Framework;
 using Shouldly;
 using static EdFi.Ods.AdminApi.Features.Applications.AddApplication;
@@ -29,48 +31,23 @@ public class PendingDeleteInstanceCommandTests : PlatformUsersContextTestBase
     [Test]
     public async Task ShouldSetDeletePendingStatusInInstance()
     {
-        AdminConsoleSqlServerUsersContext userDbContext = new(GetUserDbContextOptions());
-        var addVendorCommand = new AddVendorCommand(userDbContext);
-        var addApplicationCommand = new AddApplicationCommand(userDbContext);
-
-        var vendor = addVendorCommand.Execute(new AddVendorRequest
-        {
-            Company = Testing.GetAdminConsoleSettings().Value.VendorCompany,
-            NamespacePrefixes = "joe@test.com",
-            ContactName = Testing.GetAdminConsoleSettings().Value.VendorCompany,
-            ContactEmailAddress = "test"
-        });
-
-        var application = addApplicationCommand.Execute(new AddApplicationRequest
-        {
-            ApplicationName = Testing.GetAdminConsoleSettings().Value.ApplicationName,
-            ClaimSetName = "test",
-            ProfileIds = null,
-            VendorId = vendor?.VendorId ?? 0
-        }, Testing.GetAppSettings());
-
         var newInstanceId = 0;
-
-        await TransactionAsync(async dbContext =>
-        {
-            var repository = new CommandRepository<Instance>(dbContext);
-            var command = new AddInstanceCommand(repository);
-
-            var result = await command.Execute(new TestInstance
-            {
-                TenantId = 1,
-                OdsInstanceId = 1,
-                Name = "Test Complete Instance",
-                InstanceType = "Standard",
-                Status = nameof(InstanceStatus.Completed).ToUpper(),
-            });
-
-            newInstanceId = result.Id;
-        });
-
         var dbContext = new AdminConsoleMsSqlContext(GetDbContextOptions());
 
         var repository = new CommandRepository<Instance>(dbContext);
+        var addCommand = new AddInstanceCommand(repository);
+        var result = await addCommand.Execute(new TestInstance
+        {
+            TenantId = 1,
+            OdsInstanceId = 1,
+            Name = "Test Complete Instance",
+            InstanceType = "Standard",
+            Status = InstanceStatus.Completed.ToString(),
+        });
+
+        newInstanceId = result.Id;
+
+        repository = new CommandRepository<Instance>(dbContext);
         var qRepository = new QueriesRepository<Instance>(dbContext);
 
         var command = new PendingDeleteInstanceCommand(qRepository, repository);
@@ -102,6 +79,40 @@ public class PendingDeleteInstanceCommandTests : PlatformUsersContextTestBase
         }
     }
 
+    [Test]
+    public async Task ShouldNotSetPendingDeleteInstance_WhenStatusIsNotCompleted()
+    {
+        var newInstanceId = 0;
+        var dbContext = new AdminConsoleMsSqlContext(GetDbContextOptions());
+
+        var repository = new CommandRepository<Instance>(dbContext);
+        var addCommand = new AddInstanceCommand(repository);
+        var result = await addCommand.Execute(new TestInstance
+        {
+            TenantId = 1,
+            OdsInstanceId = 1,
+            Name = "Test Complete Instance",
+            InstanceType = "Standard",
+            Status = InstanceStatus.Error.ToString(),
+        });
+
+        newInstanceId = result.Id;
+
+        repository = new CommandRepository<Instance>(dbContext);
+        var qRepository = new QueriesRepository<Instance>(dbContext);
+
+        var command = new PendingDeleteInstanceCommand(qRepository, repository);
+        try
+        {
+            await command.Execute(newInstanceId);
+        }
+        catch (Exception ex)
+        {
+            ex.GetType().ShouldBeEquivalentTo(typeof(ValidationException));
+            ex.Message.ShouldContain(AdminConsoleValidationConstants.OdsIntanceIdStatusIsNotCompleted);
+        }
+    }
+
     private class TestInstance : IInstanceRequestModel
     {
         public int OdsInstanceId { get; set; }
@@ -115,7 +126,6 @@ public class PendingDeleteInstanceCommandTests : PlatformUsersContextTestBase
         [JsonIgnore]
         public byte[] Credentials { get; set; }
 
-        [JsonIgnore]
         public string Status { get; set; }
 
         [JsonIgnore]
