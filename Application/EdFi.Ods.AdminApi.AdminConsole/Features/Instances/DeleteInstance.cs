@@ -24,11 +24,11 @@ public class DeleteInstance : IFeature
         .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
-    private static async Task Execute(int id, DeleteInstanceValidator validator, IPendingDeleteInstanceCommand changeStatusInstanceCommand)
+    private static async Task<IResult> Execute(int id, DeleteInstanceValidator validator, IPendingDeleteInstanceCommand changeStatusInstanceCommand)
     {
         await validator.ValidateAsync(id);
         await changeStatusInstanceCommand.Execute(id);
-        await Task.FromResult(Results.AcceptedAtRoute());
+        return await Task.FromResult(Results.AcceptedAtRoute());
     }
 }
 
