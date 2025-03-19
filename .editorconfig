@@ -23,7 +23,7 @@ insert_final_newline = ignore
 trim_trailing_whitespace = false
 
 [*.{cs,cshtml,csx}]
-end_of_line = crlf
+end_of_line = lf
 # ReSharper inspection severities
 resharper_arrange_redundant_parentheses_highlighting=hint
 resharper_arrange_this_qualifier_highlighting=hint
