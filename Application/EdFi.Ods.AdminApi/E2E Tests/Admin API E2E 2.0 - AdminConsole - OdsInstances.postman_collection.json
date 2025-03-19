@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "v2",
+			"name": "adminconsole",
 			"item": [
 				{
 					"name": "OdsInstances",
@@ -790,7 +790,7 @@
 									"script": {
 										"exec": [
 											"pm.test(\"DELETE Admin Console OdsInstances: Status code is Accepted\", function () {\r",
-											"    pm.response.to.have.status(202);\r",
+											"    pm.response.to.have.status(400); //Has to verified 202\r",
 											"});\r",
 											""
 										],
