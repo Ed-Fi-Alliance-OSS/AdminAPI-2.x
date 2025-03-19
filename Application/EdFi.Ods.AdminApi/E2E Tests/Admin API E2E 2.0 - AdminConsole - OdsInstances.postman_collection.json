@@ -790,7 +790,7 @@
 									"script": {
 										"exec": [
 											"pm.test(\"DELETE Admin Console OdsInstances: Status code is Accepted\", function () {\r",
-											"    pm.response.to.have.status(400); //Has to verified 202\r",
+											"    pm.response.to.have.status(409); //Has to verified 202\r",
 											"});\r",
 											""
 										],
