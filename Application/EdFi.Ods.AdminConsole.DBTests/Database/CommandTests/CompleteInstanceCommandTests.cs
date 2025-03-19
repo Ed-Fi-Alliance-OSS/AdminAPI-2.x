@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.Admin.MsSql;
@@ -60,7 +61,8 @@ public class CompleteInstanceCommandTests : PlatformUsersContextTestBase
                 TenantId = 1,
                 OdsInstanceId = 1,
                 Name = "Test Complete Instance",
-                InstanceType = "Standard"
+                InstanceType = "Standard",
+                TenantName = "tenant1"
             });
 
             newInstanceId = result.Id;
@@ -71,17 +73,60 @@ public class CompleteInstanceCommandTests : PlatformUsersContextTestBase
         var repository = new CommandRepository<Instance>(dbContext);
         var qRepository = new QueriesRepository<Instance>(dbContext);
 
-        var command = new CompleteInstanceCommand(Testing.GetAdminConsoleSettings(), userDbContext, qRepository, repository);
+        var command = new CompleteInstanceCommand(Testing.GetAppSettings(), Testing.GetAdminConsoleSettings(), userDbContext, qRepository, repository, new TenantConfigurationProviderTest());
         var completeResult = await command.Execute(newInstanceId);
 
         completeResult.ShouldNotBeNull();
         completeResult.Id.ShouldBeGreaterThan(0);
+
+        userDbContext.OdsInstances.ToList().Count.ShouldBe(1);
+        userDbContext.OdsInstances.First().ShouldNotBeNull();
+        userDbContext.OdsInstances.First().Name.ShouldBe("Test Complete Instance");
+        userDbContext.OdsInstances.First().InstanceType.ShouldBe("Standard");
+        userDbContext.OdsInstances.First().ConnectionString.ShouldBe("Host=localhost;Port=5432;Username=postgres;Password=admin;Database=\"Test Complete Instance\";Pooling=False");
     }
 
     [Test]
     public async Task ShouldNotCompleteInstance_NotFoundException()
     {
+
         AdminConsoleSqlServerUsersContext userDbContext = new(GetUserDbContextOptions());
+        var addVendorCommand = new AddVendorCommand(userDbContext);
+        var addApplicationCommand = new AddApplicationCommand(userDbContext);
+
+        var vendor = addVendorCommand.Execute(new AddVendorRequest
+        {
+            Company = Testing.GetAdminConsoleSettings().Value.VendorCompany,
+            NamespacePrefixes = "joe@test.com",
+            ContactName = Testing.GetAdminConsoleSettings().Value.VendorCompany,
+            ContactEmailAddress = "test"
+        });
+
+        var application = addApplicationCommand.Execute(new AddApplicationRequest
+        {
+            ApplicationName = Testing.GetAdminConsoleSettings().Value.ApplicationName,
+            ClaimSetName = "test",
+            ProfileIds = null,
+            VendorId = vendor?.VendorId ?? 0
+        }, Testing.GetAppSettings());
+
+        var newInstanceId = 0;
+
+        await TransactionAsync(async dbContext =>
+        {
+            var repository = new CommandRepository<Instance>(dbContext);
+            var command = new AddInstanceCommand(repository);
+
+            var result = await command.Execute(new TestInstance
+            {
+                TenantId = 1,
+                OdsInstanceId = 1,
+                Name = "Test Complete Instance",
+                InstanceType = "Standard"
+            });
+
+            newInstanceId = result.Id;
+        });
 
         var dbContext = new AdminConsoleMsSqlContext(GetDbContextOptions());
 
@@ -89,7 +134,7 @@ public class CompleteInstanceCommandTests : PlatformUsersContextTestBase
         var qRepository = new QueriesRepository<Instance>(dbContext);
         Instance completeResult = null;
 
-        var command = new CompleteInstanceCommand(Testing.GetAdminConsoleSettings(), userDbContext, qRepository, repository);
+        var command = new CompleteInstanceCommand(Testing.GetAppSettings(), Testing.GetAdminConsoleSettings(), userDbContext, qRepository, repository, new TenantConfigurationProviderTest());
         try
         {
             completeResult = await command.Execute(int.MaxValue);

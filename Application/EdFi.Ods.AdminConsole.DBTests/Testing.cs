@@ -41,8 +41,7 @@ public static class Testing
         {
             DatabaseEngine = DatabaseEngineEnum.PostgreSql.ToString()
         };
-        IOptions<AppSettings> options = Options.Create(appSettings);
-        return options;
+        return Options.Create(appSettings);
     }
 
     public static IOptions<AdminConsoleSettings> GetAdminConsoleSettings()
@@ -52,8 +51,7 @@ public static class Testing
             VendorCompany = "Ed-Fi Administrative Tools",
             ApplicationName = "Ed-Fi Health Check"
         };
-        IOptions<AdminConsoleSettings> options = Options.Create(appSettings);
-        return options;
+        return Options.Create(appSettings);
     }
 
     public static IEncryptionKeyResolver GetEncryptionKeyResolver()

@@ -41,6 +41,56 @@ public class RenameInstanceCommandTests : PlatformUsersContextTestBase
             ContactEmailAddress = "test"
         });
 
+        _ = addApplicationCommand.Execute(new AddApplicationRequest
+        {
+            ApplicationName = Testing.GetAdminConsoleSettings().Value.ApplicationName,
+            ClaimSetName = "test",
+            ProfileIds = null,
+            VendorId = vendor?.VendorId ?? 0
+        }, Testing.GetAppSettings());
+
+        var dbContext = new AdminConsoleMsSqlContext(GetDbContextOptions());
+
+        var repository = new CommandRepository<Instance>(dbContext);
+        var qRepository = new QueriesRepository<Instance>(dbContext);
+
+        var instance = await repository.AddAsync(new Instance()
+        {
+            TenantId = 1,
+            OdsInstanceId = 1,
+            TenantName = "tenant1",
+            InstanceName = "Test Rename Instance",
+            InstanceType = "Standard",
+            Status = InstanceStatus.Pending_Rename
+        });
+
+        var command = new RenameInstanceCommand(Testing.GetAppSettings(), Testing.GetAdminConsoleSettings(), userDbContext, qRepository, repository, new TenantConfigurationProviderTest());
+        var renameResult = await command.Execute(instance.Id);
+
+        renameResult.ShouldNotBeNull();
+        renameResult.Id.ShouldBeGreaterThan(0);
+
+        userDbContext.OdsInstances.First().ShouldNotBeNull();
+        userDbContext.OdsInstances.First().Name.ShouldBe("Test Rename Instance");
+        userDbContext.OdsInstances.First().InstanceType.ShouldBe("Standard");
+        userDbContext.OdsInstances.First().ConnectionString.ShouldBe("Host=localhost;Port=5432;Username=postgres;Password=admin;Database=\"Test Rename Instance\";Pooling=False");
+    }
+
+    [Test]
+    public async Task ShouldNotRenameInstance_NotFoundException()
+    {
+        AdminConsoleSqlServerUsersContext userDbContext = new(GetUserDbContextOptions());
+        var addVendorCommand = new AddVendorCommand(userDbContext);
+        var addApplicationCommand = new AddApplicationCommand(userDbContext);
+
+        var vendor = addVendorCommand.Execute(new AddVendorRequest
+        {
+            Company = Testing.GetAdminConsoleSettings().Value.VendorCompany,
+            NamespacePrefixes = "joe@test.com",
+            ContactName = Testing.GetAdminConsoleSettings().Value.VendorCompany,
+            ContactEmailAddress = "test"
+        });
+
         var application = addApplicationCommand.Execute(new AddApplicationRequest
         {
             ApplicationName = Testing.GetAdminConsoleSettings().Value.ApplicationName,
@@ -71,32 +121,9 @@ public class RenameInstanceCommandTests : PlatformUsersContextTestBase
 
         var repository = new CommandRepository<Instance>(dbContext);
         var qRepository = new QueriesRepository<Instance>(dbContext);
-
-        var completeInstanceCommand = new CompleteInstanceCommand(Testing.GetAdminConsoleSettings(), userDbContext, qRepository, repository);
-        await completeInstanceCommand.Execute(newInstanceId);
-
-        dbContext.Instances.AsQueryable().First().Status = InstanceStatus.Pending_Rename;
-        dbContext.SaveChanges();
-
-        var command = new RenameInstanceCommand(Testing.GetAppSettings(), Testing.GetAdminConsoleSettings(), userDbContext, qRepository, repository);
-        var renameResult = await command.Execute(newInstanceId);
-
-        renameResult.ShouldNotBeNull();
-        renameResult.Id.ShouldBeGreaterThan(0);
-    }
-
-    [Test]
-    public async Task ShouldNotRenameInstance_NotFoundException()
-    {
-        AdminConsoleSqlServerUsersContext userDbContext = new(GetUserDbContextOptions());
-
-        var dbContext = new AdminConsoleMsSqlContext(GetDbContextOptions());
-
-        var repository = new CommandRepository<Instance>(dbContext);
-        var qRepository = new QueriesRepository<Instance>(dbContext);
         Instance renameResult = null;
 
-        var command = new RenameInstanceCommand(Testing.GetAppSettings(), Testing.GetAdminConsoleSettings(), userDbContext, qRepository, repository);
+        var command = new RenameInstanceCommand(Testing.GetAppSettings(), Testing.GetAdminConsoleSettings(), userDbContext, qRepository, repository, new TenantConfigurationProviderTest());
         try
         {
             renameResult = await command.Execute(int.MaxValue);
