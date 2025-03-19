@@ -4,12 +4,14 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Dynamic;
+using System.Transactions;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repositories;
 using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Helpers;
+using EdFi.Ods.AdminApi.Common.Infrastructure.MultiTenancy;
 using EdFi.Ods.AdminApi.Common.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -27,48 +29,60 @@ public class RenameInstanceCommand(
     IOptions<AdminConsoleSettings> adminConsoleOptions,
     IUsersContext context,
     IQueriesRepository<Instance> instanceQuery,
-    ICommandRepository<Instance> instanceCommand) : IRenameInstanceCommand
+    ICommandRepository<Instance> instanceCommand,
+    ITenantConfigurationProvider tenantConfigurationProvider) : IRenameInstanceCommand
 {
     private readonly AppSettings _options = options.Value;
     private readonly AdminConsoleSettings _adminConsoleOptions = adminConsoleOptions.Value;
     private readonly IUsersContext _context = context;
     private readonly IQueriesRepository<Instance> _instanceQuery = instanceQuery;
     private readonly ICommandRepository<Instance> _instanceCommand = instanceCommand;
+    private readonly ITenantConfigurationProvider _tenantConfigurationProvider = tenantConfigurationProvider;
 
     public async Task<Instance> Execute(int id)
     {
-        var transaction = _instanceCommand.BeginTransaction();
+        var common = new InstanceCommon(_adminConsoleOptions, _context);
+        var newApiClient = await common.NewApiClient();
+
+        var adminConsoleInstance = await _instanceQuery.Query().Include(w => w.OdsInstanceContexts).Include(w => w.OdsInstanceDerivatives)
+        .SingleOrDefaultAsync(w => w.Id == id) ?? throw new NotFoundException<int>("Instance", id);
+
+        using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
 
         try
         {
-            var adminConsoleInstance = await _instanceQuery.Query().Include(w => w.OdsInstanceContexts).Include(w => w.OdsInstanceDerivatives)
-            .SingleOrDefaultAsync(w => w.Id == id) ?? throw new NotFoundException<int>("Instance", id);
-
             if (adminConsoleInstance.Status == InstanceStatus.Completed)
                 return adminConsoleInstance;
 
-            /// Droping
-            var odsInstance = await _context.OdsInstances
-                .Include(p => p.OdsInstanceContexts)
-                .Include(p => p.OdsInstanceDerivatives)
-                .SingleOrDefaultAsync(v => v.OdsInstanceId == adminConsoleInstance.OdsInstanceId) ?? throw new NotFoundException<int>("odsInstance", id);
+            /// Droping if necessary
+            if (adminConsoleInstance.OdsInstanceId > 0)
+            {
+                var odsInstanceId = adminConsoleInstance.OdsInstanceId;
 
-            _context.OdsInstanceContexts.RemoveRange(odsInstance.OdsInstanceContexts);
-            _context.OdsInstanceDerivatives.RemoveRange(odsInstance.OdsInstanceDerivatives);
-            _context.OdsInstances.Remove(odsInstance);
+                var odsInstance = await _context.OdsInstances
+                    .Include(i => i.OdsInstanceContexts)
+                    .Include(i => i.OdsInstanceDerivatives)
+                    .SingleOrDefaultAsync(w => w.OdsInstanceId == odsInstanceId);
 
-            var apiClientOdsInstances = _context.ApiClientOdsInstances
-                .Include(p => p.ApiClient)
-                .Where(p => p.OdsInstance.OdsInstanceId == odsInstance.OdsInstanceId);
+                var apiclientOdsInstance = await _context.ApiClientOdsInstances
+                    .Include(i => i.ApiClient)
+                    .SingleOrDefaultAsync(w => w.OdsInstance.OdsInstanceId == odsInstanceId);
 
-            _context.ApiClients.RemoveRange(apiClientOdsInstances.Select(p => p.ApiClient));
-            _context.ApiClientOdsInstances.RemoveRange(apiClientOdsInstances);
-
-            var common = new InstanceCommon(_adminConsoleOptions, _context);
+                if (apiclientOdsInstance != null)
+                {
+                    _context.ApiClientOdsInstances.Remove(apiclientOdsInstance);
+                    _context.ApiClients.Remove(apiclientOdsInstance.ApiClient);
+                }
+                if (odsInstance != null)
+                {
+                    _context.OdsInstanceContexts.RemoveRange(odsInstance.OdsInstanceContexts);
+                    _context.OdsInstanceDerivatives.RemoveRange(odsInstance.OdsInstanceDerivatives);
+                    _context.OdsInstances.Remove(odsInstance);
+                }
+            }
 
             /// Recreating
             var newOdsInstance = InstanceCommon.NewOdsInstance(adminConsoleInstance);
-            var newApiClient = await common.NewApiClient();
 
             var apiClientOdsInstance = new ApiClientOdsInstance()
             {
@@ -76,9 +90,11 @@ public class RenameInstanceCommand(
                 OdsInstance = newOdsInstance
             };
 
-            var connectionString = odsInstance.ConnectionString;
-            var databaseEngine = _options.DatabaseEngine ?? throw new NotFoundException<string>("AppSettings", "DatabaseEngine");
-            newOdsInstance.ConnectionString = ConnectionStringHelper.ConnectionStringRename(databaseEngine, connectionString, adminConsoleInstance.InstanceName);
+            if (_tenantConfigurationProvider.Get().TryGetValue(adminConsoleInstance.TenantName, out TenantConfiguration? tenantConfiguration) && tenantConfiguration != null)
+            {
+                var databaseEngine = _options.DatabaseEngine ?? throw new NotFoundException<string>("AppSettings", "DatabaseEngine");
+                newOdsInstance.ConnectionString = ConnectionStringHelper.ConnectionStringRename(databaseEngine, tenantConfiguration.AdminConnectionString, adminConsoleInstance.InstanceName);
+            }
 
             _context.ApiClients.Add(newApiClient);
             _context.OdsInstances.Add(newOdsInstance);
@@ -96,13 +112,14 @@ public class RenameInstanceCommand(
             await _instanceCommand.UpdateAsync(adminConsoleInstance);
             await _instanceCommand.SaveChangesAsync();
 
-            await transaction.CommitAsync();
+            scope.Complete();
 
             return adminConsoleInstance;
         }
         catch (Exception)
         {
-            await transaction.RollbackAsync();
+            adminConsoleInstance.Status = InstanceStatus.Rename_Failed;
+            await _instanceCommand.SaveChangesAsync();
             throw;
         }
     }
