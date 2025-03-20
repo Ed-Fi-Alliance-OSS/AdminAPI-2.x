@@ -12,6 +12,7 @@ using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.Admin.MsSql;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repositories;
+using EdFi.Ods.AdminApi.Common.Constants;
 using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
 using EdFi.Ods.AdminApi.Common.Settings;
 using Microsoft.EntityFrameworkCore;
@@ -45,14 +46,12 @@ public class DeleteInstanceFailedCommand : IDeleteInstanceFailedCommand
             return adminConsoleInstance;
         else if (adminConsoleInstance.Status != InstanceStatus.Pending_Delete)
         {
-            var adminApiException = new AdminApiException("The instance status is invalid; it is not marked as 'pending delete'.");
+            var adminApiException = new AdminApiException(AdminConsoleValidationConstants.OdsInstanceIdStatusIsNotPendingDelete);
             adminApiException.StatusCode = HttpStatusCode.Conflict;
             throw adminApiException;
         }
         adminConsoleInstance.Status = InstanceStatus.Delete_Failed;
         await _instanceCommand.UpdateAsync(adminConsoleInstance);
-        await _instanceCommand.SaveChangesAsync();
-
         return adminConsoleInstance;
     }
 }

@@ -72,15 +72,11 @@ public class WorkerInstanceDeleted : IFeature
         {
             return Results.NotFound(ex.Message);
         }
-        catch(AdminApiException ex)
+        catch (AdminApiException ex)
         {
-            if(ex.StatusCode == HttpStatusCode.Conflict)
+            if (ex.StatusCode == HttpStatusCode.Conflict)
                 return Results.Conflict(ex.Message);
-            return Results.BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return Results.BadRequest(ex.Message);
+            throw;
         }
     }
 }

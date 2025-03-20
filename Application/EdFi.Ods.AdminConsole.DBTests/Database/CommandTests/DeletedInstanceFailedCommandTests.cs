@@ -62,7 +62,7 @@ namespace EdFi.Ods.AdminConsole.DBTests.Database.CommandTests
         }
 
         [Test]
-        public async Task ShouldNotSetPendingDeleteInstance_NotFoundException()
+        public async Task ShouldNotSetDeleteFailed_NotFoundException()
         {
             AdminConsoleSqlServerUsersContext userDbContext = new(GetUserDbContextOptions());
 
@@ -83,7 +83,7 @@ namespace EdFi.Ods.AdminConsole.DBTests.Database.CommandTests
         }
 
         [Test]
-        public async Task ShouldNotSetPendingDeleteInstance_WhenStatusIsNotPendingDelete()
+        public async Task ShouldNotSetDeleteFailed_WhenStatusIsNotPendingDelete()
         {
             var newInstanceId = 0;
             var dbContext = new AdminConsoleMsSqlContext(GetDbContextOptions());
