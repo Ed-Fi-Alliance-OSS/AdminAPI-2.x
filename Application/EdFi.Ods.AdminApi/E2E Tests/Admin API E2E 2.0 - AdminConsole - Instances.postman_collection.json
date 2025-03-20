@@ -54,7 +54,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"tenantId\": 1,\r\n  \"tenantName\": \"tenant1\",\r\n  \"name\": \"Instance test #1 - 2024 {{$guid}}\",\r\n  \"instanceType\": \"enterprise\",\r\n  \"odsInstanceContexts\": [\r\n    {\r\n      \"contextKey\": \"schoolYearFromRoute\",\r\n      \"contextValue\": \"2024\"\r\n    }\r\n  ],\r\n  \"odsInstanceDerivatives\": [\r\n    {\r\n      \"derivativeType\": \"ReadReplica\"\r\n    }\r\n  ]\r\n}",
+									"raw": "{\r\n  \"tenantId\": 1,\r\n  \"tenantName\": \"tenant1-{{$guid}}\",\r\n  \"name\": \"Instance test #1 - 2024 {{$guid}}\",\r\n  \"instanceType\": \"enterprise\",\r\n  \"odsInstanceContexts\": [\r\n    {\r\n      \"contextKey\": \"schoolYearFromRoute\",\r\n      \"contextValue\": \"2024\"\r\n    }\r\n  ],\r\n  \"odsInstanceDerivatives\": [\r\n    {\r\n      \"derivativeType\": \"ReadReplica\"\r\n    }\r\n  ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1331,7 +1331,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"tenantId\": 1,\r\n  \"tenantName\": \"tenant to delete\",\r\n  \"name\": \"Instance test #2 - 2025 {{$guid}}\",\r\n  \"instanceType\": \"enterprise\",\r\n  \"odsInstanceContexts\": [\r\n    {\r\n      \"contextKey\": \"schoolYearFromRoute\",\r\n      \"contextValue\": \"2024\"\r\n    }\r\n  ],\r\n  \"odsInstanceDerivatives\": [\r\n    {\r\n      \"derivativeType\": \"ReadReplica\"\r\n    }\r\n  ]\r\n}",
+									"raw": "{\r\n  \"tenantId\": 1,\r\n  \"tenantName\": \"tenant to delete{{$guid}}\",\r\n  \"name\": \"Instance test #2 - 2025 {{$guid}}\",\r\n  \"instanceType\": \"enterprise\",\r\n  \"odsInstanceContexts\": [\r\n    {\r\n      \"contextKey\": \"schoolYearFromRoute\",\r\n      \"contextValue\": \"2024\"\r\n    }\r\n  ],\r\n  \"odsInstanceDerivatives\": [\r\n    {\r\n      \"derivativeType\": \"ReadReplica\"\r\n    }\r\n  ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1727,6 +1727,123 @@
 										"v2",
 										"odsInstances",
 										"{{CreatedOdsInstanceId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstances - Delete",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"DELETE OdsInstances: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let header = {\r",
+											"    \"Content-Type\": \"application/json\",\r",
+											"    \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+											"};\r",
+											"\r",
+											"if (pm.variables.get(\"isMultitenant\") == \"true\") {\r",
+											"    header['Tenant'] = `${pm.variables.get(\"tenant1\")}`;\r",
+											"}\r",
+											"\r",
+											"pm.sendRequest({\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v2/OdsInstanceContexts`,\r",
+											"  method: 'GET',\r",
+											"  header: header\r",
+											"},\r",
+											"function (err, response) {\r",
+											"    if(err) { console.log(\"Error in Pre-request:\", err); }\r",
+											"    const result = response.json();\r",
+											"    if(!result[0].id) { console.log('Error in Pre-request ', result); }\r",
+											"    else {\r",
+											"        pm.sendRequest({\r",
+											"            url: `${pm.variables.get(\"API_URL\")}/v2/OdsInstanceContexts/${result[0].id}`,\r",
+											"            method: 'DELETE',\r",
+											"            header: header\r",
+											"        },\r",
+											"        function (err, response) {\r",
+											"            if(err) { console.log(\"Error in Pre-request:\", err); }\r",
+											"            const result = response.json();\r",
+											"            if(!result[0].id) { console.log('Error in Pre-request ', result); }\r",
+											"        });\r",
+											"\r",
+											"        pm.sendRequest({\r",
+											"        url: `${pm.variables.get(\"API_URL\")}/v2/OdsInstanceDerivatives`,\r",
+											"            method: 'GET',\r",
+											"            header: header\r",
+											"        },\r",
+											"        function (err, response) {\r",
+											"            if(err) { console.log(\"Error in Pre-request:\", err); }\r",
+											"            const result = response.json();\r",
+											"            if(!result[0].id) { console.log('Error in Pre-request ', result); }\r",
+											"            else {\r",
+											"                pm.sendRequest({\r",
+											"                    url: `${pm.variables.get(\"API_URL\")}/v2/OdsInstanceDerivatives/${result[0].id}`,\r",
+											"                    method: 'DELETE',\r",
+											"                    header: header\r",
+											"                },\r",
+											"                function (err, response) {\r",
+											"                    if(err) { console.log(\"Error in Pre-request:\", err); }\r",
+											"                    pm.sendRequest({\r",
+											"                        url: `${pm.variables.get(\"API_URL\")}/v2/applications`,\r",
+											"                            method: 'GET',\r",
+											"                            header: header\r",
+											"                        },\r",
+											"                        function (err, response) {\r",
+											"                            if(err) { console.log(\"Error in Pre-request:\", err); }\r",
+											"                            const result = response.json();\r",
+											"                            if(!result[0].id) { console.log('Error in Pre-request ', result); }\r",
+											"                            else {\r",
+											"                                pm.sendRequest({\r",
+											"                                url: `${pm.variables.get(\"API_URL\")}/v2/applications/${result[0].id}`,\r",
+											"                                    method: 'DELETE',\r",
+											"                                    header: header\r",
+											"                                },\r",
+											"                                function (err, response) {\r",
+											"                                    if(err) { console.log(\"Error in Pre-request:\", err); }\r",
+											"                                    const result = response.json();\r",
+											"                                    if(!result[0].id) { console.log('Error in Pre-request ', result); }\r",
+											"                                });\r",
+											"                            }\r",
+											"                        });\r",
+											"                });\r",
+											"            }\r",
+											"        });\r",
+											"    }\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/{{AdminConsoleCreatedOdsInstanceToDeleteId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										"{{AdminConsoleCreatedOdsInstanceToDeleteId}}"
 									]
 								}
 							},
