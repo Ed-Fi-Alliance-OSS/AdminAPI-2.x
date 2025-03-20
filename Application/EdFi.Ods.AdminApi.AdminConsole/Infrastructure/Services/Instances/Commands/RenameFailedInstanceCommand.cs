@@ -33,7 +33,7 @@ public class RenameFailedInstanceCommand(IQueriesRepository<Instance> instanceQu
         }
         if (existingInstance.Status != InstanceStatus.Pending_Rename)
         {
-            var exception = new AdminApiException(AdminConsoleValidationConstants.OdsIntanceIdStatusIsNotCompleted);
+            var exception = new AdminApiException(AdminConsoleValidationConstants.OdsIntanceIdStatusIsPendingRename);
             exception.StatusCode = HttpStatusCode.Conflict;
             throw exception;
         }

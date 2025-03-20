@@ -29,14 +29,14 @@ public class WorkerInstanceRenameFailed : IFeature
             .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
-    internal static async Task<IResult> Handle([FromServices] IRenameFailedInstanceCommand deletedInstanceCommand, [FromRoute] int id)
+    internal static async Task<IResult> Handle([FromServices] IRenameFailedInstanceCommand renameFailedInstanceCommand, [FromRoute] int id)
     {
         try
         {
             if (id < 1)
                 return Results.BadRequest("Instance Id not valid.");
 
-            await deletedInstanceCommand.Execute(id);
+            await renameFailedInstanceCommand.Execute(id);
         }
         catch (NotFoundException<int> ex)
         {
