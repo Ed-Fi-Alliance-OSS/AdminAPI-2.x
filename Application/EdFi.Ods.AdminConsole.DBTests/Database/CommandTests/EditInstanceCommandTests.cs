@@ -17,6 +17,7 @@ using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repositories;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Commands;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Models;
+using EdFi.Ods.AdminApi.Common.Infrastructure.Database;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -50,6 +51,7 @@ public class EditInstanceCommandTests : PlatformUsersContextTestBase
     [Test]
     public void ShouldEditInstance()
     {
+        AdminConsoleSqlServerUsersContext userDbContext = new(GetUserDbContextOptions());
         var newInstanceData = new Mock<IInstanceRequestModel>();
         newInstanceData.Setup(v => v.OdsInstanceId).Returns(1);
         newInstanceData.Setup(v => v.TenantId).Returns(1);
@@ -63,7 +65,7 @@ public class EditInstanceCommandTests : PlatformUsersContextTestBase
         {
             var repository = new CommandRepository<Instance>(dbContext);
             var qRepository = new QueriesRepository<Instance>(dbContext);
-            var command = new EditInstanceCommand(repository, qRepository, dbContext);
+            var command = new EditInstanceCommand(repository, qRepository, dbContext, userDbContext);
 
             var result = await command.Execute(_odsInstanceId, newInstanceData.Object);
         });
