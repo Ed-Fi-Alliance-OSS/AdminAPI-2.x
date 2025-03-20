@@ -1549,13 +1549,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleCreatedOdsInstanceToDeleteId}}",
+									"raw": "{{API_URL}}/adminconsole/odsinstances/{{AdminConsoleCreatedOdsInstanceToDeleteId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"adminconsole",
-										"instances",
+										"odsinstances",
 										"{{AdminConsoleCreatedOdsInstanceToDeleteId}}"
 									]
 								}
@@ -1870,6 +1870,10 @@
 			"key": "INVALIDTOKEN",
 			"value": "0123456789",
 			"type": "string"
+		},
+		{
+			"key": "AdminConsoleCreatedOdsInstanceId",
+			"value": ""
 		}
 	]
 }
