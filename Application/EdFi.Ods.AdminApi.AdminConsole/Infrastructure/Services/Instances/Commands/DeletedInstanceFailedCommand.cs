@@ -20,17 +20,17 @@ using Newtonsoft.Json;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Commands;
 
-public interface IDeletedInstanceFailedCommand
+public interface IDeleteInstanceFailedCommand
 {
     Task<Instance> Execute(int id);
 }
 
-public class DeletedInstanceFailedCommand : IDeletedInstanceFailedCommand
+public class DeleteInstanceFailedCommand : IDeleteInstanceFailedCommand
 {
     private readonly IQueriesRepository<Instance> _instanceQuery;
     private readonly ICommandRepository<Instance> _instanceCommand;
 
-    public DeletedInstanceFailedCommand(IQueriesRepository<Instance> instanceQuery, ICommandRepository<Instance> instanceCommand)
+    public DeleteInstanceFailedCommand(IQueriesRepository<Instance> instanceQuery, ICommandRepository<Instance> instanceCommand)
     {
         _instanceQuery = instanceQuery;
         _instanceCommand = instanceCommand;

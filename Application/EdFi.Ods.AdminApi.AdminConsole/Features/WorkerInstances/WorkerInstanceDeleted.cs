@@ -58,7 +58,7 @@ public class WorkerInstanceDeleted : IFeature
         }
     }
 
-    internal static async Task<IResult> HandleDeleteFailed([FromServices] IDeletedInstanceFailedCommand deletedInstanceCommand, [FromRoute] int id)
+    internal static async Task<IResult> HandleDeleteFailed([FromServices] IDeleteInstanceFailedCommand deletedInstanceCommand, [FromRoute] int id)
     {
         try
         {
