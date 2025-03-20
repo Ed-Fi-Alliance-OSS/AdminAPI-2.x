@@ -54,7 +54,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"tenantId\": 1,\r\n  \"tenantName\": \"tenant1-{{$guid}}\",\r\n  \"name\": \"Instance test #1 - 2024 {{$guid}}\",\r\n  \"instanceType\": \"enterprise\",\r\n  \"odsInstanceContexts\": [\r\n    {\r\n      \"contextKey\": \"schoolYearFromRoute\",\r\n      \"contextValue\": \"2024\"\r\n    }\r\n  ],\r\n  \"odsInstanceDerivatives\": [\r\n    {\r\n      \"derivativeType\": \"ReadReplica\"\r\n    }\r\n  ]\r\n}",
+									"raw": "{\r\n  \"tenantId\": 1,\r\n  \"tenantName\": \"tenant1768\",\r\n  \"name\": \"Instance test #1 - 2025\",\r\n  \"instanceType\": \"enterprise\",\r\n  \"odsInstanceContexts\": [\r\n    {\r\n      \"contextKey\": \"schoolYearFromRoute\",\r\n      \"contextValue\": \"2024\"\r\n    }\r\n  ],\r\n  \"odsInstanceDerivatives\": [\r\n    {\r\n      \"derivativeType\": \"ReadReplica\"\r\n    }\r\n  ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -892,7 +892,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/adminconsole/instances?tenantname=tenant1",
+									"raw": "{{API_URL}}/adminconsole/instances?tenantname=tenant1768",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -903,7 +903,7 @@
 									"query": [
 										{
 											"key": "tenantname",
-											"value": "tenant1"
+											"value": "tenant1768"
 										}
 									]
 								}
