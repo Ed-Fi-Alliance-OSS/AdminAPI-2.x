@@ -145,21 +145,24 @@ Also supports `GET /adminconsole/odsInstances/{id}`
 > [!IMPORTANT]
 > The following diagram represents the possible values the Instances 
 > have during the Worker's process
+
 ```mermaid
 stateDiagram-v2
     classDef progressStyle font-style:italic,font-weight:bold,fill:blue
+    classDef noteStyle font-style:italic,font-weight:bold,fill:#ff9e89
     [*] --> Pending
     state if_state_create <<choice>>
     Pending --> InProgress
-    note right of InProgress : *InProgress, DeleteInProgress, and RenameInProgress would be relevant in the multiple workers scenario
     InProgress --> if_state_create
     if_state_create --> Completed : Success
-    if_state_create --> Error : Error
-    Error --> Pending : Manually process
+    if_state_create --> InProgress : Retry
+    if_state_create --> CreateFailed : Error
+    CreateFailed --> Pending : Manually process
     state Rename {
         state if_state_rename <<choice>>
         PendingRename --> RenameInProgress
         RenameInProgress --> if_state_rename
+        if_state_rename --> RenameInProgress : Retry
         if_state_rename --> RenameFailed : Error
         RenameFailed --> PendingRename : Manually process
     }
@@ -168,6 +171,7 @@ stateDiagram-v2
         PendingDelete --> DeleteInProgress
         DeleteInProgress --> if_state_delete 
         if_state_delete --> Deleted : Success
+        if_state_delete --> DeleteInProgress : Retry
         if_state_delete --> DeletedFailed : Error
         DeletedFailed --> PendingDelete : Manually process
         Deleted --> [*]
@@ -176,10 +180,14 @@ stateDiagram-v2
     Completed --> PendingDelete
     Completed --> PendingRename
     Completed --> [*]
+    noteRetry : The retry mechanism will use the Polly library, after 3 retries the instance will set with the Failed status depending on the process (CreateFailed, RenameFailed, DeleteFailed). Once the Instance is set the Failed status, Admin Console will display an indicator telling the admin to check the log for more details 
+    noteInProgress : *InProgress, DeleteInProgress, and RenameInProgress would be relevant in the multiple workers scenario
 
     class InProgress progressStyle
     class DeleteInProgress progressStyle
     class RenameInProgress progressStyle
+    class noteRetry noteStyle
+    class noteInProgress noteStyle
 ```
 
 ### DELETE /adminconsole/odsInstances/{id}
