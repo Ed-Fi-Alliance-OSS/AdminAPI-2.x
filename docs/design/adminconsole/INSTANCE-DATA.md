@@ -141,14 +141,17 @@ Also supports `GET /adminconsole/odsInstances/{id}`
     ]
   }
   ```
+<hr />
 
 > [!IMPORTANT]
 > The following diagram represents the possible values the Instances 
 > have during the Worker's process
 
+<hr />
+
 ```mermaid
 stateDiagram-v2
-    classDef progressStyle font-style:italic,font-weight:bold,fill:blue
+    classDef progressStyle font-style:italic,font-weight:bold,fill:#7a8eff
     classDef noteStyle font-style:italic,font-weight:bold,fill:#ff9e89
     [*] --> Pending
     state if_state_create <<choice>>
