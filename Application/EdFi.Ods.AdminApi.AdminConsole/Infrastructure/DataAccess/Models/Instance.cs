@@ -66,5 +66,6 @@ public enum InstanceStatus
     Deleted,
     Delete_Failed,
     Pending_Rename,
+    Rename_Failed,
     Error
 }
