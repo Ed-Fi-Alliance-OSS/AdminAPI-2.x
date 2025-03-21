@@ -38,10 +38,6 @@ public class WorkerInstanceRenameFailed : IFeature
 
             await renameFailedInstanceCommand.Execute(id);
         }
-        catch (NotFoundException<int> ex)
-        {
-            return Results.NotFound(ex.Message);
-        }
         catch (AdminApiException ex)
         {
             if (ex.StatusCode == System.Net.HttpStatusCode.Conflict)

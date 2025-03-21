@@ -26,11 +26,7 @@ public class RenameFailedInstanceCommand(IQueriesRepository<Instance> instanceQu
 
     public async Task Execute(int id)
     {
-        var existingInstance = await _instanceQuery.Query().FirstOrDefaultAsync(i => i.Id == id);
-        if (existingInstance == null)
-        {
-            throw new NotFoundException<int>("odsInstance", id);
-        }
+        var existingInstance = await _instanceQuery.Query().FirstOrDefaultAsync(i => i.Id == id) ?? throw new NotFoundException<int>("Instance", id);
         if (existingInstance.Status != InstanceStatus.Pending_Rename)
         {
             var exception = new AdminApiException(AdminConsoleValidationConstants.OdsIntanceIdStatusIsPendingRename);
