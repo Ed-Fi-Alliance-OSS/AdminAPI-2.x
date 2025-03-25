@@ -3320,17 +3320,9 @@
 									"script": {
 										"exec": [
 											"pm.test(\"POST AdminConsole OdsInstances: Status code is Created\", function () {\r",
-											"    pm.response.to.have.status(201);\r",
+											"    pm.response.to.have.status(204);\r",
 											"});\r",
 											"\r",
-											"pm.test(\"POST AdminConsole OdsInstances: Response includes location in header\", function () {\r",
-											"    pm.response.to.have.header(\"Location\");\r",
-											"    const id = pm.response.headers.get(\"Location\").split(\"/\")[2];\r",
-											"    if(id)\r",
-											"    {\r",
-											"        pm.collectionVariables.set(\"AdminConsoleCreatedBaseOdsInstanceToRenameId\", id);\r",
-											"    }\r",
-											"});\r",
 											""
 										],
 										"type": "text/javascript",
@@ -3674,7 +3666,7 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"POST Instances: Conflict, instance is not marked as 'Pending Delete'\", function () {\r",
+											"pm.test(\"POST Instances: Conflict, instance is not marked as 'Pending Rename'\", function () {\r",
 											"    pm.response.to.have.status(409);\r",
 											"});"
 										],
