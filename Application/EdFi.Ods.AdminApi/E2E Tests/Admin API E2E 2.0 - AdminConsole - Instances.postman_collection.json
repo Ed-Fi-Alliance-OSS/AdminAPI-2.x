@@ -2668,7 +2668,7 @@
 											"\r",
 											"const response = pm.response.json();\r",
 											"\r",
-											"pm.test(\"GET Instance By Id: Response contains expected status (Pending_Delete)\", function () {\r",
+											"pm.test(\"GET Instance By Id: Response contains expected status (Delete_Failed)\", function () {\r",
 											"    pm.expect(response).to.have.property(\"status\"); \r",
 											"    pm.expect(response.status).to.eql(\"Delete_Failed\"); \r",
 											"});\r",
@@ -3266,7 +3266,7 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"POST Instances: Conflict, instance is not marked as 'Pending Delete'\", function () {\r",
+											"pm.test(\"POST Instances: Conflict, instance is not marked as 'Pending Rename'\", function () {\r",
 											"    pm.response.to.have.status(409);\r",
 											"});"
 										],
@@ -3319,7 +3319,7 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"POST AdminConsole OdsInstances: Status code is Created\", function () {\r",
+											"pm.test(\"POST AdminConsole OdsInstances: Status code is No Content\", function () {\r",
 											"    pm.response.to.have.status(204);\r",
 											"});\r",
 											"\r",
@@ -3436,7 +3436,7 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"POST Instances (Delete): Status code is No Content\", function () {\r",
+											"pm.test(\"POST Instances (Renamed): Status code is No Content\", function () {\r",
 											"    pm.response.to.have.status(204);\r",
 											"});"
 										],
@@ -3468,14 +3468,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleCreatedBaseOdsInstanceToDeleteId}}/renamed",
+									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleCreatedBaseOdsInstanceToRenameId}}/renamed",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"adminconsole",
 										"instances",
-										"{{AdminConsoleCreatedBaseOdsInstanceToDeleteId}}",
+										"{{AdminConsoleCreatedBaseOdsInstanceToRenameId}}",
 										"renamed"
 									]
 								}
@@ -3489,7 +3489,7 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"POST Instances (Delete): Status code is No Content\", function () {\r",
+											"pm.test(\"POST Instances (Renamed): Status code is No Content\", function () {\r",
 											"    pm.response.to.have.status(204);\r",
 											"});"
 										],
@@ -3521,14 +3521,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleCreatedBaseOdsInstanceToDeleteId}}/renamed",
+									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleCreatedBaseOdsInstanceToRenameId}}/renamed",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"adminconsole",
 										"instances",
-										"{{AdminConsoleCreatedBaseOdsInstanceToDeleteId}}",
+										"{{AdminConsoleCreatedBaseOdsInstanceToRenameId}}",
 										"renamed"
 									]
 								}
@@ -3548,9 +3548,9 @@
 											"\r",
 											"const response = pm.response.json();\r",
 											"\r",
-											"pm.test(\"GET Instance By Id: Response contains expected status (Renamed)\", function () {\r",
+											"pm.test(\"GET Instance By Id: Response contains expected status (Completed)\", function () {\r",
 											"    pm.expect(response).to.have.property(\"status\"); \r",
-											"    pm.expect(response.status).to.eql(\"Renamed\"); \r",
+											"    pm.expect(response.status).to.eql(\"Completed\"); \r",
 											"});\r",
 											""
 										],
@@ -3585,14 +3585,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleCreatedBaseOdsInstanceToDeleteId}}",
+									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleCreatedBaseOdsInstanceToRenameId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"adminconsole",
 										"instances",
-										"{{AdminConsoleCreatedBaseOdsInstanceToDeleteId}}"
+										"{{AdminConsoleCreatedBaseOdsInstanceToRenameId}}"
 									]
 								}
 							},
@@ -3614,7 +3614,7 @@
 											"    const id = pm.response.headers.get(\"Location\").split(\"/\")[2];\r",
 											"    if(id)\r",
 											"    {\r",
-											"        pm.collectionVariables.set(\"AdminConsoleCreatedRenameFailedOdsInstanceToDeleteId\", id);\r",
+											"        pm.collectionVariables.set(\"AdminConsoleCreatedRenameFailedOdsInstanceId\", id);\r",
 											"    }\r",
 											"});\r",
 											""
@@ -3698,14 +3698,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleTenantNameInstanceToRenameFailed}}/renamefailed",
+									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleCreatedRenameFailedOdsInstanceId}}/renamefailed",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"adminconsole",
 										"instances",
-										"{{AdminConsoleTenantNameInstanceToRenameFailed}}",
+										"{{AdminConsoleCreatedRenameFailedOdsInstanceId}}",
 										"renamefailed"
 									]
 								}
@@ -3751,14 +3751,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleTenantNameInstanceToRenameFailed}}/completed",
+									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleCreatedRenameFailedOdsInstanceId}}/completed",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"adminconsole",
 										"instances",
-										"{{AdminConsoleTenantNameInstanceToRenameFailed}}",
+										"{{AdminConsoleCreatedRenameFailedOdsInstanceId}}",
 										"completed"
 									]
 								}
@@ -3778,7 +3778,7 @@
 											"\r",
 											"const response = pm.response.json();\r",
 											"\r",
-											"pm.test(\"GET Instance By Id: Response contains expected status (Pending_Delete)\", function () {\r",
+											"pm.test(\"GET Instance By Id: Response contains expected status (Completed)\", function () {\r",
 											"    pm.expect(response).to.have.property(\"status\"); \r",
 											"    pm.expect(response.status).to.eql(\"Completed\"); \r",
 											"});\r",
@@ -3815,14 +3815,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleTenantNameInstanceToRenameFailed}}",
+									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleCreatedRenameFailedOdsInstanceId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"adminconsole",
 										"instances",
-										"{{AdminConsoleTenantNameInstanceToRenameFailed}}"
+										"{{AdminConsoleCreatedRenameFailedOdsInstanceId}}"
 									]
 								}
 							},
@@ -3867,14 +3867,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleTenantNameInstanceToRenameFailed}}/renamefailed",
+									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleCreatedRenameFailedOdsInstanceId}}/renamefailed",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"adminconsole",
 										"instances",
-										"{{AdminConsoleTenantNameInstanceToRenameFailed}}",
+										"{{AdminConsoleCreatedRenameFailedOdsInstanceId}}",
 										"renamefailed"
 									]
 								}
@@ -3888,8 +3888,8 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"POST Instances Delete: Status code is No Content\", function () {\r",
-											"    pm.response.to.have.status(202);\r",
+											"pm.test(\"POST Instances Rename: Status code is No Content\", function () {\r",
+											"    pm.response.to.have.status(204);\r",
 											"});"
 										],
 										"type": "text/javascript",
@@ -3975,14 +3975,14 @@
 								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/adminconsole/odsInstances/{{AdminConsoleTenantNameInstanceToRenameFailed}}/renamed",
+									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleCreatedRenameFailedOdsInstanceId}}/renamed",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"adminconsole",
-										"odsInstances",
-										"{{AdminConsoleTenantNameInstanceToRenameFailed}}",
+										"instances",
+										"{{AdminConsoleCreatedRenameFailedOdsInstanceId}}",
 										"renamed"
 									]
 								}
@@ -3997,16 +3997,7 @@
 									"script": {
 										"exec": [
 											"pm.test(\"POST AdminConsole OdsInstances: Status code is Created\", function () {\r",
-											"    pm.response.to.have.status(201);\r",
-											"});\r",
-											"\r",
-											"pm.test(\"POST AdminConsole OdsInstances: Response includes location in header\", function () {\r",
-											"    pm.response.to.have.header(\"Location\");\r",
-											"    const id = pm.response.headers.get(\"Location\").split(\"/\")[2];\r",
-											"    if(id)\r",
-											"    {\r",
-											"        pm.collectionVariables.set(\"AdminConsoleCreatedBaseOdsInstanceToRenameId\", id);\r",
-											"    }\r",
+											"    pm.response.to.have.status(204);\r",
 											"});\r",
 											""
 										],
@@ -4038,14 +4029,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/adminconsole/odsInstances/{{AdminConsoleTenantNameInstanceToRenameFailed}}",
+									"raw": "{{API_URL}}/adminconsole/odsInstances/{{AdminConsoleCreatedRenameFailedOdsInstanceId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"adminconsole",
 										"odsInstances",
-										"{{AdminConsoleTenantNameInstanceToRenameFailed}}"
+										"{{AdminConsoleCreatedRenameFailedOdsInstanceId}}"
 									]
 								}
 							},
@@ -4101,14 +4092,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleTenantNameInstanceToRenameFailed}}",
+									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleCreatedRenameFailedOdsInstanceId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"adminconsole",
 										"instances",
-										"{{AdminConsoleTenantNameInstanceToRenameFailed}}"
+										"{{AdminConsoleCreatedRenameFailedOdsInstanceId}}"
 									]
 								}
 							},
@@ -4121,7 +4112,7 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"POST Instances: Status code is Delete Failed\", function () {\r",
+											"pm.test(\"POST Instances: Status code is Rename Failed\", function () {\r",
 											"    pm.response.to.have.status(204);\r",
 											"});"
 										],
@@ -4153,14 +4144,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleTenantNameInstanceToRenameFailed}}/renamefailed",
+									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleCreatedRenameFailedOdsInstanceId}}/renamefailed",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"adminconsole",
 										"instances",
-										"{{AdminConsoleTenantNameInstanceToRenameFailed}}",
+										"{{AdminConsoleCreatedRenameFailedOdsInstanceId}}",
 										"renamefailed"
 									]
 								}
@@ -4174,7 +4165,7 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"POST Instances: Status code is Delete Failed\", function () {\r",
+											"pm.test(\"POST Instances: Status code is Rename Failed\", function () {\r",
 											"    pm.response.to.have.status(204);\r",
 											"});"
 										],
@@ -4206,14 +4197,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleTenantNameInstanceToRenameFailed}}/renamefailed",
+									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleCreatedRenameFailedOdsInstanceId}}/renamefailed",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"adminconsole",
 										"instances",
-										"{{AdminConsoleTenantNameInstanceToRenameFailed}}",
+										"{{AdminConsoleCreatedRenameFailedOdsInstanceId}}",
 										"renamefailed"
 									]
 								}
@@ -4233,9 +4224,9 @@
 											"\r",
 											"const response = pm.response.json();\r",
 											"\r",
-											"pm.test(\"GET Instance By Id: Response contains expected status (Pending_Delete)\", function () {\r",
+											"pm.test(\"GET Instance By Id: Response contains expected status (Rename_Failed)\", function () {\r",
 											"    pm.expect(response).to.have.property(\"status\"); \r",
-											"    pm.expect(response.status).to.eql(\"Delete_Failed\"); \r",
+											"    pm.expect(response.status).to.eql(\"Rename_Failed\"); \r",
 											"});\r",
 											""
 										],
@@ -4270,14 +4261,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleTenantNameInstanceToRenameFailed}}",
+									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleCreatedRenameFailedOdsInstanceId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"adminconsole",
 										"instances",
-										"{{AdminConsoleTenantNameInstanceToRenameFailed}}"
+										"{{AdminConsoleCreatedRenameFailedOdsInstanceId}}"
 									]
 								}
 							},
@@ -4332,14 +4323,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleTenantNameInstanceToRenameFailed}}/renamed",
+									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleCreatedRenameFailedOdsInstanceId}}/renamed",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"adminconsole",
 										"instances",
-										"{{AdminConsoleTenantNameInstanceToRenameFailed}}",
+										"{{AdminConsoleCreatedRenameFailedOdsInstanceId}}",
 										"renamed"
 									]
 								}
@@ -4395,14 +4386,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleTenantNameInstanceToRenameFailed}}/renamed",
+									"raw": "{{API_URL}}/adminconsole/instances/{{AdminConsoleCreatedRenameFailedOdsInstanceId}}/renamed",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"adminconsole",
 										"instances",
-										"{{AdminConsoleTenantNameInstanceToRenameFailed}}",
+										"{{AdminConsoleCreatedRenameFailedOdsInstanceId}}",
 										"renamed"
 									]
 								}
