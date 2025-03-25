@@ -771,7 +771,7 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": "{{API_URL}}/adminconsole/odsInstances/{{AdminConsoleCreatedOdsInstanceIdToDelete}}"
+								"url": "{{API_URL}}/adminconsole/odsInstances/{{AdminConsoleCreatedOdsInstanceId}}"
 							},
 							"response": []
 						},
