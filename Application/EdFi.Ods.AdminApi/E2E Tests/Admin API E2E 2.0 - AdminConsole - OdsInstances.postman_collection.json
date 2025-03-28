@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "6cd62ca5-9c2b-4d12-a6ac-dd8ecf5873d3",
+		"_postman_id": "458df9f0-c957-4c0f-b3d2-771f615ef22e",
 		"name": "Admin API E2E 2.0 - AdminConsole - OdsInstances",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
 		"_exporter_id": "42411115",
-		"_collection_link": "https://dewfdaf.postman.co/workspace/ADMINAPI-1176~ddd19801-3c24-4c02-a38b-a15bf7e53e1e/collection/42411115-6cd62ca5-9c2b-4d12-a6ac-dd8ecf5873d3?action=share&source=collection_link&creator=42411115"
+		"_collection_link": "https://dewfdaf.postman.co/workspace/ADMINAPI-1176~ddd19801-3c24-4c02-a38b-a15bf7e53e1e/collection/42411115-458df9f0-c957-4c0f-b3d2-771f615ef22e?action=share&source=collection_link&creator=42411115"
 	},
 	"item": [
 		{
@@ -689,6 +689,29 @@
 							"response": []
 						},
 						{
+							"name": "Instances - Completed",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST Instances: Status code is No Content - Delete\", function () {\r",
+											"    pm.response.to.have.status(204);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": "{{API_URL}}/adminconsole/instances/{{AdminConsoleCreatedOdsInstanceId}}/completed"
+							},
+							"response": []
+						},
+						{
 							"name": "OdsInstances",
 							"event": [
 								{
@@ -845,7 +868,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"tenantId\": 1,\r\n  \"tenantName\": \"Test\",\r\n  \"name\": \"Instance #1 - 2024 - Delete\",\r\n  \"instanceType\": \"enterprise\",\r\n  \"odsInstanceContexts\": [\r\n    {\r\n      \"contextKey\": \"schoolYearFromRoute\",\r\n      \"contextValue\": \"2024\"\r\n    }\r\n  ],\r\n  \"odsInstanceDerivatives\": [\r\n    {\r\n      \"derivativeType\": \"ReadReplica\"\r\n    }\r\n  ]\r\n}",
+									"raw": "{\r\n  \"tenantId\": 1,\r\n  \"tenantName\": \"Test\",\r\n  \"name\": \"Instance #1 - 2024 - Delete\",\r\n  \"instanceType\": \"enterprise\",\r\n  \"odsInstanceContexts\": null,\r\n  \"odsInstanceDerivatives\": null\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -968,6 +991,7 @@
 									"script": {
 										"exec": [
 											"pm.test(\"GET AdminConsole Instances: The response includes a status property with the value 'Pending_Delete' - Delete\", function () {\r",
+											"    pm.response.to.have.jsonBody();\r",
 											"    let jsonData = pm.response.json();\r",
 											"    pm.expect(jsonData).to.have.property(\"status\", \"Pending_Delete\");\r",
 											"});"
@@ -1088,7 +1112,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"tenantId\": 1,\r\n  \"tenantName\": \"Test\",\r\n  \"name\": \"Instance #1 - 2024 - Rename\",\r\n  \"instanceType\": \"enterprise\",\r\n  \"odsInstanceContexts\": [\r\n    {\r\n      \"contextKey\": \"schoolYearFromRoute\",\r\n      \"contextValue\": \"2024\"\r\n    }\r\n  ],\r\n  \"odsInstanceDerivatives\": [\r\n    {\r\n      \"derivativeType\": \"ReadReplica\"\r\n    }\r\n  ]\r\n}",
+									"raw": "{\r\n  \"tenantId\": 1,\r\n  \"tenantName\": \"Test\",\r\n  \"name\": \"Instance #1 - 2024 - Rename\",\r\n  \"instanceType\": \"enterprise\",\r\n  \"odsInstanceContexts\": null,\r\n  \"odsInstanceDerivatives\": null\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1693,6 +1717,11 @@
 		{
 			"key": "AdminConsoleCreatedOdsInstanceId",
 			"value": ""
+		},
+		{
+			"key": "OdsInstanceId_v2",
+			"value": "",
+			"type": "string"
 		}
 	]
 }
