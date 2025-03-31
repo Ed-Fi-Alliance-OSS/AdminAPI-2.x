@@ -11,7 +11,7 @@
 			"name": "AdminConsole",
 			"item": [
 				{
-					"name": "Instances",
+					"name": "Healthcheck",
 					"item": [
 						{
 							"name": "Add Healthcheck Data",
