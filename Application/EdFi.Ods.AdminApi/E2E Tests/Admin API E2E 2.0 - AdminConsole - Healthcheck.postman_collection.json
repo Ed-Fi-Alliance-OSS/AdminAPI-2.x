@@ -1,0 +1,592 @@
+{
+	"info": {
+		"_postman_id": "a2c0ff5c-870f-4239-88ae-cccc8fa72b2a",
+		"name": "Admin API E2E 2.0 - AdminConsole - Healthcheck",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "42536960",
+		"_collection_link": "https://test33-6887.postman.co/workspace/ADMINAPI-1177~6897fc80-fd1c-4f87-a848-18d7cdfdb498/collection/42536960-a2c0ff5c-870f-4239-88ae-cccc8fa72b2a?action=share&source=collection_link&creator=42536960"
+	},
+	"item": [
+		{
+			"name": "AdminConsole",
+			"item": [
+				{
+					"name": "Instances",
+					"item": [
+						{
+							"name": "Add Healthcheck Data",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST AdminConsole Healthcheck: Status code is Created\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.collectionVariables.set(\"AdminConsoleTenantName\", \"tenant-\" + pm.variables.replaceIn(\"{{$guid}}\"));"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"docId\": 1,\r\n  \"instanceId\": 1,\r\n  \"edOrgId\": 1,\r\n  \"tenantId\": 1,\r\n  \"document\": \"{\\\"localEducationAgencyId\\\":1527,\\\"studentSpecialEducationProgramAssociations\\\":95,\\\"studentDisciplineIncidentBehaviorAssociations\\\":34,\\\"studentSchoolAssociations\\\":457,\\\"studentSchoolAttendanceEvents\\\":327,\\\"studentSectionAssociations\\\":352,\\\"staffEducationOrganizationAssignmentAssociations\\\":58,\\\"staffEducationOrganizationEmploymentAssociations\\\":72,\\\"staffSectionAssociations\\\":63,\\\"courseTranscripts\\\":105,\\\"basicReportingPeriodAttendances\\\":150,\\\"sections\\\":45,\\\"reportingPeriodExts\\\":12,\\\"healthy\\\":true}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/adminconsole/healthcheck",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"adminconsole",
+										"healthcheck"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Healthcheck - GetAll",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET Healthcheck: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const results = pm.response.json();\r",
+											"\r",
+											"pm.test(\"GET Healthcheck: Response result includes Healthcheck List\", function () {\r",
+											"    const results = pm.response.json();\r",
+											"    pm.expect(results.length).to.be.greaterThan(0);\r",
+											"});\r",
+											"\r",
+											"const GetHealthcheckSchema = {\r",
+											"  \"type\": \"array\",\r",
+											"  \"items\": [\r",
+											"    {\r",
+											"      \"type\": \"object\",\r",
+											"      \"properties\": {\r",
+											"        \"docId\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"instanceId\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"edOrgId\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"tenantId\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"document\": {\r",
+											"          \"type\": \"string\"\r",
+											"        }\r",
+											"      },\r",
+											"      \"required\": [\r",
+											"        \"docId\",\r",
+											"        \"instanceId\",\r",
+											"        \"tenantId\",\r",
+											"        \"document\"\r",
+											"      ]\r",
+											"    }\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET Healthcheck: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetHealthcheckSchema);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/adminconsole/healthcheck",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"adminconsole",
+										"healthcheck"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Healthcheck by Id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET Healthcheck by instance Id: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const GetHealthcheckSchema = {\r",
+											"    \"type\": \"object\",\r",
+											"    \"properties\": {\r",
+											"    \"docId\": {\r",
+											"        \"type\": \"integer\"\r",
+											"    },\r",
+											"    \"instanceId\": {\r",
+											"        \"type\": \"integer\"\r",
+											"    },\r",
+											"    \"edOrgId\": {\r",
+											"        \"type\": \"integer\"\r",
+											"    },\r",
+											"    \"tenantId\": {\r",
+											"        \"type\": \"integer\"\r",
+											"    },\r",
+											"    \"document\": {\r",
+											"        \"type\": \"string\"\r",
+											"    }\r",
+											"    },\r",
+											"    \"required\": [\r",
+											"    \"docId\",\r",
+											"    \"instanceId\",\r",
+											"    \"tenantId\",\r",
+											"    \"document\"\r",
+											"    ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET Healthcheck: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetHealthcheckSchema);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/adminconsole/healthcheck/1",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"adminconsole",
+										"healthcheck",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Healthcheck by Id - Not Found",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET Instance by Id: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const results = pm.response.json();\r",
+											"\r",
+											"pm.test(\"GET Instance By Id: Response result includes Instance\", function () {\r",
+											"    const results = pm.response.json();\r",
+											"    if (results.odsInstanceId){\r",
+											"        pm.collectionVariables.set(\"CreatedOdsInstanceId\", results.odsInstanceId);\r",
+											"    }\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/adminconsole/healthcheck/999999",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"adminconsole",
+										"healthcheck",
+										"999999"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Healthcheck  - Expired Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST Instances: Status code is Unauthorized\", function () {\r",
+											"    pm.response.to.have.status(401);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "0",
+											"value": {
+												"key": "token",
+												"value": "{{EXPIREDTOKEN}}",
+												"type": "string"
+											},
+											"type": "any"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/adminconsole/healthcheck",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"adminconsole",
+										"healthcheck"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Healthcheck   - Invalid Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST Healthcheck: Status code is Unauthorized\", function () {\r",
+											"    pm.response.to.have.status(401);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "0",
+											"value": {
+												"key": "token",
+												"value": "{{INVALIDTOKEN}}",
+												"type": "string"
+											},
+											"type": "any"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/adminconsole/healthcheck",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"adminconsole",
+										"healthcheck"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"function generateClientSecret() {\r",
+					"    const minLength = 32;\r",
+					"    const maxLength = 128;\r",
+					"    let result = '';\r",
+					"    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';\r",
+					"    const specialCharacters = '!@#$%^&*()_+{}:\"<>?|[];\\',./`~';\r",
+					"    const length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;\r",
+					"\r",
+					"    result += randomChar('abcdefghijklmnopqrstuvwxyz');\r",
+					"    result += randomChar('ABCDEFGHIJKLMNOPQRSTUVWXYZ');\r",
+					"    result += randomChar('0123456789');\r",
+					"    result += randomChar(specialCharacters);\r",
+					"\r",
+					"    for (let i = result.length; i < length; i++) {\r",
+					"        const charactersPlusSpecial = characters + specialCharacters;\r",
+					"        result += charactersPlusSpecial.charAt(Math.floor(Math.random() * charactersPlusSpecial.length));\r",
+					"    }\r",
+					"\r",
+					"    return shuffleString(result);\r",
+					"}\r",
+					"\r",
+					"function randomChar(str) {\r",
+					"    return str.charAt(Math.floor(Math.random() * str.length));\r",
+					"}\r",
+					"\r",
+					"function shuffleString(str) {\r",
+					"    const array = str.split('');\r",
+					"    for (let i = array.length - 1; i > 0; i--) {\r",
+					"        const j = Math.floor(Math.random() * (i + 1));\r",
+					"        [array[i], array[j]] = [array[j], array[i]];\r",
+					"    }\r",
+					"    return array.join('');\r",
+					"}\r",
+					"\r",
+					"let guid = pm.variables.replaceIn('{{$guid}}');\r",
+					"let client_secret =  generateClientSecret();\r",
+					"\r",
+					"let header = {\r",
+					"    'Content-Type': 'application/x-www-form-urlencoded'\r",
+					"};\r",
+					"\r",
+					"if (pm.variables.get(\"isMultitenant\") == \"true\") {\r",
+					"    header['Tenant'] = `${pm.variables.get(\"tenant1\")}`;\r",
+					"    pm.request.headers.upsert({key: 'Tenant', value: `${pm.variables.get(\"tenant1\")}` });\r",
+					"}\r",
+					"\r",
+					"pm.sendRequest({\r",
+					"    url: `${pm.variables.get(\"API_URL\")}/connect/register`,\r",
+					"    method: 'POST',\r",
+					"    header: header,\r",
+					"    body: {\r",
+					"        mode: 'urlencoded',\r",
+					"        urlencoded: [\r",
+					"            {key: 'ClientId', value: guid },\r",
+					"            {key: 'ClientSecret', value: client_secret },\r",
+					"            {key: 'DisplayName', value: guid }\r",
+					"        ]\r",
+					"    }\r",
+					"},\r",
+					"(err, res) => {\r",
+					"    error = res.json().error\r",
+					"    if(error) {\r",
+					"        throw res.json().error_description\r",
+					"    }\r",
+					"\r",
+					"    pm.sendRequest({\r",
+					"        url: `${pm.variables.get(\"API_URL\")}/connect/token`,\r",
+					"        method: 'POST',\r",
+					"        header: header,\r",
+					"        body: {\r",
+					"            mode: 'urlencoded',\r",
+					"            urlencoded: [\r",
+					"                {key: 'client_id', value: guid },\r",
+					"                {key: 'client_secret', value: client_secret },\r",
+					"                {key: 'grant_type', value: \"client_credentials\"},\r",
+					"                {key: 'scope', value: \"edfi_admin_api/full_access\"}\r",
+					"            ]\r",
+					"        }\r",
+					"    },\r",
+					"    (err, res) => {\r",
+					"        error = res.json().error\r",
+					"        if(error) {\r",
+					"            throw res.json().error_description\r",
+					"        }\r",
+					"        pm.collectionVariables.set(\"TOKEN\", res.json().access_token)\r",
+					"    });\r",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "TOKEN",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "EXPIREDTOKEN\n",
+			"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IlVRQURHRjYwTl9UUVNQTDNGS0ZET1FULUJLWFpWUlNMWlg3Q1ZXSjMiLCJ0eXAiOiJhdCtqd3QifQ.eyJzdWIiOiJ1dTEiLCJvaV9wcnN0IjoidXUxIiwiY2xpZW50X2lkIjoidXUxIiwib2lfdGtuX2lkIjoiMTYyIiwic2NvcGUiOiJlZGZpX2FkbWluX2FwaS9mdWxsX2FjY2VzcyIsImp0aSI6IjczMDliOWVkLWM3ODMtNDk2Ny04MjVhLWUxOTUxZmI4ODIyZCIsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcyMTQvIiwiZXhwIjoxNzM5MjAzNzY3LCJpYXQiOjE3MzkyMDE5Njd9.RUaPkA8yLScBlfdJE-hn17RvNBHpQ8spi-ay1G_fk2nKMvVhPMFmgT7GDXXeYrnQt3pyta4iaEub3XwAkIAsSdDMhg4n6_vI4-djdW8_N28wZk0zr8pKC2jrRJUbAf3MNXcZ4_aPb_2wUxtuVNE7Yh49_Z9miB-aKkjBKS__x0eaCFjYAtCcrZCwL03hJP2ldNg2-FrsHj47nAPtfQ0tvQBGUSEpduqkIemSiKEuhuGBzPqvidOlofiqpHjE3BPB5UBREwZ3nNsFXEA7D6OADoUGanwrallv7t9iy9L2fPxdjoUyYYUsk-LKgp97oRlyGqH9au7fx-3bf927MCV1Lg",
+			"type": "string"
+		},
+		{
+			"key": "INVALIDTOKEN",
+			"value": "0123456789",
+			"type": "string"
+		},
+		{
+			"key": "AdminConsoleCreatedOdsInstanceId",
+			"value": ""
+		}
+	]
+}
