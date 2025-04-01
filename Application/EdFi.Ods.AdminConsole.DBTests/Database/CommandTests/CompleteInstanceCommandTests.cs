@@ -13,9 +13,11 @@ using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repositories;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Commands;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Models;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Tenants;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Database;
 using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
+using Microsoft.Extensions.Caching.Memory;
 using NUnit.Framework;
 using Shouldly;
 using static EdFi.Ods.AdminApi.Features.Applications.AddApplication;
@@ -72,8 +74,9 @@ public class CompleteInstanceCommandTests : PlatformUsersContextTestBase
 
         var repository = new CommandRepository<Instance>(dbContext);
         var qRepository = new QueriesRepository<Instance>(dbContext);
+        var tenantService = new TenantService(Testing.GetOptionsSnapshot(), new MemoryCache(new MemoryCacheOptions()));
 
-        var command = new CompleteInstanceCommand(Testing.GetAppSettings(), Testing.GetAdminConsoleSettings(), userDbContext, qRepository, repository, new TenantConfigurationProviderTest());
+        var command = new CompleteInstanceCommand(Testing.GetAppSettings(), Testing.GetAdminConsoleSettings(), userDbContext, qRepository, repository, new TenantConfigurationProviderTest(), tenantService);
         var completeResult = await command.Execute(newInstanceId);
 
         completeResult.ShouldNotBeNull();
@@ -133,8 +136,8 @@ public class CompleteInstanceCommandTests : PlatformUsersContextTestBase
         var repository = new CommandRepository<Instance>(dbContext);
         var qRepository = new QueriesRepository<Instance>(dbContext);
         Instance completeResult = null;
-
-        var command = new CompleteInstanceCommand(Testing.GetAppSettings(), Testing.GetAdminConsoleSettings(), userDbContext, qRepository, repository, new TenantConfigurationProviderTest());
+        var tenantService = new TenantService(Testing.GetOptionsSnapshot(), new MemoryCache(new MemoryCacheOptions()));
+        var command = new CompleteInstanceCommand(Testing.GetAppSettings(), Testing.GetAdminConsoleSettings(), userDbContext, qRepository, repository, new TenantConfigurationProviderTest(), tenantService);
         try
         {
             completeResult = await command.Execute(int.MaxValue);
