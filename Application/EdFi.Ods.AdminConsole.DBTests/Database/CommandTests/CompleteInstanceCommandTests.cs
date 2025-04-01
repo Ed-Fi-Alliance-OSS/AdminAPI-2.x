@@ -81,6 +81,8 @@ public class CompleteInstanceCommandTests : PlatformUsersContextTestBase
 
         completeResult.ShouldNotBeNull();
         completeResult.Id.ShouldBeGreaterThan(0);
+        completeResult.OAuthUrl.ShouldNotBeNull();
+        completeResult.ResourceUrl.ShouldNotBeNull();
 
         userDbContext.OdsInstances.ToList().Count.ShouldBe(1);
         userDbContext.OdsInstances.First().ShouldNotBeNull();
