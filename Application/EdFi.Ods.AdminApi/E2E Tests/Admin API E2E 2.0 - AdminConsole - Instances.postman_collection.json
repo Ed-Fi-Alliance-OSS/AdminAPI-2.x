@@ -41,7 +41,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.collectionVariables.set(\"AdminConsoleTenantName\", \"tenant1\"));"
+											"pm.collectionVariables.set(\"AdminConsoleTenantName\", \"tenant1\");"
 										],
 										"type": "text/javascript",
 										"packages": {}
