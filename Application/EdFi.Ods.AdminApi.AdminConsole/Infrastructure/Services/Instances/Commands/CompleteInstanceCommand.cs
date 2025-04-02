@@ -103,7 +103,7 @@ public class CompleteInstanceCommand(
             !documentDictionary.TryGetValue("edfiApiDiscoveryUrl", out var url) ||
             url is not string discoveryUrl)
         {
-            return;
+            throw new HttpRequestException("Discovery URL not found in tenant document.");
         }
 
         if (_options.MultiTenancy && (documentDictionary.TryGetValue("name", out var tenantName) && tenantName is string name) && !discoveryUrl.Contains(name))
@@ -118,7 +118,7 @@ public class CompleteInstanceCommand(
 
         if (response.StatusCode != HttpStatusCode.OK)
         {
-            return;
+            throw new HttpRequestException($"Failed to get API URLs. Status code: {response.StatusCode}");
         }
 
         var responseContent = await response.Content.ReadAsStringAsync();
@@ -128,7 +128,7 @@ public class CompleteInstanceCommand(
 
         if (urls == null)
         {
-            return;
+            throw new HttpRequestException("Failed to extract API URLs from response.");
         }
 
         urls.TryGetValue("oauth", out var oauth);
