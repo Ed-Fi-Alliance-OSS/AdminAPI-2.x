@@ -106,19 +106,23 @@ public class CompleteInstanceCommand(
             throw new HttpRequestException("Discovery URL not found in tenant document.");
         }
 
+        #region Uncomment this code when ODS Docker Environment is Running        
+#pragma warning disable S125 // Sections of code should not be commented out
+        /*
+        string finalUri = discoveryUrl
         if (_options.MultiTenancy && (documentDictionary.TryGetValue("name", out var tenantName) && tenantName is string name) && !discoveryUrl.Contains(name))
         {
             var baseUri = new Uri(discoveryUrl);
-            var finalUri = new Uri(baseUri, name);
-            discoveryUrl = finalUri.ToString();
+            finalUri = new Uri(baseUri, name).ToString();
         }
+        
 
         using var httpClient = new HttpClient();
-        var response = await httpClient.GetAsync(discoveryUrl);
+        var response = await httpClient.GetAsync(finalUri);
 
-        if (response.StatusCode != HttpStatusCode.OK)
+        if (!response.IsSuccessStatusCode)
         {
-            throw new HttpRequestException($"Failed to get API URLs. Status code: {response.StatusCode}");
+            throw new HttpRequestException($"Failed to get API URLs. Status code: {response.StatusCode}. DiscoveryURL: {discoveryUrl}");
         }
 
         var responseContent = await response.Content.ReadAsStringAsync();
@@ -131,9 +135,29 @@ public class CompleteInstanceCommand(
             throw new HttpRequestException("Failed to extract API URLs from response.");
         }
 
+
         urls.TryGetValue("oauth", out var oauth);
         urls.TryGetValue("dataManagementApi", out var dataManagementApi);
+
         instance.OAuthUrl = oauth;
         instance.ResourceUrl = dataManagementApi;
+        */
+#pragma warning restore S125 // Sections of code should not be commented out
+        #endregion
+
+        #region Remove this code when ODS Docker Environment is Running
+        var oAuthUri = "oauth/token";
+        var resourceUri = "data/v3";
+        var baseUri = new Uri(discoveryUrl);
+        if (_options.MultiTenancy && (documentDictionary.TryGetValue("name", out var tenantName) && tenantName is string name) && !discoveryUrl.Contains(name))
+        {
+            instance.OAuthUrl = new Uri(baseUri, string.Concat(tenantName, oAuthUri)).ToString();
+            instance.ResourceUrl = new Uri(baseUri, string.Concat(tenantName, resourceUri)).ToString();
+            return;
+        }
+
+        instance.OAuthUrl = new Uri(baseUri, oAuthUri).ToString();
+        instance.ResourceUrl = new Uri(baseUri, resourceUri).ToString();
+        #endregion
     }
 }
