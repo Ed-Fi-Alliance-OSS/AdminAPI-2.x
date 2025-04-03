@@ -34,10 +34,12 @@ public class CompleteInstanceCommand(
     IQueriesRepository<Instance> instanceQuery,
     ICommandRepository<Instance> instanceCommand,
     ITenantConfigurationProvider tenantConfigurationProvider,
-    IAdminConsoleTenantsService adminConsoleTenantsService) : ICompleteInstanceCommand
+    IAdminConsoleTenantsService adminConsoleTenantsService,
+    IOptionsMonitor<TestingSettings>? testingSettings = null) : ICompleteInstanceCommand
 {
     private readonly AppSettings _options = options.Value;
     private readonly AdminConsoleSettings _adminConsoleOptions = adminConsoleOptions.Value;
+    private readonly IOptionsMonitor<TestingSettings>? _testingSettings = testingSettings;
     private readonly IUsersContext _context = context;
     private readonly IQueriesRepository<Instance> _instanceQuery = instanceQuery;
     private readonly ICommandRepository<Instance> _instanceCommand = instanceCommand;
@@ -89,6 +91,9 @@ public class CompleteInstanceCommand(
 
         await _instanceCommand.UpdateAsync(adminConsoleInstance);
         await _instanceCommand.SaveChangesAsync();
+
+        if (_testingSettings is not null && _testingSettings.CurrentValue.InjectException)
+            throw new Exception("Exception to test");
 
         scope.Complete();
 

@@ -91,6 +91,10 @@ public static class Testing
                         EdFiApiDiscoveryUrl = "https://api.ed-fi.org/v7.2/api/"
                     }
                 }
+            },
+            Testing = new TestingSettings
+            {
+                InjectException = false
             }
         };
 
