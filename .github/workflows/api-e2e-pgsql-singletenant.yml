@@ -52,6 +52,7 @@ jobs:
         run: |
           docker compose \
             -f '../../Docker/Compose/pgsql/SingleTenant/compose-build-dev.yml' \
+            -f '../../Docker/OdsCompose/pgsql/SingleTenant/compose-single-tenant-env.yml' \
             --env-file './E2E Tests/gh-action-setup/.automation_pgsql.env' \
             up -d
 

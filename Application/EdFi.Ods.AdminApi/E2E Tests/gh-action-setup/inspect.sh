@@ -26,3 +26,13 @@ else
     echo "--- Admin API application is failing with status code ${status}"
     exit 2
 fi
+
+# status=`wget -nv -t1 --spider -S https://localhost/api/health --no-check-certificate 2>&1|grep "HTTP/"|awk '{print $2}'`
+
+# if [[ $status -eq "200" ]]
+# then
+#     echo "--- Ods API application is running ---"
+# else
+#     echo "--- Ods API application is failing with status code ${status}"
+#     exit 2
+# fi
