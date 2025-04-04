@@ -113,6 +113,17 @@ public static class Testing
         return Options.Create(appSettings);
     }
 
+    public static IOptionsMonitor<TestingSettings> GetTestingSettings(bool injectException = false)
+    {
+        TestingSettings testingSettings = new()
+        {
+            InjectException = injectException,
+        };
+        var optionsMonitor = A.Fake<IOptionsMonitor<TestingSettings>>();
+        A.CallTo(() => optionsMonitor.CurrentValue).Returns(testingSettings);
+        return optionsMonitor;
+    }
+
     public static IEncryptionKeyResolver GetEncryptionKeyResolver()
     {
         var encryptionKeyResolver = A.Fake<IEncryptionKeyResolver>();

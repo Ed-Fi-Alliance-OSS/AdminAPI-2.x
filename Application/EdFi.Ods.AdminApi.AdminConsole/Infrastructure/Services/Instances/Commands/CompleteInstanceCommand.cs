@@ -30,16 +30,16 @@ public interface ICompleteInstanceCommand
 public class CompleteInstanceCommand(
     IOptions<AppSettings> options,
     IOptions<AdminConsoleSettings> adminConsoleOptions,
+    IOptionsMonitor<TestingSettings> testingSettings,
     IUsersContext context,
     IQueriesRepository<Instance> instanceQuery,
     ICommandRepository<Instance> instanceCommand,
     ITenantConfigurationProvider tenantConfigurationProvider,
-    IAdminConsoleTenantsService adminConsoleTenantsService,
-    IOptionsMonitor<TestingSettings>? testingSettings = null) : ICompleteInstanceCommand
+    IAdminConsoleTenantsService adminConsoleTenantsService) : ICompleteInstanceCommand
 {
     private readonly AppSettings _options = options.Value;
     private readonly AdminConsoleSettings _adminConsoleOptions = adminConsoleOptions.Value;
-    private readonly IOptionsMonitor<TestingSettings>? _testingSettings = testingSettings;
+    private readonly TestingSettings _testingSettings = testingSettings.CurrentValue;
     private readonly IUsersContext _context = context;
     private readonly IQueriesRepository<Instance> _instanceQuery = instanceQuery;
     private readonly ICommandRepository<Instance> _instanceCommand = instanceCommand;
@@ -92,7 +92,7 @@ public class CompleteInstanceCommand(
         await _instanceCommand.UpdateAsync(adminConsoleInstance);
         await _instanceCommand.SaveChangesAsync();
 
-        if (_testingSettings is not null && _testingSettings.CurrentValue.InjectException)
+        if (_testingSettings.InjectException)
             throw new Exception("Exception to test");
 
         scope.Complete();

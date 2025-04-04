@@ -34,7 +34,7 @@ public class CompleteInstanceCommandTests : PlatformUsersContextTestBase
         AdminConsoleSqlServerUsersContext userDbContext = new(GetUserDbContextOptions());
         var addVendorCommand = new AddVendorCommand(userDbContext);
         var addApplicationCommand = new AddApplicationCommand(userDbContext);
-
+        var guid = Guid.NewGuid();
         var vendor = addVendorCommand.Execute(new AddVendorRequest
         {
             Company = Testing.GetAdminConsoleSettings().Value.VendorCompany,
@@ -62,7 +62,7 @@ public class CompleteInstanceCommandTests : PlatformUsersContextTestBase
             {
                 TenantId = 1,
                 OdsInstanceId = 1,
-                Name = "Test Complete Instance",
+                Name = "Test Complete Instance " + guid.ToString(),
                 InstanceType = "Standard",
                 TenantName = "tenant1"
             });
@@ -76,7 +76,7 @@ public class CompleteInstanceCommandTests : PlatformUsersContextTestBase
         var qRepository = new QueriesRepository<Instance>(dbContext);
         var tenantService = new TenantService(Testing.GetOptionsSnapshot(), new MemoryCache(new MemoryCacheOptions()));
 
-        var command = new CompleteInstanceCommand(Testing.GetAppSettings(), Testing.GetAdminConsoleSettings(), userDbContext, qRepository, repository, new TenantConfigurationProviderTest(), tenantService);
+        var command = new CompleteInstanceCommand(Testing.GetAppSettings(), Testing.GetAdminConsoleSettings(), Testing.GetTestingSettings(), userDbContext, qRepository, repository, new TenantConfigurationProviderTest(), tenantService);
         var completeResult = await command.Execute(newInstanceId);
 
         completeResult.ShouldNotBeNull();
@@ -98,6 +98,7 @@ public class CompleteInstanceCommandTests : PlatformUsersContextTestBase
         AdminConsoleSqlServerUsersContext userDbContext = new(GetUserDbContextOptions());
         var addVendorCommand = new AddVendorCommand(userDbContext);
         var addApplicationCommand = new AddApplicationCommand(userDbContext);
+        var guid = Guid.NewGuid();
 
         var vendor = addVendorCommand.Execute(new AddVendorRequest
         {
@@ -126,7 +127,7 @@ public class CompleteInstanceCommandTests : PlatformUsersContextTestBase
             {
                 TenantId = 1,
                 OdsInstanceId = 1,
-                Name = "Test Complete Instance",
+                Name = "Test Complete Instance " + guid.ToString(),
                 InstanceType = "Standard"
             });
 
@@ -139,7 +140,7 @@ public class CompleteInstanceCommandTests : PlatformUsersContextTestBase
         var qRepository = new QueriesRepository<Instance>(dbContext);
         Instance completeResult = null;
         var tenantService = new TenantService(Testing.GetOptionsSnapshot(), new MemoryCache(new MemoryCacheOptions()));
-        var command = new CompleteInstanceCommand(Testing.GetAppSettings(), Testing.GetAdminConsoleSettings(), userDbContext, qRepository, repository, new TenantConfigurationProviderTest(), tenantService);
+        var command = new CompleteInstanceCommand(Testing.GetAppSettings(), Testing.GetAdminConsoleSettings(), Testing.GetTestingSettings(), userDbContext, qRepository, repository, new TenantConfigurationProviderTest(), tenantService);
         try
         {
             completeResult = await command.Execute(int.MaxValue);
@@ -150,6 +151,73 @@ public class CompleteInstanceCommandTests : PlatformUsersContextTestBase
         }
 
         completeResult.ShouldBeNull();
+    }
+
+    [Test]
+    public async Task ShouldNotCompleteInstance_WhenAnExceptionIsThrownInTransaction()
+    {
+
+        AdminConsoleSqlServerUsersContext userDbContext = new(GetUserDbContextOptions());
+        var addVendorCommand = new AddVendorCommand(userDbContext);
+        var addApplicationCommand = new AddApplicationCommand(userDbContext);
+        var guid = Guid.NewGuid();
+
+        var vendor = addVendorCommand.Execute(new AddVendorRequest
+        {
+            Company = Testing.GetAdminConsoleSettings().Value.VendorCompany,
+            NamespacePrefixes = "joe@test.com",
+            ContactName = Testing.GetAdminConsoleSettings().Value.VendorCompany,
+            ContactEmailAddress = "test"
+        });
+
+        var application = addApplicationCommand.Execute(new AddApplicationRequest
+        {
+            ApplicationName = Testing.GetAdminConsoleSettings().Value.ApplicationName,
+            ClaimSetName = "test",
+            ProfileIds = null,
+            VendorId = vendor?.VendorId ?? 0
+        }, Testing.GetAppSettings());
+
+        var newInstanceId = 0;
+
+        await TransactionAsync(async dbContext =>
+        {
+            var repository = new CommandRepository<Instance>(dbContext);
+            var command = new AddInstanceCommand(repository);
+
+            var result = await command.Execute(new TestInstance
+            {
+                TenantId = 1,
+                OdsInstanceId = 1,
+                Name = "Test Complete Instance " + guid.ToString(),
+                InstanceType = "Standard"
+            });
+
+            newInstanceId = result.Id;
+        });
+
+        var dbContext = new AdminConsoleMsSqlContext(GetDbContextOptions());
+
+        var repository = new CommandRepository<Instance>(dbContext);
+        var qRepository = new QueriesRepository<Instance>(dbContext);
+        Instance completeResult = null;
+        var tenantService = new TenantService(Testing.GetOptionsSnapshot(), new MemoryCache(new MemoryCacheOptions()));
+        var command = new CompleteInstanceCommand(Testing.GetAppSettings(), Testing.GetAdminConsoleSettings(), Testing.GetTestingSettings(injectException: true), userDbContext, qRepository, repository, new TenantConfigurationProviderTest(), tenantService);
+        try
+        {
+            completeResult = await command.Execute(newInstanceId);
+        }
+        catch (Exception ex)
+        {
+            ex.GetType().ShouldBeEquivalentTo(typeof(Exception));
+            ex.Message.ShouldBe("Exception to test");
+            //check for the data
+            var data = await qRepository.GetAllAsync();
+            var dataResult = data.FirstOrDefault(p => p.Id == newInstanceId);
+            dataResult.ShouldNotBeNull();
+            dataResult.Id.ShouldBe(newInstanceId);
+            dataResult.Status.ShouldNotBe(InstanceStatus.Completed);
+        }
     }
 
     private class TestInstance : IInstanceRequestModel
