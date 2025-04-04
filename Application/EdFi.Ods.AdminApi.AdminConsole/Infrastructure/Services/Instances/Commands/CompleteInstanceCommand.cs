@@ -93,7 +93,7 @@ public class CompleteInstanceCommand(
         await _instanceCommand.SaveChangesAsync();
 
         if (_testingSettings.InjectException)
-            throw new Exception("Exception to test");
+            throw new AdminApiException("Exception to test");
 
         scope.Complete();
 

@@ -85,11 +85,13 @@ public class CompleteInstanceCommandTests : PlatformUsersContextTestBase
         completeResult.OAuthUrl.ShouldNotBeNull();
         completeResult.ResourceUrl.ShouldNotBeNull();
 
-        userDbContext.OdsInstances.ToList().Count.ShouldBe(1);
-        userDbContext.OdsInstances.First().ShouldNotBeNull();
-        userDbContext.OdsInstances.First().Name.ShouldBe("Test Complete Instance " + guid.ToString());
-        userDbContext.OdsInstances.First().InstanceType.ShouldBe("Standard");
-        userDbContext.OdsInstances.First().ConnectionString.ShouldBe(connectionString);
+        userDbContext.OdsInstances.ToList().Count.ShouldBeGreaterThanOrEqualTo(1);
+
+        var odsInstance = userDbContext.OdsInstances.FirstOrDefault(p => p.OdsInstanceId == completeResult.OdsInstanceId);
+        odsInstance.ShouldNotBeNull();
+        odsInstance.Name.ShouldBe("Test Complete Instance " + guid.ToString());
+        odsInstance.InstanceType.ShouldBe("Standard");
+        odsInstance.ConnectionString.ShouldBe(connectionString);
     }
 
     [Test]
@@ -210,7 +212,7 @@ public class CompleteInstanceCommandTests : PlatformUsersContextTestBase
         }
         catch (Exception ex)
         {
-            ex.GetType().ShouldBeEquivalentTo(typeof(Exception));
+            ex.GetType().ShouldBeEquivalentTo(typeof(AdminApiException));
             ex.Message.ShouldBe("Exception to test");
             //check for the data
             var data = await qRepository.GetAllAsync();

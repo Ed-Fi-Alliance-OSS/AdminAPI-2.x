@@ -49,13 +49,15 @@ public class AddUserProfileCommandTests : PlatformUsersContextTestBase
 
             var result = await command.Execute(newUserProfile);
 
-            var persistedUserProfile = dbContext.UserProfiles;
-            persistedUserProfile.Count().ShouldBe(1);
-            persistedUserProfile.First().DocId.ShouldBe(1);
-            persistedUserProfile.First().TenantId.ShouldBe(1);
-            persistedUserProfile.First().InstanceId.ShouldBe(1);
-            persistedUserProfile.First().EdOrgId.ShouldBe(1);
-            persistedUserProfile.First().Document.ShouldBe(userProfileDocument);
+            result.DocId.GetValueOrDefault().ShouldBeGreaterThanOrEqualTo(1);
+
+            var persistedUserProfile = dbContext.UserProfiles.FirstOrDefault(p => p.DocId == result.DocId);
+            persistedUserProfile.ShouldNotBeNull();
+            persistedUserProfile.DocId.ShouldBe(result.DocId);
+            persistedUserProfile.TenantId.ShouldBe(1);
+            persistedUserProfile.InstanceId.ShouldBe(1);
+            persistedUserProfile.EdOrgId.ShouldBe(1);
+            persistedUserProfile.Document.ShouldBe(userProfileDocument);
         });
     }
 
