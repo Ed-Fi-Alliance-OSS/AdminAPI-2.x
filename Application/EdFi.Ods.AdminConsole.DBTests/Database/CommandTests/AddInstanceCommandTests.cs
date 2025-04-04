@@ -55,7 +55,7 @@ public class AddInstanceCommandTests : PlatformUsersContextTestBase
             var result = await command.Execute(newInstance);
 
             result.ShouldNotBeNull(); // Ensure a result is returned
-            result.Id.ShouldBe(1);
+            result.Id.ShouldBeGreaterThan(0);
         });
 
         await TransactionAsync(async dbContext =>

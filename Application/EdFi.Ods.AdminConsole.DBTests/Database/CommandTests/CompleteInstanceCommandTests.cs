@@ -29,12 +29,13 @@ namespace EdFi.Ods.AdminConsole.DBTests.Database.CommandTests;
 public class CompleteInstanceCommandTests : PlatformUsersContextTestBase
 {
     [Test]
-    public async Task ShouldCompleteInstance()
+    public async Task ShouldCompleteInstanceAsync()
     {
         AdminConsoleSqlServerUsersContext userDbContext = new(GetUserDbContextOptions());
         var addVendorCommand = new AddVendorCommand(userDbContext);
         var addApplicationCommand = new AddApplicationCommand(userDbContext);
         var guid = Guid.NewGuid();
+        string connectionString = "Host=localhost;Port=5432;Username=postgres;Password=admin;Database=\"Test Complete Instance " + guid.ToString() + "\";Pooling=False";
         var vendor = addVendorCommand.Execute(new AddVendorRequest
         {
             Company = Testing.GetAdminConsoleSettings().Value.VendorCompany,
@@ -86,9 +87,9 @@ public class CompleteInstanceCommandTests : PlatformUsersContextTestBase
 
         userDbContext.OdsInstances.ToList().Count.ShouldBe(1);
         userDbContext.OdsInstances.First().ShouldNotBeNull();
-        userDbContext.OdsInstances.First().Name.ShouldBe("Test Complete Instance");
+        userDbContext.OdsInstances.First().Name.ShouldBe("Test Complete Instance " + guid.ToString());
         userDbContext.OdsInstances.First().InstanceType.ShouldBe("Standard");
-        userDbContext.OdsInstances.First().ConnectionString.ShouldBe("Host=localhost;Port=5432;Username=postgres;Password=admin;Database=\"Test Complete Instance\";Pooling=False");
+        userDbContext.OdsInstances.First().ConnectionString.ShouldBe(connectionString);
     }
 
     [Test]
