@@ -170,7 +170,7 @@
 											"});\r",
 											"\r",
 											"pm.test(\"POST Vendors Invalid: Response errors include messages by property\", function () {\r",
-											"    pm.expect(response.errors[\"NamespacePrefix\"].length).to.equal(1);\r",
+											"    pm.expect(response.errors[\"NamespacePrefixes\"].length).to.equal(1);\r",
 											"});\r",
 											""
 										],
