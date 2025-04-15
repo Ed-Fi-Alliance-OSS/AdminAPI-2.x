@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "e84cf599-e459-4c3c-b468-d51f44bc16eb",
+		"_postman_id": "c2f46729-edb4-4105-8dff-e780d432f24f",
 		"name": "Admin API E2E 2.0 - Vendors",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "22794466"
 	},
 	"item": [
 		{
@@ -48,16 +49,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/vendors",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"vendors"
-									]
-								}
+								"url": "{{API_URL}}/v2/vendors"
 							},
 							"response": [
 								{
@@ -74,15 +66,7 @@
 												}
 											}
 										},
-										"url": {
-											"raw": "{{API_URL}}/vendors",
-											"host": [
-												"{{API_URL}}"
-											],
-											"path": [
-												"vendors"
-											]
-										}
+										"url": "{{API_URL}}/vendors"
 									},
 									"status": "Created",
 									"code": 201,
@@ -159,16 +143,55 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/vendors",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"vendors"
-									]
+								"url": "{{API_URL}}/v2/vendors"
+							},
+							"response": []
+						},
+						{
+							"name": "Vendors - Invalid Prefix exceed length",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST Vendors Invalid: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"POST Vendors Invalid: Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST Vendors Invalid: Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST Vendors Invalid: Response errors include messages by property\", function () {\r",
+											"    pm.expect(response.errors[\"NamespacePrefix\"].length).to.equal(1);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
 								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"company\": \"Test Company\",\r\n    \"namespacePrefixes\": \"uri://abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkl.org\",\r\n    \"contactName\": \"Test User\",\r\n    \"contactEmailAddress\": \"test@test-ed-fi.org\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{API_URL}}/v2/vendors"
 							},
 							"response": []
 						},
@@ -444,16 +467,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/vendors",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"vendors"
-									]
-								}
+								"url": "{{API_URL}}/v2/vendors"
 							},
 							"response": []
 						},
@@ -616,17 +630,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v2/vendors/{{CreatedVendorId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"vendors",
-										"{{CreatedVendorId}}"
-									]
-								}
+								"url": "{{API_URL}}/v2/vendors/{{CreatedVendorId}}"
 							},
 							"response": []
 						},
@@ -800,18 +804,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/vendors/{{OtherApplicationVendorIdwithVendor}}/applications",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"vendors",
-										"{{OtherApplicationVendorIdwithVendor}}",
-										"applications"
-									]
-								}
+								"url": "{{API_URL}}/v2/vendors/{{OtherApplicationVendorIdwithVendor}}/applications"
 							},
 							"response": []
 						},
@@ -879,17 +872,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/vendors/{{CreatedVendorId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"vendors",
-										"{{CreatedVendorId}}"
-									]
-								}
+								"url": "{{API_URL}}/v2/vendors/{{CreatedVendorId}}"
 							},
 							"response": []
 						},
@@ -947,17 +930,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/vendors/{{CreatedVendorId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"vendors",
-										"{{CreatedVendorId}}"
-									]
-								}
+								"url": "{{API_URL}}/v2/vendors/{{CreatedVendorId}}"
 							},
 							"response": []
 						},
@@ -1007,17 +980,7 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v2/vendors/{{CreatedVendorId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"vendors",
-										"{{CreatedVendorId}}"
-									]
-								}
+								"url": "{{API_URL}}/v2/vendors/{{CreatedVendorId}}"
 							},
 							"response": []
 						},
@@ -1054,17 +1017,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v2/vendors/{{CreatedVendorId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"vendors",
-										"{{CreatedVendorId}}"
-									]
-								}
+								"url": "{{API_URL}}/v2/vendors/{{CreatedVendorId}}"
 							},
 							"response": []
 						},
@@ -1122,18 +1075,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/vendors/0/applications",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"vendors",
-										"0",
-										"applications"
-									]
-								}
+								"url": "{{API_URL}}/v2/vendors/0/applications"
 							},
 							"response": []
 						},
@@ -1179,17 +1121,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/vendors/{{CreatedVendorId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"vendors",
-										"{{CreatedVendorId}}"
-									]
-								}
+								"url": "{{API_URL}}/v2/vendors/{{CreatedVendorId}}"
 							},
 							"response": []
 						},
@@ -1228,17 +1160,7 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v2/vendors/{{CreatedVendorId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"vendors",
-										"{{CreatedVendorId}}"
-									]
-								}
+								"url": "{{API_URL}}/v2/vendors/{{CreatedVendorId}}"
 							},
 							"response": []
 						}
@@ -1249,13 +1171,9 @@
 	],
 	"auth": {
 		"type": "bearer",
-		"bearer": [
-			{
-				"key": "token",
-				"value": "{{TOKEN}}",
-				"type": "string"
-			}
-		]
+		"bearer": {
+			"token": "{{TOKEN}}"
+		}
 	},
 	"event": [
 		{
