@@ -97,3 +97,4 @@ public class OdsInstanceDerivativeValidator : AbstractValidator<OdsInstanceDeriv
             .WithMessage("Allowed values: ReadReplica, Snapshot.");
     }
 }
+
