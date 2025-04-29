@@ -53,12 +53,12 @@ public class DeletedInstanceCommand : IDeletedInstanceCommand
                 .Include(i => i.OdsInstanceDerivatives)
                 .SingleOrDefaultAsync(w => w.OdsInstanceId == odsInstanceId);
 
-            var apiclientOdsInstance = await _context.ApiClientOdsInstances.Include(i => i.ApiClient).SingleOrDefaultAsync(w => w.OdsInstance.OdsInstanceId == odsInstanceId);
+            var apiclientOdsInstance = _context.ApiClientOdsInstances.Include(i => i.ApiClient).Where(w => w.OdsInstance.OdsInstanceId == odsInstanceId);
 
             if (apiclientOdsInstance != null)
             {
-                _context.ApiClientOdsInstances.Remove(apiclientOdsInstance);
-                _context.ApiClients.Remove(apiclientOdsInstance.ApiClient);
+                _context.ApiClientOdsInstances.RemoveRange(apiclientOdsInstance);
+                _context.ApiClients.RemoveRange(apiclientOdsInstance.Select(p => p.ApiClient).Distinct());
             }
             if (odsInstance != null)
             {
