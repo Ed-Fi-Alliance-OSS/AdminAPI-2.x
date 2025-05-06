@@ -65,6 +65,122 @@
 							"response": []
 						},
 						{
+							"name": "Complete Instance Without Connection String",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST AdminConsole Complete Instance Invalid: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"POST AdminConsole Complete Instance Invalid: Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST AdminConsole Complete Instance Invalid: Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST AdminConsole Complete Instance Invalid: Response errors include messages by property\", function () {\r",
+											"    pm.expect(response.errors[\"ConnectionString\"].length).to.equal(1);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"connectionString\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{API_URL}}/adminconsole/instances/{{AdminConsoleCreatedOdsInstanceId}}/completed"
+							},
+							"response": []
+						},
+						{
+							"name": "Complete Instance With Invalid Connection String",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST AdminConsole Complete Instance Invalid: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"POST AdminConsole Complete Instance Invalid: Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST AdminConsole Complete Instance Invalid: Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST AdminConsole Complete Instance Invalid: Response errors include messages by property\", function () {\r",
+											"    pm.expect(response.errors[\"ConnectionString\"].length).to.equal(1);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"connectionString\": \"Invalid_Connection_String\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{API_URL}}/adminconsole/instances/{{AdminConsoleCreatedOdsInstanceId}}/completed"
+							},
+							"response": []
+						},
+						{
 							"name": "Complete Instance",
 							"event": [
 								{
@@ -1990,7 +2106,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "",
+									"raw": "{\r\n  \"connectionString\": \"{{connectionString}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
