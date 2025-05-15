@@ -307,9 +307,11 @@ function ResetTestDatabases {
         $arguments = @{
             RestApiPackageVersion    = $OdsVersion
             RestApiPackageName       = $OdsPackageName
-            UseIntegratedSecurity    = $true
+            UseIntegratedSecurity    = $false
             RestApiPackagePrerelease = $Prerelease
             NuGetFeed                = $EdFiNuGetFeed
+            DbUsername               = "sa"
+            DbPassword               = "P@55w0rd" 
         }
 
         Invoke-PrepareDatabasesForTesting @arguments
@@ -431,8 +433,6 @@ function Invoke-UnitTestSuite {
 }
 
 function Invoke-IntegrationTestSuite {
-    Invoke-Step { InitializeNuGet }
-
     $supportedApiVersions | ForEach-Object {
         Write-Output "Running Integration Tests for ODS Version" $_.OdsVersion
 
