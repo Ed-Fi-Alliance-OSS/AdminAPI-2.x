@@ -19,6 +19,8 @@ services:
       SQLSERVER_PASSWORD: ${SQLSERVER_PASSWORD:-P@55w0rd}
       TPDM_ENABLED: ${TPDM_ENABLED:-true}
       MSSQL_PID: ${MSSQL_PID:-Express}
+    ports:
+      - 1435:1433
     volumes:
       - vol-db-ods-tenant1:/var/opt/mssql/data
       - vol-db-ods-tenant1:/var/opt/mssql/log
@@ -45,6 +47,8 @@ services:
       SQLSERVER_PASSWORD: ${SQLSERVER_PASSWORD:-P@55w0rd}
       TPDM_ENABLED: ${TPDM_ENABLED:-true}
       MSSQL_PID: ${MSSQL_PID:-Express}
+    ports:
+      - 1436:1433
     volumes:
       - vol-db-ods-tenant2:/var/opt/mssql/data
       - vol-db-ods-tenant2:/var/opt/mssql/log
