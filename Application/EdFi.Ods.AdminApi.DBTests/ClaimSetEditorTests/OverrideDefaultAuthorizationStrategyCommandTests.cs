@@ -4,9 +4,11 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
+using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using FluentValidation;
 using NUnit.Framework;
 using Shouldly;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
@@ -144,7 +146,13 @@ public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityDataTest
 
         resultResourceClaim1.AuthorizationStrategyOverridesForCRUD.Count.ShouldBe(1);
         resultResourceClaim1.AuthorizationStrategyOverridesForCRUD[0].ActionName.ShouldBe("Create");
-        resultResourceClaim1.AuthorizationStrategyOverridesForCRUD[0].AuthorizationStrategies.Any(x => x.AuthStrategyName.Equals("TestAuthStrategy1")).ShouldBeTrue();
+
+        var resourceClaimActionAuthorizationStrategies = new GetResourceClaimActionAuthorizationStrategiesQuery(securityContext, null).Execute(new Common.Infrastructure.CommonQueryParams(), null);
+        var authStrategyName = resourceClaimActionAuthorizationStrategies
+            .FirstOrDefault(p => p.ResourceClaimId == overrideModel.ResourceClaimId).AuthorizationStrategiesForActions
+            .FirstOrDefault(s => s.ActionName.Equals(overrideModel.ActionName, StringComparison.CurrentCultureIgnoreCase)).AuthorizationStrategies.FirstOrDefault().AuthStrategyName;
+
+        resultResourceClaim1.AuthorizationStrategyOverridesForCRUD[0].AuthorizationStrategies.Any(x => x.AuthStrategyName.Equals(authStrategyName)).ShouldBeFalse();
 
         var resultResourceClaim2 =
             resourceClaimsForClaimSet.Single(x => x.Id == testResource2ToNotEdit.ResourceClaimId);
