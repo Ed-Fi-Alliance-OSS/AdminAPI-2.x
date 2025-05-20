@@ -12,19 +12,9 @@ using EdFi.Ods.AdminApi.Common.Infrastructure.Providers;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Providers.Interfaces;
 using EdFi.Ods.AdminApi.Features;
 using EdFi.Ods.AdminApi.Infrastructure;
-using Serilog;
-using Microsoft.Extensions.Logging;
+using log4net;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add Serilog
-Log.Logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(builder.Configuration)
-    .Enrich.FromLogContext()
-    .WriteTo.Console()
-    .WriteTo.File("Logs/adminapi.log", rollingInterval: RollingInterval.Day)
-    .CreateLogger();
-builder.Host.UseSerilog();
 
 //Rate Limit
 builder.Services.AddMemoryCache();
@@ -35,11 +25,14 @@ builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>()
 builder.Services.AddSingleton<ISymmetricStringEncryptionProvider, Aes256SymmetricStringEncryptionProvider>();
 builder.Services.AddInMemoryRateLimiting();
 
+// logging
+var _logger = LogManager.GetLogger("Program");
+_logger.Info("Starting Admin API");
 var adminConsoleIsEnabled = builder.Configuration.GetValue<bool>("AppSettings:EnableAdminConsoleAPI");
 
 //Order is important to enable CORS
 if (adminConsoleIsEnabled)
-    builder.RegisterAdminConsoleCorsDependencies();
+    builder.RegisterAdminConsoleCorsDependencies(_logger);
 
 builder.AddServices();
 

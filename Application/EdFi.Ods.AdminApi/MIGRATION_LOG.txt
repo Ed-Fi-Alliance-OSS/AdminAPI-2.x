@@ -1,1 +1,0 @@
-log4net has been fully removed from the codebase and configuration. Serilog is now used for all logging. All log4net config files and references have been removed.

@@ -12,6 +12,7 @@ using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Queries;
 using EdFi.Ods.AdminApi.Features.ODSInstances;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+using log4net;
 using Newtonsoft.Json;
 using static EdFi.Ods.AdminApi.AdminConsole.Features.Instances.AddInstance;
 
@@ -30,6 +31,8 @@ public class InstanceService : IAdminConsoleInstancesService
     private readonly IGetInstancesQuery _getInstancesQuery;
     private readonly IGetApiClientIdByApplicationIdQuery _getApiClientIdByApplicationIdQuery;
     private readonly IMapper _mapper;
+
+    private static readonly ILog _log = LogManager.GetLogger(typeof(InstanceService));
 
 
     public InstanceService(IGetOdsInstancesQuery getOdsInstancesQuery,
@@ -89,6 +92,7 @@ public class InstanceService : IAdminConsoleInstancesService
                 await _addInstanceCommand.Execute(addInstanceRequest);
             }
         }
+        _log.Info("Instances have been created in the AdminConsole tables");
     }
 }
 

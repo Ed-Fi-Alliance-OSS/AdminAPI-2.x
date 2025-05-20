@@ -5,6 +5,7 @@
 
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Tenants;
 using EdFi.Ods.AdminApi.Common.Settings;
+using log4net;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
@@ -14,6 +15,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services;
 public class TenantBackgroundService : BackgroundService
 {
     private readonly IDisposable _optionsChangedListener;
+    private static readonly ILog _log = LogManager.GetLogger(typeof(TenantService));
     private readonly IServiceScopeFactory _serviceScopeFactory;
     public TenantBackgroundService(IOptionsMonitor<AppSettingsFile> optionsMonitor, IServiceScopeFactory serviceScopeFactory)
     {
@@ -24,7 +26,7 @@ public class TenantBackgroundService : BackgroundService
     private async Task OnAppSettingsChangedAsync()
     {
         using IServiceScope scope = _serviceScopeFactory.CreateScope();
-        // Removed log statement
+        _log.Info("The appsettings file has been modified");
 
         IAdminConsoleTenantsService scopedProcessingService =
             scope.ServiceProvider.GetRequiredService<IAdminConsoleTenantsService>();
@@ -42,7 +44,7 @@ public class TenantBackgroundService : BackgroundService
 
     public override async Task StopAsync(CancellationToken cancellationToken)
     {
-        // Removed log statement
+        _log.Info("Stopping background");
         await base.StopAsync(cancellationToken);
     }
 
