@@ -4,7 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Ods.AdminApi.Common.Constants;
-using log4net;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,31 +18,23 @@ public static class AdminConsoleBuilderExtension
         webApplicationBuilder.AddAdminConsoleServices();
     }
 
-    public static void RegisterAdminConsoleCorsDependencies(this WebApplicationBuilder webApplicationBuilder, ILog logger)
+    public static void RegisterAdminConsoleCorsDependencies(this WebApplicationBuilder webApplicationBuilder)
     {
-        var corsSettings = webApplicationBuilder.Configuration.GetSection(AdminConsoleConstants.AdminConsoleSettingsKey);
-        var enableCors = corsSettings.GetValue<bool>(AdminConsoleConstants.EnableCorsKey);
-        var allowedOrigins = corsSettings.GetSection(AdminConsoleConstants.AllowedOriginsCorsKey).Get<string[]>();
-        // Read CORS settings from configuration
-        if (enableCors && allowedOrigins != null)
+        var corsSettings = webApplicationBuilder.Configuration.GetSection("AdminConsoleSettings");
+        var enableCors = corsSettings.GetValue<bool>("EnableCors");
+        var allowedOrigins = corsSettings.GetSection("AllowedOrigins").Get<string[]>();
+        if (enableCors && allowedOrigins != null && allowedOrigins.Length > 0)
         {
-            if (allowedOrigins.Length > 0)
+            webApplicationBuilder.Services.AddCors(options =>
             {
-                webApplicationBuilder.Services.AddCors(options =>
+                options.AddPolicy("AdminConsoleCorsPolicy", policy =>
                 {
-                    options.AddPolicy(AdminConsoleConstants.CorsPolicyName, policy =>
-                    {
-                        policy.WithOrigins(allowedOrigins)
-                              .AllowAnyMethod()
-                              .AllowAnyHeader();
-                    });
+                    policy.WithOrigins(allowedOrigins)
+                          .AllowAnyMethod()
+                          .AllowAnyHeader();
                 });
-            }
-            else
-            {
-                // Handle the case where allowedOrigins is null or empty
-                logger.Warn("CORS is enabled, but no allowed origins are specified.");
-            }
+            });
         }
+        // Optionally: log a warning if CORS is enabled but no origins are specified
     }
 }

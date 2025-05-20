@@ -5,7 +5,6 @@
 
 using System.Security.Cryptography;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Providers.Interfaces;
-using log4net;
 
 namespace EdFi.Ods.AdminApi.Common.Infrastructure.Providers;
 
@@ -21,11 +20,9 @@ namespace EdFi.Ods.AdminApi.Common.Infrastructure.Providers;
 public class Aes256SymmetricStringEncryptionProvider : ISymmetricStringEncryptionProvider
 {
 
-    private readonly ILog _logger;
-
     public Aes256SymmetricStringEncryptionProvider()
     {
-        _logger = LogManager.GetLogger(typeof(Aes256SymmetricStringEncryptionProvider));
+        // No logger needed
     }
 
     /// <summary>
@@ -128,9 +125,8 @@ public class Aes256SymmetricStringEncryptionProvider : ISymmetricStringEncryptio
             encryptedBytes = Convert.FromBase64String(base64EncryptedBytes);
             hashValue = Convert.FromBase64String(base64HashValue);
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            _logger.Error("Unable to convert encryption key from Base 64 String.", e);
             throw new ArgumentException("Unable to convert key from Base 64 String.", nameof(key));
         }
 

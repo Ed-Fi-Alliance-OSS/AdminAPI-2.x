@@ -156,8 +156,7 @@ _value }
         });
 
         // Logging
-        var loggingOptions = config.GetSection("Log4NetCore").Get<Log4NetProviderOptions>();
-        webApplicationBuilder.Logging.AddLog4Net(loggingOptions);
+        // Serilog is now configured in Program.cs
 
         // Fluent validation
         webApplicationBuilder.Services

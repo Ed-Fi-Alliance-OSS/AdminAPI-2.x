@@ -3,7 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using log4net;
 using Microsoft.Data.SqlClient;
 using Npgsql;
 
@@ -11,7 +10,6 @@ namespace EdFi.Ods.AdminApi.Common.Infrastructure.Helpers;
 
 public static class ConnectionStringHelper
 {
-    private static readonly ILog _log = LogManager.GetLogger(typeof(ConnectionStringHelper));
     public static bool ValidateConnectionString(string databaseEngine, string? connectionString)
     {
         bool result = true;
@@ -21,15 +19,10 @@ public static class ConnectionStringHelper
             {
                 _ = new SqlConnectionStringBuilder(connectionString);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                if (ex is ArgumentException ||
-                    ex is FormatException ||
-                    ex is KeyNotFoundException)
-                {
-                    result = false;
-                    _log.Error(ex);
-                }
+                result = false;
+                // Optionally: log error with Serilog or Microsoft.Extensions.Logging
             }
         }
         else if (databaseEngine.Equals(DatabaseEngineEnum.PostgreSql, StringComparison.InvariantCultureIgnoreCase))
@@ -38,10 +31,10 @@ public static class ConnectionStringHelper
             {
                 _ = new NpgsqlConnectionStringBuilder(connectionString);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 result = false;
-                _log.Error(ex);
+                // Optionally: log error with Serilog or Microsoft.Extensions.Logging
             }
         }
         return result;

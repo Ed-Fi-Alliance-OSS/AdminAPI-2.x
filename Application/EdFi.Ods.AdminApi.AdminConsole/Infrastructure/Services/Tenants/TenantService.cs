@@ -8,7 +8,6 @@ using EdFi.Ods.AdminApi.AdminConsole.Features.Tenants;
 using EdFi.Ods.AdminApi.Common.Constants;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Helpers;
 using EdFi.Ods.AdminApi.Common.Settings;
-using log4net;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 
@@ -27,7 +26,6 @@ public class TenantService(IOptionsSnapshot<AppSettingsFile> options,
     private const string ADMIN_DB_KEY = "EdFi_Admin";
     protected AppSettingsFile _appSettings = options.Value;
     private readonly IMemoryCache _memoryCache = memoryCache;
-    private static readonly ILog _log = LogManager.GetLogger(typeof(TenantService));
 
     public async Task InitializeTenantsAsync()
     {
@@ -59,8 +57,7 @@ public class TenantService(IOptionsSnapshot<AppSettingsFile> options,
                 var connectionString = tenantConfig.Value.ConnectionStrings.First(p => p.Key == ADMIN_DB_KEY).Value;
                 if (!ConnectionStringHelper.ValidateConnectionString(_appSettings.AppSettings.DatabaseEngine!, connectionString))
                 {
-                    _log.WarnFormat("Tenant {Key} has an invalid connection string for database {ADMIN_DB_KEY}. Database engine is {engine}",
-                        tenantConfig.Key, ADMIN_DB_KEY, _appSettings.AppSettings.DatabaseEngine);
+                    // Removed log warning
                 }
                 dynamic document = new ExpandoObject();
                 document.edfiApiDiscoveryUrl = tenantConfig.Value.EdFiApiDiscoveryUrl;
