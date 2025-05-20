@@ -98,7 +98,7 @@ try
 }
 catch (Exception ex)
 {
-    Log.Fatal(ex, "Admin API Host terminated unexpectedly");
+    Log.Fatal(ex, ex.Message);
     throw new InvalidOperationException("Admin API Host terminated unexpectedly", ex);
 }
 finally
