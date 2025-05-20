@@ -99,7 +99,7 @@ try
 catch (Exception ex)
 {
     Log.Fatal(ex, "Admin API Host terminated unexpectedly");
-    throw new Exception("Admin API Host terminated unexpectedly", ex);
+    throw new InvalidOperationException("Admin API Host terminated unexpectedly", ex);
 }
 finally
 {
