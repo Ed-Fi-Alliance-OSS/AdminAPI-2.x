@@ -91,7 +91,7 @@ jobs:
         image: mcr.microsoft.com/mssql/server@sha256:d7f2c670f0cd807b4dc466b8887bd2b39a4561f624c154896f5564ea38efd13a
         env:
           ACCEPT_EULA: "Y"
-          SA_PASSWORD: $DB_Password
+          SA_PASSWORD: ${{ env.DB_Password }}
           MSSQL_ENABLE_HADR: "1"
         ports:
           - 1433:1433
@@ -107,7 +107,7 @@ jobs:
 
       - name: Run Integration Tests
         if: success()
-        run: ./build.ps1 -Command IntegrationTest -Configuration Debug -UseIntegratedSecurity:$false -DbUsername "sa" -DbPassword $DB_Password
+        run: ./build.ps1 -Command IntegrationTest -Configuration Debug -UseIntegratedSecurity:$false -DbUsername "sa" -DbPassword ${{ env.DB_Password }}
 
       - name: Upload Test Results
         uses: actions/upload-artifact@26f96dfa697d77e81fd5907df203aa23a56210a8 # v4.3.0
