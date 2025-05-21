@@ -79,6 +79,9 @@ jobs:
         uses: github/codeql-action/analyze@48ab28a6f5dbc2a99bf1e0131198dd8f1df78169 # codeql-bundle-v3.28.0
 
   run-integration-tests:
+    name: Run integration tests
+    env:
+      DB_Password: P@55w0rd
     runs-on: ubuntu-22.04
     defaults:
       run:
@@ -88,7 +91,7 @@ jobs:
         image: mcr.microsoft.com/mssql/server@sha256:d7f2c670f0cd807b4dc466b8887bd2b39a4561f624c154896f5564ea38efd13a
         env:
           ACCEPT_EULA: "Y"
-          SA_PASSWORD: "P@55w0rd"
+          SA_PASSWORD: $DB_Password
           MSSQL_ENABLE_HADR: "1"
         ports:
           - 1433:1433
@@ -104,7 +107,7 @@ jobs:
 
       - name: Run Integration Tests
         if: success()
-        run: ./build.ps1 -Command IntegrationTest -Configuration Debug -UseIntegratedSecurity:$false -DbUsername "sa" -DbPassword "P@55w0rd"
+        run: ./build.ps1 -Command IntegrationTest -Configuration Debug -UseIntegratedSecurity:$false -DbUsername "sa" -DbPassword $DB_Password
 
       - name: Upload Test Results
         uses: actions/upload-artifact@26f96dfa697d77e81fd5907df203aa23a56210a8 # v4.3.0
