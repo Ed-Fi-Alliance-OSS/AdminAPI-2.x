@@ -11,10 +11,10 @@ SET @claimSetName = 'Ed-Fi ODS Admin Console'
 
 PRINT 'Ensuring Ed-Fi ODS Admin Console Claimset exists.'
 
-INSERT INTO dbo.ClaimSets (ClaimSetName, IsEdfiPreset)
-SELECT DISTINCT @claimSetName, 1 FROM dbo.ClaimSets
+INSERT INTO EdFi_Security.dboClaimSets (ClaimSetName, IsEdfiPreset)
+SELECT DISTINCT @claimSetName, 1 FROM EdFi_Security.dboClaimSets
 WHERE NOT EXISTS (SELECT 1
-    FROM dbo.ClaimSets
+    FROM EdFi_Security.dboClaimSets
 		WHERE ClaimSetName = @claimSetName  )
 GO
 
@@ -29,20 +29,20 @@ DECLARE @ResourceClaimId INT
 
 SET @claimSetName = 'Ed-Fi ODS Admin Console'
 
-IF  EXISTS (SELECT 1 FROM dbo.ClaimSets c WHERE c.ClaimSetName = @claimSetName)
+IF  EXISTS (SELECT 1 FROM EdFi_Security.dboClaimSets c WHERE c.ClaimSetName = @claimSetName)
 BEGIN
     DECLARE @edFiOdsAdminConsoleClaimSetId as INT
 
     SELECT @edFiOdsAdminConsoleClaimSetId = ClaimsetId
-    FROM dbo.ClaimSets
+    FROM EdFi_Security.dboClaimSets
     WHERE ClaimSets.ClaimSetName = @claimSetName
 
     DELETE csrcaaso
-    FROM dbo.ClaimSetResourceClaimActionAuthorizationStrategyOverrides csrcaaso
-    INNER JOIN dbo.ClaimSetResourceClaimActions ON csrcaaso.ClaimSetResourceClaimActionId = dbo.ClaimSetResourceClaimActions.ClaimSetResourceClaimActionId
-    WHERE dbo.ClaimSetResourceClaimActions.ClaimSetId = @edFiOdsAdminConsoleClaimSetId
+    FROM EdFi_Security.dboClaimSetResourceClaimActionAuthorizationStrategyOverrides csrcaaso
+    INNER JOIN EdFi_Security.dboClaimSetResourceClaimActions ON csrcaaso.ClaimSetResourceClaimActionId = EdFi_Security.dboClaimSetResourceClaimActions.ClaimSetResourceClaimActionId
+    WHERE EdFi_Security.dboClaimSetResourceClaimActions.ClaimSetId = @edFiOdsAdminConsoleClaimSetId
 
-    DELETE FROM dbo.ClaimSetResourceClaimActions
+    DELETE FROM EdFi_Security.dboClaimSetResourceClaimActions
     WHERE ClaimSetId = @edFiOdsAdminConsoleClaimSetId
 
     PRINT 'Creating Temporary Records.'
@@ -59,39 +59,39 @@ BEGIN
 				('staffEducationOrganizationAssignmentAssociation'),
 				('staffSectionAssociation'),
 				('courseTranscript')
-    INSERT INTO @resourceClaimIds SELECT ResourceClaimId FROM dbo.ResourceClaims WHERE ResourceName IN (SELECT ResourceName FROM @resourceNames)
+    INSERT INTO @resourceClaimIds SELECT ResourceClaimId FROM EdFi_Security.dboResourceClaims WHERE ResourceName IN (SELECT ResourceName FROM @resourceNames)
 END
 
 SELECT @authorizationStrategyId = AuthorizationStrategyId
-FROM   dbo.AuthorizationStrategies
+FROM   EdFi_Security.dboAuthorizationStrategies
 WHERE  AuthorizationStrategyName = 'NoFurtherAuthorizationRequired'
 
 DECLARE @actionId int
 DECLARE @claimSetId int
 
-SELECT @claimSetId = ClaimSetId FROM dbo.ClaimSets WHERE ClaimSetName = @claimSetName
+SELECT @claimSetId = ClaimSetId FROM EdFi_Security.dboClaimSets WHERE ClaimSetName = @claimSetName
 
 PRINT 'Configuring Claims for Ed-Fi ODS Admin Console Claimset...'
 
 IF NOT EXISTS (SELECT 1
-    FROM dbo.ClaimSetResourceClaimActions csraa,dbo.Actions a, @resourceClaimIds rc
+    FROM EdFi_Security.dboClaimSetResourceClaimActions csraa,EdFi_Security.dboActions a, @resourceClaimIds rc
 		WHERE csraa.ActionId = a.ActionId AND ClaimSetId = @claimSetId AND csraa.ResourceClaimId = rc.ResourceClaimId)
 
 BEGIN
-    INSERT INTO dbo.ClaimSetResourceClaimActions (ActionId, ClaimSetId, ResourceClaimId)
+    INSERT INTO EdFi_Security.dboClaimSetResourceClaimActions (ActionId, ClaimSetId, ResourceClaimId)
         SELECT ActionId, @claimSetId, rc.ResourceClaimId  
-        FROM dbo.Actions, @resourceClaimIds rc
+        FROM EdFi_Security.dboActions, @resourceClaimIds rc
         WHERE ActionName in ('Read')
         AND NOT EXISTS (
             SELECT 1
-            FROM dbo.ClaimSetResourceClaimActions
+            FROM EdFi_Security.dboClaimSetResourceClaimActions
             WHERE ActionId = Actions.ActionId AND ClaimSetId = @claimSetId AND ResourceClaimId = rc.ResourceClaimId
         )
 
-    INSERT INTO dbo.ClaimSetResourceClaimActionAuthorizationStrategyOverrides (AuthorizationStrategyId, ClaimSetResourceClaimActionId)
+    INSERT INTO EdFi_Security.dboClaimSetResourceClaimActionAuthorizationStrategyOverrides (AuthorizationStrategyId, ClaimSetResourceClaimActionId)
         SELECT @authorizationStrategyId, ClaimSetResourceClaimActionId
-        FROM dbo.ClaimSetResourceClaimActions csrc
-            INNER JOIN dbo.ResourceClaims r 
+        FROM EdFi_Security.dboClaimSetResourceClaimActions csrc
+            INNER JOIN EdFi_Security.dboResourceClaims r 
                 ON csrc.ResourceClaimId = r.ResourceClaimId AND csrc.ClaimSetId = @claimSetId
         WHERE r.ResourceName IN (
 				    'section',
@@ -108,23 +108,23 @@ BEGIN
 				    'courseTranscript')
 END 
 
-SELECT @actionId = ActionId FROM dbo.Actions WHERE ActionName = 'Read'
-SELECT @ResourceClaimId = ResourceClaimId FROM dbo.ResourceClaims WHERE ResourceName = 'types'
+SELECT @actionId = ActionId FROM EdFi_Security.dboActions WHERE ActionName = 'Read'
+SELECT @ResourceClaimId = ResourceClaimId FROM EdFi_Security.dboResourceClaims WHERE ResourceName = 'types'
 
 IF NOT EXISTS (
-    SELECT 1 FROM dbo.ClaimSetResourceClaimActions
+    SELECT 1 FROM EdFi_Security.dboClaimSetResourceClaimActions
 		WHERE ClaimSetResourceClaimActions.ActionId = @actionId AND ClaimSetResourceClaimActions.ClaimSetId = @claimSetId
 			   AND ClaimSetResourceClaimActions.ResourceClaimId = @ResourceClaimId)
 BEGIN
-    INSERT INTO dbo.ClaimSetResourceClaimActions (ActionId, ClaimSetId, ResourceClaimId)
+    INSERT INTO EdFi_Security.dboClaimSetResourceClaimActions (ActionId, ClaimSetId, ResourceClaimId)
 		    VALUES (@actionId, @claimSetId, @ResourceClaimId)
 
-	  INSERT INTO dbo.ClaimSetResourceClaimActionAuthorizationStrategyOverrides (AuthorizationStrategyId, ClaimSetResourceClaimActionId)
+	  INSERT INTO EdFi_Security.dboClaimSetResourceClaimActionAuthorizationStrategyOverrides (AuthorizationStrategyId, ClaimSetResourceClaimActionId)
 	      SELECT @authorizationStrategyId, ClaimSetResourceClaimActions.ClaimSetResourceClaimActionId
-	      FROM dbo.ClaimSetResourceClaimActions
-	          INNER JOIN dbo.ResourceClaims r
+	      FROM EdFi_Security.dboClaimSetResourceClaimActions
+	          INNER JOIN EdFi_Security.dboResourceClaims r
                 ON ClaimSetResourceClaimActions.ResourceClaimId = r.ResourceClaimId
-	          INNER JOIN dbo.Actions
+	          INNER JOIN EdFi_Security.dboActions
                 ON Actions.actionId = ClaimSetResourceClaimActions.ActionId AND Actions.ActionName in ('Read')
 	      WHERE r.ResourceName IN  ('types') AND ClaimSetResourceClaimActions.ActionId = @actionId AND ClaimSetResourceClaimActions.ClaimSetId = @claimSetId
 END
