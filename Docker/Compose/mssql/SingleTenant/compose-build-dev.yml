@@ -72,8 +72,10 @@ services:
 
   db-admin:
     build:
-      context: ../../../Settings/DB-Admin/mssql/
-      dockerfile: Dockerfile
+      context: ../../../
+      additional_contexts:
+        assets: ../../../../
+      dockerfile: db.mssql.admin.Dockerfile
       args:
         ADMIN_API_VERSION: "${ADMIN_API_VERSION:-2.2.0}"
     environment:
