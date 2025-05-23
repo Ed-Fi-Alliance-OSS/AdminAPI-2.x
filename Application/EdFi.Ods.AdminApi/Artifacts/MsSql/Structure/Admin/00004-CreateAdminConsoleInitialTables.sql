@@ -65,16 +65,6 @@ GO
 
 IF NOT EXISTS (
     SELECT 1 FROM sys.indexes 
-    WHERE name = 'IX_HealthChecks_EdOrgId' 
-      AND object_id = OBJECT_ID('[adminconsole].[HealthChecks]')
-)
-BEGIN
-    CREATE INDEX [IX_HealthChecks_EdOrgId] ON [adminconsole].[HealthChecks] ([EdOrgId]);
-END
-GO
-
-IF NOT EXISTS (
-    SELECT 1 FROM sys.indexes 
     WHERE name = 'IX_HealthChecks_InstanceId' 
       AND object_id = OBJECT_ID('[adminconsole].[HealthChecks]')
 )
@@ -90,16 +80,6 @@ IF NOT EXISTS (
 )
 BEGIN
     CREATE UNIQUE INDEX [IX_HealthChecks_TenantId] ON [adminconsole].[HealthChecks] ([TenantId]);
-END
-GO
-
-IF NOT EXISTS (
-    SELECT 1 FROM sys.indexes 
-    WHERE name = 'IX_Instances_Id' 
-      AND object_id = OBJECT_ID('[adminconsole].[Instances]')
-)
-BEGIN
-    CREATE INDEX [IX_Instances_Id] ON [adminconsole].[Instances] ([Id]);
 END
 GO
 
