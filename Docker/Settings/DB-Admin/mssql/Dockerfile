@@ -49,11 +49,11 @@ RUN wget -q -O /tmp/EdFi_Admin.zip "https://pkgs.dev.azure.com/ed-fi-alliance/Ed
     dos2unix /tmp/AdminApiScripts/Admin/MsSql/* && \
     chmod -R 777 /tmp/AdminApiScripts/Admin/MsSql && \
     # Security
-    mkdir -p /tmp/AdminApiScripts/Security/ && \
-    unzip -o /tmp/EdFi_AdminApi_Scripts.zip AdminApi/Artifacts/MsSql/Structure/Security/* -d  /tmp/AdminApiScripts/Security/ && \
-    cp -r /tmp/AdminApiScripts/Security/AdminApi/Artifacts/MsSql/Structure/Security/. /tmp/AdminApiScripts/Security/MsSql/ && \
-    dos2unix /tmp/AdminApiScripts/Security/MsSql/* && \
-    chmod -R 777 /tmp/AdminApiScripts/Security/MsSql && \
+    # mkdir -p /tmp/AdminApiScripts/Security/ && \
+    # unzip -o /tmp/EdFi_AdminApi_Scripts.zip AdminApi/Artifacts/MsSql/Structure/Security/* -d  /tmp/AdminApiScripts/Security/ && \
+    # cp -r /tmp/AdminApiScripts/Security/AdminApi/Artifacts/MsSql/Structure/Security/. /tmp/AdminApiScripts/Security/MsSql/ && \
+    # dos2unix /tmp/AdminApiScripts/Security/MsSql/* && \
+    # chmod -R 777 /tmp/AdminApiScripts/Security/MsSql && \
     # Clean up
     rm -f /tmp/EdFi_Admin.zip  && \
     rm -f /tmp/EdFi_Security.zip && \
