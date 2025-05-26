@@ -14,11 +14,17 @@ USER root
 
 COPY Settings/DB-Admin/pgsql/run-adminapi-migrations.sh /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh
 COPY --from=assets Application/EdFi.Ods.AdminApi/Artifacts/PgSql/Structure/Admin/ /tmp/AdminApiScripts/Admin/PgSql
+COPY --from=assets Application/EdFi.Ods.AdminApi/Artifacts/PgSql/Structure/Security/ /tmp/AdminApiScripts/Security/PgSql
 COPY Settings/dev/adminapi-test-seeddata.sql /tmp/AdminApiScripts/Admin/PgSql/adminapi-test-seeddata.sql
 
 RUN dos2unix /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh && \
+    #Admin
     dos2unix /tmp/AdminApiScripts/Admin/PgSql/* && \
     chmod -R 777 /tmp/AdminApiScripts/Admin/PgSql/* && \
+    #Security
+    dos2unix /tmp/AdminApiScripts/Security/PgSql/* && \
+    chmod -R 777 /tmp/AdminApiScripts/Security/PgSql/* && \
+    # Clean up
     apk del unzip dos2unix
 
 USER postgres

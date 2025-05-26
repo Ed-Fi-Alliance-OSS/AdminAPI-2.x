@@ -19,3 +19,8 @@ for FILE in `LANG=C ls /tmp/AdminApiScripts/Admin/PgSql/*.sql | sort -V`
 do
     psql --no-password --username "$POSTGRES_USER" --port $POSTGRES_PORT --dbname "EdFi_Admin" --file $FILE 1> /dev/null
 done
+
+for FILE in `LANG=C ls /tmp/AdminApiScripts/Security/PgSql/*.sql | sort -V`
+do
+    psql --no-password --username "$POSTGRES_USER" --port $POSTGRES_PORT --dbname "EdFi_Security" --file $FILE 1> /dev/null
+done

@@ -35,6 +35,7 @@ COPY Settings/DB-Admin/mssql/entrypoint.sh /tmp/init/entrypoint.sh
 
 COPY Settings/DB-Admin/mssql/run-adminapi-migrations.sh /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh
 COPY --from=assets Application/EdFi.Ods.AdminApi/Artifacts/MsSql/Structure/Admin/ /tmp/AdminApiScripts/Admin/MsSql
+COPY --from=assets Application/EdFi.Ods.AdminApi/Artifacts/MsSql/Structure/Security/ /tmp/AdminApiScripts/Security/MsSql
 COPY Settings/dev/adminapi-test-seeddata.sql /tmp/AdminApiScripts/Admin/MsSql/adminapi-test-seeddata.sql
 
 RUN wget -q -O /tmp/EdFi_Admin.zip "https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_apis/packaging/feeds/EdFi/nuget/packages/EdFi.Database.Admin.BACPAC.Standard.${STANDARD_VERSION}/versions/${ADMIN_VERSION}/content" && \
@@ -48,8 +49,12 @@ RUN wget -q -O /tmp/EdFi_Admin.zip "https://pkgs.dev.azure.com/ed-fi-alliance/Ed
     rm -f /tmp/EdFi_Admin.zip  && \
     rm -f /tmp/EdFi_Security.zip && \
     dos2unix /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh && \
+    # Admin
     dos2unix /tmp/AdminApiScripts/Admin/MsSql/* && \
-    chmod -R 777 /tmp/AdminApiScripts/Admin/MsSql/*
+    chmod -R 777 /tmp/AdminApiScripts/Admin/MsSql/* && \
+    # Security
+    dos2unix /tmp/AdminApiScripts/Security/MsSql/* && \
+    chmod -R 777 /tmp/AdminApiScripts/Security/MsSql/*
 
 EXPOSE 1433
 
