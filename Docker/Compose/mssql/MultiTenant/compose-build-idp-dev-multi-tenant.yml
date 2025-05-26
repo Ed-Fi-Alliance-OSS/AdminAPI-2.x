@@ -105,7 +105,7 @@ services:
       retries: 10
     volumes:
       - vol-db-admin-adminapi-tenant1:/var/lib/mssql/data
-      - ../../../Settings/dev/mssql/adminapi-test-seeddata.sql:/tmp/AdminApiScripts/MsSql/adminapi-test-seeddata.sql
+      - ../../../Settings/dev/mssql/adminapi-test-seeddata.sql:/tmp/AdminApiScripts/Admin/MsSql/adminapi-test-seeddata.sql
     restart: always
     container_name: ed-fi-db-admin-adminapi-tenant1
 
@@ -134,7 +134,7 @@ services:
       retries: 10
     volumes:
       - vol-db-admin-adminapi-tenant2:/var/lib/mssql/data
-      - ../../../Settings/dev/mssql/adminapi-test-seeddata.sql:/tmp/AdminApiScripts/MsSql/adminapi-test-seeddata.sql
+      - ../../../Settings/dev/mssql/adminapi-test-seeddata.sql:/tmp/AdminApiScripts/Admin/MsSql/adminapi-test-seeddata.sql
     restart: always
     container_name: ed-fi-db-admin-adminapi-tenant2
 
