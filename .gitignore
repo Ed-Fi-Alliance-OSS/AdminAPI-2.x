@@ -1,3 +1,4 @@
+
 # Build Folders (you can keep bin if you'd like, to store dlls and pdbs)
 [Bb]in
 csx/
@@ -72,3 +73,7 @@ Docker/Settings/ssl/dhparam.pem
 coverage
 coverage.*
 coveragereport/
+
+
+# used by deploy process
+.tools/
