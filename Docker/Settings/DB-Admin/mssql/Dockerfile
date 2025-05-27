@@ -48,7 +48,7 @@ RUN wget -q -O /tmp/EdFi_Admin.zip "https://pkgs.dev.azure.com/ed-fi-alliance/Ed
     cp -r /tmp/AdminApiScripts/Admin/AdminApi/Artifacts/MsSql/Structure/Admin/. /tmp/AdminApiScripts/Admin/MsSql/ && \
     dos2unix /tmp/AdminApiScripts/Admin/MsSql/* && \
     chmod -R 777 /tmp/AdminApiScripts/Admin/MsSql && \
-    # Security
+    # Security - Uncomment the lines below as part of ADMINAPI-1210
     # mkdir -p /tmp/AdminApiScripts/Security/ && \
     # unzip -o /tmp/EdFi_AdminApi_Scripts.zip AdminApi/Artifacts/MsSql/Structure/Security/* -d  /tmp/AdminApiScripts/Security/ && \
     # cp -r /tmp/AdminApiScripts/Security/AdminApi/Artifacts/MsSql/Structure/Security/. /tmp/AdminApiScripts/Security/MsSql/ && \
