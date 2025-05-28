@@ -7,9 +7,9 @@
 set -e
 set +x
 
-# envsubst < /app/appsettings.Docker.json > /app/temp.json
+envsubst < /app/appsettings.Docker.json > /app/temp.json
 
-# mv /app/temp.json /app/appsettings.json
+mv /app/temp.json /app/appsettings.json
 
 if [[ -f /ssl/server.crt ]]; then
  cp /ssl/server.crt /usr/local/share/ca-certificates/

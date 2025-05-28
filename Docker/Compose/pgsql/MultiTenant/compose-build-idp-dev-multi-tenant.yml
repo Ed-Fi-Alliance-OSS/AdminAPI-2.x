@@ -9,7 +9,7 @@ services:
       context: ../../../Settings/gateway/
       dockerfile: IDP.Dockerfile
     environment:
-      AppSettings__PathBase: "${ADMIN_API_VIRTUAL_NAME:-adminapi}"
+      ADMIN_API_VIRTUAL_NAME: "${ADMIN_API_VIRTUAL_NAME:-adminapi}"
       ODS_VIRTUAL_NAME: "${ODS_VIRTUAL_NAME:-api}"
       KEYCLOAK_VIRTUAL_NAME: ${KEYCLOAK_VIRTUAL_NAME:-auth}
     ports:
@@ -64,8 +64,7 @@ services:
     volumes:
       - ./appsettings.dockertemplate.json:/app/appsettings.dockertemplate.json
     entrypoint: ["/bin/sh"]
-    # command: ["-c","envsubst < /app/appsettings.dockertemplate.json > /app/appsettings.multitenantdocker.json && /app/run.sh"]
-    command: ["-c","/app/run.sh"]
+    command: ["-c","envsubst < /app/appsettings.dockertemplate.json > /app/appsettings.multitenantdocker.json && /app/run.sh"]
     depends_on:
       - db-admin-tenant1
       - db-admin-tenant2
