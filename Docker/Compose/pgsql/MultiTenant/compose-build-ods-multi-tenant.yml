@@ -56,8 +56,7 @@ services:
       - ${LOGS_FOLDER}:/app/logs
       - ./../../../Compose/pgsql/MultiTenant/appsettings.dockertemplate.json:/app/appsettings.dockertemplate.json
     entrypoint: ["/bin/sh"]
-    # command: ["-c","envsubst < /app/appsettings.dockertemplate.json > /app/appsettings.docker.json && /app/run.sh"]
-    command: ["-c","/app/run.sh"]
+    command: ["-c","envsubst < /app/appsettings.dockertemplate.json > /app/appsettings.docker.json && /app/run.sh"]
     depends_on:
       - pb-ods-tenant1
       - pb-ods-tenant2

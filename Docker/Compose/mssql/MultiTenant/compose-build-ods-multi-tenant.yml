@@ -75,8 +75,7 @@ services:
       - ${LOGS_FOLDER}:/app/logs
       - ./../../../Compose/mssql/MultiTenant/appsettings.dockertemplate.json:/app/appsettings.dockertemplate.json
     entrypoint: ["/bin/sh"]
-    # command: ["-c","envsubst < /app/appsettings.dockertemplate.json > /app/appsettings.docker.json && /app/run.sh"]
-    command: ["-c","/app/run.sh"]
+    command: ["-c","envsubst < /app/appsettings.dockertemplate.json > /app/appsettings.docker.json && /app/run.sh"]
     depends_on:
       - db-ods-tenant1
       - db-ods-tenant2
