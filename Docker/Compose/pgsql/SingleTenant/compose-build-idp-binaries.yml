@@ -9,7 +9,7 @@ services:
       context: ../../../Settings/gateway/
       dockerfile: IDP.Dockerfile
     environment:
-      AppSettings__PathBase: "${ADMIN_API_VIRTUAL_NAME:-adminapi}"
+      ADMIN_API_VIRTUAL_NAME: "${ADMIN_API_VIRTUAL_NAME:-adminapi}"
       KEYCLOAK_VIRTUAL_NAME: ${KEYCLOAK_VIRTUAL_NAME:-auth}
     ports:
       - "443:443"

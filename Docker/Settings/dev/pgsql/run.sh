@@ -7,9 +7,9 @@
 set -e
 set +x
 
-# envsubst < /app/appsettings.Docker.json > /app/temp.json
+envsubst < /app/appsettings.Docker.json > /app/temp.json
 
-# mv /app/temp.json /app/appsettings.json
+mv /app/temp.json /app/appsettings.json
 
 if [[ -z "$ADMIN_WAIT_POSTGRES_HOSTS" ]]; then
   # if there are no hosts to wait then fallback to $ODS_POSTGRES_HOST
