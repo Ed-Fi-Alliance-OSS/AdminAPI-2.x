@@ -79,7 +79,7 @@ IF NOT EXISTS (
       AND object_id = OBJECT_ID('[adminconsole].[HealthChecks]')
 )
 BEGIN
-    CREATE UNIQUE INDEX [IX_HealthChecks_TenantId] ON [adminconsole].[HealthChecks] ([TenantId]);
+    CREATE INDEX [IX_HealthChecks_TenantId] ON [adminconsole].[HealthChecks] ([TenantId]);
 END
 GO
 

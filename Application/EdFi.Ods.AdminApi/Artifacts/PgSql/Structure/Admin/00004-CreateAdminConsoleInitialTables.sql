@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS adminconsole."OdsInstanceDerivatives" (
 
 CREATE INDEX IF NOT EXISTS "IX_HealthChecks_InstanceId" ON adminconsole."HealthChecks" ("InstanceId");
 
-CREATE UNIQUE INDEX IF NOT EXISTS "IX_HealthChecks_TenantId" ON adminconsole."HealthChecks" ("TenantId");
+CREATE INDEX IF NOT EXISTS "IX_HealthChecks_TenantId" ON adminconsole."HealthChecks" ("TenantId");
 
 CREATE INDEX IF NOT EXISTS "IX_Instances_OdsInstanceId" ON adminconsole."Instances" ("OdsInstanceId");
 
