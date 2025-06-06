@@ -46,8 +46,8 @@ AdminApiVersions.Initialize(app);
 app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseMiddleware<TenantResolverMiddleware>();
 app.UseRouting();
-app.UseRateLimiter();
 app.UseAuthentication();
+app.UseRateLimiter();
 app.UseAuthorization();
 app.MapFeatureEndpoints();
 

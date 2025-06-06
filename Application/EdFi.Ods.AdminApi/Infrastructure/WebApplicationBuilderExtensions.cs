@@ -13,6 +13,8 @@ using EdFi.Ods.AdminApi.Common.Infrastructure.Context;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Database;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Extensions;
 using EdFi.Ods.AdminApi.Common.Infrastructure.MultiTenancy;
+using EdFi.Ods.AdminApi.Common.Infrastructure.Providers.Interfaces;
+using EdFi.Ods.AdminApi.Common.Infrastructure.Providers;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Security;
 using EdFi.Ods.AdminApi.Common.Settings;
 using EdFi.Ods.AdminApi.Infrastructure.Api;
@@ -36,6 +38,7 @@ public static class WebApplicationBuilderExtensions
 
     public static void AddServices(this WebApplicationBuilder webApplicationBuilder)
     {
+        webApplicationBuilder.Services.AddSingleton<ISymmetricStringEncryptionProvider, Aes256SymmetricStringEncryptionProvider>();
         ConfigureRateLimiting(webApplicationBuilder);
         ConfigurationManager config = webApplicationBuilder.Configuration;
         webApplicationBuilder.Services.Configure<AppSettings>(config.GetSection("AppSettings"));
