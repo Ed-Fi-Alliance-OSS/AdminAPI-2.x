@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using NUnit.Framework;
+using Shouldly;
 
 namespace EdFi.Ods.AdminApi.UnitTests.Infrastructure;
 
@@ -34,18 +35,18 @@ public class WebApplicationBuilderExtensionsTests
         var services = builder.Services.BuildServiceProvider();
         var options = services.GetRequiredService<IOptions<RateLimiterOptions>>().Value;
 
-        Assert.That(options, Is.Not.Null);
+        options.ShouldNotBeNull();
 
         // Build an app to test the global limiter
         var app = builder.Build();
         var httpContext = new DefaultHttpContext();
         var globalLimiter = app.Services.GetRequiredService<IOptions<RateLimiterOptions>>().Value.GlobalLimiter;
 
-        Assert.That(globalLimiter, Is.Not.Null);
+        globalLimiter.ShouldNotBeNull();
 
         // The global limiter should be configured as a NoLimiter when disabled
         var acquireResult = globalLimiter.AttemptAcquire(httpContext);
-        Assert.That(acquireResult.IsAcquired, Is.True);
+        acquireResult.IsAcquired.ShouldBeTrue();
     }
 
     [Test]
@@ -61,8 +62,8 @@ public class WebApplicationBuilderExtensionsTests
         var services = builder.Services.BuildServiceProvider();
         var options = services.GetRequiredService<IOptions<RateLimiterOptions>>().Value;
 
-        Assert.That(options, Is.Not.Null);
-        Assert.That(options.RejectionStatusCode, Is.EqualTo(429));
+        options.ShouldNotBeNull();
+        options.RejectionStatusCode.ShouldBe(429);
     }
 
     [Test]
@@ -81,13 +82,13 @@ public class WebApplicationBuilderExtensionsTests
         var services = builder.Services.BuildServiceProvider();
         var options = services.GetRequiredService<IOptions<RateLimiterOptions>>().Value;
 
-        Assert.That(options, Is.Not.Null);
+        options.ShouldNotBeNull();
 
         // Build an app to test the endpoint limiters
         var app = builder.Build();
         var globalLimiter = app.Services.GetRequiredService<IOptions<RateLimiterOptions>>().Value.GlobalLimiter;
 
-        Assert.That(globalLimiter, Is.Not.Null);
+        globalLimiter.ShouldNotBeNull();
 
         // Test with a matching endpoint
         var httpContext = new DefaultHttpContext();
@@ -98,12 +99,12 @@ public class WebApplicationBuilderExtensionsTests
         for (int i = 0; i < 3; i++)
         {
             var acquireResult = globalLimiter.AttemptAcquire(httpContext);
-            Assert.That(acquireResult.IsAcquired, Is.True, $"Request {i + 1} should be allowed");
+            acquireResult.IsAcquired.ShouldBeTrue($"Request {i + 1} should be allowed");
         }
 
         // 4th request should be rejected
         var fourthResult = globalLimiter.AttemptAcquire(httpContext);
-        Assert.That(fourthResult.IsAcquired, Is.False, "4th request should be rejected");
+        fourthResult.IsAcquired.ShouldBeFalse("4th request should be rejected");
 
         // Test with a non-matching endpoint
         var differentContext = new DefaultHttpContext();
@@ -111,7 +112,7 @@ public class WebApplicationBuilderExtensionsTests
         differentContext.Request.Path = "/api/different";
 
         var differentResult = globalLimiter.AttemptAcquire(differentContext);
-        Assert.That(differentResult.IsAcquired, Is.True, "Non-matching endpoint should be allowed");
+        differentResult.IsAcquired.ShouldBeTrue("Non-matching endpoint should be allowed");
     }
 
     private static WebApplicationBuilder CreateWebApplicationBuilder(
