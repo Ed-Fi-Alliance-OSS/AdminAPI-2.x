@@ -179,7 +179,8 @@ public static class SecurityExtensions
                             var scopes = context.User.FindFirst(c => c.Type == OpenIddictConstants.Claims.Scope)?.Value
                                 .Split(' ')
                                 .ToList();
-                            return scopes != null && scopes.Contains(scope.Scope, StringComparer.OrdinalIgnoreCase);
+                            return scopes != null && (scopes.Contains(SecurityConstants.Scopes.AdminApiFullAccess.Scope, StringComparer.OrdinalIgnoreCase)
+                                || scopes.Contains(scope.Scope, StringComparer.OrdinalIgnoreCase));
                         }
                         return false;
                     });
