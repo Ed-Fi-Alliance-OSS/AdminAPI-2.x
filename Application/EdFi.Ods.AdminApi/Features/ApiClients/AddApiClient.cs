@@ -39,12 +39,6 @@ public class AddApiClient : IFeature
         [SwaggerSchema(Description = FeatureConstants.ApiClientNameDescription, Nullable = false)]
         public string Name { get; set; } = string.Empty;
 
-        [SwaggerSchema(Description = FeatureConstants.ApiClientKeyDescription, Nullable = false)]
-        public string Key { get; set; } = string.Empty;
-
-        [SwaggerSchema(Description = FeatureConstants.ApiClientSecretDescription, Nullable = false)]
-        public string Secret { get; set; } = string.Empty;
-
         [SwaggerSchema(Description = FeatureConstants.ApiClientIsApprovedDescription, Nullable = false)]
         public bool IsApproved { get; set; }
 
@@ -53,9 +47,6 @@ public class AddApiClient : IFeature
 
         [SwaggerSchema(Description = FeatureConstants.ApiClientKeyStatusDescription, Nullable = false)]
         public string KeyStatus { get; set; } = "Active";
-
-        [SwaggerSchema(Description = FeatureConstants.ApiClientSecretIsHashedDescription, Nullable = false)]
-        public bool SecretIsHashed { get; set; }
 
         [SwaggerSchema(Description = FeatureConstants.VendorIdDescription, Nullable = false)]
         public int VendorId { get; set; } = 0;
@@ -68,12 +59,6 @@ public class AddApiClient : IFeature
         public Validator()
         {
             RuleFor(m => m.Name)
-             .NotEmpty();
-
-            RuleFor(m => m.Key)
-             .NotEmpty();
-
-            RuleFor(m => m.Secret)
              .NotEmpty();
 
             RuleFor(m => m.ApplicationId)

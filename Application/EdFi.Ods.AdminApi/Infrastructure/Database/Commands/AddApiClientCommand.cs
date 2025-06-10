@@ -16,14 +16,9 @@ public interface IAddApiClientCommand
     AddApiClientResult Execute(IAddApiClientModel apiClientModel, IOptions<AppSettings> options);
 }
 
-public class AddApiClientCommand : IAddApiClientCommand
+public class AddApiClientCommand(IUsersContext usersContext) : IAddApiClientCommand
 {
-    private readonly IUsersContext _usersContext;
-
-    public AddApiClientCommand(IUsersContext usersContext)
-    {
-        _usersContext = usersContext;
-    }
+    private readonly IUsersContext _usersContext = usersContext;
 
     public AddApiClientResult Execute(IAddApiClientModel apiClientModel, IOptions<AppSettings> options)
     {
@@ -36,16 +31,13 @@ public class AddApiClientCommand : IAddApiClientCommand
         var application = _usersContext.Applications
             .Single(a => a.ApplicationId == apiClientModel.ApplicationId);
 
-        var apiClient = new ApiClient(false)
+        var apiClient = new ApiClient(true)
         {
             Name = apiClientModel.Name,
-            Key = apiClientModel.Key,
-            Secret = apiClientModel.Secret,
             IsApproved = true,
             Application = application,
             UseSandbox = false,
             KeyStatus = "Active",
-            SecretIsHashed = apiClientModel.SecretIsHashed,
             User = user,
         };
 
@@ -67,12 +59,9 @@ public class AddApiClientCommand : IAddApiClientCommand
 public interface IAddApiClientModel
 {
     string Name { get; }
-    string Key { get; }
-    string Secret { get; }
     bool IsApproved { get; }
     int ApplicationId { get; }
     string KeyStatus { get; }
-    bool SecretIsHashed { get; }
     int VendorId { get; }
 }
 public class AddApiClientResult

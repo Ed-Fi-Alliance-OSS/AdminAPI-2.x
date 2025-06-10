@@ -61,10 +61,7 @@ public static class FeatureConstants
     public const string ActionNameDescription = "Action name";
 
     public const string ApiClientNameDescription = "Api client name";
-    public const string ApiClientKeyDescription = "Api client key";
-    public const string ApiClientSecretDescription = "Api client secret";
     public const string ApiClientIsApprovedDescription = "Is approved";
     public const string ApiClientApplicationIdDescription = "Application id";
     public const string ApiClientKeyStatusDescription = "Key status";
-    public const string ApiClientSecretIsHashedDescription = "Is secret hashed";
 }
