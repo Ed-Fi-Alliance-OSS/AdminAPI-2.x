@@ -140,41 +140,36 @@ public static class SecurityExtensions
                 ValidateIssuerSigningKey = validateIssuerSigningKey,
                 ValidIssuer = issuer,
                 RoleClaimType = roleClaimType
-            };        });
+            };
+        });
 
         services.AddAuthorization(opt =>
         {
             opt.DefaultPolicy = new AuthorizationPolicyBuilder()
-                .AddAuthenticationSchemes()
+            .AddAuthenticationSchemes()
                 .RequireAssertion(context =>
-                    !context.HasSucceeded
-                    && context.User.HasClaim(c =>
-                        c.Type == OpenIddictConstants.Claims.Scope
-                        && c.Value.Split(' ')
+                        !context.HasSucceeded
+                        && context.User.HasClaim(c
+                            => c.Type == OpenIddictConstants.Claims.Scope
+                            && c.Value.Split(' ')
                             .ToList()
-                            .Exists(scopeValue =>
-                                string.Equals(
-                                    scopeValue,
-                                    AuthorizationPolicies.DefaultScopePolicy.Scope,
-                                    StringComparison.OrdinalIgnoreCase
-                                )
+                            .Exists(scopeValue
+                                => string.Equals(scopeValue, AuthorizationPolicies.DefaultScopePolicy.Scope, StringComparison.OrdinalIgnoreCase)
                             )
+                        )
                     )
-                )
                 .Build();
             foreach (var policy in AuthorizationPolicies.RolePolicies)
             {
-                opt.AddPolicy(
-                    policy.PolicyName,
-                    policyBuilder =>
-                        policyBuilder.RequireAssertion(context =>
-                            context.User.Claims.Any(c =>
-                                c.Type == roleClaimType
-                                && policy.Roles.Contains(c.Value, StringComparer.OrdinalIgnoreCase)
-                            )
-                        )
-                );
-            }            foreach (var scope in AuthorizationPolicies.ScopePolicies)
+                opt.AddPolicy(policy.PolicyName, policyBuilder =>
+                policyBuilder.RequireAssertion(context =>
+                    context.User.Claims.Any(c =>
+                        c.Type == roleClaimType &&
+                        policy.Roles.Contains(c.Value, StringComparer.OrdinalIgnoreCase)
+                    )
+                ));
+            }
+            foreach (var scope in AuthorizationPolicies.ScopePolicies)
             {
                 opt.AddPolicy(scope.PolicyName, policy =>
                 {
