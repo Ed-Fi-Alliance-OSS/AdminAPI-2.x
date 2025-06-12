@@ -9,6 +9,7 @@ using EdFi.Ods.AdminApi.Common.Infrastructure;
 using EdFi.Ods.AdminApi.Common.Infrastructure.MultiTenancy;
 using EdFi.Ods.AdminApi.Features;
 using EdFi.Ods.AdminApi.Infrastructure;
+using EdFi.Ods.AdminApi.Infrastructure.Security;
 using log4net;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -47,6 +48,7 @@ app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseMiddleware<TenantResolverMiddleware>();
 app.UseRouting();
 app.UseAuthentication();
+app.UseMiddleware<ScopeValidationMiddleware>();
 app.UseRateLimiter();
 app.UseAuthorization();
 app.MapFeatureEndpoints();
