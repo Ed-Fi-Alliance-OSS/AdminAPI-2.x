@@ -48,7 +48,6 @@ app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseMiddleware<TenantResolverMiddleware>();
 app.UseRouting();
 app.UseAuthentication();
-app.UseMiddleware<ScopeValidationMiddleware>();
 app.UseRateLimiter();
 app.UseAuthorization();
 app.MapFeatureEndpoints();
