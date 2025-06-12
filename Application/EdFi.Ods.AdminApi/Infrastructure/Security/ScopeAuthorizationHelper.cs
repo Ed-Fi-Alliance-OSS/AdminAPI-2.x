@@ -10,7 +10,7 @@ using OpenIddict.Abstractions;
 namespace EdFi.Ods.AdminApi.Infrastructure.Security;
 
 /// <summary>
-/// Helper class for creating scope-based authorization policies that throw 
+/// Helper class for creating scope-based authorization policies that throw
 /// ScopeAuthorizationException (400 Bad Request) instead of returning 403 Forbidden.
 /// </summary>
 public static class ScopeAuthorizationHelper

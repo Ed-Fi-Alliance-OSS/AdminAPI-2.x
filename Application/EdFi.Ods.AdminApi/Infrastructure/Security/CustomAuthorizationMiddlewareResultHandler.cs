@@ -32,16 +32,17 @@ public class CustomAuthorizationMiddlewareResultHandler : IAuthorizationMiddlewa
     )
     {
         // Check if authorization failed and is scope-related
-        if ((authorizeResult.Challenged || authorizeResult.Forbidden) 
+        if ((authorizeResult.Challenged || authorizeResult.Forbidden)
             && IsScopeAuthorizationFailure(authorizeResult))
         {
-            await HandleScopeAuthorizationFailure(context);
-            return;
+            await HandleScopeAuthorizationFailure(context);        return;
         }
 
         // Use default handler for all other cases
         await _defaultHandler.HandleAsync(next, context, policy, authorizeResult);
-    }    private static bool IsScopeAuthorizationFailure(PolicyAuthorizationResult authorizeResult)
+    }
+
+    private static bool IsScopeAuthorizationFailure(PolicyAuthorizationResult authorizeResult)
     {
         // Check if any requirements failed that are related to scope assertions
         // This includes both the default policy scope assertion and custom scope policies
@@ -56,7 +57,6 @@ public class CustomAuthorizationMiddlewareResultHandler : IAuthorizationMiddlewa
 
         var problemDetails = new
         {
-            type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
             title = "Bad Request",
             status = 400,
             detail = "The request is missing required scope claims or has invalid scope values. Please ensure your access token contains the appropriate scope permissions.",
