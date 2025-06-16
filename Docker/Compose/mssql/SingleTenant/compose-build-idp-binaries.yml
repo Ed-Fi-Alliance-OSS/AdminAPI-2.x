@@ -44,15 +44,10 @@ services:
       AppSettings__MultiTenancy: "${MULTITENANCY_ENABLED:-false}"
       AppSettings__PathBase: ${ADMIN_API_VIRTUAL_NAME:-adminapi}
       AppSettings__PreventDuplicateApplications: "${PREVENT_DUPLICATE_APPLICATIONS:-true}"
-      AppSettings__UseSelfcontainedAuthorization: ${USE_SELF_CONTAINED_AUTH:-true}
       AppSettings__EncryptionKey: "TDMyNH0lJmo7aDRnNXYoSmAwSXQpV09nbitHSWJTKn0="
       AdminConsoleSettings__CorsSettings__AllowedOrigins: "${ALLOWED_ORIGINS:-https://localhost}"
       AdminConsoleSettings__CorsSettings__EnableCors: "${ENABLE_CORS:-false}"
-      Authentication__Authority: ${AUTHORITY}
       Authentication__IssuerUrl: ${ISSUER_URL}
-      Authentication__OIDC__Authority: "${OIDC_AUTHORITY:-http://ed-fi-idp-keycloak:8080/auth/realms/edfi-admin-console}"
-      Authentication__OIDC__EnableServerCertificateCustomValidationCallback: "${OIDC_ENABLE_SERVER_CERTIFICATE:-true}"
-      Authentication__OIDC__RequireHttpsMetadata: "${OIDC_REQUIRE_METADATA:-false}"
       Authentication__SigningKey: ${SIGNING_KEY}
       ConnectionStrings__EdFi_Admin: "Data Source=db-admin,1433;Initial Catalog=EdFi_Admin;User Id=$SQLSERVER_USER;Password=$SQLSERVER_PASSWORD; Integrated Security=False;Encrypt=false;TrustServerCertificate=true"
       ConnectionStrings__EdFi_Security: "Data Source=db-admin,1433;Initial Catalog=EdFi_Security;User Id=$SQLSERVER_USER;Password=$SQLSERVER_PASSWORD; Integrated Security=False;Encrypt=false;TrustServerCertificate=true"

@@ -46,17 +46,11 @@ services:
       AppSettings__MultiTenancy: ${MULTITENANCY_ENABLED:-true}
       AppSettings__PathBase: ${ADMIN_API_VIRTUAL_NAME:-adminapi}
       AppSettings__PreventDuplicateApplications: ${PREVENT_DUPLICATE_APPLICATIONS:-false}
-      AppSettings__UseSelfcontainedAuthorization: ${USE_SELF_CONTAINED_AUTH:-true}
       ASPNETCORE_ENVIRONMENT: "multitenantdocker"
       AdminConsoleSettings__CorsSettings__AllowedOrigins: "${ALLOWED_ORIGINS:-https://localhost}"
       AdminConsoleSettings__CorsSettings__EnableCors: ${ENABLE_CORS:-false}
       Authentication__AllowRegistration: true
-      Authentication__Authority: ${AUTHORITY}
       Authentication__IssuerUrl: ${ISSUER_URL}
-      Authentication__OIDC__Authority: "${OIDC_AUTHORITY:-http://ed-fi-idp-keycloak:8080/auth/realms/edfi-admin-console}"
-      Authentication__OIDC__EnableServerCertificateCustomValidationCallback: ${OIDC_ENABLE_SERVER_CERTIFICATE:-true}
-      Authentication__OIDC__RequireHttpsMetadata: ${OIDC_REQUIRE_METADATA:-false}
-      Authentication__OIDC__ValidateIssuer: false
       Authentication__SigningKey: ${SIGNING_KEY}
       EnableDockerEnvironment: true
       IpRateLimiting__EnableEndpointRateLimiting: false
