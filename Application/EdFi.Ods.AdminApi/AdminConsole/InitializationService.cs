@@ -22,6 +22,7 @@ using Microsoft.Identity.Client;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using static EdFi.Ods.AdminApi.AdminConsole.Features.Instances.AddInstance;
+using static EdFi.Ods.AdminApi.Features.ApiClients.AddApiClient;
 using static EdFi.Ods.AdminApi.Features.Applications.AddApplication;
 using static EdFi.Ods.AdminApi.Features.Vendors.AddVendor;
 
@@ -57,7 +58,7 @@ public class InitializationService : IAdminConsoleInitializationService
         {
             // Create the vendor
             Vendor vendor = InitializeVendor(app);
-            var command = new AddApplicationCommand(_usersContext);
+            var appCommand = new AddApplicationCommand(_usersContext);
             // Create the application
             var newApplication = new AddApplicationRequest
             {
@@ -66,8 +67,20 @@ public class InitializationService : IAdminConsoleInitializationService
                 ProfileIds = null,
                 VendorId = vendor?.VendorId ?? 0
             };
-            var result = command.Execute(newApplication, _options);
-            applicationId = result.ApplicationId;
+            var appResult = appCommand.Execute(newApplication, _options);
+
+            // Create the api client
+            var newApiClient = new AddApiClientRequest
+            {
+                Name = adminConsoleApplicationName,
+                ApplicationId = appResult.ApplicationId,
+                IsApproved = true,
+                VendorId = vendor?.VendorId ?? 0
+            };
+
+            var apiClientCommand = new AddApiClientCommand(_usersContext);
+            apiClientCommand.Execute(newApiClient, _options);
+            applicationId = appResult.ApplicationId;
         }
         else
         {

@@ -34,12 +34,14 @@ public class AddApplicationCommand : IAddApplicationCommand
     {
         if (options.Value.PreventDuplicateApplications)
         {
-            ValidateApplicationExistsQuery validateApplicationExists = new ValidateApplicationExistsQuery(_usersContext);
+            ValidateApplicationExistsQuery validateApplicationExists = new(_usersContext);
             bool applicationExists = validateApplicationExists.Execute(applicationModel);
             if (applicationExists)
             {
-                var adminApiException = new AdminApiException("The Application already exists");
-                adminApiException.StatusCode = HttpStatusCode.Conflict;
+                var adminApiException = new AdminApiException("The Application already exists")
+                {
+                    StatusCode = HttpStatusCode.Conflict
+                };
                 throw adminApiException;
             }
         }
@@ -50,36 +52,19 @@ public class AddApplicationCommand : IAddApplicationCommand
         var vendor = _usersContext.Vendors.Include(x => x.Users)
             .Single(v => v.VendorId == applicationModel.VendorId);
 
-        var odsInstances = applicationModel.OdsInstanceIds != null
-            ? _usersContext.OdsInstances.Where(o => applicationModel.OdsInstanceIds.Contains(o.OdsInstanceId))
-            : null;
-
-        var user = vendor.Users.FirstOrDefault();
-
-        var apiClient = new ApiClient(true)
-        {
-            Name = applicationModel.ApplicationName,
-            IsApproved = true,
-            UseSandbox = false,
-            KeyStatus = "Active",
-            User = user,
-        };
-
         var applicationEdOrgs = applicationModel.EducationOrganizationIds == null
-            ? Enumerable.Empty<ApplicationEducationOrganization>()
+            ? []
             : applicationModel.EducationOrganizationIds.Select(id => new ApplicationEducationOrganization
             {
-                ApiClients = new List<ApiClient> { apiClient },
                 EducationOrganizationId = id
             });
 
         var application = new Application
         {
             ApplicationName = applicationModel.ApplicationName,
-            ApiClients = new List<ApiClient> { apiClient },
             ApplicationEducationOrganizations = new List<ApplicationEducationOrganization>(applicationEdOrgs),
             ClaimSetName = applicationModel.ClaimSetName,
-            Profiles = new List<Profile>(),
+            Profiles = [],
             Vendor = vendor,
             OperationalContextUri = OperationalContext.DefaultOperationalContextUri
         };
@@ -94,25 +79,11 @@ public class AddApplicationCommand : IAddApplicationCommand
 
         _usersContext.Applications.Add(application);
 
-        if (odsInstances != null && odsInstances.Count() > 0)
-        {
-            foreach (var odsInstance in odsInstances)
-            {
-                _usersContext.ApiClientOdsInstances.Add(new ApiClientOdsInstance
-                {
-                    OdsInstance = odsInstance,
-                    ApiClient = apiClient,
-                });
-            }
-        }
-
         _usersContext.SaveChanges();
 
         return new AddApplicationResult
         {
             ApplicationId = application.ApplicationId,
-            Key = apiClient.Key,
-            Secret = apiClient.Secret
         };
     }
 }
@@ -124,12 +95,9 @@ public interface IAddApplicationModel
     string? ClaimSetName { get; }
     IEnumerable<int>? ProfileIds { get; }
     IEnumerable<long>? EducationOrganizationIds { get; }
-    IEnumerable<int>? OdsInstanceIds { get; }
 }
 
 public class AddApplicationResult
 {
     public int ApplicationId { get; set; }
-    public string? Key { get; set; }
-    public string? Secret { get; set; }
 }
