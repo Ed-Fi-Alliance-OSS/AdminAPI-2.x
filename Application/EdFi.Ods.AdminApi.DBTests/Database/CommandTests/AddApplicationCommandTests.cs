@@ -114,8 +114,6 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
             var apiClient = persistedApplication.ApiClients.FirstOrDefault();
             apiClient.Name.ShouldBe("Test Application");
             apiClient.ApplicationEducationOrganizations.All(o => o.EducationOrganizationId == 12345 || o.EducationOrganizationId == 67890 || o.EducationOrganizationId == 5000000005).ShouldBeTrue();
-            apiClient.Key.ShouldBe(result.Key);
-            apiClient.Secret.ShouldBe(result.Secret);
         });
     }
 
@@ -180,8 +178,6 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
             var apiClient = persistedApplication.ApiClients.First();
             apiClient.Name.ShouldBe("Test Application");
             apiClient.ApplicationEducationOrganizations.All(o => o.EducationOrganizationId == 12345 || o.EducationOrganizationId == 67890 || o.EducationOrganizationId == 5000000005).ShouldBeTrue();
-            apiClient.Key.ShouldBe(result.Key);
-            apiClient.Secret.ShouldBe(result.Secret);
 
             var persistedApiOdsInstances = usersContext.ApiClientOdsInstances.Where(a => a.ApiClient.ApiClientId == apiClient.ApiClientId).ToList();
 

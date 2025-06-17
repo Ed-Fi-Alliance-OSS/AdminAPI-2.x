@@ -40,10 +40,9 @@ public class AddApplication : IFeature
     private void GuardAgainstInvalidEntityReferences(AddApplicationRequest request, IUsersContext db)
     {
         if (null == db.Vendors.Find(request.VendorId))
-            throw new ValidationException(new[] { new ValidationFailure(nameof(request.VendorId), $"Vendor with ID {request.VendorId} not found.") });
+            throw new ValidationException([new ValidationFailure(nameof(request.VendorId), $"Vendor with ID {request.VendorId} not found.")]);
 
         ValidateProfileIds(request, db);
-        ValidateOdsInstanceIds(request, db);
     }
 
     private static void ValidateProfileIds(AddApplicationRequest request, IUsersContext db)
@@ -52,29 +51,13 @@ public class AddApplication : IFeature
 
         if ((request.ProfileIds != null && request.ProfileIds.Any()) && allProfileIds.Count == 0)
         {
-            throw new ValidationException(new[] { new ValidationFailure(nameof(request.ProfileIds), $"The following ProfileIds were not found in database: {string.Join(", ", request.ProfileIds)}") });
+            throw new ValidationException([new ValidationFailure(nameof(request.ProfileIds), $"The following ProfileIds were not found in database: {string.Join(", ", request.ProfileIds)}")]);
         }
 
         if ((request.ProfileIds != null && request.ProfileIds.Any()) && (!request.ProfileIds.All(p => allProfileIds.Contains(p))))
         {
             var notExist = request.ProfileIds.Where(p => !allProfileIds.Contains(p));
-            throw new ValidationException(new[] { new ValidationFailure(nameof(request.ProfileIds), $"The following ProfileIds were not found in database: {string.Join(", ", notExist)}") });
-        }
-    }
-
-    private static void ValidateOdsInstanceIds(AddApplicationRequest request, IUsersContext db)
-    {
-        var allOdsInstanceIds = db.OdsInstances.Select(p => p.OdsInstanceId).ToList();
-
-        if ((request.OdsInstanceIds != null && request.OdsInstanceIds.Any()) && allOdsInstanceIds.Count == 0)
-        {
-            throw new ValidationException(new[] { new ValidationFailure(nameof(request.OdsInstanceIds), $"The following OdsInstanceIds were not found in database: {string.Join(", ", request.OdsInstanceIds)}") });
-        }
-
-        if ((request.OdsInstanceIds != null && request.OdsInstanceIds.Any()) && (!request.OdsInstanceIds.All(p => allOdsInstanceIds.Contains(p))))
-        {
-            var notExist = request.OdsInstanceIds.Where(p => !allOdsInstanceIds.Contains(p));
-            throw new ValidationException(new[] { new ValidationFailure(nameof(request.OdsInstanceIds), $"The following OdsInstanceIds were not found in database: {string.Join(", ", notExist)}") });
+            throw new ValidationException([new ValidationFailure(nameof(request.ProfileIds), $"The following ProfileIds were not found in database: {string.Join(", ", notExist)}")]);
         }
     }
 
@@ -96,9 +79,6 @@ public class AddApplication : IFeature
 
         [SwaggerSchema(Description = FeatureConstants.EducationOrganizationIdsDescription, Nullable = false)]
         public IEnumerable<long>? EducationOrganizationIds { get; set; }
-
-        [SwaggerSchema(Description = FeatureConstants.OdsInstanceIdsDescription, Nullable = false)]
-        public IEnumerable<int>? OdsInstanceIds { get; set; }
     }
 
     public class Validator : AbstractValidator<AddApplicationRequest>
@@ -120,10 +100,6 @@ public class AddApplication : IFeature
             RuleFor(m => m.EducationOrganizationIds)
                 .NotEmpty()
                 .WithMessage(FeatureConstants.EdOrgIdsValidationMessage);
-
-            RuleFor(m => m.OdsInstanceIds)
-                .NotEmpty()
-                .WithMessage(FeatureConstants.OdsInstanceIdsValidationMessage);
 
             RuleFor(m => m.VendorId).Must(id => id > 0).WithMessage(FeatureConstants.VendorIdValidationMessage);
         }

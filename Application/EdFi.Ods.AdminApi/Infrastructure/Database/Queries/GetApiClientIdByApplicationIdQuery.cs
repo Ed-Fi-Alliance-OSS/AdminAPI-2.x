@@ -5,14 +5,12 @@
 
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
-using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
-using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
 public interface IGetApiClientIdByApplicationIdQuery
 {
-    ApiClient Execute(int applicationId);
+    ApiClient? Execute(int applicationId);
 }
 
 public class GetApiClientIdByApplicationIdQuery : IGetApiClientIdByApplicationIdQuery
@@ -24,14 +22,10 @@ public class GetApiClientIdByApplicationIdQuery : IGetApiClientIdByApplicationId
         _context = context;
     }
 
-    public ApiClient Execute(int applicationId)
+    public ApiClient? Execute(int applicationId)
     {
         var apiClientId = _context.ApiClients
             .SingleOrDefault(app => app.Application.ApplicationId == applicationId);
-        if (apiClientId == null)
-        {
-            throw new NotFoundException<int>("apiClientId", applicationId);
-        }
 
         return apiClientId;
     }

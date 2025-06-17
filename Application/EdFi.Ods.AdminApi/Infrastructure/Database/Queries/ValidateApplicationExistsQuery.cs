@@ -74,8 +74,6 @@ public class ValidateApplicationExistsQuery(IUsersContext context)
             if ((existingInstance == null
                 || (existingInstance != null
                     && existingInstance.Count == 0))
-             && (applicationModel.OdsInstanceIds == null
-                || (applicationModel.OdsInstanceIds != null && !applicationModel.OdsInstanceIds.Any()))
               )
             {
                 return true;
