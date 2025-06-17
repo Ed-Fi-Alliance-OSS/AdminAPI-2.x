@@ -193,7 +193,6 @@ public static class SecurityExtensions
         services.AddTransient<ITokenService, TokenService>();
         services.AddTransient<IRegisterService, RegisterService>();
     }
-
     public class DefaultTokenResponseHandler : IOpenIddictServerHandler<ApplyTokenResponseContext>
     {
         private const string DENIED_AUTHENTICATION_MESSAGE =
@@ -202,6 +201,12 @@ public static class SecurityExtensions
         public ValueTask HandleAsync(ApplyTokenResponseContext context)
         {
             var response = context.Response;
+
+            // Don't modify invalid_scope errors - let them pass through with 400 status
+            if (string.Equals(response.Error, OpenIddictConstants.Errors.InvalidScope, StringComparison.Ordinal))
+            {
+                return default;
+            }
 
             if (
                 string.Equals(
@@ -217,11 +222,6 @@ public static class SecurityExtensions
                 || string.Equals(
                     response.Error,
                     OpenIddictConstants.Errors.InvalidClient,
-                    StringComparison.Ordinal
-                )
-                || string.Equals(
-                    response.Error,
-                    OpenIddictConstants.Errors.InvalidScope,
                     StringComparison.Ordinal
                 )
             )
