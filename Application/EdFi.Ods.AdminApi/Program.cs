@@ -45,7 +45,6 @@ AdminApiVersions.Initialize(app);
 //The ordering here is meaningful: Logging -> Routing -> Auth -> Endpoints
 app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseMiddleware<TenantResolverMiddleware>();
-app.UseMiddleware<EdFi.Ods.AdminApi.Infrastructure.Security.ProblemDetailsMiddleware>();
 app.UseRouting();
 app.UseAuthentication();
 app.UseRateLimiter();
