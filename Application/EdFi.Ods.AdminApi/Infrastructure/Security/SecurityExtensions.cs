@@ -24,7 +24,6 @@ public static class SecurityExtensions
         IWebHostEnvironment webHostEnvironment
     )
     {
-
         var issuer = configuration.Get<string>("Authentication:IssuerUrl");
 
         var isDockerEnvironment = configuration.Get<bool>("EnableDockerEnvironment");
@@ -197,14 +196,19 @@ public static class SecurityExtensions
     {
         private const string DENIED_AUTHENTICATION_MESSAGE =
             "Access Denied. Please review your information and try again.";
-
         public ValueTask HandleAsync(ApplyTokenResponseContext context)
         {
             var response = context.Response;
 
-            // Don't modify invalid_scope errors - let them pass through with 400 status
+            // For invalid_scope errors, set content type to application/problem+json
             if (string.Equals(response.Error, OpenIddictConstants.Errors.InvalidScope, StringComparison.Ordinal))
             {
+                response.ErrorUri = "";
+                response.ErrorDescription = "The request is missing required scope claims or has invalid scope values";
+
+                // Mark this response to be processed as problem+json
+                context.Transaction.SetProperty("CustomContentType", "application/problem+json");
+
                 return default;
             }
 
