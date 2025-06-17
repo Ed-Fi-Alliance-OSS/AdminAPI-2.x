@@ -71,7 +71,6 @@ public class RequestLoggingMiddleware
             }
             else
             {
-                // For non-token endpoints, just execute the next middleware normally
                 await _next(context);
             }
         }
