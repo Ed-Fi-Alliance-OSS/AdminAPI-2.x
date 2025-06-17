@@ -9,7 +9,6 @@ using EdFi.Ods.AdminApi.Common.Infrastructure.Security;
 using EdFi.Ods.AdminApi.Features.Connect;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using OpenIddict.Server;
@@ -184,12 +183,10 @@ public static class SecurityExtensions
                                 || scopes.Contains(scope.Scope, StringComparer.OrdinalIgnoreCase));
                         }
                         return false;
-                    });                });
+                    });
+                });
             }
         });
-
-        // Register custom authorization middleware result handler to return 400 instead of 403 for scope assertion failures
-        services.AddSingleton<IAuthorizationMiddlewareResultHandler, CustomAuthorizationMiddlewareResultHandler>();
 
         services.AddControllers();
         //Security Endpoints
