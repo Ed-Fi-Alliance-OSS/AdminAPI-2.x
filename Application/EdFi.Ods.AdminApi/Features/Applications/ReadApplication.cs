@@ -9,6 +9,7 @@ using EdFi.Ods.AdminApi.Common.Infrastructure;
 using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
 using EdFi.Ods.AdminApi.Common.Settings;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApi.Features.Applications;
@@ -25,6 +26,13 @@ public class ReadApplication : IFeature
         AdminApiEndpointBuilder.MapGet(endpoints, "/applications/{id}", GetApplication)
             .WithDefaultSummaryAndDescription()
             .WithRouteOptions(b => b.WithResponse<ApplicationModel>(200))
+            .BuildForVersions(AdminApiVersions.V2);
+
+        AdminApiEndpointBuilder.MapGet(endpoints, "/applications/byIds", GetApplicationByIds)
+            .WithSummaryAndDescription(
+                "Get applications by IDs",
+                "Retrieves multiple applications using a comma-separated list of application IDs provided via the 'ids' query parameter.")
+            .WithRouteOptions(b => b.WithResponse<ApplicationModel[]>(200))
             .BuildForVersions(AdminApiVersions.V2);
     }
 
@@ -46,6 +54,19 @@ public class ReadApplication : IFeature
             throw new NotFoundException<int>("application", id);
         }
         var model = mapper.Map<ApplicationModel>(application);
+        return Task.FromResult(Results.Ok(model));
+    }
+
+    internal Task<IResult> GetApplicationByIds(GetApplicationByIdsQuery getApplicationByIdsQuery, IMapper mapper, [FromQuery] string ids)
+    {
+        if (string.IsNullOrWhiteSpace(ids))
+        {
+            throw new ArgumentException("The 'ids' query parameter cannot be null or empty.", nameof(ids));
+        }
+
+        var applications = getApplicationByIdsQuery.Execute(ids);
+
+        var model = mapper.Map<List<ApplicationModel>>(applications);
         return Task.FromResult(Results.Ok(model));
     }
 }
