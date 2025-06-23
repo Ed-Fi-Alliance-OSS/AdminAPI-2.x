@@ -7,8 +7,11 @@ using AutoMapper;
 using EdFi.Ods.AdminApi.Common.Features;
 using EdFi.Ods.AdminApi.Common.Infrastructure;
 using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
+using EdFi.Ods.AdminApi.Common.Infrastructure.Helpers;
 using EdFi.Ods.AdminApi.Common.Settings;
+using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -57,19 +60,24 @@ public class ReadApplication : IFeature
         return Task.FromResult(Results.Ok(model));
     }
 
-    internal Task<IResult> GetApplicationByIds(GetApplicationByIdsQuery getApplicationByIdsQuery, IMapper mapper, [FromQuery] string ids)
+    internal async Task<IResult> GetApplicationByIds(GetApplicationByIdsQuery getApplicationByIdsQuery, IMapper mapper, Validator validator, [FromQuery] string ids)
     {
-        if (string.IsNullOrWhiteSpace(ids))
-        {
-            throw new ArgumentException("The 'ids' query parameter cannot be null or empty.", nameof(ids));
-        }
-        if (!Array.TrueForAll(ids.Split(','), id => int.TryParse(id.Trim(), out _)))
-        {
-            throw new ArgumentException("The 'ids' query parameter must be a comma-separated list of integers.", nameof(ids));
-        }
+        await validator.GuardAsync(ids);
         var applications = getApplicationByIdsQuery.Execute(ids);
 
         var model = mapper.Map<List<ApplicationModel>>(applications);
-        return Task.FromResult(Results.Ok(model));
+        return Results.Ok(model);
+    }
+
+    public class Validator : AbstractValidator<string>
+    {
+        public Validator()
+        {
+            RuleFor(ids => ids)
+            .NotEmpty()
+                .WithMessage("The 'ids' query parameter cannot be null or empty.")
+            .Must(ids => Array.TrueForAll(ids.Split(','), id => int.TryParse(id.Trim(), out _)))
+                .WithMessage("The 'ids' query parameter must be a comma-separated list of integers.");
+        }
     }
 }
