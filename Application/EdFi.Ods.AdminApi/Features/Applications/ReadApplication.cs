@@ -63,7 +63,10 @@ public class ReadApplication : IFeature
         {
             throw new ArgumentException("The 'ids' query parameter cannot be null or empty.", nameof(ids));
         }
-
+        if (!Array.TrueForAll(ids.Split(','), id => int.TryParse(id.Trim(), out _)))
+        {
+            throw new ArgumentException("The 'ids' query parameter must be a comma-separated list of integers.", nameof(ids));
+        }
         var applications = getApplicationByIdsQuery.Execute(ids);
 
         var model = mapper.Map<List<ApplicationModel>>(applications);
