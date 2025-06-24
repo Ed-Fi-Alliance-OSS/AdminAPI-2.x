@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "2d1ed547-d825-4b3e-8272-1035d2965100",
 		"name": "Admin API E2E 2.0 - Application",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "42411115",
 		"_collection_link": "https://dewfdaf.postman.co/workspace/ADMINAPI-1214~5cebf2b8-1c75-4f33-bdf5-c61ddb6ada6d/collection/42411115-2d1ed547-d825-4b3e-8272-1035d2965100?action=share&source=collection_link&creator=42411115"
 	},
@@ -141,7 +141,16 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/applications"
+								"url": {
+									"raw": "{{API_URL}}/v2/applications",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"applications"
+									]
+								}
 							},
 							"response": []
 						},
@@ -199,7 +208,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/applications/"
+								"url": {
+									"raw": "{{API_URL}}/v2/applications/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"applications",
+										""
+									]
+								}
 							},
 							"response": []
 						},
@@ -256,7 +275,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/applications/"
+								"url": {
+									"raw": "{{API_URL}}/v2/applications/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"applications",
+										""
+									]
+								}
 							},
 							"response": []
 						},
@@ -314,7 +343,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/applications/"
+								"url": {
+									"raw": "{{API_URL}}/v2/applications/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"applications",
+										""
+									]
+								}
 							},
 							"response": []
 						},
@@ -372,7 +411,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/applications/"
+								"url": {
+									"raw": "{{API_URL}}/v2/applications/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"applications",
+										""
+									]
+								}
 							},
 							"response": []
 						},
@@ -389,6 +438,14 @@
 											"\r",
 											"const response = pm.response.json();\r",
 											"const results = pm.response.json();\r",
+											"\r",
+											"if (Array.isArray(results) && results.length >= 2) {\r",
+											"    const id1 = results[0].id;\r",
+											"    const id2 = results[1].id;\r",
+											"\r",
+											"    const csv = `${id1},${id2}`;\r",
+											"    pm.collectionVariables.set(\"FirstTwoApplicationIdsCSV\", csv);\r",
+											"}\r",
 											"\r",
 											"pm.test(\"GET Applications: Response result includes applications\", function () {\r",
 											"    pm.expect(results.length).to.be.greaterThan(0);\r",
@@ -590,7 +647,16 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v2/applications"
+								"url": {
+									"raw": "{{API_URL}}/v2/applications",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"applications"
+									]
+								}
 							},
 							"response": []
 						},
@@ -898,7 +964,112 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v2/applications/{{CreatedApplicationId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/applications/{{CreatedApplicationId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"applications",
+										"{{CreatedApplicationId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Applications by IDs",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET ApplicationID: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const result = pm.response.json();\r",
+											"\r",
+											"pm.test(\"GET ApplicationID: Response result matches application\", function () {\r",
+											"    const applicationId = pm.collectionVariables.get(\"CreatedApplicationId\");\r",
+											"    pm.expect(result.id).to.equal(applicationId);\r",
+											"    pm.expect(result.applicationName).to.equal(\"Test Application\");\r",
+											"    pm.expect(result.claimSetName).to.equal(\"Ed-Fi Sandbox\");\r",
+											"    pm.expect(result.educationOrganizationIds.length).to.equal(1);\r",
+											"    pm.expect(result.profileIds.length).to.equal(0);\r",
+											"    pm.expect(result.odsInstanceIds.length).to.equal(1);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"GET ApplicationID: Response result does not include key or secret\", function () {  \r",
+											"    pm.expect(result).to.not.have.property(\"key\");\r",
+											"    pm.expect(result).to.not.have.property(\"secret\");\r",
+											"});\r",
+											"\r",
+											"const GetApplicationId = {\r",
+											"  \"type\": \"object\",\r",
+											"  \"properties\": {\r",
+											"    \"id\": {\r",
+											"      \"type\": \"integer\"\r",
+											"    },\r",
+											"    \"applicationName\": {\r",
+											"      \"type\": \"string\"\r",
+											"    },\r",
+											"    \"claimSetName\": {\r",
+											"      \"type\": \"string\"\r",
+											"    },\r",
+											"    \"educationOrganizationIds\": {\r",
+											"      \"type\": \"array\",\r",
+											"      \"items\": {}\r",
+											"    },\r",
+											"    \"vendorId\": {\r",
+											"      \"type\": \"integer\"\r",
+											"    },\r",
+											"    \"profileIds\": {\r",
+											"      \"type\": \"array\",\r",
+											"      \"items\": {}\r",
+											"    },\r",
+											"    \"odsInstanceIds\": {\r",
+											"      \"type\": \"array\",\r",
+											"      \"items\": {}\r",
+											"    }\r",
+											"  },\r",
+											"  \"required\": [\r",
+											"    \"id\",\r",
+											"    \"applicationName\",\r",
+											"    \"claimSetName\",\r",
+											"    \"educationOrganizationIds\",\r",
+											"    \"vendorId\",\r",
+											"    \"profileIds\",\r",
+											"    \"odsInstanceIds\"\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET ApplicationId: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetApplicationId);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/applications/ids={{FirstTwoApplicationIdsCSV}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"applications",
+										"ids={{FirstTwoApplicationIdsCSV}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1071,7 +1242,18 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v2/vendors/{{ApplicationVendorId}}/applications"
+								"url": {
+									"raw": "{{API_URL}}/v2/vendors/{{ApplicationVendorId}}/applications",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"vendors",
+										"{{ApplicationVendorId}}",
+										"applications"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1175,7 +1357,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/applications/{{CreatedApplicationId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/applications/{{CreatedApplicationId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"applications",
+										"{{CreatedApplicationId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1233,7 +1425,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/applications/{{CreatedApplicationId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/applications/{{CreatedApplicationId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"applications",
+										"{{CreatedApplicationId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1290,7 +1492,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/applications/{{CreatedApplicationId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/applications/{{CreatedApplicationId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"applications",
+										"{{CreatedApplicationId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1348,7 +1560,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/applications/{{CreatedApplicationId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/applications/{{CreatedApplicationId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"applications",
+										"{{CreatedApplicationId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1406,7 +1628,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/applications/{{CreatedApplicationId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/applications/{{CreatedApplicationId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"applications",
+										"{{CreatedApplicationId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1462,7 +1694,18 @@
 							"request": {
 								"method": "PUT",
 								"header": [],
-								"url": "{{API_URL}}/v2/applications/{{CreatedApplicationId}}/reset-credential"
+								"url": {
+									"raw": "{{API_URL}}/v2/applications/{{CreatedApplicationId}}/reset-credential",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"applications",
+										"{{CreatedApplicationId}}",
+										"reset-credential"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1511,7 +1754,17 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": "{{API_URL}}/v2/applications/{{CreatedApplicationId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/applications/{{CreatedApplicationId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"applications",
+										"{{CreatedApplicationId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1547,7 +1800,17 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v2/applications/{{CreatedApplicationId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/applications/{{CreatedApplicationId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"applications",
+										"{{CreatedApplicationId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1583,7 +1846,18 @@
 							"request": {
 								"method": "PUT",
 								"header": [],
-								"url": "{{API_URL}}/v2/applications/{{CreatedApplicationId}}/reset-credential"
+								"url": {
+									"raw": "{{API_URL}}/v2/applications/{{CreatedApplicationId}}/reset-credential",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"applications",
+										"{{CreatedApplicationId}}",
+										"reset-credential"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1628,7 +1902,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/applications/{{CreatedApplicationId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/applications/{{CreatedApplicationId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"applications",
+										"{{CreatedApplicationId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1668,7 +1952,17 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": "{{API_URL}}/v2/applications/{{CreatedApplicationId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/applications/{{CreatedApplicationId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"applications",
+										"{{CreatedApplicationId}}"
+									]
+								}
 							},
 							"response": []
 						}
@@ -1679,9 +1973,13 @@
 	],
 	"auth": {
 		"type": "bearer",
-		"bearer": {
-			"token": "{{TOKEN}}"
-		}
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{TOKEN}}",
+				"type": "string"
+			}
+		]
 	},
 	"event": [
 		{
@@ -1812,6 +2110,10 @@
 		},
 		{
 			"key": "CreatedApplicationId",
+			"value": ""
+		},
+		{
+			"key": "FirstTwoApplicationIdsCSV",
 			"value": ""
 		}
 	]
