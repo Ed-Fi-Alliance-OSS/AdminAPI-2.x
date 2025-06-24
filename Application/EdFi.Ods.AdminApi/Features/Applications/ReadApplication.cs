@@ -30,23 +30,21 @@ public class ReadApplication : IFeature
             .WithDefaultSummaryAndDescription()
             .WithRouteOptions(b => b.WithResponse<ApplicationModel>(200))
             .BuildForVersions(AdminApiVersions.V2);
-
-        AdminApiEndpointBuilder.MapGet(endpoints, "/applications/byIds", GetApplicationByIds)
-            .WithSummaryAndDescription(
-                "Get applications by IDs",
-                "Retrieves multiple applications using a comma-separated list of application IDs provided via the 'ids' query parameter.")
-            .WithRouteOptions(b => b.WithResponse<ApplicationModel[]>(200))
-            .BuildForVersions(AdminApiVersions.V2);
     }
 
-    internal Task<IResult> GetApplications(
+    internal async Task<IResult> GetApplications(
         IGetAllApplicationsQuery getAllApplicationsQuery,
         IMapper mapper,
         IOptions<AppSettings> settings,
-        [AsParameters] CommonQueryParams commonQueryParams, int? id, string? applicationName, string? claimsetName)
+        Validator validator,
+        [AsParameters] CommonQueryParams commonQueryParams, int? id, string? applicationName, string? claimsetName, string? ids)
     {
-        var applications = mapper.Map<List<ApplicationModel>>(getAllApplicationsQuery.Execute(commonQueryParams, id, applicationName, claimsetName));
-        return Task.FromResult(Results.Ok(applications));
+        if (!string.IsNullOrEmpty(ids))
+        {
+            await validator.GuardAsync(ids);
+        }
+        var applications = mapper.Map<List<ApplicationModel>>(getAllApplicationsQuery.Execute(commonQueryParams, id, applicationName, claimsetName, ids));
+        return Results.Ok(applications);
     }
 
     internal Task<IResult> GetApplication(GetApplicationByIdQuery getApplicationByIdQuery, IMapper mapper, int id)
@@ -60,22 +58,11 @@ public class ReadApplication : IFeature
         return Task.FromResult(Results.Ok(model));
     }
 
-    internal async Task<IResult> GetApplicationByIds(GetApplicationByIdsQuery getApplicationByIdsQuery, IMapper mapper, Validator validator, [FromQuery] string ids)
-    {
-        await validator.GuardAsync(ids);
-        var applications = getApplicationByIdsQuery.Execute(ids);
-
-        var model = mapper.Map<List<ApplicationModel>>(applications);
-        return Results.Ok(model);
-    }
-
     public class Validator : AbstractValidator<string>
     {
         public Validator()
         {
             RuleFor(ids => ids)
-            .NotEmpty()
-                .WithMessage("The 'ids' query parameter cannot be null or empty.")
             .Must(ids => Array.TrueForAll(ids.Split(','), id => int.TryParse(id.Trim(), out _)))
                 .WithMessage("The 'ids' query parameter must be a comma-separated list of integers.");
         }

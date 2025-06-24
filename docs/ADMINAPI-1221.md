@@ -1,28 +1,46 @@
-# ADMINAPI-1221: `/applications/byIds` Endpoint Documentation
+# ADMINAPI-1221: `/applications` Endpoint Documentation
 
 ## Purpose
 
-The `/applications/byIds` endpoint allows clients to retrieve multiple application resources in a single request by specifying a comma-separated list of application IDs via the `ids` query parameter. This is useful for batch-fetching specific applications without making multiple round-trips to the server.
+The `/applications` endpoint allows clients to retrieve one or more application resources. The API supports both legacy and new query patterns to maximize compatibility and flexibility for field usage.
 
 ## How It Works
 
 * **HTTP Method:** `GET`
-* **Route:** `/applications/byIds`
-* **Query Parameter:** `ids` (required, comma-separated list of integers)
-* **Response:** An array of `ApplicationModel` objects corresponding to the provided IDs.
+* **Route:** `/applications` (with query parameters)
+* **Query Parameters:**
+  * `id` (single integer, legacy/field usage)
+  * `ids` (comma-separated list of integers, official batch retrieval)
+* **Response:**
+  * For `id`, an array with a single `ApplicationModel` object is returned.
+  * For `ids`, an array of `ApplicationModel` objects is returned.
 * **Error Handling:**
-  * If the `ids` parameter is missing or empty, the endpoint returns a `400 Bad Request`.
+  * If `id` is present and is not a valid integer, the endpoint will log the error to the console.
+  * If `ids` is present and is not a comma-separated list of integers, the endpoint returns a type error (400 Bad Request).
+  * If both `id` and `ids` are present, `id` takes precedence and only the single application for that `id` is returned.
+  * If neither parameter is present, all applications are returned (default behavior).
   * If none of the provided IDs match existing applications, the endpoint returns a `404 Not Found`.
 
-### Example Request
+### Example Requests
 
-```
-GET /applications/byIds?ids=1,2,3
+```http
+GET /applications?id=1
+GET /applications?ids=1,2,3
 ```
 
-### Example Response
+### Example Responses
 
 ```json
+// For id=1
+[ 
+  {
+    "id": 1,
+    "applicationName": "App One",
+    ...
+  }
+]
+
+// For ids=1,2,3
 [
   {
     "id": 1,
@@ -39,35 +57,20 @@ GET /applications/byIds?ids=1,2,3
 
 ## RESTful Alignment
 
-This endpoint aligns with REST principles by:
+This approach aligns with REST principles by:
 
-* Using the `GET` method for a safe, idempotent, read-only operation.
-* Returning a collection resource when multiple IDs are specified.
-* Using query parameters to filter the resource collection, which is a common RESTful pattern for batch retrieval.
-* Not overloading the single-resource endpoint (`/applications/{id}`), thus keeping resource URIs predictable and semantically clear.
+* Using the `GET` method for safe, idempotent, read-only operations.
+* Returning a single resource for `/applications?id=` and a collection for `/applications?ids=`.
+* Using query parameters for filtering and batch retrieval, a common RESTful pattern.
+* Not overloading the single-resource endpoint (`/applications/{id}`), keeping URIs predictable and semantically clear.
 
-## Why Not Overload `/applications/{id}`?
+## Why Support Both `id` and `ids`?
 
-Changing the existing `/applications/{id}` endpoint to accept multiple IDs (e.g., `/applications/1,2,3`) would break REST conventions and existing client code:
+We are keeping both ways. `applications?id=` is not official, but it is being used by our field so we don't want to modify or break existing integrations. Supporting both `id` and `ids` allows for a smooth transition and maximum compatibility.
 
-* **Response Type Change:** Clients expect a single object, not an array. Changing this would break deserialization and error handling logic.
-* **Route Semantics:** `/applications/{id}` is meant for a single resource. Overloading it for multiple resources makes the API less predictable and less RESTful.
-* **Backward Compatibility:** Existing integrations, tests, and documentation would break, requiring coordinated updates across all consumers.
-
-## How should we handle when the ids are not found?
-
-When using the `/applications/byIds` endpoint, it's important to clearly define and document how the API handles missing IDs.
-
-The current implementation returns only the applications that match the provided IDs. If some of the requested IDs don't exist, the endpoint still responds with a `200 OK` and includes only the found records. This approach is aligned with common RESTful practices for batch retrieval and avoids unnecessary failures due to partial mismatches.
-
-However, there are other valid alternatives depending on the use case:
-
-* Return both the existing applications and an explicit list of IDs that were not found.
-* Return a `404 Not Found` response if **none** of the provided IDs match any existing records.
-* In stricter cases, the API may return an error if any requested ID is missing or invalid, rejecting the whole request with a 404 Not Found or 422 Unprocessable Entity. This is less common for batch endpoints since it forces clients to fix all IDs even if only one is bad. It’s mainly used when strict validation is needed.
-
-The appropriate strategy depends on the desired tolerance for partial results and the expected client handling of the response.
+* The `id` parameter overrides the `ids` parameter if both are set.
+* The `id` parameter must be a single integer. If a non-integer or a comma-separated list is passed (e.g., `id=1,2,3`), a type error is returned.
 
 ## Summary
 
-The `/applications/byIds` endpoint provides a RESTful, non-breaking way to support batch retrieval of applications. It keeps the API clean, predictable, and backward compatible, while enabling efficient client operations.
+The `/applications` endpoint provides a RESTful, non-breaking way to support both single and batch retrieval of applications. This approach keeps the API clean, predictable, backward compatible, and flexible for both legacy and new client needs.
