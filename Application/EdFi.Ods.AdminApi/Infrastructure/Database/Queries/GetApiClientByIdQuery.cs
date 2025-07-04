@@ -10,29 +10,26 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
-public interface IGetApiClientIdByApplicationIdQuery
-{
-    ApiClient Execute(int applicationId);
-}
-
-public class GetApiClientIdByApplicationIdQuery : IGetApiClientIdByApplicationIdQuery
+public class GetApiClientByIdQuery
 {
     private readonly IUsersContext _context;
 
-    public GetApiClientIdByApplicationIdQuery(IUsersContext context)
+    public GetApiClientByIdQuery(IUsersContext context)
     {
         _context = context;
     }
 
-    public ApiClient Execute(int applicationId)
+    public ApiClient Execute(int apiClientId)
     {
-        var apiClientId = _context.ApiClients
-            .FirstOrDefault(app => app.Application.ApplicationId == applicationId);
-        if (apiClientId == null)
+        var apiClient = _context.ApiClients
+            .Include(a => a.Application)
+            .SingleOrDefault(app => app.ApiClientId == apiClientId);
+
+        if (apiClient == null)
         {
-            throw new NotFoundException<int>("apiClientId", applicationId);
+            throw new NotFoundException<int>("apiclient", apiClientId);
         }
 
-        return apiClientId;
+        return apiClient;
     }
 }
