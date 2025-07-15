@@ -14,7 +14,7 @@ namespace EdFi.Ods.AdminApi.UnitTests.Api;
 [TestFixture]
 public class OdsApiValidatorTests
 {
-    private const string ValidOdsApiUrl = "https://valid/api";
+    private const string ValidOdsApiUrl = "https://valid/api/v2";
     private const string InvalidOdsApiUrl = "https://invalid/api";
 
     private class StubGetRequest : ISimpleGetRequest
