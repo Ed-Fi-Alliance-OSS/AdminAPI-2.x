@@ -57,6 +57,13 @@ jobs:
         if: success()
         run: ./build.ps1 -Command UnitTest -Configuration Debug -RunCoverageAnalysis
 
+      - name: Upload Coverage Report
+        if: always()
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5
+        with:
+          name: Coverage Report
+          path: coveragereport
+
       - name: Upload Test Results
         uses: actions/upload-artifact@26f96dfa697d77e81fd5907df203aa23a56210a8 # v4.3.0
         with:
