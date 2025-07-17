@@ -47,7 +47,7 @@ jobs:
       - name: Build
         run: ./build.ps1 -Command Build -Configuration Debug
 
-      - name: Install Coverlet Reference
+      - name: Install Coverlet Tools
         if: success()
         run: |
           dotnet tool install --global coverlet.console
@@ -65,7 +65,7 @@ jobs:
           path: coveragereport
 
       - name: Upload Test Results
-        uses: actions/upload-artifact@26f96dfa697d77e81fd5907df203aa23a56210a8 # v4.3.0
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5
         with:
           name: csharp-tests
           path: "**/*.trx"
@@ -123,7 +123,7 @@ jobs:
         run: ./build.ps1 -Command IntegrationTest -Configuration Debug -UseIntegratedSecurity:$false -DbUsername "sa" -DbPassword ${{ env.DB_Password }}
 
       - name: Upload Test Results
-        uses: actions/upload-artifact@26f96dfa697d77e81fd5907df203aa23a56210a8 # v4.3.0
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5
         with:
           name: csharp-integration-tests
           path: "**/*.trx"
@@ -134,7 +134,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Upload
-      uses: actions/upload-artifact@26f96dfa697d77e81fd5907df203aa23a56210a8 # v4.3.0
+      uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5
       with:
         name: Event File
         path: ${{ github.event_path }}
