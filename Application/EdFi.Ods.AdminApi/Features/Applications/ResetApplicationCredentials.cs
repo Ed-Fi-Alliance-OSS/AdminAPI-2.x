@@ -21,7 +21,7 @@ public class ResetApplicationCredentials : IFeature
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    public async Task<IResult> HandleResetCredentials(RegenerateApiClientSecretCommand resetSecretCommand, IMapper mapper, int id)
+    public async static Task<IResult> HandleResetCredentials(RegenerateApiClientSecretCommand resetSecretCommand, IMapper mapper, int id)
     {
         var resetApplicationSecret = await Task.Run(() => resetSecretCommand.Execute(id));
         var model = mapper.Map<ApplicationResult>(resetApplicationSecret);
