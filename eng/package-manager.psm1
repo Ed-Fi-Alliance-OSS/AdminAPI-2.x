@@ -1,4 +1,4 @@
-﻿# SPDX-License-Identifier: Apache-2.0
+﻿﻿# SPDX-License-Identifier: Apache-2.0
 # Licensed to the Ed-Fi Alliance under one or more agreements.
 # The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 # See the LICENSE and NOTICES files in the project root for more information.
@@ -145,37 +145,83 @@ function Get-RestApiPackage {
         $ToolsPath = "$PSScriptRoot/.tools"
     )
 
-    $wildcardPath = "$PackagesPath/$RestApiPackageName.$RestApiPackageVersion*"
+    # Create cache manifest file path
+    $cacheManifestPath = "$PackagesPath/.package-cache-manifest.json"
 
-    # Remove anything that already exists, so that it is always easy to
-    # use Resolve-Path with a wildcard to find the installed path without
-    # having to parse pre-release number of the package.
-    $existing = Resolve-Path $wildcardPath -ErrorAction SilentlyContinue
-    if ($existing) {
-        Remove-Item -Path $existing -Force -ErrorAction SilentlyContinue -Recurse | Out-Null
+    # Determine the full package version string including prerelease
+    $fullPackageVersion = if ($RestApiPackagePrerelease) { "prerelease" } else { $RestApiPackageVersion }
+    $packageKey = "$RestApiPackageName-$fullPackageVersion"
+
+    # Check if package is already cached
+    $needsDownload = $true
+    if (Test-Path $cacheManifestPath) {
+        try {
+            $cacheManifest = Get-Content $cacheManifestPath | ConvertFrom-Json
+            if ($cacheManifest.$packageKey) {
+                $wildcardPath = "$PackagesPath/$RestApiPackageName.$RestApiPackageVersion*"
+                $existing = Resolve-Path $wildcardPath -ErrorAction SilentlyContinue
+                if ($existing) {
+                    Write-Host "Package $RestApiPackageName version $fullPackageVersion already cached, skipping download" -ForegroundColor Green
+                    $needsDownload = $false
+                }
+            }
+        }
+        catch {
+            # If manifest is corrupted, we'll redownload
+            Write-Host "Cache manifest corrupted, will redownload packages" -ForegroundColor Yellow
+        }
     }
 
-    New-Item -Path $PackagesPath -ItemType Directory -Force | Out-Null
+    if ($needsDownload) {
+        $wildcardPath = "$PackagesPath/$RestApiPackageName.$RestApiPackageVersion*"
 
-    $arguments = @(
-        "install", "$RestApiPackageName",
-        "-OutputDirectory", "$PackagesPath",
-        "-Source", "$NuGetFeed"
-    )
+        # Remove anything that already exists, so that it is always easy to
+        # use Resolve-Path with a wildcard to find the installed path without
+        # having to parse pre-release number of the package.
+        $existing = Resolve-Path $wildcardPath -ErrorAction SilentlyContinue
+        if ($existing) {
+            Remove-Item -Path $existing -Force -ErrorAction SilentlyContinue -Recurse | Out-Null
+        }
 
-    if ($RestApiPackagePrerelease) {
-        $arguments += "-Prerelease"
-    }
-    else {
-        $arguments += "-Version"
-        $arguments += "$RestApiPackageVersion"
-    }
+        New-Item -Path $PackagesPath -ItemType Directory -Force | Out-Null
 
-    Write-Host "Executing: nuget $arguments" -ForegroundColor Magenta
-    nuget @arguments | Out-Null
+        $arguments = @(
+            "install", "$RestApiPackageName",
+            "-OutputDirectory", "$PackagesPath",
+            "-Source", "$NuGetFeed"
+        )
 
-    if ($LASTEXITCODE -ne 0) {
-        throw "NuGet package install failed for RestApi.Databases"
+        if ($RestApiPackagePrerelease) {
+            $arguments += "-Prerelease"
+        }
+        else {
+            $arguments += "-Version"
+            $arguments += "$RestApiPackageVersion"
+        }
+
+        Write-Host "Executing: nuget $arguments" -ForegroundColor Magenta
+        nuget @arguments | Out-Null
+
+        if ($LASTEXITCODE -ne 0) {
+            throw "NuGet package install failed for RestApi.Databases"
+        }
+
+        # Update cache manifest
+        $cacheManifest = @{}
+        if (Test-Path $cacheManifestPath) {
+            try {
+                $cacheManifest = Get-Content $cacheManifestPath | ConvertFrom-Json -AsHashtable
+            }
+            catch {
+                $cacheManifest = @{}
+            }
+        }
+        $cacheManifest[$packageKey] = @{
+            timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+            version = $fullPackageVersion
+        }
+        $cacheManifest | ConvertTo-Json | Set-Content $cacheManifestPath
+        Write-Host "Package $RestApiPackageName version $fullPackageVersion downloaded and cached" -ForegroundColor Cyan
     }
 
     return (Resolve-Path $wildcardPath)
@@ -206,31 +252,74 @@ function Add-AppCommon {
         $ToolsPath = "$PSScriptRoot/.tools"
     )
 
-    $wildcardPath = "$PackagesPath/$AppCommonPackageName.$AppCommonPackageVersion*"
+    # Create cache manifest file path
+    $cacheManifestPath = "$PackagesPath/.package-cache-manifest.json"
+    $packageKey = "$AppCommonPackageName-$AppCommonPackageVersion"
 
-    # Remove anything that already exists, so that it is always easy to
-    # use Resolve-Path with a wildcard to find the installed path without
-    # having to parse pre-release number of the package.
-    $existing = Resolve-Path $wildcardPath -ErrorAction SilentlyContinue
-    if ($existing) {
-        Remove-Item -Path $existing -Force -ErrorAction SilentlyContinue -Recurse | Out-Null
+    # Check if package is already cached
+    $needsDownload = $true
+    if (Test-Path $cacheManifestPath) {
+        try {
+            $cacheManifest = Get-Content $cacheManifestPath | ConvertFrom-Json
+            if ($cacheManifest.$packageKey) {
+                $wildcardPath = "$PackagesPath/$AppCommonPackageName.$AppCommonPackageVersion*"
+                $existing = Resolve-Path $wildcardPath -ErrorAction SilentlyContinue
+                if ($existing) {
+                    Write-Host "Package $AppCommonPackageName version $AppCommonPackageVersion already cached, skipping download" -ForegroundColor Green
+                    $needsDownload = $false
+                }
+            }
+        }
+        catch {
+            # If manifest is corrupted, we'll redownload
+            Write-Host "Cache manifest corrupted, will redownload packages" -ForegroundColor Yellow
+        }
     }
 
-    New-Item -Path $PackagesPath -ItemType Directory -Force | Out-Null
+    if ($needsDownload) {
+        $wildcardPath = "$PackagesPath/$AppCommonPackageName.$AppCommonPackageVersion*"
 
-    $parameters = @(
-        "install", $AppCommonPackageName,
-        "-source", $NuGetFeed,
-        "-outputDirectory", $PackagesPath
-        "-version", $AppCommonPackageVersion
-    )
+        # Remove anything that already exists, so that it is always easy to
+        # use Resolve-Path with a wildcard to find the installed path without
+        # having to parse pre-release number of the package.
+        $existing = Resolve-Path $wildcardPath -ErrorAction SilentlyContinue
+        if ($existing) {
+            Remove-Item -Path $existing -Force -ErrorAction SilentlyContinue -Recurse | Out-Null
+        }
 
-    Write-Host "Downloading AppCommon"
-    Write-Host -ForegroundColor Magenta "Executing nuget: $parameters"
-    nuget $parameters | Out-Null
+        New-Item -Path $PackagesPath -ItemType Directory -Force | Out-Null
 
-    if ($LASTEXITCODE -ne 0) {
-        throw "NuGet package install failed for AppCommon"
+        $parameters = @(
+            "install", $AppCommonPackageName,
+            "-source", $NuGetFeed,
+            "-outputDirectory", $PackagesPath
+            "-version", $AppCommonPackageVersion
+        )
+
+        Write-Host "Downloading AppCommon"
+        Write-Host -ForegroundColor Magenta "Executing nuget: $parameters"
+        nuget $parameters | Out-Null
+
+        if ($LASTEXITCODE -ne 0) {
+            throw "NuGet package install failed for AppCommon"
+        }
+
+        # Update cache manifest
+        $cacheManifest = @{}
+        if (Test-Path $cacheManifestPath) {
+            try {
+                $cacheManifest = Get-Content $cacheManifestPath | ConvertFrom-Json -AsHashtable
+            }
+            catch {
+                $cacheManifest = @{}
+            }
+        }
+        $cacheManifest[$packageKey] = @{
+            timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+            version = $AppCommonPackageVersion
+        }
+        $cacheManifest | ConvertTo-Json | Set-Content $cacheManifestPath
+        Write-Host "Package $AppCommonPackageName version $AppCommonPackageVersion downloaded and cached" -ForegroundColor Cyan
     }
 
     $appCommonDirectory = Resolve-Path $wildcardPath | Select-Object -Last 1
