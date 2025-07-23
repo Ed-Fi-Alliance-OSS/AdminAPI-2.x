@@ -149,7 +149,7 @@ function Get-RestApiPackage {
     $cacheManifestPath = "$PackagesPath/.package-cache-manifest.json"
 
     # Determine the full package version string including prerelease
-    $fullPackageVersion = if ($RestApiPackagePrerelease) { "prerelease" } else { $RestApiPackageVersion }
+    $fullPackageVersion = if ($RestApiPackagePrerelease) { "$RestApiPackageVersion-prerelease" } else { $RestApiPackageVersion }
     $packageKey = "$RestApiPackageName-$fullPackageVersion"
 
     # Check if package is already cached
