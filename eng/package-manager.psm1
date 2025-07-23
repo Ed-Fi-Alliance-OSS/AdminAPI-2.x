@@ -156,8 +156,8 @@ function Get-RestApiPackage {
     $needsDownload = $true
     if (Test-Path $cacheManifestPath) {
         try {
-            $cacheManifest = Get-Content $cacheManifestPath | ConvertFrom-Json
-            if ($cacheManifest.$packageKey) {
+            $cacheManifest = Get-Content $cacheManifestPath | ConvertFrom-Json -AsHashtable
+            if ($cacheManifest[$packageKey]) {
                 $wildcardPath = "$PackagesPath/$RestApiPackageName.$RestApiPackageVersion*"
                 $existing = Resolve-Path $wildcardPath -ErrorAction SilentlyContinue
                 if ($existing) {
@@ -260,8 +260,8 @@ function Add-AppCommon {
     $needsDownload = $true
     if (Test-Path $cacheManifestPath) {
         try {
-            $cacheManifest = Get-Content $cacheManifestPath | ConvertFrom-Json
-            if ($cacheManifest.$packageKey) {
+            $cacheManifest = Get-Content $cacheManifestPath | ConvertFrom-Json -AsHashtable
+            if ($cacheManifest[$packageKey]) {
                 $wildcardPath = "$PackagesPath/$AppCommonPackageName.$AppCommonPackageVersion*"
                 $existing = Resolve-Path $wildcardPath -ErrorAction SilentlyContinue
                 if ($existing) {
