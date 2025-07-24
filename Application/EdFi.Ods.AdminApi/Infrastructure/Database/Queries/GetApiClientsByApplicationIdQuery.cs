@@ -5,34 +5,28 @@
 
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Common.Extensions;
 using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
 using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
-public interface IGetApiClientIdByApplicationIdQuery
-{
-    ApiClient Execute(int applicationId);
-}
-
-public class GetApiClientIdByApplicationIdQuery : IGetApiClientIdByApplicationIdQuery
+public class GetApiClientsByApplicationIdQuery
 {
     private readonly IUsersContext _context;
 
-    public GetApiClientIdByApplicationIdQuery(IUsersContext context)
+    public GetApiClientsByApplicationIdQuery(IUsersContext context)
     {
         _context = context;
     }
 
-    public ApiClient Execute(int applicationId)
+    public IReadOnlyList<ApiClient> Execute(int applicationId)
     {
-        var apiClientId = _context.ApiClients
-            .FirstOrDefault(app => app.Application.ApplicationId == applicationId);
-        if (apiClientId == null)
-        {
-            throw new NotFoundException<int>("apiClientId", applicationId);
-        }
+        var apiClients = _context.ApiClients
+            .Include(ac => ac.Application)
+            .Include(ac => ac.User)
+            .Where(app => applicationId == 0 || app.Application.ApplicationId == applicationId);
 
-        return apiClientId;
+        return apiClients.ToReadOnlyList();
     }
 }
