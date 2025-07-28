@@ -27,16 +27,19 @@ public class ReadApiClient : IFeature
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    internal Task<IResult> GetApiClients(
-        GetApiClientsByApplicationIdQuery getApiClientsByApplicationIdQuery,
-        IMapper mapper,
+    public Task<IResult> GetApiClients(
+        [FromServices] IGetApiClientsByApplicationIdQuery getApiClientsByApplicationIdQuery,
+        [FromServices] IMapper mapper,
         [FromQuery(Name = "applicationid")] int applicationid)
     {
         var apiClients = mapper.Map<List<ApiClientModel>>(getApiClientsByApplicationIdQuery.Execute(applicationid));
         return Task.FromResult(Results.Ok(apiClients));
     }
 
-    internal Task<IResult> GetApiClient(GetApiClientByIdQuery getApiClientByIdQuery, IMapper mapper, int id)
+    public Task<IResult> GetApiClient([
+        FromServices] IGetApiClientByIdQuery getApiClientByIdQuery,
+        [FromServices] IMapper mapper,
+        int id)
     {
         var apiClient = getApiClientByIdQuery.Execute(id) ?? throw new NotFoundException<int>("apiClient", id);
         var model = mapper.Map<ApiClientModel>(apiClient);

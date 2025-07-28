@@ -70,7 +70,7 @@ internal class AddApiClientCommandTests : PlatformUsersContextTestBase
     }
 
     [Test]
-    public void ShouldExecute()
+    public void ShouldCreateApiClientWithOdsInstances()
     {
         var vendor = new Vendor
         {
@@ -99,6 +99,42 @@ internal class AddApiClientCommandTests : PlatformUsersContextTestBase
                 ApplicationId = application.ApplicationId,
                 IsApproved = true,
                 OdsInstanceIds = new List<int> { 1, 2 }
+            };
+
+            command.Execute(newApiClient, _options);
+        });
+    }
+
+    [Test]
+    public void ShouldCreateApiClientWithOutOdsInstances()
+    {
+        var vendor = new Vendor
+        {
+            VendorId = 0,
+            VendorNamespacePrefixes = new List<VendorNamespacePrefix> { new VendorNamespacePrefix { NamespacePrefix = "http://tests.com" } },
+            VendorName = "Integration Tests"
+        };
+
+        var application = new Application
+        {
+            ApplicationName = "Test Application",
+            ClaimSetName = "FakeClaimSet",
+            OperationalContextUri = "http://test.com",
+            Profiles = null,
+            Vendor = vendor
+        };
+
+        Save(application);
+
+        Transaction(usersContext =>
+        {
+            var command = new AddApiClientCommand(usersContext);
+            var newApiClient = new TestApiClient
+            {
+                Name = "Test ApiClient",
+                ApplicationId = application.ApplicationId,
+                IsApproved = true,
+                OdsInstanceIds = null // No OdsInstanceIds provided
             };
 
             command.Execute(newApiClient, _options);

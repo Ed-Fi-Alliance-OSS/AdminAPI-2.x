@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
-public class GetApiClientByIdQuery
+public class GetApiClientByIdQuery : IGetApiClientByIdQuery
 {
     private readonly IUsersContext _context;
 

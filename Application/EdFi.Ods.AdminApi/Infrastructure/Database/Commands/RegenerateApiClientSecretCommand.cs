@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 
-public class RegenerateApiClientSecretCommand
+public class RegenerateApiClientSecretCommand : IRegenerateApiClientSecretCommand
 {
     private readonly IUsersContext _context;
 
