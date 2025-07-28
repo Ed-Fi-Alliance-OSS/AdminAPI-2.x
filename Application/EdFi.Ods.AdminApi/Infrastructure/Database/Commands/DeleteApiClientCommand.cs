@@ -27,11 +27,6 @@ public class DeleteApiClientCommand : IDeleteApiClientCommand
         var apiClient = _context.ApiClients
             .SingleOrDefault(a => a.ApiClientId == id) ?? throw new NotFoundException<int>("apiclient", id);
 
-        if (apiClient == null)
-        {
-            return;
-        }
-
         var currentClientAccessTokens = _context.ClientAccessTokens.Where(o => apiClient.ApiClientId.Equals(o.ApiClient.ApiClientId));
 
         if (currentClientAccessTokens.Any())

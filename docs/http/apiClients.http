@@ -41,7 +41,7 @@ Authorization: bearer {{token}}
     0
   ]
 }
-# No ods isntances on the body of the post.
+# No ods instances on the body of the post.
 
 ### Get ods instances
 GET {{adminapi_url}}/v2/odsinstances
@@ -53,7 +53,7 @@ GET {{adminapi_url}}/v2/applications/2
 Content-Type: application/json
 Authorization: bearer {{token}}
 
-### Create ApliClient
+### Create ApiClient
 POST {{adminapi_url}}/v2/apiclients
 Content-Type: application/json
 Authorization: bearer {{token}}

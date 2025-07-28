@@ -19,14 +19,14 @@ public class RegenerateApiClientSecretCommand
         _context = context;
     }
 
-    public RegenerateApiClientSecretResult Execute(int apiCientId)
+    public RegenerateApiClientSecretResult Execute(int apiClientId)
     {
         var apiClient = _context.ApiClients
             .Include(a => a.Application)
-            .SingleOrDefault(a => a.ApiClientId == apiCientId);
+            .SingleOrDefault(a => a.ApiClientId == apiClientId);
         if (apiClient == null)
         {
-            throw new NotFoundException<int>("ApiCient", apiCientId);
+            throw new NotFoundException<int>("ApiClient", apiClientId);
         }
 
         apiClient.GenerateSecret();

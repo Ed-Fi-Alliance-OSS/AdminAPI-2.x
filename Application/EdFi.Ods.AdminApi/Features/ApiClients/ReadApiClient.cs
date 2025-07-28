@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EdFi.Ods.AdminApi.Features.ApiClients;
 
-public class ReadApiClientn : IFeature
+public class ReadApiClient : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {

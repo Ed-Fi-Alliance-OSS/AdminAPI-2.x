@@ -951,7 +951,7 @@
 											"    const response = pm.response.json();\r",
 											"\r",
 											"    pm.expect(response.title).to.contain(\"Not found\");\r",
-											"    pm.expect(response.title).to.contain(\"ApiCient\");\r",
+											"    pm.expect(response.title).to.contain(\"ApiClient\");\r",
 											"});\r",
 											""
 										],
