@@ -115,6 +115,11 @@ jobs:
       - name: Setup Nuget.exe
         uses: nuget/setup-nuget@323ab0502cd38fdc493335025a96c8fdb0edc71f #v2.0.1
 
+      - name: Install .NET 6 runtime
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '6.0.x'
+
       - name: Build
         run: ./build.ps1 -Command Build -Configuration Debug
 
