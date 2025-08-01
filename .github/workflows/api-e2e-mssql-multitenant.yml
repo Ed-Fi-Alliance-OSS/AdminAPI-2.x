@@ -76,8 +76,7 @@ jobs:
           node-version: "20"
 
       - name: Install Newman and dependencies
-        run: npm install
-        working-directory: './E2E Tests'
+        run: cd "E2E Tests" && npm install
 
       - name: Combine Collections
         run: |
