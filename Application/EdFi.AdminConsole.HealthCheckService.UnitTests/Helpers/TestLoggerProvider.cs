@@ -6,12 +6,14 @@
 using Microsoft.Extensions.Logging;
 
 namespace EdFi.AdminConsole.HealthCheckService.UnitTests.Helpers;
+
 public class TestLoggerProvider : ILoggerProvider
 {
-    private readonly List<LogEntry> _entries = new();
+    private readonly List<LogEntry> _entries = [];
     public IReadOnlyList<LogEntry> Entries => _entries;
 
     public ILogger CreateLogger(string categoryName) => new TestLogger(categoryName, _entries);
+
     public void Dispose() { }
 
     private class TestLogger(string category, List<LogEntry> entries) : ILogger
@@ -19,7 +21,7 @@ public class TestLoggerProvider : ILoggerProvider
         private readonly List<LogEntry> _entries = entries;
         private readonly string _category = category;
 
-        public IDisposable BeginScope<TState>(TState state) => NullScope.Instance;
+        public IDisposable? BeginScope<TState>(TState state) => NullScope.Instance;
         public bool IsEnabled(LogLevel logLevel) => true;
 
         public void Log<TState>(
