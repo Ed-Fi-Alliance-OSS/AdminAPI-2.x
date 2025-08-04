@@ -36,6 +36,7 @@ public class RegenerateApiClientSecretCommand : IRegenerateApiClientSecretComman
         return new RegenerateApiClientSecretResult
         {
             Id = apiClient.ApiClientId,
+            Name = apiClient.Name,
             Key = apiClient.Key,
             Secret = apiClient.Secret,
             Application = apiClient.Application
@@ -46,6 +47,7 @@ public class RegenerateApiClientSecretCommand : IRegenerateApiClientSecretComman
 public class RegenerateApiClientSecretResult
 {
     public int Id { get; set; }
+    public string? Name { get; set; }
     public string? Key { get; set; }
     public string? Secret { get; set; }
     public Application Application { get; set; } = new();
