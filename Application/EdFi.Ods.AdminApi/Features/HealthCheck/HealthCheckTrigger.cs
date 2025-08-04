@@ -38,7 +38,7 @@ public class HealthCheckTrigger : IFeature
             await scheduler.AddJob(jobDetail, replace: true);
         }
 
-        // Fire-and-forget: schedule a one-time immediate trigger
+        // Schedule a one-time immediate trigger
         var trigger = TriggerBuilder.Create()
             .ForJob(jobKey)
             .WithIdentity($"ImmediateTrigger-{Guid.NewGuid()}")
