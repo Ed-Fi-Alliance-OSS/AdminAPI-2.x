@@ -44,3 +44,4 @@ body:
       placeholder: "Additional details..."
     validations:
       required: false
+
