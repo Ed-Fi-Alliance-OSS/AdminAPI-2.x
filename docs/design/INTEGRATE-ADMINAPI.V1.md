@@ -22,6 +22,7 @@ backward compatibility while leveraging the enhanced architecture of V2.
 * **Phase 3**: Implement unified endpoint mapping
 * **Phase 4**: Logging Modernization
 * **Phase 5**: Testing and Validation
+* **Phase 6**: V1/V2 Multi-Tenancy Integration Strategy
 
 ---
 
@@ -129,14 +130,59 @@ public class EditResourceOnClaimSetCommand(EditResourceOnClaimSetCommandV6Servic
 
 **Objective**: Maintain V1 compatibility by preserving Ed-Fi ODS 6.x DataAccess implementations.
 
-**Implementation Strategy**:
+**Tasks**:
 
 * Copy Ed-Fi ODS 6.x Admin.DataAccess and Security.DataAccess code implementation files directly to AdminAPI V1 project
 * Avoid handling divergence between 6.x and 7.x Security and Admin DataAccess usages while maintaining V1 API compatibility
+  
 * **Isolation Benefits**:
   * V1 maintains stable DataAccess layer independent of V2 upgrades
   * Eliminates version compatibility complexity in shared DataAccess components
   * Reduces risk of breaking V1 functionality when V2 adopts newer Ed-Fi ODS versions
+  
+### 2.4 Database Setup Strategy
+
+**Objective**: Maintain separate database infrastructure to support V1 with
+Ed-Fi ODS 6.x and V2 with Ed-Fi ODS 7.x DataAccess compatibility.
+
+**Tasks**:
+
+* **Separate Database Instances**: Setup dedicated EdFi_Admin and EdFi_Security databases for each version:
+  * `EdFi_Admin_V1` and `EdFi_Security_V1` (6.x schema)
+  * `EdFi_Admin` and `EdFi_Security` (7.x schema)
+
+* **Version-Specific Connection Strings**: Define separate connection string configurations for V1 and V2 since each uses different DbContexts:
+
+  ```json
+  {
+    "ConnectionStrings": {
+      // V1 connections (6.x schema)
+      "EdFi_Admin_V1": "Server=.;Database=EdFi_Admin_V1;Integrated Security=true",
+      "EdFi_Security_V1": "Server=.;Database=EdFi_Security_V1;Integrated Security=true",
+      
+      // V2 connections (7.x schema) 
+      "EdFi_Admin": "Server=.;Database=EdFi_Admin;Integrated Security=true",
+      "EdFi_Security": "Server=.;Database=EdFi_Security;Integrated Security=true"
+    }
+  }
+  ```
+
+* **DbContext Registration**: Configure separate DbContext instances in DI container:
+
+  ```csharp
+  // V1 DbContext (6.x DataAccess)
+  services.AddDbContext<AdminApiV1DbContext>(options =>
+      options.UseSqlServer(connectionString.GetConnectionString("EdFi_Admin_V1")));
+  
+  // V2 DbContext (7.x DataAccess) 
+  services.AddDbContext<AdminApiDbContext>(options =>
+      options.UseSqlServer(connectionString.GetConnectionString("EdFi_Admin")));
+  ```
+
+* **Schema Management**:
+  * V1 databases maintain Ed-Fi ODS 6.x schema structure
+  * V2 databases use Ed-Fi ODS 7.x schema structure
+  * No shared tables or cross-version dependencies
 
 ### 2.3 Response Format Standardization
 
@@ -249,13 +295,15 @@ public static void MapAdminApiV1FeatureEndpoints(this WebApplication application
 
 ### 5.2 Integration Test Consolidation
 
-**Objective**: Merge V1 integration tests with V2 test infrastructure while maintaining test isolation.
+**Objective**: Merge V1 integration tests with V2 test infrastructure while maintaining test isolation and version-specific database compatibility.
 
 **Tasks**:
 
-* Consolidate V1 `*.DBTests` with V2 database testing approach
-* Ensure V1 tests use same test database setup as V2
-* Update connection string management for integrated solution
+* **Consolidate Test Projects**: Merge V1 `*.DBTests` projects into V2 database testing infrastructure:
+  * Move V1 integration tests to `EdFi.Ods.AdminApi.DBTests` project
+  * Organize tests in version-specific namespaces: `EdFi.Ods.AdminApi.DBTests.V1` and `EdFi.Ods.AdminApi.DBTests.V2`
+  * Maintain separate test base classes for V1 and V2 to handle different DbContexts
+  * Ensure V1 and V2 tests use completely separate test databases
 
 ### 5.3 End-to-End Test Migration
 
@@ -265,14 +313,15 @@ public static void MapAdminApiV1FeatureEndpoints(this WebApplication application
 
 * **E2E Test Organization**: Move V1 E2E tests to V2 `E2E Tests` folder with version-specific subdirectories:
 
-  ```  
+  ```md
+
   E2E Tests/
   ├── V1/
   │   ├── Applications/
   │   ├── ClaimSets/
-  │   └── Common/
+  │   
   ├── V2/
-  └── Shared/
+  
   ```
 
   * Update V1 Postman collections to use `/v1/` URL prefix
@@ -280,3 +329,42 @@ public static void MapAdminApiV1FeatureEndpoints(this WebApplication application
   * Add version-specific environment variables
   * Test version routing (v1 vs v2 vs unversioned URLs)
   * Add tests that validate V1 and V2 can operate simultaneously without conflicts
+  
+## Phase 6: V1/V2 Multi-Tenancy Integration Strategy
+
+**Objective**: Strategy for maintaining multi-tenancy support in V2 while ensuring V1 endpoints continue to work without multi-tenancy requirements during the integration of AdminAPI V1 and V2.
+
+**Tasks**:
+
+* **Define Version-Aware Multi-Tenancy Middleware**: Enhance
+  `TenantResolverMiddleware` to detect V1 vs V2 endpoints and apply
+  multi-tenancy rules accordingly.
+
+```csharp
+private static bool IsV1Endpoint(HttpContext context)
+{
+    var path = context.Request.Path.Value;    
+
+    if (path.StartsWith("/v1/", StringComparison.InvariantCultureIgnoreCase))
+        return true;   
+    return false;
+}
+
+// Te
+ public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+ {
+ 
+        // Check if this is a V1 endpoint
+        if (IsV1Endpoint(context))
+        {
+            // For V1 endpoints, skip multi-tenancy validation entirely
+            await next.Invoke(context);
+            return;
+        }
+
+     if (multiTenancyEnabled)
+     {
+     }
+ }
+
+```
