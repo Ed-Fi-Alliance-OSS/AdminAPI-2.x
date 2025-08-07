@@ -7,20 +7,22 @@ using System.Net;
 using System.Reflection;
 using System.Threading.RateLimiting;
 using EdFi.Admin.DataAccess.Contexts;
-using EdFi.Common.Extensions;
 using EdFi.Ods.AdminApi.Common.Infrastructure;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Context;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Database;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Extensions;
 using EdFi.Ods.AdminApi.Common.Infrastructure.MultiTenancy;
-using EdFi.Ods.AdminApi.Common.Infrastructure.Providers.Interfaces;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Providers;
+using EdFi.Ods.AdminApi.Common.Infrastructure.Providers.Interfaces;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Security;
 using EdFi.Ods.AdminApi.Common.Settings;
 using EdFi.Ods.AdminApi.Infrastructure.Api;
+using EdFi.Ods.AdminApi.Infrastructure.BackgroundJobs;
+using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.Documentation;
 using EdFi.Ods.AdminApi.Infrastructure.Security;
 using EdFi.Ods.AdminApi.Infrastructure.Services;
+using EdFi.Ods.Common.Extensions;
 using EdFi.Security.DataAccess.Contexts;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -29,7 +31,7 @@ using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
-using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+using Quartz;
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 
@@ -215,6 +217,27 @@ public static class WebApplicationBuilderExtensions
         webApplicationBuilder.Services.AddHttpClient();
         webApplicationBuilder.Services.AddTransient<ISimpleGetRequest, SimpleGetRequest>();
         webApplicationBuilder.Services.AddTransient<IOdsApiValidator, OdsApiValidator>();
+
+        var adminConsoleIsEnabled = webApplicationBuilder.Configuration.GetValue<bool>("AppSettings:EnableAdminConsoleAPI");
+        var instanceManagementFrequency = webApplicationBuilder.Configuration.GetValue<int>("AppSettings:InstanceManagementFrequencyInMinutes");
+
+        if (adminConsoleIsEnabled)
+        {
+            // Quartz.NET back end service
+            webApplicationBuilder.Services.AddQuartz(q =>
+            {
+                var jobKey = new JobKey("InstanceManagementJob");
+                q.AddJob<InstanceManagementJob>(opts => opts.WithIdentity(jobKey));
+
+                // Create a trigger that fires every 10 minutes
+                q.AddTrigger(opts =>
+                    opts.ForJob(jobKey)
+                        .WithIdentity("InstanceManagementJob-trigger")
+                        .WithSimpleSchedule(x => x.WithInterval(TimeSpan.FromMinutes(instanceManagementFrequency)).RepeatForever())
+                );
+            });
+            webApplicationBuilder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = false);
+        }
     }
 
     private static void EnableMultiTenancySupport(this WebApplicationBuilder webApplicationBuilder)
@@ -427,7 +450,12 @@ public static class WebApplicationBuilderExtensions
                         var parts = rule.Endpoint.Split(':');
                         // Only support fixed window for now, parse period (e.g., "1m")
                         var window = rule.Period.EndsWith('m') ? TimeSpan.FromMinutes(int.Parse(rule.Period.TrimEnd('m'))) : TimeSpan.FromMinutes(1);
-                        if (path != null && parts.Length == 2 && method.Equals(parts[0], StringComparison.OrdinalIgnoreCase) && path.Equals(parts[1], StringComparison.OrdinalIgnoreCase))
+                        if (
+                            path != null
+                            && parts.Length == 2
+                            && method.Equals(parts[0], StringComparison.OrdinalIgnoreCase)
+                            && path.Equals(parts[1], StringComparison.OrdinalIgnoreCase)
+                        )
                         {
                             return RateLimitPartition.GetFixedWindowLimiter(rule.Endpoint, _ => new FixedWindowRateLimiterOptions
                             {

@@ -46,6 +46,8 @@ services:
       ASPNETCORE_ENVIRONMENT: "multitenantdocker"
       Authentication__IssuerUrl: ${ISSUER_URL}
       Authentication__SigningKey: ${SIGNING_KEY}
+      connectionStringsProvider: ${CONNECTION_STRINGS_PROVIDER:-Npgsql}
+      DatabaseProvider: ${DATABASEPROVIDER:-Npgsql}
       IpRateLimiting__EnableEndpointRateLimiting: ${IPRATELIMITING__ENABLEENDPOINTRATELIMITING:-false}
       IpRateLimiting__StackBlockedRequests: ${IPRATELIMITING__STACKBLOCKEDREQUESTS:-false}
       IpRateLimiting__RealIpHeader: ${IPRATELIMITING__REALIPHEADER:-X-Real-IP}
