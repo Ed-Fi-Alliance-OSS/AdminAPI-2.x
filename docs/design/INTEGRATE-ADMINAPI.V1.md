@@ -23,6 +23,7 @@ backward compatibility while leveraging the enhanced architecture of V2.
 * **Phase 4**: Logging Modernization
 * **Phase 5**: Testing and Validation
 * **Phase 6**: V1/V2 Multi-Tenancy Integration Strategy
+* **Phase 7**: Docker setup
 
 ---
 
@@ -155,16 +156,20 @@ Ed-Fi ODS 6.x and V2 with Ed-Fi ODS 7.x DataAccess compatibility.
 
   ```json
   {
-    "ConnectionStrings": {
-      // V1 connections (6.x schema)
-      "EdFi_Admin_V1": "Server=.;Database=EdFi_Admin_V1;Integrated Security=true",
-      "EdFi_Security_V1": "Server=.;Database=EdFi_Security_V1;Integrated Security=true",
-      
-      // V2 connections (7.x schema) 
-      "EdFi_Admin": "Server=.;Database=EdFi_Admin;Integrated Security=true",
-      "EdFi_Security": "Server=.;Database=EdFi_Security;Integrated Security=true"
-    }
-  }
+        "ConnectionStrings": 
+        {
+            "v1": {
+                // V1 connections (6.x schema)
+                "EdFi_Admin": "Server=.;Database=EdFi_Admin_V1;Integrated Security=true",
+                "EdFi_Security": "Server=.;Database=EdFi_Security_V1;Integrated Security=true",
+            },
+            "v2": {
+                // V2 connections (7.x schema) 
+                "EdFi_Admin": "Server=.;Database=EdFi_Admin;Integrated Security=true",
+                "EdFi_Security": "Server=.;Database=EdFi_Security;Integrated Security=true"
+            }
+        }
+   }
   ```
 
 * **DbContext Registration**: Configure separate DbContext instances in DI container:
@@ -350,9 +355,8 @@ private static bool IsV1Endpoint(HttpContext context)
     return false;
 }
 
-// Te
- public async Task InvokeAsync(HttpContext context, RequestDelegate next)
- {
+public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+{
  
         // Check if this is a V1 endpoint
         if (IsV1Endpoint(context))
@@ -365,6 +369,120 @@ private static bool IsV1Endpoint(HttpContext context)
      if (multiTenancyEnabled)
      {
      }
- }
+}
 
 ```
+
+## Phase 7: Docker Setup
+
+**Objective**: Update Docker files to include Admin API V1 specific changes and
+support separate V1/V2 database infrastructure.
+
+**Tasks**:
+
+* Update Build Stage for V1 Project Integration
+**Files to modify**: dev.mssql.Dockerfile and dev.pgsql.Dockerfile
+  
+```docker
+# Add after existing project copies
+
+COPY --from=assets ./Application/NuGet.Config EdFi.Ods.AdminApi.V1/
+COPY --from=assets ./Application/EdFi.Ods.AdminApi.V1 EdFi.Ods.AdminApi.V1/
+```
+
+* **Docker Compose Considerations**: Add V1 specific environment variables if any.
+  
+ ```yml
+
+  adminapi:  
+    environment:
+      # Existing V2 configuration
+      ConnectionStrings__v2__EdFi_Admin: "host=pb-admin;port=${PGBOUNCER_LISTEN_PORT:-6432};username=${POSTGRES_USER};password=${POSTGRES_PASSWORD};database=EdFi_Admin;pooling=false"
+      ConnectionStrings__v2__EdFi_Security: "host=pb-admin;port=${PGBOUNCER_LISTEN_PORT:-6432};username=${POSTGRES_USER};password=${POSTGRES_PASSWORD};database=EdFi_Security;pooling=false"
+      
+      # New V1-specific database connections
+      ConnectionStrings__v1__EdFi_Admin: "host=pb-admin-v1;port=${PGBOUNCER_LISTEN_PORT:-6432};username=${POSTGRES_USER};password=${POSTGRES_PASSWORD};database=EdFi_Admin;pooling=false"
+      ConnectionStrings__v1__EdFi_Security: "host=pb-admin-v1;port=${PGBOUNCER_LISTEN_PORT:-6432};username=${POSTGRES_USER};password=${POSTGRES_PASSWORD};database=EdFi_Security;pooling=false"
+
+
+      # Update on compose file to use the unified database container:
+
+    services:
+      # Unified database container for both V1 and V2
+    db-admin:
+        build:
+        context: ../../../
+        dockerfile: Docker/db.pgsql.admin.unified.Dockerfile
+        environment:
+        POSTGRES_USER: ${POSTGRES_USER}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+        POSTGRES_DB: postgres
+        volumes:
+        - vol-db-admin:/var/lib/postgresql/data
+        restart: always
+        container_name: ed-fi-db-admin-unified
+        healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+        start_period: "60s"
+        retries: 3
+
+ ```
+
+* `db.pgsql.admin.unified.Dockerfile` update:
+  `edfialliance/ods-api-db-admin:7.3` will be used as base image which contains
+  EdFi_Admin and EdFi_Security databases with 7.x schema. V1-specific EdFi_Admin
+  and EdFi_Security database schema files (6.x) will be downloaded as Azure
+  artifacts and executed to create separate `EdFi_Admin_V1` and
+  `EdFi_Security_V1` databases on the same db_admin container. This approach
+  provides:
+
+  * **V2 Databases** (pre-existing): `EdFi_Admin` and `EdFi_Security` with 7.x schema
+  * **V1 Databases** (created): `EdFi_Admin_V1` and `EdFi_Security_V1` with 6.x schema
+  * **Single Container**: All four databases on one PostgreSQL instance
+  * **Schema Isolation**: Each version maintains its appropriate Ed-Fi ODS schema version
+
+  **Implementation Details**:
+  
+  ```dockerfile
+
+    FROM edfialliance/ods-api-db-admin:7.3 AS base
+    
+    # Download Ed-Fi ODS 6.x schema artifacts for V1 databases
+    RUN wget -O /tmp/edfi-6x-artifacts.zip \
+        https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_apis/packaging/feeds/EdFi/nuget/packages/EdFi.Suite3.Ods.Artifacts.PgSql/versions/6.2.0/content \
+        && unzip /tmp/edfi-6x-artifacts.zip -d /tmp/V1Schema/ \
+        && rm /tmp/edfi-6x-artifacts.zip    
+
+    ...
+
+    # Enhanced migration script
+    COPY Settings/DB-Admin/pgsql/run-unified-adminapi-migrations.sh /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh
+    
+  ```
+
+  * **Migration Script Strategy**:
+  
+  ```bash
+
+    #!/bin/bash
+    # Create V1 databases with 6.x schema
+    echo "Creating V1 databases with Ed-Fi ODS 6.x schema..."
+    psql --command "CREATE DATABASE \"EdFi_Admin_V1\";"
+    psql --command "CREATE DATABASE \"EdFi_Security_V1\";"
+    
+    # Apply 6.x schema to V1 databases
+    psql --dbname "EdFi_Admin_V1" --file /tmp/V1Schema/Admin/EdFi_Admin_6x.sql
+    psql --dbname "EdFi_Security_V1" --file /tmp/V1Schema/Security/EdFi_Security_6x.sql
+    
+    # Apply AdminAPI customizations to respective databases
+    # AdminAPI customizations to V1 databases
+    for FILE in /tmp/AdminApiScripts/Admin/PgSql/*.sql; do
+        psql --dbname "EdFi_Admin_V1" --file "$FILE"
+    done
+    
+    # AdminAPI customizations to V2 databases (existing EdFi_Admin, EdFi_Security)
+    for FILE in /tmp/AdminApiScripts/Admin/PgSql/*.sql; do
+        psql --dbname "EdFi_Admin" --file "$FILE"
+    done
+
+  ```
