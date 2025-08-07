@@ -8,7 +8,7 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Linq;
-using EdFi.Common.Extensions;
+using EdFi.Ods.Common.Extensions;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Documentation;
 

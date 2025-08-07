@@ -43,6 +43,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Quartz" />
+    <PackageReference Include="Quartz.Extensions.DependencyInjection" />
+    <PackageReference Include="Quartz.Extensions.Hosting" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
@@ -51,6 +54,7 @@
     <PackageReference Include="System.Text.Json" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EdFi.AdminConsole.InstanceMgrWorker.Provisioner\EdFi.AdminConsole.InstanceMgrWorker.Configuration.csproj" />
     <ProjectReference Include="..\EdFi.Ods.AdminApi.AdminConsole\EdFi.Ods.AdminApi.AdminConsole.csproj" />
     <ProjectReference Include="..\EdFi.Ods.AdminApi.Common\EdFi.Ods.AdminApi.Common.csproj" />
   </ItemGroup>
