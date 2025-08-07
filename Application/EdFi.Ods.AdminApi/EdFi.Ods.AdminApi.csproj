@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
@@ -39,6 +39,9 @@
     <PackageReference Include="Npgsql" />
     <PackageReference Include="OpenIddict.AspNetCore" />
     <PackageReference Include="OpenIddict.EntityFrameworkCore" />
+    <PackageReference Include="Quartz" />
+    <PackageReference Include="Quartz.Extensions.DependencyInjection" />
+    <PackageReference Include="Quartz.Extensions.Hosting" />
     <PackageReference Include="SonarAnalyzer.CSharp">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -53,5 +56,6 @@
   <ItemGroup>
     <ProjectReference Include="..\EdFi.Ods.AdminApi.AdminConsole\EdFi.Ods.AdminApi.AdminConsole.csproj" />
     <ProjectReference Include="..\EdFi.Ods.AdminApi.Common\EdFi.Ods.AdminApi.Common.csproj" />
+    <ProjectReference Include="..\EdFi.Ods.AdminApi.HealthCheck\EdFi.Ods.AdminApi.HealthCheck.csproj" />
   </ItemGroup>
 </Project>

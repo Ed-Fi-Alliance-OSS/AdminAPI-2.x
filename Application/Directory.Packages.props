@@ -79,5 +79,29 @@
 
     <!-- System -->
     <PackageVersion Include="System.Formats.Asn1" Version="9.0.0" />
+
+    <!-- Quartz-->
+    <PackageVersion Include="Quartz" Version="3.14.0" />
+    <PackageVersion Include="Quartz.Extensions.DependencyInjection" Version="3.14.0" />
+    <PackageVersion Include="Quartz.Extensions.Hosting" Version="3.14.0" />
+
+    <!-- Health Check Service-->
+      <PackageVersion Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+      <PackageVersion Include="Microsoft.CodeAnalysis" Version="4.12.0" />
+      <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="4.12.0" />
+      <PackageVersion Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+      <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.0" />
+      <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
+      <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.0" />
+      <PackageVersion Include="Polly" Version="8.5.2" />
+      <PackageVersion Include="Polly.Contrib.WaitAndRetry" Version="1.1.1" />
+      <PackageVersion Include="Serilog" Version="4.1.0" />
+      <PackageVersion Include="Serilog.Extensions.Hosting" Version="8.0.0" />
+      <PackageVersion Include="Serilog.Sinks.Console" Version="6.0.0" />
+      <PackageVersion Include="Serilog.Enrichers.Environment" Version="3.0.1" />
+      <PackageVersion Include="Serilog.Expressions" Version="5.0.0" />
+      <PackageVersion Include="Serilog.Formatting.Compact" Version="3.0.0" />
+      <PackageVersion Include="Serilog.Sinks.File" Version="6.0.0" />
+      <PackageVersion Include="System.Text.Encodings.Web" Version="9.0.0" />
   </ItemGroup>
 </Project>
