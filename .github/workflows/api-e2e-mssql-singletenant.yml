@@ -47,7 +47,7 @@ jobs:
         run: cp -r ../EdFi.Ods.AdminApi.Common ../../Docker/Application
 
       - name: Copy health check service folder to docker context
-        run: cp -r ../EdFi.AdminConsole.HealthCheckService ../../Docker/Application
+        run: cp -r ../EdFi.Ods.AdminApi.HealthCheck ../../Docker/Application
 
       - name: Copy nuget config to docker context
         run: cp ../NuGet.Config ../../Docker/Application

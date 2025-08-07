@@ -3,10 +3,10 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.AdminConsole.HealthCheckService;
-using EdFi.AdminConsole.HealthCheckService.Features.OdsApi;
-using EdFi.AdminConsole.HealthCheckService.Infrastructure;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.HealthChecks.Commands;
+using EdFi.Ods.AdminApi.HealthCheck;
+using EdFi.Ods.AdminApi.HealthCheck.Features.OdsApi;
+using EdFi.Ods.AdminApi.HealthCheck.Infrastructure;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.BackgroundJobs;
 

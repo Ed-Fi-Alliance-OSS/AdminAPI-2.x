@@ -11,7 +11,7 @@ This document describes the design and process for integrating the `EdFi.AdminCo
 * Enable scheduled health checks of ODS API instances via Quartz.NET.
 * Allow on-demand triggering of health checks via an API endpoint.
 * Ensure only one health check job runs at a time to prevent data conflicts.
-* Centralize health check logic in `EdFi.AdminConsole.HealthCheckService`.
+* Centralize health check logic in `EdFi.Ods.AdminApi.HealthCheck`.
 
 ---
 
@@ -19,7 +19,7 @@ This document describes the design and process for integrating the `EdFi.AdminCo
 
 ### Components
 
-* **HealthCheckService**: Core service that performs health checks across tenants and instances.
+* **HealthCheckService**: Service class that performs health checks across tenants and instances.
 * **HealthCheckJob**: Quartz.NET job that invokes `HealthCheckService.Run()`.
 * **Quartz.NET Scheduler**: Manages scheduled and ad-hoc job execution.
 * **HealthCheckTrigger Endpoint**: API endpoint to trigger health checks on demand.
