@@ -375,24 +375,27 @@ public class ReadInformation : IFeature
 **Tasks**:
 
 * **Define Version-Aware Multi-Tenancy Middleware**: Enhance
-  `TenantResolverMiddleware` to detect V1 vs V2 endpoints and apply
+  `TenantResolverMiddleware` to detect `adminApiMode` and apply
   multi-tenancy rules accordingly.
 
 ```csharp
-private static bool IsV1Endpoint(HttpContext context)
-{
-    var path = context.Request.Path.Value;    
 
-    if (path.StartsWith("/v1/", StringComparison.InvariantCultureIgnoreCase))
-        return true;   
-    return false;
+private readonly string _adminApiMode;
+
+public TenantResolverMiddleware(RequestDelegate next, IConfiguration configuration)
+{
+    _adminApiMode = configuration.GetValue<string>("AppSettings:adminApiMode")?.ToLower() ?? "v2";
+}
+private static bool IsV1Mode(HttpContext context)
+{
+    return string.Equals(_adminApiMode, "v1", StringComparison.InvariantCultureIgnoreCase);
 }
 
 public async Task InvokeAsync(HttpContext context, RequestDelegate next)
 {
- 
+   
         // Check if this is a V1 endpoint
-        if (IsV1Endpoint(context))
+        if (IsV1Mode(context))
         {
             // For V1 endpoints, skip multi-tenancy validation entirely
             await next.Invoke(context);
@@ -408,14 +411,34 @@ public async Task InvokeAsync(HttpContext context, RequestDelegate next)
 
 ## Phase 6: Docker Setup
 
-**Objective**:  Update Docker files to support mode-based Admin API deployment with schema-specific database container images selected at build time.
+**Objective**: Update Docker files to support mode-based Admin API deployment with schema-specific database containers selected at build time.
 
 **Tasks**:
 
-* **Multiple Dockerfile Strategy**: Create v1 and v2 folders to keep corresponding Docker files.
+* **Multiple Dockerfile Strategy**: Create separate v1 and v2 folders to organize version-specific Docker files:
+  
+```md
+
+Docker/
+├── dev.mssql.Dockerfile
+├── dev.pgsql.Dockerfile
+├── v1/
+│   ├── db.mssql.admin.Dockerfile # 6.x database schema
+│   ├── db.pgsql.admin.Dockerfile # 6.x database schema
+│   └── Compose/
+│       └── pgsql/
+│           └── compose-build-dev.yml
+└── v2/
+    ├── db.mssql.admin.Dockerfile # 7.x database schema
+    ├── db.pgsql.admin.Dockerfile # 7.x database schema
+    └── Compose/
+        └── pgsql/
+            └── compose-build-dev.yml
+
+```
 
 * Update Build Stage for V1 Project Integration
-**Files to modify**: v1/dev.mssql.Dockerfile and v1/dev.pgsql.Dockerfile
+**Files to modify**: dev.mssql.Dockerfile and dev.pgsql.Dockerfile
   
 ```docker
 
@@ -437,10 +460,11 @@ COPY --from=assets ./Application/EdFi.Ods.AdminApi.V1 EdFi.Ods.AdminApi.V1/
        
 
     adminapi:
+      build:
+        context: ../../../../
+        dockerfile: Docker/dev.pgsql.Dockerfile  
       environment:
-        AppSettings__adminApiMode: "v1"
-        ConnectionStrings__EdFi_Admin: "host=pb-admin;port=${PGBOUNCER_LISTEN_PORT:-6432};username=${POSTGRES_USER};password=${POSTGRES_PASSWORD};database=EdFi_Admin;pooling=false"
-        ConnectionStrings__EdFi_Security: "host=pb-admin;port=${PGBOUNCER_LISTEN_PORT:-6432};username=${POSTGRES_USER};password=${POSTGRES_PASSWORD};database=EdFi_Security;pooling=false"
+        AppSettings__adminApiMode: "v1"        
       depends_on:
         - db-admin
       container_name: ed-fi-adminapi-v1
@@ -458,9 +482,7 @@ COPY --from=assets ./Application/EdFi.Ods.AdminApi.V1 EdFi.Ods.AdminApi.V1/
 
     adminapi:
       environment:
-        AppSettings__adminApiMode: "v2"
-        ConnectionStrings__EdFi_Admin: "host=pb-admin;port=${PGBOUNCER_LISTEN_PORT:-6432};username=${POSTGRES_USER};password=${POSTGRES_PASSWORD};database=EdFi_Admin;pooling=false"
-        ConnectionStrings__EdFi_Security: "host=pb-admin;port=${PGBOUNCER_LISTEN_PORT:-6432};username=${POSTGRES_USER};password=${POSTGRES_PASSWORD};database=EdFi_Security;pooling=false"
+        AppSettings__adminApiMode: "v2"        
       depends_on:
         - db-admin
       container_name: ed-fi-adminapi-v2
