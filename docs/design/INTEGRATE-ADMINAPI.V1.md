@@ -20,10 +20,9 @@ backward compatibility while leveraging the enhanced architecture of V2.
 * **Phase 1**: Clean up and modernize V1 codebase
 * **Phase 2**: Merge projects and consolidate infrastructure
 * **Phase 3**: Implement unified endpoint mapping
-* **Phase 4**: Logging Modernization
-* **Phase 5**: Testing and Validation
-* **Phase 6**: V1/V2 Multi-Tenancy Integration Strategy
-* **Phase 7**: Docker setup
+* **Phase 4**: Testing and Validation
+* **Phase 5**: V1/V2 Multi-Tenancy Integration Strategy
+* **Phase 6**: Docker setup
 
 ---
 
@@ -274,23 +273,11 @@ public static void MapAdminApiV1FeatureEndpoints(this WebApplication application
 
 * V1 endpoints: `/v1/applications`, `/v1/claimsets`, etc.
 * V2 endpoints: `/v2/applications`, `/v2/claimsets`, etc.  
-* Default (unversioned): Route to V2 or configurable default
+* Default (unversioned): Connect endpoints (Register and Token), discovery endpoint, and health check endpoints remain unversioned.
 
 ---
 
-## Phase 4: Logging Modernization
-
-### 4.1 Migrate to Serilog
-
-**Objective**: Standardize both V1 and V2 on modern structured logging.
-
-**Tasks**:
-
-* Replace log4net with Serilog in both V1 and V2
-* Implement consistent logging patterns across versions and configure structured
-  logging
-
-## Phase 5: Testing and Validation
+## Phase 4: Testing and Validation
 
 **Objective**: Enhance test coverage for V1 project and ensure seamless integration with V2 test infrastructure.
 
@@ -298,7 +285,7 @@ public static void MapAdminApiV1FeatureEndpoints(this WebApplication application
 
 * Add unit tests for uncovered areas using NUnit and Shouldly patterns consistent with V2
 
-### 5.2 Integration Test Consolidation
+### 4.1 Integration Test Consolidation
 
 **Objective**: Merge V1 integration tests with V2 test infrastructure while maintaining test isolation and version-specific database compatibility.
 
@@ -310,7 +297,7 @@ public static void MapAdminApiV1FeatureEndpoints(this WebApplication application
   * Maintain separate test base classes for V1 and V2 to handle different DbContexts
   * Ensure V1 and V2 tests use completely separate test databases
 
-### 5.3 End-to-End Test Migration
+### 4.2 End-to-End Test Migration
 
 **Objective**: Consolidate V1 E2E tests into V2 test structure while maintaining version-specific validation.
 
@@ -335,7 +322,7 @@ public static void MapAdminApiV1FeatureEndpoints(this WebApplication application
   * Test version routing (v1 vs v2 vs unversioned URLs)
   * Add tests that validate V1 and V2 can operate simultaneously without conflicts
   
-## Phase 6: V1/V2 Multi-Tenancy Integration Strategy
+## Phase 5: V1/V2 Multi-Tenancy Integration Strategy
 
 **Objective**: Strategy for maintaining multi-tenancy support in V2 while ensuring V1 endpoints continue to work without multi-tenancy requirements during the integration of AdminAPI V1 and V2.
 
@@ -373,7 +360,7 @@ public async Task InvokeAsync(HttpContext context, RequestDelegate next)
 
 ```
 
-## Phase 7: Docker Setup
+## Phase 6: Docker Setup
 
 **Objective**: Update Docker files to include Admin API V1 specific changes and
 support separate V1/V2 database infrastructure.
