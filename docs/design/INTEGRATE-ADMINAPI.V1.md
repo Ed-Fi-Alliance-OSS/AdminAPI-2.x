@@ -128,7 +128,9 @@ public class EditResourceOnClaimSetCommand(EditResourceOnClaimSetCommandV6Servic
 
 ### 2.2 DataAccess Layer Strategy
 
-**Objective**: Maintain V1 compatibility by preserving Ed-Fi ODS 6.x DataAccess implementations.
+**Objective**: Maintain V1 compatibility by preserving Ed-Fi ODS 6.x DataAccess
+implementations while supporting runtime mode switching with unified connection
+strings.
 
 **Tasks**:
 
@@ -140,63 +142,57 @@ public class EditResourceOnClaimSetCommand(EditResourceOnClaimSetCommandV6Servic
   * Eliminates version compatibility complexity in shared DataAccess components
   * Reduces risk of breaking V1 functionality when V2 adopts newer Ed-Fi ODS versions
   
-### 2.4 Database Setup Strategy
+### 2.3 Database Context Setup Strategy
 
-**Objective**: Maintain separate database infrastructure to support V1 with
-Ed-Fi ODS 6.x and V2 with Ed-Fi ODS 7.x DataAccess compatibility.
-
-**Tasks**:
-
-* **Separate Database Instances**: Setup dedicated EdFi_Admin and EdFi_Security databases for each version:
-  * `EdFi_Admin_V1` and `EdFi_Security_V1` (6.x schema)
-  * `EdFi_Admin` and `EdFi_Security` (7.x schema)
-
-* **Version-Specific Connection Strings**: Define separate connection string configurations for V1 and V2 since each uses different DbContexts:
+* **Runtime Mode Configuration**: Add `adminApiMode` setting to control which version endpoints are active:
 
   ```json
   {
-        "ConnectionStrings": 
-        {
-            "v1": {
-                // V1 connections (6.x schema)
-                "EdFi_Admin": "Server=.;Database=EdFi_Admin_V1;Integrated Security=true",
-                "EdFi_Security": "Server=.;Database=EdFi_Security_V1;Integrated Security=true",
-            },
-            "v2": {
-                // V2 connections (7.x schema) 
-                "EdFi_Admin": "Server=.;Database=EdFi_Admin;Integrated Security=true",
-                "EdFi_Security": "Server=.;Database=EdFi_Security;Integrated Security=true"
-            }
-        }
-   }
+    "AppSettings": {
+      "adminApiMode": "v1",  // or "v2"
+      "MultiTenancy": false,
+      "EnableAdminConsoleAPI": true
+    },
+    "ConnectionStrings": {
+      // Single connection strings for both modes
+      "EdFi_Admin": "Server=.;Database=EdFi_Admin;Integrated Security=true",
+      "EdFi_Security": "Server=.;Database=EdFi_Security;Integrated Security=true"
+    }
+  }
   ```
 
-* **DbContext Registration**: Configure separate DbContext instances in DI container:
+* **Mode-Aware DbContext Registration**: Configure DbContext based on `adminApiMode`:
 
   ```csharp
-  // V1 DbContext (6.x DataAccess)
-  services.AddDbContext<AdminApiV1DbContext>(options =>
-      options.UseSqlServer(connectionString.GetConnectionString("EdFi_Admin_V1")));
-  
-  // V2 DbContext (7.x DataAccess) 
-  services.AddDbContext<AdminApiDbContext>(options =>
-      options.UseSqlServer(connectionString.GetConnectionString("EdFi_Admin")));
+  public static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+  {
+      var adminApiMode = configuration.GetValue<string>("AppSettings:adminApiMode")?.ToLower();
+      var adminConnectionString = configuration.GetConnectionString("EdFi_Admin");
+      var securityConnectionString = configuration.GetConnectionString("EdFi_Security");
+      
+      switch (adminApiMode)
+      {
+          case "v1":
+              // Register V1 DbContext with 6.x DataAccess layer
+              services.AddDbContext<AdminApiV1DbContext>(options =>
+                  options.UseSqlServer(adminConnectionString));
+              services.AddDbContext<SecurityV1DbContext>(options =>
+                  options.UseSqlServer(securityConnectionString));
+              break;
+              
+          case "v2":
+              // Register V2 DbContext with 7.x DataAccess layer
+              services.AddDbContext<AdminApiDbContext>(options =>
+                  options.UseSqlServer(adminConnectionString));
+              services.AddDbContext<SecurityDbContext>(options =>
+                  options.UseSqlServer(securityConnectionString));
+              break;
+              
+          default:
+              throw new InvalidOperationException($"Invalid adminApiMode: {adminApiMode}. Must be 'v1' or 'v2'");
+      }
+  }
   ```
-
-* **Schema Management**:
-  * V1 databases maintain Ed-Fi ODS 6.x schema structure
-  * V2 databases use Ed-Fi ODS 7.x schema structure
-  * No shared tables or cross-version dependencies
-
-### 2.3 Response Format Standardization
-
-**Objective**: Align V1 response formats with V2 patterns while maintaining
-backward compatibility.
-
-**Tasks**:
-
-* Replace explicit `AdminApiResponse` wrapping with `Microsoft.AspNetCore.Http.Results`
-* Update V1 endpoints to use modern ASP.NET Core response patterns
 
 ### 2.4 Project Type Conversion
 
@@ -213,59 +209,109 @@ backward compatibility.
 
 ## Phase 3: Endpoint Mapping and API Versioning
 
-### 3.1 Update AdminApiVersions Configuration
+### 3.1 Implement V1 Endpoint Mapping
 
-**Objective**: Extend V2's versioning infrastructure to include V1 endpoints.
-
-**Implementation**:
-
-Update `EdFi.Ods.AdminApi.Common.Infrastructure.AdminApiVersions` to include V1:
-
-```csharp
-public static class AdminApiVersions
-{
-    public const string V1 = "1.0";
-    public const string V2 = "2.0";
-    
-    public static readonly ApiVersion[] SupportedVersions = 
-    {
-        new(1, 0), // V1 support
-        new(2, 0)  // V2 current
-    };
-}
-```
-
-### 3.2 Implement V1 Endpoint Mapping
-
-**Objective**: Create unified endpoint registration similar to V2's pattern.
+**Objective**: Create unified endpoint registration.
 
 **Implementation** (add to `WebApplicationExtensions.cs`):
 
 ```csharp
-// Existing V2 method
-public static void MapAdminConsoleFeatureEndpoints(this WebApplication application)
-{
-    application.UseEndpoints(endpoints =>
-    {
-        foreach (var routeBuilder in AdminConsoleFeatureHelper.GetFeatures())
-        {
-            routeBuilder.MapEndpoints(endpoints);
-        }
-    });
-}
+  public static void MapAdminApiEndpoints(this WebApplication app)
+  {
+      var adminApiMode = app.Configuration.GetValue<string>("AppSettings:adminApiMode")?.ToLower();
+      
+      // Always register unversioned endpoints
+      app.MapConnectEndpoints();
+      app.MapDiscoveryEndpoint();
+      app.MapHealthCheckEndpoints();
+      
+      switch (adminApiMode)
+      {
+          case "v1":
+              app.MapAdminApiV1FeatureEndpoints();
+              break;
+              
+          case "v2":
+              app.MapAdminApiV2FeatureEndpoints();
+              app.MapAdminConsoleFeatureEndpoints();
+              break;
+              
+          default:
+              throw new InvalidOperationException($"Invalid adminApiMode: {adminApiMode}");
+      }
+  }
+```
 
-// New V1 method
-public static void MapAdminApiV1FeatureEndpoints(this WebApplication application)
+### 3.2 Mode-Aware API Configuration
+
+**Objective**: Configure information endpoint responses and implement endpoint filtering based on the `adminApiMode` setting, including validation middleware for version-specific endpoint access.
+
+**Implementation**:
+
+**Version-Aware Discovery Endpoint**: Update discovery/information response based on the mode:
+
+```csharp
+public class ReadInformation : IFeature
 {
-    application.UseEndpoints(endpoints =>
+    public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        foreach (var routeBuilder in AdminApiV1FeatureHelper.GetFeatures())
-        {
-            routeBuilder.MapEndpoints(endpoints);
-        }
-    });
+      // Map endpoint implementation
+    }
+    internal static InformationResult GetInformation()
+    {
+        return adminApiMode switch
+          {
+              "v1" => new InformationResult
+              {
+                  Version = "1.1", 
+                  Build = buildVersion                 
+              },
+              "v2" => new DiscoveryResponse
+              {
+                  Version = "2.3",
+                  Build = buildVersion                
+              },
+              _ => throw new InvalidOperationException($"Invalid adminApiMode: {adminApiMode}")
+          };
+    }
 }
 ```
+
+* **Mode Validation Middleware**: Return 400 errors for wrong endpoint usage:
+
+  ```csharp
+  public class AdminApiModeValidationMiddleware
+  {
+      // Constructor: Get adminApiMode from configuration (default: "v2")
+      
+      public async Task InvokeAsync(HttpContext context)
+      {
+          // Skip validation for unversioned endpoints (/connect/, /health, /.well-known/)
+          if (IsUnversionedEndpoint(path)) 
+              continue to next middleware;
+          
+          // Extract version from path (/v1/ or /v2/)
+          var requestedVersion = GetVersionFromPath(path);
+          
+          // If requested version doesn't match configured mode
+          if (requestedVersion != _adminApiMode)
+          {
+              // Return 400 with descriptive error message
+              return BadRequest("Wrong API version for this instance mode");
+          }
+          
+          // Continue to next middleware
+          await _next(context);
+      }
+      
+      // Helper: Check if endpoint is unversioned (auth, health, discovery)
+      private static bool IsUnversionedEndpoint(string path) { ... }
+      
+      // Helper: Extract "v1" or "v2" from URL path
+      private static string GetVersionFromPath(string path) { ... }
+  }     
+  
+  ```
 
 ### 3.3 API Versioning Strategy
 
@@ -362,114 +408,60 @@ public async Task InvokeAsync(HttpContext context, RequestDelegate next)
 
 ## Phase 6: Docker Setup
 
-**Objective**: Update Docker files to include Admin API V1 specific changes and
-support separate V1/V2 database infrastructure.
+**Objective**:  Update Docker files to support mode-based Admin API deployment with schema-specific database container images selected at build time.
 
 **Tasks**:
 
+* **Multiple Dockerfile Strategy**: Create v1 and v2 folders to keep corresponding Docker files.
+
 * Update Build Stage for V1 Project Integration
-**Files to modify**: dev.mssql.Dockerfile and dev.pgsql.Dockerfile
+**Files to modify**: v1/dev.mssql.Dockerfile and v1/dev.pgsql.Dockerfile
   
 ```docker
-# Add after existing project copies
 
 COPY --from=assets ./Application/NuGet.Config EdFi.Ods.AdminApi.V1/
 COPY --from=assets ./Application/EdFi.Ods.AdminApi.V1 EdFi.Ods.AdminApi.V1/
 ```
 
-* **Docker Compose Considerations**: Add V1 specific environment variables if any.
-  
- ```yml
+* **Mode-Based Docker Compose Configuration**: Select appropriate database Dockerfile based on mode:
 
-  adminapi:  
-    environment:
-      # Existing V2 configuration
-      ConnectionStrings__v2__EdFi_Admin: "host=pb-admin;port=${PGBOUNCER_LISTEN_PORT:-6432};username=${POSTGRES_USER};password=${POSTGRES_PASSWORD};database=EdFi_Admin;pooling=false"
-      ConnectionStrings__v2__EdFi_Security: "host=pb-admin;port=${PGBOUNCER_LISTEN_PORT:-6432};username=${POSTGRES_USER};password=${POSTGRES_PASSWORD};database=EdFi_Security;pooling=false"
-      
-      # New V1-specific database connections
-      ConnectionStrings__v1__EdFi_Admin: "host=pb-admin-v1;port=${PGBOUNCER_LISTEN_PORT:-6432};username=${POSTGRES_USER};password=${POSTGRES_PASSWORD};database=EdFi_Admin;pooling=false"
-      ConnectionStrings__v1__EdFi_Security: "host=pb-admin-v1;port=${PGBOUNCER_LISTEN_PORT:-6432};username=${POSTGRES_USER};password=${POSTGRES_PASSWORD};database=EdFi_Security;pooling=false"
+  **V1 Mode Compose** (`Docker/v1/Compose/pgsql/compose-build-dev.yml`):
 
-
-      # Update on compose file to use the unified database container:
-
-    services:
-      # Unified database container for both V1 and V2
+  ```yaml
+  services:
     db-admin:
-        build:
-        context: ../../../
-        dockerfile: Docker/db.pgsql.admin.unified.Dockerfile
-        environment:
-        POSTGRES_USER: ${POSTGRES_USER}
-        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-        POSTGRES_DB: postgres
-        volumes:
-        - vol-db-admin:/var/lib/postgresql/data
-        restart: always
-        container_name: ed-fi-db-admin-unified
-        healthcheck:
-        test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
-        start_period: "60s"
-        retries: 3
+      build:
+        context: ../../../../
+        dockerfile: Docker/v1/db.pgsql.admin.Dockerfile  # 6.x schema
+      environment:
+       
 
- ```
-
-* `db.pgsql.admin.unified.Dockerfile` update:
-  `edfialliance/ods-api-db-admin:7.3` will be used as base image which contains
-  EdFi_Admin and EdFi_Security databases with 7.x schema. V1-specific EdFi_Admin
-  and EdFi_Security database schema files (6.x) will be downloaded as Azure
-  artifacts and executed to create separate `EdFi_Admin_V1` and
-  `EdFi_Security_V1` databases on the same db_admin container. This approach
-  provides:
-
-  * **V2 Databases** (pre-existing): `EdFi_Admin` and `EdFi_Security` with 7.x schema
-  * **V1 Databases** (created): `EdFi_Admin_V1` and `EdFi_Security_V1` with 6.x schema
-  * **Single Container**: All four databases on one PostgreSQL instance
-  * **Schema Isolation**: Each version maintains its appropriate Ed-Fi ODS schema version
-
-  **Implementation Details**:
-  
-  ```dockerfile
-
-    FROM edfialliance/ods-api-db-admin:7.3 AS base
-    
-    # Download Ed-Fi ODS 6.x schema artifacts for V1 databases
-    RUN wget -O /tmp/edfi-6x-artifacts.zip \
-        https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_apis/packaging/feeds/EdFi/nuget/packages/EdFi.Suite3.Ods.Artifacts.PgSql/versions/6.2.0/content \
-        && unzip /tmp/edfi-6x-artifacts.zip -d /tmp/V1Schema/ \
-        && rm /tmp/edfi-6x-artifacts.zip    
-
-    ...
-
-    # Enhanced migration script
-    COPY Settings/DB-Admin/pgsql/run-unified-adminapi-migrations.sh /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh
-    
+    adminapi:
+      environment:
+        AppSettings__adminApiMode: "v1"
+        ConnectionStrings__EdFi_Admin: "host=pb-admin;port=${PGBOUNCER_LISTEN_PORT:-6432};username=${POSTGRES_USER};password=${POSTGRES_PASSWORD};database=EdFi_Admin;pooling=false"
+        ConnectionStrings__EdFi_Security: "host=pb-admin;port=${PGBOUNCER_LISTEN_PORT:-6432};username=${POSTGRES_USER};password=${POSTGRES_PASSWORD};database=EdFi_Security;pooling=false"
+      depends_on:
+        - db-admin
+      container_name: ed-fi-adminapi-v1
   ```
 
-  * **Migration Script Strategy**:
-  
-  ```bash
+  **V2 Mode Compose** (`Docker/v2/Compose/pgsql/compose-build-dev.yml`):
 
-    #!/bin/bash
-    # Create V1 databases with 6.x schema
-    echo "Creating V1 databases with Ed-Fi ODS 6.x schema..."
-    psql --command "CREATE DATABASE \"EdFi_Admin_V1\";"
-    psql --command "CREATE DATABASE \"EdFi_Security_V1\";"
-    
-    # Apply 6.x schema to V1 databases
-    psql --dbname "EdFi_Admin_V1" --file /tmp/V1Schema/Admin/EdFi_Admin_6x.sql
-    psql --dbname "EdFi_Security_V1" --file /tmp/V1Schema/Security/EdFi_Security_6x.sql
-    
-    # Apply AdminAPI customizations to respective databases
-    # AdminAPI customizations to V1 databases
-    for FILE in /tmp/AdminApiScripts/Admin/PgSql/*.sql; do
-        psql --dbname "EdFi_Admin_V1" --file "$FILE"
-    done
-    
-    # AdminAPI customizations to V2 databases (existing EdFi_Admin, EdFi_Security)
-    for FILE in /tmp/AdminApiScripts/Admin/PgSql/*.sql; do
-        psql --dbname "EdFi_Admin" --file "$FILE"
-    done
+  ```yaml
+  services:
+    db-admin:
+      build:
+        context: ../../../../
+        dockerfile: Docker/v2/db.pgsql.admin.Dockerfile  # 7.x schema
+      environment:      
 
+    adminapi:
+      environment:
+        AppSettings__adminApiMode: "v2"
+        ConnectionStrings__EdFi_Admin: "host=pb-admin;port=${PGBOUNCER_LISTEN_PORT:-6432};username=${POSTGRES_USER};password=${POSTGRES_PASSWORD};database=EdFi_Admin;pooling=false"
+        ConnectionStrings__EdFi_Security: "host=pb-admin;port=${PGBOUNCER_LISTEN_PORT:-6432};username=${POSTGRES_USER};password=${POSTGRES_PASSWORD};database=EdFi_Security;pooling=false"
+      depends_on:
+        - db-admin
+      container_name: ed-fi-adminapi-v2
   ```
