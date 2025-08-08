@@ -10,15 +10,3 @@ updates:
     target-branch: main
     schedule:
       interval: weekly
-    ignore:
-      - dependency-name: "EdFi.Suite3.Admin.DataAccess"
-      - dependency-name: "EdFi.Suite3.LoadTools"
-      - dependency-name: "EdFi.Suite3.Security.DataAccess"
-    groups:
-      minor-patches:
-        applies-to: version-updates
-        patterns:
-          - "*"
-        update-types:
-          - "minor"
-          - "patch"

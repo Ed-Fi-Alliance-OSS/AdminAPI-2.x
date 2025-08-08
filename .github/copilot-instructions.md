@@ -8,7 +8,6 @@
 ## General
 
 * Make only high confidence suggestions when reviewing code changes.
-* Never change package.json or package-lock.json files unless explicitly asked to.
 * Never change NuGet.config files unless explicitly asked to.
 
 ## Formatting
@@ -30,7 +29,7 @@
 
 * We use NUnit tests.
 * We use Shouldly for assertions.
-* Use Moq for mocking in tests.
+* Use FakeItEasy for mocking in tests.
 * Copy existing style in nearby files for test method names and capitalization.
 
 ## Running tests
