@@ -1,12 +1,10 @@
-# Integrating EdFi.AdminConsole.HealthCheckService into EdFi.Ods.AdminApi with Quartz.NET
-
-## Overview
-
 # Integrating EdFi.Ods.AdminApi.HealthCheck into EdFi.Ods.AdminApi with Quartz.NET
 
 ## Overview
 
-This document describes the design and process for integrating the `EdFi.Ods.AdminApi.HealthCheck` into the `EdFi.Ods.AdminApi` application, leveraging Quartz.NET for scheduled and on-demand execution of health checks.
+This document describes the design and process for integrating the
+`EdFi.Ods.AdminApi.HealthCheck` into the `EdFi.Ods.AdminApi` application,
+leveraging Quartz.NET for scheduled and on-demand execution of health checks.
 
 ---
 
@@ -44,7 +42,7 @@ This document describes the design and process for integrating the `EdFi.Ods.Adm
 
 ### 3. On-Demand Triggering
 
-* Implement an API endpoint (e.g., `/healthcheck/trigger`) in `EdFi.Ods.AdminApi`. Note: Grouped with `adminconsole` endpoints for consistency.
+* Implement an API endpoint (e.g., `/v2/healthcheck`) in `EdFi.Ods.AdminApi`. Note: Grouped with `v2` endpoints for consistency.
 * The endpoint uses `ISchedulerFactory` to schedule an immediate, one-time execution of `HealthCheckJob`.
 
 ### 4. Concurrency Control
@@ -57,6 +55,8 @@ This document describes the design and process for integrating the `EdFi.Ods.Adm
 
 * **appsettings.json**:
   * `HealthCheck:HealthCheckFrequencyInMinutes`: Controls the schedule interval.
-  * `AppSettings:EnableAdminConsoleAPI`: Enables or disables the health check API endpoint.
+    Set to 0 to disable scheduled health checks.
+  * `AppSettings:EnableAdminConsoleAPI`: Enables or disables the health check
+    API endpoint and scheduled health checks.
 
 Please refer to the [POC PR #323](https://github.com/Ed-Fi-Alliance-OSS/AdminAPI-2.x/pull/323) for implementation details and code examples.
