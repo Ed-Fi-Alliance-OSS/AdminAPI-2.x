@@ -1,11 +1,12 @@
-# Integrating EdFi.AdminConsole.HealthCheckService into EdFi.Ods.AdminApi with Quartz.NET
-
-## Overview
+# Integrating EdFi.AdminConsole.InstanceManagement into EdFi.Ods.AdminApi with Quartz.NET
 
 This document describes the design and process for integrating the `Ed-Fi-Admin-Console-Instance-Management-Worker-Process`
-into the `EdFi.Ods.AdminApi` application, leveraging Quartz.NET for scheduled and on-demand execution of Instance-Management-Worker.
+into the `EdFi.Ods.AdminApi` application, leveraging Quartz.NET for on-demand execution of Instance-Management-Worker.
 
-## Instance Management Worker Solution
+## Overview of the InstanceManagement solution
+
+These are the 4 projects that create the Instance Management Worker solution. `EdFi.AdminConsole.InstanceMgrWorker.Configuration` is
+the only project that would be copied over to Admin API.
 
 1. EdFi.AdminConsole.InstanceManagementWorker (Console Application, where process starts)
 2. EdFi.AdminConsole.InstanceMgrWorker.Configuration (Manage ods database creation and deletion)
@@ -44,45 +45,26 @@ To get tenants and instances, and other other transactions we do in this project
 The `EdFi.AdminConsole.InstanceManagementWorker` is the responsible to do these tasks.
 This project can be removed as well. Its main tasks is to loop throuh tenants and intances
 to process instances to be created and instances to be deleted.
-The compontent that performes these tasks will be integrated as a new **Feature** (Features layer) in `EdFi.Ods.AdminApi`
+The compontent that performes these tasks will be integrated as news **Features** (Features layer) in `EdFi.Ods.AdminApi`
 
-### Architecture
+## New Architecture
 
-#### Components
+### Components
 
-* **InstanceManagementService**: Service that performs instance management across tenants and instances.
-Now part of the Admin API Features, not its own project.
+* **InstanceManagementCompleteService Feature**: Service that performs instance management creation for given instance.
+`InstanceManagementCompleteService` is triggered on every call to `POST /adminconsole/instances`
 
-* **InstanceManagementJob**: Quartz.NET job that invokes `InstanceManagementService.RunAsync()`.
+* **InstanceManagementDeleteService Feature**: Service that performs instance management deletion for given instance.
+`InstanceManagementDeleteService` is triggered on every call to `DELETE /adminconsole/instances`
 
-This file defines the InstanceManagementJob class, which is the scheduled background job.
-It uses Quartz.NET for scheduling and ensures that only one instance runs at a time (via the [DisallowConcurrentExecution] attribute).
+* **InstanceManagementRenameService Feature**: Service that performs instance management renaming for given instance.
+`InstanceManagementRenameService` is triggered on every call to `PUT /adminconsole/instances`
 
-* **Quartz.NET Scheduler**: Manages scheduled and ad-hoc job execution.
+* **InstanceManagementCompleteJob**: Quartz.NET job that invokes `InstanceManagementCompleteService.RunAsync()`.
 
-* **InstanceManagementTrigger Endpoint**: API endpoint to trigger instance management on demand.
-POST `/adminconsole/instancemanagement/trigger`
+* **InstanceManagementDeleteJob**: Quartz.NET job that invokes `InstanceManagementDeleteService.RunAsync()`.
 
-### Process Flow
-
-#### 1. Service Registration
-
-* Register `InstanceManagementJob` with Quartz.NET using `AddQuartz` and `AddQuartzHostedService`.
-
-#### 2. Scheduling with Quartz.NET
-
-* Configure Quartz.NET to schedule `InstanceManagementJob` at a configurable interval (e.g., every 10 minutes,
-using `InstanceManagementFrequencyInMinutes` from configuration).
-* Use the `[DisallowConcurrentExecution]` attribute on `InstanceManagementJob` to prevent overlapping executions.
-
-#### 3. On-Demand Triggering
-
-* Implement an API endpoint (e.g., `/adminconsole/instancemanagement/trigger`) in `EdFi.Ods.AdminApi`. Note: Grouped with `adminconsole` endpoints for consistency.
-* The endpoint uses `ISchedulerFactory` to schedule an immediate, one-time execution of `InstanceManagementJob`.
-
-#### 4. Concurrency Control
-
-* `[DisallowConcurrentExecution]` ensures only one instance of `InstanceManagementJob` runs at a time, regardless of trigger source (scheduled or on-demand).
+* **InstanceManagementRenameJob**: Quartz.NET job that invokes `InstanceManagementRenameService.RunAsync()`.
 
 ### Configuration
 
@@ -118,3 +100,11 @@ Two new connection strings need to be added to Admin API
 | ---    | ---         |
 | EdFi_Master | To get authenticated on Database Engine (mssql or pgsql) |
 | EdFi_Ods | Where the new Instance database is created or deleted |
+
+### Cleanup
+
+Given the new arquitecture, it should be safe to remove these 3 endpoints
+
+1. /adminconsole/instances/<instanceId>/deletefailed
+2. /adminconsole/instances/<instanceId>/renameFailed
+3. /adminconsole/instances/<instanceId>/completed
