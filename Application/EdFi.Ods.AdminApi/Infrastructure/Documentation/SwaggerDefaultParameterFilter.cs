@@ -15,9 +15,9 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Documentation;
 
 public class SwaggerDefaultParameterFilter : IOperationFilter
 {
-    private readonly IOptions<AppSettings> _settings;
+    private readonly IOptionsMonitor<AppSettings> _settings;
 
-    public SwaggerDefaultParameterFilter(IOptions<AppSettings> settings)
+    public SwaggerDefaultParameterFilter(IOptionsMonitor<AppSettings> settings)
     {
         _settings = settings;
     }
@@ -29,12 +29,12 @@ public class SwaggerDefaultParameterFilter : IOperationFilter
             if (parameter.Name.ToLower().Equals("offset"))
             {
                 parameter.Description = "Indicates how many items should be skipped before returning results.";
-                parameter.Schema.Default = new OpenApiString(_settings.Value.DefaultPageSizeOffset.ToString());
+                parameter.Schema.Default = new OpenApiString(_settings.CurrentValue.DefaultPageSizeOffset.ToString());
             }
             else if (parameter.Name.ToLower().Equals("limit"))
             {
                 parameter.Description = "Indicates the maximum number of items that should be returned in the results.";
-                parameter.Schema.Default = new OpenApiString(_settings.Value.DefaultPageSizeLimit.ToString());
+                parameter.Schema.Default = new OpenApiString(_settings.CurrentValue.DefaultPageSizeLimit.ToString());
             }
             else if (parameter.Name.ToLower().Equals("orderby"))
             {

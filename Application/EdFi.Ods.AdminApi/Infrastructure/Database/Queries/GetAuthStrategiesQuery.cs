@@ -25,13 +25,13 @@ public interface IGetAuthStrategiesQuery
 public class GetAuthStrategiesQuery : IGetAuthStrategiesQuery
 {
     private readonly ISecurityContext _context;
-    private readonly IOptions<AppSettings> _options;
+    private readonly IOptionsMonitor<AppSettings> _options;
     private readonly Dictionary<string, Expression<Func<AuthorizationStrategy, object>>> _orderByColumnAuthorizationStrategies;
-    public GetAuthStrategiesQuery(ISecurityContext context, IOptions<AppSettings> options)
+    public GetAuthStrategiesQuery(ISecurityContext context, IOptionsMonitor<AppSettings> options)
     {
         _context = context;
         _options = options;
-        var isSQLServerEngine = _options.Value.DatabaseEngine?.ToLowerInvariant() == DatabaseEngineEnum.SqlServer.ToLowerInvariant();
+        var isSQLServerEngine = _options.CurrentValue.DatabaseEngine?.ToLowerInvariant() == DatabaseEngineEnum.SqlServer.ToLowerInvariant();
 
         _orderByColumnAuthorizationStrategies = new Dictionary<string, Expression<Func<AuthorizationStrategy, object>>>
             (StringComparer.OrdinalIgnoreCase)

@@ -31,7 +31,7 @@ public static class ServicesBuilderExtension
         builder.Services.Configure<AdminConsoleSettings>(builder.Configuration.GetSection("AdminConsoleSettings"));
         builder.Services.AddAutoMapper(typeof(AdminConsoleMappingProfile));
 
-        builder.Services.AddTransient<IEncryptionKeySettings>(sp => sp.GetService<IOptions<AdminConsoleSettings>>()!.Value);
+        builder.Services.AddTransient<IEncryptionKeySettings>(sp => sp.GetService<IOptionsMonitor<AdminConsoleSettings>>()!.CurrentValue);
         builder.Services.AddTransient<IEncryptionKeyResolver, OptionsEncryptionKeyResolver>();
 
         builder.Services.AddTransient<IAdminConsoleTenantsService, TenantService>();

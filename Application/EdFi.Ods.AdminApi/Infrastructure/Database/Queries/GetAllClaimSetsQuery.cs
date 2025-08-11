@@ -25,13 +25,13 @@ public interface IGetAllClaimSetsQuery
 public class GetAllClaimSetsQuery : IGetAllClaimSetsQuery
 {
     private readonly ISecurityContext _securityContext;
-    private readonly IOptions<AppSettings> _options;
+    private readonly IOptionsMonitor<AppSettings> _options;
     private readonly Dictionary<string, Expression<Func<ClaimSet, object>>> _orderByColumnClaimSet;
-    public GetAllClaimSetsQuery(ISecurityContext securityContext, IOptions<AppSettings> options)
+    public GetAllClaimSetsQuery(ISecurityContext securityContext, IOptionsMonitor<AppSettings> options)
     {
         _securityContext = securityContext;
         _options = options;
-        var isSQLServerEngine = _options.Value.DatabaseEngine?.ToLowerInvariant() == DatabaseEngineEnum.SqlServer.ToLowerInvariant();
+        var isSQLServerEngine = _options.CurrentValue.DatabaseEngine?.ToLowerInvariant() == DatabaseEngineEnum.SqlServer.ToLowerInvariant();
         _orderByColumnClaimSet = new Dictionary<string, Expression<Func<ClaimSet, object>>>
         (StringComparer.OrdinalIgnoreCase)
         {

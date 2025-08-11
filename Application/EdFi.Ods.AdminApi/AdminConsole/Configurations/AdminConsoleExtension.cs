@@ -16,9 +16,9 @@ public static class AdminConsoleExtension
 {
     public static void UseCorsForAdminConsole(this WebApplication app)
     {
-        var adminConsoleSettings = app.Services.GetService<IOptions<AdminConsoleSettings>>();
+        var adminConsoleSettings = app.Services.GetService<IOptionsMonitor<AdminConsoleSettings>>();
 
-        if (adminConsoleSettings != null && adminConsoleSettings.Value.CorsSettings.EnableCors)
+        if (adminConsoleSettings != null && adminConsoleSettings.CurrentValue.CorsSettings.EnableCors)
             app.UseCors(AdminConsoleConstants.CorsPolicyName);
     }
 

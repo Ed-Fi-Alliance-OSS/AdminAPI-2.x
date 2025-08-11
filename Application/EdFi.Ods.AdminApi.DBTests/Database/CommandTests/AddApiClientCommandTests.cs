@@ -19,7 +19,7 @@ namespace EdFi.Ods.AdminApi.DBTests.Database.CommandTests;
 [TestFixture]
 internal class AddApiClientCommandTests : PlatformUsersContextTestBase
 {
-    private IOptions<AppSettings> _options { get; set; }
+    private IOptionsMonitor<AppSettings> _options { get; set; }
     private int applicationId { get; set; }
 
     [SetUp]
@@ -27,7 +27,7 @@ internal class AddApiClientCommandTests : PlatformUsersContextTestBase
     {
         AppSettings appSettings = new AppSettings();
         appSettings.PreventDuplicateApplications = false;
-        _options = Options.Create(appSettings);
+        _options = new TestOptionsMonitor(appSettings);
         await Task.Yield();
 
         var vendor = new Vendor

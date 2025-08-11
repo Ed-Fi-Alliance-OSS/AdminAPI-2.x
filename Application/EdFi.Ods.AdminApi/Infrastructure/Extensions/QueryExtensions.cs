@@ -37,13 +37,13 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Extensions
         /// <param name="limit"></param>
         /// <param name="settings">App Setting values</param>
         /// <returns>Paginated list</returns>
-        public static IQueryable<T> Paginate<T>(this IQueryable<T> source, int? offset, int? limit, IOptions<AppSettings> settings)
+        public static IQueryable<T> Paginate<T>(this IQueryable<T> source, int? offset, int? limit, IOptionsMonitor<AppSettings> settings)
         {
             try
             {
-                offset ??= settings.Value.DefaultPageSizeOffset;
+                offset ??= settings.CurrentValue.DefaultPageSizeOffset;
 
-                limit ??= settings.Value.DefaultPageSizeLimit;
+                limit ??= settings.CurrentValue.DefaultPageSizeLimit;
 
                 return source.Skip(offset.Value).Take(limit.Value);
             }

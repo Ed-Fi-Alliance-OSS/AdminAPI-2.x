@@ -35,7 +35,7 @@ public class ReadApplication : IFeature
     internal static async Task<IResult> GetApplications(
         IGetAllApplicationsQuery getAllApplicationsQuery,
         IMapper mapper,
-        IOptions<AppSettings> settings,
+        IOptionsMonitor<AppSettings> settings,
         Validator validator,
         [AsParameters] CommonQueryParams commonQueryParams, int? id, string? applicationName, string? claimsetName, string? ids)
     {

@@ -16,17 +16,17 @@ namespace EdFi.Ods.AdminApi.Common.Infrastructure.MultiTenancy;
 public partial class TenantResolverMiddleware(
     ITenantConfigurationProvider tenantConfigurationProvider,
     IContextProvider<TenantConfiguration> tenantConfigurationContextProvider,
-    IOptions<AppSettings> options,
-    IOptions<SwaggerSettings> swaggerOptions) : IMiddleware
+    IOptionsMonitor<AppSettings> options,
+    IOptionsMonitor<SwaggerSettings> swaggerOptions) : IMiddleware
 {
     private readonly ITenantConfigurationProvider _tenantConfigurationProvider = tenantConfigurationProvider;
     private readonly IContextProvider<TenantConfiguration> _tenantConfigurationContextProvider = tenantConfigurationContextProvider;
-    private readonly IOptions<AppSettings> _options = options;
-    private readonly IOptions<SwaggerSettings> _swaggerOptions = swaggerOptions;
+    private readonly IOptionsMonitor<AppSettings> _options = options;
+    private readonly IOptionsMonitor<SwaggerSettings> _swaggerOptions = swaggerOptions;
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
-        var multiTenancyEnabled = _options.Value.MultiTenancy;
+        var multiTenancyEnabled = _options.CurrentValue.MultiTenancy;
         var validationErrorMessage = "Please provide valid tenant id. Tenant id can only contain alphanumeric and -";
 
         if (multiTenancyEnabled)
@@ -50,9 +50,9 @@ public partial class TenantResolverMiddleware(
                     ThrowTenantValidationError(validationErrorMessage);
                 }
             }
-            else if (_swaggerOptions.Value.EnableSwagger && RequestFromSwagger())
+            else if (_swaggerOptions.CurrentValue.EnableSwagger && RequestFromSwagger())
             {
-                var defaultTenant = _swaggerOptions.Value.DefaultTenant;
+                var defaultTenant = _swaggerOptions.CurrentValue.DefaultTenant;
                 if (!string.IsNullOrEmpty(defaultTenant) && IsValidTenantId(defaultTenant))
                 {
                     if (!string.IsNullOrEmpty(defaultTenant) &&
@@ -72,7 +72,7 @@ public partial class TenantResolverMiddleware(
             }
             else
             {
-                if (_options.Value.EnableAdminConsoleAPI)
+                if (_options.CurrentValue.EnableAdminConsoleAPI)
                 {
                     if (!context.Request.Path.Value!.Contains("adminconsole/tenants") &&
                     context.Request.Method != "GET" &&

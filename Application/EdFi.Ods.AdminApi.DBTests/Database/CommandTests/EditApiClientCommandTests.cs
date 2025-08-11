@@ -11,11 +11,9 @@ using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApi.Common.Infrastructure;
 using EdFi.Ods.AdminApi.Common.Settings;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using NUnit.Framework;
 using Shouldly;
-using Profile = EdFi.Admin.DataAccess.Models.Profile;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.CommandTests;
@@ -30,14 +28,14 @@ internal class EditApiClientCommandTests : PlatformUsersContextTestBase
     private OdsInstance _odsInstance;
     private ApiClientOdsInstance _apiClientOdsInstance;
 
-    private IOptions<AppSettings> _options { get; set; }
+    private IOptionsMonitor<AppSettings> _options { get; set; }
 
     [SetUp]
     public virtual async Task SetUp()
     {
         AppSettings appSettings = new AppSettings();
         appSettings.PreventDuplicateApplications = false;
-        _options = Options.Create(appSettings);
+        _options = new TestOptionsMonitor(appSettings);
         await Task.Yield();
     }
 

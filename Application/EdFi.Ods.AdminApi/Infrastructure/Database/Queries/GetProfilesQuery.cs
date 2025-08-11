@@ -25,13 +25,13 @@ public interface IGetProfilesQuery
 public class GetProfilesQuery : IGetProfilesQuery
 {
     private readonly IUsersContext _usersContext;
-    private readonly IOptions<AppSettings> _options;
+    private readonly IOptionsMonitor<AppSettings> _options;
     private readonly Dictionary<string, Expression<Func<Profile, object>>> _orderByColumnProfiles;
-    public GetProfilesQuery(IUsersContext usersContext, IOptions<AppSettings> options)
+    public GetProfilesQuery(IUsersContext usersContext, IOptionsMonitor<AppSettings> options)
     {
         _usersContext = usersContext;
         _options = options;
-        var isSQLServerEngine = _options.Value.DatabaseEngine?.ToLowerInvariant() == DatabaseEngineEnum.SqlServer.ToLowerInvariant();
+        var isSQLServerEngine = _options.CurrentValue.DatabaseEngine?.ToLowerInvariant() == DatabaseEngineEnum.SqlServer.ToLowerInvariant();
         _orderByColumnProfiles = new Dictionary<string, Expression<Func<Profile, object>>>
             (StringComparer.OrdinalIgnoreCase)
         {

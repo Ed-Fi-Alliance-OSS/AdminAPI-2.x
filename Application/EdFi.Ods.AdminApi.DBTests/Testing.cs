@@ -38,13 +38,12 @@ public static class Testing
         return builder.Options;
     }
 
-    public static IOptions<AppSettings> GetAppSettings()
+    public static IOptionsMonitor<AppSettings> GetAppSettings()
     {
         AppSettings appSettings = new AppSettings();
         appSettings.DefaultPageSizeOffset = DefaultPageSizeOffset;
         appSettings.DefaultPageSizeLimit = DefaultPageSizeLimit;
-        IOptions<AppSettings> options = Options.Create(appSettings);
+        IOptionsMonitor<AppSettings> options = new TestOptionsMonitor(appSettings);
         return options;
     }
-
 }

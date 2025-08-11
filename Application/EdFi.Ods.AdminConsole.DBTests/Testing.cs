@@ -36,14 +36,14 @@ public static class Testing
         return builder.Options;
     }
 
-    public static IOptions<AppSettings> GetAppSettings()
+    public static IOptionsMonitor<AppSettings> GetAppSettings()
     {
         AppSettings appSettings = new()
         {
             DatabaseEngine = DatabaseEngineEnum.PostgreSql.ToString(),
             IgnoresCertificateErrors = true
         };
-        return Options.Create(appSettings);
+        return new TestOptionsMonitor(appSettings);
     }
 
     public static IOptionsSnapshot<AppSettingsFile> GetOptionsSnapshot()
@@ -105,14 +105,14 @@ public static class Testing
         return optionsSnapshot;
     }
 
-    public static IOptions<AdminConsoleSettings> GetAdminConsoleSettings()
+    public static IOptionsMonitor<AdminConsoleSettings> GetAdminConsoleSettings()
     {
         AdminConsoleSettings appSettings = new()
         {
             VendorCompany = "Ed-Fi Administrative Tools",
             ApplicationName = "Ed-Fi Health Check"
         };
-        return Options.Create(appSettings);
+        return new TestAdminConsoleOptionsMonitor(appSettings);
     }
 
     public static IOptionsMonitor<TestingSettings> GetTestingSettings(bool injectException = false)

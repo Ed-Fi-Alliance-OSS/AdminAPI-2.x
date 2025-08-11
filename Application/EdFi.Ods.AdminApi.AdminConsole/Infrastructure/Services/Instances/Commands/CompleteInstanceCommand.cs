@@ -25,16 +25,16 @@ public interface ICompleteInstanceCommand
 }
 
 public class CompleteInstanceCommand(
-    IOptions<AppSettings> options,
-    IOptions<AdminConsoleSettings> adminConsoleOptions,
+    IOptionsMonitor<AppSettings> options,
+    IOptionsMonitor<AdminConsoleSettings> adminConsoleOptions,
     IOptionsMonitor<TestingSettings> testingSettings,
     IUsersContext context,
     IQueriesRepository<Instance> instanceQuery,
     ICommandRepository<Instance> instanceCommand,
     IAdminConsoleTenantsService adminConsoleTenantsService) : ICompleteInstanceCommand
 {
-    private readonly AppSettings _options = options.Value;
-    private readonly AdminConsoleSettings _adminConsoleOptions = adminConsoleOptions.Value;
+    private readonly AppSettings _options = options.CurrentValue;
+    private readonly AdminConsoleSettings _adminConsoleOptions = adminConsoleOptions.CurrentValue;
     private readonly TestingSettings _testingSettings = testingSettings.CurrentValue;
     private readonly IUsersContext _context = context;
     private readonly IQueriesRepository<Instance> _instanceQuery = instanceQuery;

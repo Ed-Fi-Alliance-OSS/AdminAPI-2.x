@@ -22,13 +22,13 @@ namespace EdFi.Ods.AdminApi.DBTests.Database.QueryTests;
 [TestFixture]
 public class GetAllApplicationsQueryTests : PlatformUsersContextTestBase
 {
-    private IOptions<AppSettings> _options { get; set; }
+    private IOptionsMonitor<AppSettings> _options { get; set; }
 
     [SetUp]
     public virtual async Task FixtureSetup()
     {
         _options = Testing.GetAppSettings();
-        _options.Value.PreventDuplicateApplications = false;
+        _options.CurrentValue.PreventDuplicateApplications = false;
         LoadApplications(3);
         await Task.Yield();
     }

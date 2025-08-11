@@ -28,7 +28,7 @@ public class AddApplication : IFeature
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    public static async Task<IResult> Handle(Validator validator, IAddApplicationCommand addApplicationCommand, IMapper mapper, IUsersContext db, AddApplicationRequest request, IOptions<AppSettings> options)
+    public static async Task<IResult> Handle(Validator validator, IAddApplicationCommand addApplicationCommand, IMapper mapper, IUsersContext db, AddApplicationRequest request, IOptionsMonitor<AppSettings> options)
     {
         await validator.GuardAsync(request);
         GuardAgainstInvalidEntityReferences(request, db);

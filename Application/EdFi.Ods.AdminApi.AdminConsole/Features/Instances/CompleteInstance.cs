@@ -47,9 +47,9 @@ public class CompleteInstance : IFeature
     public class Validator : AbstractValidator<CompleteInstanceRequest>
     {
         private readonly string _databaseEngine;
-        public Validator(IOptions<AppSettings> options)
+        public Validator(IOptionsMonitor<AppSettings> options)
         {
-            _databaseEngine = options.Value.DatabaseEngine ?? throw new NotFoundException<string>("AppSettings", "DatabaseEngine");
+            _databaseEngine = options.CurrentValue.DatabaseEngine ?? throw new NotFoundException<string>("AppSettings", "DatabaseEngine");
 
             RuleFor(x => x.ConnectionString)
                 .NotEmpty()

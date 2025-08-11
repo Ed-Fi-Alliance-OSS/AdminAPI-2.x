@@ -28,13 +28,13 @@ public static class IEnumerableExtensions
             : string.Empty;
     }
 
-    public static IEnumerable<T> Paginate<T>(this IEnumerable<T> source, int? offset, int? limit, IOptions<AppSettings> settings)
+    public static IEnumerable<T> Paginate<T>(this IEnumerable<T> source, int? offset, int? limit, IOptionsMonitor<AppSettings> settings)
     {
         try
         {
-            offset ??= settings.Value.DefaultPageSizeOffset;
+            offset ??= settings.CurrentValue.DefaultPageSizeOffset;
 
-            limit ??= settings.Value.DefaultPageSizeLimit;
+            limit ??= settings.CurrentValue.DefaultPageSizeLimit;
 
             return source.Skip(offset.Value).Take(limit.Value);
         }

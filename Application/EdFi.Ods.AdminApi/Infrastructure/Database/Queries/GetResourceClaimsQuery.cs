@@ -24,7 +24,7 @@ public interface IGetResourceClaimsQuery
 public class GetResourceClaimsQuery : IGetResourceClaimsQuery
 {
     private readonly ISecurityContext _securityContext;
-    private readonly IOptions<AppSettings> _options;
+    private readonly IOptionsMonitor<AppSettings> _options;
     private static readonly Dictionary<string, Expression<Func<EdFi.Security.DataAccess.Models.ResourceClaim, object>>> _orderByColumnResourceClaims =
     new Dictionary<string, Expression<Func<EdFi.Security.DataAccess.Models.ResourceClaim, object>>>
         (StringComparer.OrdinalIgnoreCase)
@@ -36,7 +36,7 @@ public class GetResourceClaimsQuery : IGetResourceClaimsQuery
 #pragma warning restore CS8603 // Possible null reference return.
         { SortingColumns.DefaultIdColumn, x => x.ResourceClaimId }
     };
-    public GetResourceClaimsQuery(ISecurityContext securityContext, IOptions<AppSettings> options)
+    public GetResourceClaimsQuery(ISecurityContext securityContext, IOptionsMonitor<AppSettings> options)
     {
         _securityContext = securityContext;
         _options = options;
