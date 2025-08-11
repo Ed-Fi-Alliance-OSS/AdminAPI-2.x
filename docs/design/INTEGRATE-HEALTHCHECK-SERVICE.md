@@ -2,7 +2,11 @@
 
 ## Overview
 
-This document describes the design and process for integrating the `EdFi.AdminConsole.HealthCheckService` into the `EdFi.Ods.AdminApi` application, leveraging Quartz.NET for scheduled and on-demand execution of health checks.
+# Integrating EdFi.Ods.AdminApi.HealthCheck into EdFi.Ods.AdminApi with Quartz.NET
+
+## Overview
+
+This document describes the design and process for integrating the `EdFi.Ods.AdminApi.HealthCheck` into the `EdFi.Ods.AdminApi` application, leveraging Quartz.NET for scheduled and on-demand execution of health checks.
 
 ---
 
