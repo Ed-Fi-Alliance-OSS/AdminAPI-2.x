@@ -33,7 +33,7 @@ To create the ods instance database on pgsql it simply executes the `CREATE DATA
 
 To delete it, the command is `DROP DATABASE IF EXISTS "database"`.
 
-### HTTP call to Admin API and ODS API
+### HTTP call to Admin API
 
 The `EdFi.AdminConsole.InstanceMgrWorker.Core` is the responsible to do these tasks.
 This project can be removed, given that `Instance-Management-Worker` lives now with Admin API.
@@ -51,20 +51,51 @@ The component that performs these tasks will be integrated as new **Features** (
 
 ### Components
 
-* **InstanceManagementCompleteService Feature**: Service that performs instance management creation for given instance.
+#### 1. InstanceManagementCompleteService Feature
+
+Service that performs instance management creation for given instance
 `InstanceManagementCompleteService` is triggered on every call to `POST /adminconsole/instances`
 
-* **InstanceManagementDeleteService Feature**: Service that performs instance management deletion for given instance.
+##### InstanceManagementCompleteService will
+
+* Create new records on ApiClients, OdsInstances, potentially OdsInstanceContexts and OdsInstanceDerivatives as well, etc.
+* Create the database itself, if it doesn't exist.
+* Change instance status from `Pending` to `Completed` on `adminconsole.Instances`.
+In this case `Completed` means that the instance is created, and it's fully functional.
+
+#### 2. InstanceManagementDeleteService Feature
+
+Service that performs instance management deletion for given instance
 `InstanceManagementDeleteService` is triggered on every call to `DELETE /adminconsole/instances`
 
-* **InstanceManagementRenameService Feature**: Service that performs instance management renaming for given instance.
+##### InstanceManagementDeleteService will
+
+* Delete records on ApiClients, OdsInstances, OdsInstanceContexts, OdsInstanceDerivatives as well, etc.
+* Delete the database itself.
+* Change instance status from `Pending_Delete` to `Deleted` on `adminconsole.Instances`.
+
+#### 3. InstanceManagementRenameService Feature
+
+Service that performs instance management renaming for given instance
 `InstanceManagementRenameService` is triggered on every call to `PUT /adminconsole/instances`
 
-* **InstanceManagementCompleteJob**: Quartz.NET job that invokes `InstanceManagementCompleteService.RunAsync()`.
+##### InstanceManagementRenameService will
 
-* **InstanceManagementDeleteJob**: Quartz.NET job that invokes `InstanceManagementDeleteService.RunAsync()`.
+* Update the instance information on OdsInstances, OdsInstanceContexts, OdsInstanceDerivatives, etc.
+* Rename the database itself if the instance name actually changed.
+* Change instance status from `Pending_Rename` to `Completed` on `adminconsole.Instances`.
 
-* **InstanceManagementRenameJob**: Quartz.NET job that invokes `InstanceManagementRenameService.RunAsync()`.
+#### 4. InstanceManagementCompleteJob
+
+Quartz.NET job that invokes `InstanceManagementCompleteService.RunAsync()`
+
+#### 5. InstanceManagementDeleteJob
+
+Quartz.NET job that invokes `InstanceManagementDeleteService.RunAsync()`
+
+#### 6. InstanceManagementRenameJob
+
+Quartz.NET job that invokes `InstanceManagementRenameService.RunAsync()`
 
 ### Configuration
 
@@ -105,6 +136,6 @@ Two new connection strings need to be added to Admin API
 
 Given the new architecture, it should be safe to remove these 3 endpoints
 
-1. /adminconsole/instances/<instanceId>/deletefailed
-2. /adminconsole/instances/<instanceId>/renameFailed
-3. /adminconsole/instances/<instanceId>/completed
+1. /adminconsole/instances/{instanceId}/deletefailed
+2. /adminconsole/instances/{instanceId}/renameFailed
+3. /adminconsole/instances/{instanceId}/completed
