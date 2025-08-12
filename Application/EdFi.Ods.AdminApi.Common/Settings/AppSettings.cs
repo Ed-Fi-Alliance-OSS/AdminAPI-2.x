@@ -27,6 +27,9 @@ public class AppSettings
     public bool EnableAdminConsoleAPI { get; set; }
     public bool IgnoresCertificateErrors { get; set; }
     public bool EnableApplicationResetEndpoint { get; set; }
+    public bool OverrideExistingDatabase { get; set; }
+    public string? InstanceManagementFrequencyInMinutes { get; set; }
+    public string? SqlServerBakFile { get; set; }
 }
 
 public class SwaggerSettings
