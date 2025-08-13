@@ -320,7 +320,7 @@ function Update-EdFiOdsAdminApi {
         Invokes dbup migrations for updating the EdFi_Admin database accordingly.
     .EXAMPLE
         PS c:\> $parameters = @{
-            PackageVersion = '1.1.0'
+            PackageVersion = '__ADMINAPI_VERSION__'
         }
         PS c:\> Upgrade-AdminApi @parameters
 

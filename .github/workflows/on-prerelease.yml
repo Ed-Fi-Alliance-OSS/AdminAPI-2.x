@@ -83,6 +83,31 @@ jobs:
         run: |
           echo "hash-code=$(sha256sum *.nupkg | base64 -w0)" >> $GITHUB_OUTPUT
 
+      - name: Replace Installer Version Token
+        shell: pwsh
+        run: |
+          $version = "${{ github.ref_name }}"
+          $versionWithoutPrefix = $version -replace '^v', ''
+
+          # Update Install-AdminApi.psm1
+          $installerPath = "Installer.AdminApi/Install-AdminApi.psm1"
+          (Get-Content $installerPath) -replace '__ADMINAPI_VERSION__', $version | Set-Content $installerPath
+
+          # Update install.ps1
+          $installScriptPath = "Installer.AdminApi/install.ps1"
+          (Get-Content $installScriptPath) -replace "PackageVersion = '[^']*'", "PackageVersion = '$versionWithoutPrefix'" | Set-Content $installScriptPath
+
+          # Update Docker files
+          $dockerFiles = @(
+            "Docker/api.mssql.Dockerfile",
+            "Docker/api.pgsql.Dockerfile"
+          )
+          foreach ($dockerFile in $dockerFiles) {
+            (Get-Content $dockerFile) -replace 'ENV ADMIN_API_VERSION="\$\{ADMIN_API_VERSION:-[^}]*\}"', "ENV ADMIN_API_VERSION=`"`${ADMIN_API_VERSION:-$versionWithoutPrefix}`"" | Set-Content $dockerFile
+          }
+
+          Write-Output "Updated version to $version (or $versionWithoutPrefix) in all installer and Docker files"
+
       - name: Upload Packages as Artifacts
         if: success()
         uses: actions/upload-artifact@26f96dfa697d77e81fd5907df203aa23a56210a8 # v4.3.0
