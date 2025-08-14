@@ -30,6 +30,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+using Quartz;
+using EdFi.Ods.AdminApi.Infrastructure.BackgroundJobs;
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 
@@ -215,6 +217,29 @@ public static class WebApplicationBuilderExtensions
         webApplicationBuilder.Services.AddHttpClient();
         webApplicationBuilder.Services.AddTransient<ISimpleGetRequest, SimpleGetRequest>();
         webApplicationBuilder.Services.AddTransient<IOdsApiValidator, OdsApiValidator>();
+
+        var adminConsoleIsEnabled = webApplicationBuilder.Configuration.GetValue<bool>("AppSettings:EnableAdminConsoleAPI");
+        var healthCheckFrequency = webApplicationBuilder.Configuration.GetValue<int>("HealthCheck:HealthCheckFrequencyInMinutes");
+
+        // Schedule the health check job if the Admin Console API is enabled and
+        // the health check frequency is greater than zero.
+        if (adminConsoleIsEnabled && healthCheckFrequency > 0)
+        {
+            // Quartz.NET back end service
+            webApplicationBuilder.Services.AddQuartz(q =>
+            {
+                var jobKey = new JobKey("HealthCheckJob");
+                q.AddJob<HealthCheckJob>(opts => opts.WithIdentity(jobKey));
+
+                // Create a trigger that fires every 10 minutes
+                q.AddTrigger(opts =>
+                    opts.ForJob(jobKey)
+                        .WithIdentity("HealthCheckJob-trigger")
+                        .WithSimpleSchedule(x => x.WithInterval(TimeSpan.FromMinutes(healthCheckFrequency)).RepeatForever())
+                );
+            });
+            webApplicationBuilder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = false);
+        }
     }
 
     private static void EnableMultiTenancySupport(this WebApplicationBuilder webApplicationBuilder)
@@ -427,7 +452,12 @@ public static class WebApplicationBuilderExtensions
                         var parts = rule.Endpoint.Split(':');
                         // Only support fixed window for now, parse period (e.g., "1m")
                         var window = rule.Period.EndsWith('m') ? TimeSpan.FromMinutes(int.Parse(rule.Period.TrimEnd('m'))) : TimeSpan.FromMinutes(1);
-                        if (path != null && parts.Length == 2 && method.Equals(parts[0], StringComparison.OrdinalIgnoreCase) && path.Equals(parts[1], StringComparison.OrdinalIgnoreCase))
+                        if (
+                            path != null
+                            && parts.Length == 2
+                            && method.Equals(parts[0], StringComparison.OrdinalIgnoreCase)
+                            && path.Equals(parts[1], StringComparison.OrdinalIgnoreCase)
+                        )
                         {
                             return RateLimitPartition.GetFixedWindowLimiter(rule.Endpoint, _ => new FixedWindowRateLimiterOptions
                             {
