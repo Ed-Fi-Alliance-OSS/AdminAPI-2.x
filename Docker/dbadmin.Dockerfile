@@ -15,7 +15,7 @@ COPY Settings/DB-Admin/pgsql/run-adminapi-migrations.sh /docker-entrypoint-initd
 COPY Application/EdFi.Ods.AdminApi/Artifacts/PgSql/Structure/Admin/ /tmp/AdminApiScripts/PgSql
 COPY Settings/dev/adminapi-test-seeddata.sql /tmp/AdminApiScripts/PgSql/adminapi-test-seeddata.sql
 
-RUN apk --no-cache add dos2unix=~7.4 unzip=~6.0
+RUN apk --no-cache add dos2unix=~7 unzip=~6
 USER postgres
 
 USER root
