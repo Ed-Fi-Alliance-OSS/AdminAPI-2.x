@@ -14,7 +14,8 @@
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
 
     <!-- AutoMapper -->
-    <PackageVersion Include="AutoMapper" Version="13.0.1" />
+    <PackageVersion Include="AutoMapper" Version="12.0.1" />
+    <PackageVersion Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
 
     <!-- Azure -->
     <PackageVersion Include="Azure.Identity" Version="1.12.0" />
@@ -35,6 +36,7 @@
     <PackageVersion Include="EdFi.Suite3.Security.DataAccess" Version="7.3.431" />
 
     <!-- FluentValidation -->
+    <PackageVersion Include="FluentValidation" Version="11.11.0" />
     <PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.0" />
 
     <!-- Entity Framework Core -->
@@ -79,5 +81,8 @@
 
     <!-- System -->
     <PackageVersion Include="System.Formats.Asn1" Version="9.0.0" />
+    
+    <!-- log4net -->
+    <PackageVersion Include="log4net" Version="3.0.0" />
   </ItemGroup>
 </Project>
