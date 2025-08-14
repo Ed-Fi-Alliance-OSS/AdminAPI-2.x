@@ -18,7 +18,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 
 public interface IAddApplicationCommand
 {
-    AddApplicationResult Execute(IAddApplicationModel applicationModel, IOptions<AppSettings> options);
+    AddApplicationResult Execute(IAddApplicationModel applicationModel, IOptionsMonitor<AppSettings> options);
 }
 
 public class AddApplicationCommand : IAddApplicationCommand
@@ -30,9 +30,9 @@ public class AddApplicationCommand : IAddApplicationCommand
         _usersContext = usersContext;
     }
 
-    public AddApplicationResult Execute(IAddApplicationModel applicationModel, IOptions<AppSettings> options)
+    public AddApplicationResult Execute(IAddApplicationModel applicationModel, IOptionsMonitor<AppSettings> options)
     {
-        if (options.Value.PreventDuplicateApplications)
+        if (options.CurrentValue.PreventDuplicateApplications)
         {
             ValidateApplicationExistsQuery validateApplicationExists = new ValidateApplicationExistsQuery(_usersContext);
             bool applicationExists = validateApplicationExists.Execute(applicationModel);

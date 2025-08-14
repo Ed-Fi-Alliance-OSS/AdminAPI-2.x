@@ -26,13 +26,13 @@ public interface IGetOdsInstanceContextsQuery
 public class GetOdsInstanceContextsQuery : IGetOdsInstanceContextsQuery
 {
     private readonly IUsersContext _usersContext;
-    private readonly IOptions<AppSettings> _options;
+    private readonly IOptionsMonitor<AppSettings> _options;
     private readonly Dictionary<string, Expression<Func<OdsInstanceContext, object>>> _orderByColumnOds;
-    public GetOdsInstanceContextsQuery(IUsersContext usersContext, IOptions<AppSettings> options)
+    public GetOdsInstanceContextsQuery(IUsersContext usersContext, IOptionsMonitor<AppSettings> options)
     {
         _usersContext = usersContext;
         _options = options;
-        var isSQLServerEngine = _options.Value.DatabaseEngine?.ToLowerInvariant() == DatabaseEngineEnum.SqlServer.ToLowerInvariant();
+        var isSQLServerEngine = _options.CurrentValue.DatabaseEngine?.ToLowerInvariant() == DatabaseEngineEnum.SqlServer.ToLowerInvariant();
         _orderByColumnOds = new Dictionary<string, Expression<Func<OdsInstanceContext, object>>>
             (StringComparer.OrdinalIgnoreCase)
         {

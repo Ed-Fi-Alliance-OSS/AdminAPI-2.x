@@ -24,7 +24,7 @@ namespace EdFi.Ods.AdminConsole.DBTests.Database.CommandTests;
 [TestFixture]
 public class GetInstanceByIdQueryTests : PlatformUsersContextTestBase
 {
-    private IOptions<AppSettings> _options { get; set; }
+    private IOptionsMonitor<AppSettings> _options { get; set; }
 
     [OneTimeSetUp]
     public virtual async Task FixtureSetup()

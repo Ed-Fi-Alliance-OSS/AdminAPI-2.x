@@ -25,14 +25,14 @@ public interface IGetAllActionsQuery
 public class GetAllActionsQuery : IGetAllActionsQuery
 {
     private readonly ISecurityContext _securityContext;
-    private readonly IOptions<AppSettings> _options;
+    private readonly IOptionsMonitor<AppSettings> _options;
     private readonly Dictionary<string, Expression<Func<Action, object>>> _orderByColumnActions;
 
-    public GetAllActionsQuery(ISecurityContext securityContext, IOptions<AppSettings> options)
+    public GetAllActionsQuery(ISecurityContext securityContext, IOptionsMonitor<AppSettings> options)
     {
         _securityContext = securityContext;
         _options = options;
-        var isSQLServerEngine = _options.Value.DatabaseEngine?.ToLowerInvariant() == DatabaseEngineEnum.SqlServer.ToLowerInvariant();
+        var isSQLServerEngine = _options.CurrentValue.DatabaseEngine?.ToLowerInvariant() == DatabaseEngineEnum.SqlServer.ToLowerInvariant();
         _orderByColumnActions = new Dictionary<string, Expression<Func<Action, object>>>
         (StringComparer.OrdinalIgnoreCase)
         {

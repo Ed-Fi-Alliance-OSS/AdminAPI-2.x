@@ -23,10 +23,10 @@ public interface IGetResourceClaimActionAuthorizationStrategiesQuery
 public class GetResourceClaimActionAuthorizationStrategiesQuery : IGetResourceClaimActionAuthorizationStrategiesQuery
 {
     private readonly ISecurityContext _securityContext;
-    private readonly IOptions<AppSettings> _options;
+    private readonly IOptionsMonitor<AppSettings> _options;
     private readonly Dictionary<string, Expression<Func<ResourceClaimActionAuthStrategyModel, object>>> _orderByColumns;
 
-    public GetResourceClaimActionAuthorizationStrategiesQuery(ISecurityContext securityContext, IOptions<AppSettings> options)
+    public GetResourceClaimActionAuthorizationStrategiesQuery(ISecurityContext securityContext, IOptionsMonitor<AppSettings> options)
     {
         _securityContext = securityContext;
         _options = options;

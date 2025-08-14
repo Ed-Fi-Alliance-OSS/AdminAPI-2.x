@@ -38,15 +38,15 @@ public class RenameInstanceCommandTests : PlatformUsersContextTestBase
         var guid = Guid.NewGuid();
         var vendor = addVendorCommand.Execute(new AddVendorRequest
         {
-            Company = Testing.GetAdminConsoleSettings().Value.VendorCompany,
+            Company = Testing.GetAdminConsoleSettings().CurrentValue.VendorCompany,
             NamespacePrefixes = "joe@test.com",
-            ContactName = Testing.GetAdminConsoleSettings().Value.VendorCompany,
+            ContactName = Testing.GetAdminConsoleSettings().CurrentValue.VendorCompany,
             ContactEmailAddress = "test"
         });
 
         _ = addApplicationCommand.Execute(new AddApplicationRequest
         {
-            ApplicationName = Testing.GetAdminConsoleSettings().Value.ApplicationName,
+            ApplicationName = Testing.GetAdminConsoleSettings().CurrentValue.ApplicationName,
             ClaimSetName = "test",
             ProfileIds = null,
             VendorId = vendor?.VendorId ?? 0
@@ -108,15 +108,15 @@ public class RenameInstanceCommandTests : PlatformUsersContextTestBase
 
         var vendor = addVendorCommand.Execute(new AddVendorRequest
         {
-            Company = Testing.GetAdminConsoleSettings().Value.VendorCompany,
+            Company = Testing.GetAdminConsoleSettings().CurrentValue.VendorCompany,
             NamespacePrefixes = "joe@test.com",
-            ContactName = Testing.GetAdminConsoleSettings().Value.VendorCompany,
+            ContactName = Testing.GetAdminConsoleSettings().CurrentValue.VendorCompany,
             ContactEmailAddress = "test"
         });
 
         var application = addApplicationCommand.Execute(new AddApplicationRequest
         {
-            ApplicationName = Testing.GetAdminConsoleSettings().Value.ApplicationName,
+            ApplicationName = Testing.GetAdminConsoleSettings().CurrentValue.ApplicationName,
             ClaimSetName = "test",
             ProfileIds = null,
             VendorId = vendor?.VendorId ?? 0

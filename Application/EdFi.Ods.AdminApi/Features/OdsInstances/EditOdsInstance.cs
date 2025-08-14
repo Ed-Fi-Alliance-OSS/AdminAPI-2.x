@@ -35,14 +35,14 @@ public class EditOdsInstance : IFeature
         IEditOdsInstanceCommand editOdsInstanceCommand,
         IMapper mapper,
         ISymmetricStringEncryptionProvider encryptionProvider,
-        IOptions<AppSettings> options,
+        IOptionsMonitor<AppSettings> options,
         EditOdsInstanceRequest request,
         int id)
     {
         request.Id = id;
         await validator.GuardAsync(request);
 
-        string encryptionKey = options.Value.EncryptionKey ?? throw new InvalidOperationException("EncryptionKey can't be null.");
+        string encryptionKey = options.CurrentValue.EncryptionKey ?? throw new InvalidOperationException("EncryptionKey can't be null.");
         if (!string.IsNullOrEmpty(request.ConnectionString))
             request.ConnectionString = encryptionProvider.Encrypt(request.ConnectionString, Convert.FromBase64String(encryptionKey));
         else

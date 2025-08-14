@@ -35,11 +35,11 @@ public class InitializationService : IAdminConsoleInitializationService
 {
     private readonly IUsersContext _usersContext;
     private readonly IGetApplicationByNameAndClaimsetQuery _getApplicationByNameAndClaimset;
-    private readonly IOptions<AppSettings> _options;
+    private readonly IOptionsMonitor<AppSettings> _options;
 
     public InitializationService(IUsersContext usersContext,
         IGetApplicationByNameAndClaimsetQuery getApplicationByNameAndClaimset,
-        IOptions<AppSettings> options)
+        IOptionsMonitor<AppSettings> options)
     {
         _usersContext = usersContext;
         _getApplicationByNameAndClaimset = getApplicationByNameAndClaimset;

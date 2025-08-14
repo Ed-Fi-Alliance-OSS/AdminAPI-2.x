@@ -34,11 +34,11 @@ public class AddOdsInstance : IFeature
         IAddOdsInstanceCommand addOdsInstanceCommand,
         IMapper mapper,
         ISymmetricStringEncryptionProvider encryptionProvider,
-        IOptions<AppSettings> options,
+        IOptionsMonitor<AppSettings> options,
         AddOdsInstanceRequest request)
     {
         await validator.GuardAsync(request);
-        string encryptionKey = options.Value.EncryptionKey ?? throw new InvalidOperationException("EncryptionKey can't be null.");
+        string encryptionKey = options.CurrentValue.EncryptionKey ?? throw new InvalidOperationException("EncryptionKey can't be null.");
         request.ConnectionString = encryptionProvider.Encrypt(request.ConnectionString, Convert.FromBase64String(encryptionKey));
         var addedProfile = addOdsInstanceCommand.Execute(request);
         return Results.Created($"/odsInstances/{addedProfile.OdsInstanceId}", null);
@@ -60,10 +60,10 @@ public class AddOdsInstance : IFeature
     {
         private readonly IGetOdsInstancesQuery _getOdsInstancesQuery;
         private readonly string _databaseEngine;
-        public Validator(IGetOdsInstancesQuery getOdsInstancesQuery, IOptions<AppSettings> options)
+        public Validator(IGetOdsInstancesQuery getOdsInstancesQuery, IOptionsMonitor<AppSettings> options)
         {
             _getOdsInstancesQuery = getOdsInstancesQuery;
-            _databaseEngine = options.Value.DatabaseEngine ?? throw new NotFoundException<string>("AppSettings", "DatabaseEngine");
+            _databaseEngine = options.CurrentValue.DatabaseEngine ?? throw new NotFoundException<string>("AppSettings", "DatabaseEngine");
 
             RuleFor(m => m.Name)
                 .NotEmpty()

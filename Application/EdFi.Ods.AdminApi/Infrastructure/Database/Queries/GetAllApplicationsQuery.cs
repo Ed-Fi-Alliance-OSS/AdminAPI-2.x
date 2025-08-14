@@ -24,14 +24,14 @@ public interface IGetAllApplicationsQuery
 public class GetAllApplicationsQuery : IGetAllApplicationsQuery
 {
     private readonly IUsersContext _context;
-    private readonly IOptions<AppSettings> _options;
+    private readonly IOptionsMonitor<AppSettings> _options;
     private readonly Dictionary<string, Expression<Func<Application, object>>> _orderByColumnApplications;
 
-    public GetAllApplicationsQuery(IUsersContext context, IOptions<AppSettings> options)
+    public GetAllApplicationsQuery(IUsersContext context, IOptionsMonitor<AppSettings> options)
     {
         _context = context;
         _options = options;
-        var isSQLServerEngine = _options.Value.DatabaseEngine?.ToLowerInvariant() == DatabaseEngineEnum.SqlServer.ToLowerInvariant();
+        var isSQLServerEngine = _options.CurrentValue.DatabaseEngine?.ToLowerInvariant() == DatabaseEngineEnum.SqlServer.ToLowerInvariant();
         _orderByColumnApplications = new Dictionary<string, Expression<Func<Application, object>>>
         (StringComparer.OrdinalIgnoreCase)
         {

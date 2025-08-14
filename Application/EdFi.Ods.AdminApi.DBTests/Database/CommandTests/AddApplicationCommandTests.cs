@@ -21,14 +21,14 @@ namespace EdFi.Ods.AdminApi.DBTests.Database.CommandTests;
 [TestFixture]
 public class AddApplicationCommandTests : PlatformUsersContextTestBase
 {
-    private IOptions<AppSettings> _options { get; set; }
+    private IOptionsMonitor<AppSettings> _options { get; set; }
 
     [OneTimeSetUp]
     public virtual async Task FixtureSetup()
     {
         AppSettings appSettings = new AppSettings();
         appSettings.PreventDuplicateApplications = false;
-        _options = Options.Create(appSettings);
+        _options = new TestOptionsMonitor(appSettings);
         await Task.Yield();
     }
 
@@ -209,7 +209,7 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
     {
         AppSettings appSettings = new AppSettings();
         appSettings.PreventDuplicateApplications = true;
-        IOptions<AppSettings> options = Options.Create(appSettings);
+        IOptionsMonitor<AppSettings> options = new TestOptionsMonitor(appSettings);
         const string OdsInstanceName = "Test Instance";
         var vendor = new Vendor
         {
@@ -269,7 +269,7 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
     {
         AppSettings appSettings = new AppSettings();
         appSettings.PreventDuplicateApplications = true;
-        IOptions<AppSettings> options = Options.Create(appSettings);
+        IOptionsMonitor<AppSettings> options = new TestOptionsMonitor(appSettings);
         var vendor = new Vendor
         {
             VendorNamespacePrefixes = new List<VendorNamespacePrefix> { new VendorNamespacePrefix { NamespacePrefix = "http://tests.com" } },
@@ -312,7 +312,7 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
     {
         AppSettings appSettings = new AppSettings();
         appSettings.PreventDuplicateApplications = true;
-        IOptions<AppSettings> options = Options.Create(appSettings);
+        IOptionsMonitor<AppSettings> options = new TestOptionsMonitor(appSettings);
         var vendor = new Vendor
         {
             VendorNamespacePrefixes = new List<VendorNamespacePrefix> { new VendorNamespacePrefix { NamespacePrefix = "http://tests.com" } },

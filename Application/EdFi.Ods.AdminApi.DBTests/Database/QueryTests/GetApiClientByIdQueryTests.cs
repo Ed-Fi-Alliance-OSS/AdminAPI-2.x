@@ -22,14 +22,14 @@ namespace EdFi.Ods.AdminApi.DBTests.Database.QueryTests;
 [TestFixture]
 internal class GetApiClientByIdQueryTests : PlatformUsersContextTestBase
 {
-    private IOptions<AppSettings> _options { get; set; }
+    private IOptionsMonitor<AppSettings> _options { get; set; }
     private int secondApiClientId = 0;
 
     [SetUp]
     public virtual async Task FixtureSetup()
     {
         _options = Testing.GetAppSettings();
-        _options.Value.PreventDuplicateApplications = false;
+        _options.CurrentValue.PreventDuplicateApplications = false;
         LoadApiClients();
         await Task.Yield();
     }

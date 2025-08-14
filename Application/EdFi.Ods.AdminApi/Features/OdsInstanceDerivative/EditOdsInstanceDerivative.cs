@@ -63,11 +63,11 @@ public class EditOdsInstanceDerivative : IFeature
         private readonly IGetOdsInstanceQuery _getOdsInstanceQuery;
         private readonly IGetOdsInstanceDerivativesQuery _getOdsInstanceDerivativesQuery;
         private readonly string _databaseEngine;
-        public Validator(IGetOdsInstanceQuery getOdsInstanceQuery, IGetOdsInstanceDerivativesQuery getOdsInstanceDerivativesQuery, IOptions<AppSettings> options)
+        public Validator(IGetOdsInstanceQuery getOdsInstanceQuery, IGetOdsInstanceDerivativesQuery getOdsInstanceDerivativesQuery, IOptionsMonitor<AppSettings> options)
         {
             _getOdsInstanceQuery = getOdsInstanceQuery;
             _getOdsInstanceDerivativesQuery = getOdsInstanceDerivativesQuery;
-            _databaseEngine = options.Value.DatabaseEngine ?? throw new NotFoundException<string>("AppSettings", "DatabaseEngine");
+            _databaseEngine = options.CurrentValue.DatabaseEngine ?? throw new NotFoundException<string>("AppSettings", "DatabaseEngine");
 
             RuleFor(m => m.DerivativeType).NotEmpty();
 

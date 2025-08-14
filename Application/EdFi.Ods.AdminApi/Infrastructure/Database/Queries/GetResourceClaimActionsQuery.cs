@@ -24,14 +24,14 @@ public interface IGetResourceClaimActionsQuery
 public class GetResourceClaimActionsQuery : IGetResourceClaimActionsQuery
 {
     private readonly ISecurityContext _securityContext;
-    private readonly IOptions<AppSettings> _options;
+    private readonly IOptionsMonitor<AppSettings> _options;
     private readonly Dictionary<string, Expression<Func<ResourceClaimActionModel, object>>> _orderByColumns;
 
-    public GetResourceClaimActionsQuery(ISecurityContext securityContext, IOptions<AppSettings> options)
+    public GetResourceClaimActionsQuery(ISecurityContext securityContext, IOptionsMonitor<AppSettings> options)
     {
         _securityContext = securityContext;
         _options = options;
-        var isSQLServerEngine = _options.Value.DatabaseEngine?.ToLowerInvariant() == DatabaseEngineEnum.SqlServer.ToLowerInvariant();
+        var isSQLServerEngine = _options.CurrentValue.DatabaseEngine?.ToLowerInvariant() == DatabaseEngineEnum.SqlServer.ToLowerInvariant();
         _orderByColumns = new Dictionary<string, Expression<Func<ResourceClaimActionModel, object>>>
             (StringComparer.OrdinalIgnoreCase)
         {

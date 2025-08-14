@@ -25,13 +25,13 @@ public interface IGetOdsInstanceDerivativesQuery
 public class GetOdsInstanceDerivativesQuery : IGetOdsInstanceDerivativesQuery
 {
     private readonly IUsersContext _usersContext;
-    private readonly IOptions<AppSettings> _options;
+    private readonly IOptionsMonitor<AppSettings> _options;
     private readonly Dictionary<string, Expression<Func<OdsInstanceDerivative, object>>> _orderByColumnOds;
-    public GetOdsInstanceDerivativesQuery(IUsersContext usersContext, IOptions<AppSettings> options)
+    public GetOdsInstanceDerivativesQuery(IUsersContext usersContext, IOptionsMonitor<AppSettings> options)
     {
         _usersContext = usersContext;
         _options = options;
-        var DatabaseEngine = _options.Value.DatabaseEngine ??= DatabaseEngineEnum.SqlServer;
+        var DatabaseEngine = _options.CurrentValue.DatabaseEngine ??= DatabaseEngineEnum.SqlServer;
         var isSQLServerEngine = DatabaseEngine.Equals(DatabaseEngineEnum.SqlServer, StringComparison.OrdinalIgnoreCase);
         _orderByColumnOds = new Dictionary<string, Expression<Func<OdsInstanceDerivative, object>>>
             (StringComparer.OrdinalIgnoreCase)

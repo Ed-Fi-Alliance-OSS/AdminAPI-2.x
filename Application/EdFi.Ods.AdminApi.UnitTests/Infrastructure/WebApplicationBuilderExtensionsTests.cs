@@ -33,14 +33,14 @@ public class WebApplicationBuilderExtensionsTests
 
         // Assert
         var services = builder.Services.BuildServiceProvider();
-        var options = services.GetRequiredService<IOptions<RateLimiterOptions>>().Value;
+        var options = services.GetRequiredService<IOptionsMonitor<RateLimiterOptions>>().CurrentValue;
 
         options.ShouldNotBeNull();
 
         // Build an app to test the global limiter
         var app = builder.Build();
         var httpContext = new DefaultHttpContext();
-        var globalLimiter = app.Services.GetRequiredService<IOptions<RateLimiterOptions>>().Value.GlobalLimiter;
+        var globalLimiter = app.Services.GetRequiredService<IOptionsMonitor<RateLimiterOptions>>().CurrentValue.GlobalLimiter;
 
         globalLimiter.ShouldNotBeNull();
 
@@ -60,7 +60,7 @@ public class WebApplicationBuilderExtensionsTests
 
         // Assert
         var services = builder.Services.BuildServiceProvider();
-        var options = services.GetRequiredService<IOptions<RateLimiterOptions>>().Value;
+        var options = services.GetRequiredService<IOptionsMonitor<RateLimiterOptions>>().CurrentValue;
 
         options.ShouldNotBeNull();
         options.RejectionStatusCode.ShouldBe(429);
@@ -80,13 +80,13 @@ public class WebApplicationBuilderExtensionsTests
 
         // Assert
         var services = builder.Services.BuildServiceProvider();
-        var options = services.GetRequiredService<IOptions<RateLimiterOptions>>().Value;
+        var options = services.GetRequiredService<IOptionsMonitor<RateLimiterOptions>>().CurrentValue;
 
         options.ShouldNotBeNull();
 
         // Build an app to test the endpoint limiters
         var app = builder.Build();
-        var globalLimiter = app.Services.GetRequiredService<IOptions<RateLimiterOptions>>().Value.GlobalLimiter;
+        var globalLimiter = app.Services.GetRequiredService<IOptionsMonitor<RateLimiterOptions>>().CurrentValue.GlobalLimiter;
 
         globalLimiter.ShouldNotBeNull();
 

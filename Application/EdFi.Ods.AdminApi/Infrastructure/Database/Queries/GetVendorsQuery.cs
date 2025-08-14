@@ -26,13 +26,13 @@ public interface IGetVendorsQuery
 public class GetVendorsQuery : IGetVendorsQuery
 {
     private readonly IUsersContext _context;
-    private readonly IOptions<AppSettings> _options;
+    private readonly IOptionsMonitor<AppSettings> _options;
     private readonly Dictionary<string, Expression<Func<Vendor, object>>> _orderByColumnVendors;
-    public GetVendorsQuery(IUsersContext context, IOptions<AppSettings> options)
+    public GetVendorsQuery(IUsersContext context, IOptionsMonitor<AppSettings> options)
     {
         _context = context;
         _options = options;
-        var isSQLServerEngine = _options.Value.DatabaseEngine?.ToLowerInvariant() == DatabaseEngineEnum.SqlServer.ToLowerInvariant();
+        var isSQLServerEngine = _options.CurrentValue.DatabaseEngine?.ToLowerInvariant() == DatabaseEngineEnum.SqlServer.ToLowerInvariant();
         _orderByColumnVendors = new Dictionary<string, Expression<Func<Vendor, object>>>
             (StringComparer.OrdinalIgnoreCase)
         {

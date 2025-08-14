@@ -23,12 +23,12 @@ public interface IRenameInstanceCommand
 }
 
 public class RenameInstanceCommand(
-    IOptions<AdminConsoleSettings> adminConsoleOptions,
+    IOptionsMonitor<AdminConsoleSettings> adminConsoleOptions,
     IUsersContext context,
     IQueriesRepository<Instance> instanceQuery,
     ICommandRepository<Instance> instanceCommand) : IRenameInstanceCommand
 {
-    private readonly AdminConsoleSettings _adminConsoleOptions = adminConsoleOptions.Value;
+    private readonly AdminConsoleSettings _adminConsoleOptions = adminConsoleOptions.CurrentValue;
     private readonly IUsersContext _context = context;
     private readonly IQueriesRepository<Instance> _instanceQuery = instanceQuery;
     private readonly ICommandRepository<Instance> _instanceCommand = instanceCommand;

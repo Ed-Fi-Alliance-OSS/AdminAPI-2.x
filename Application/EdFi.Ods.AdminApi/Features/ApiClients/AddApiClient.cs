@@ -27,7 +27,7 @@ public class AddApiClient : IFeature
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    public static async Task<IResult> Handle(Validator validator, IAddApiClientCommand addApiClientCommand, IMapper mapper, IUsersContext db, AddApiClientRequest request, IOptions<AppSettings> options)
+    public static async Task<IResult> Handle(Validator validator, IAddApiClientCommand addApiClientCommand, IMapper mapper, IUsersContext db, AddApiClientRequest request, IOptionsMonitor<AppSettings> options)
     {
         await validator.GuardAsync(request);
         GuardAgainstInvalidEntityReferences(request, db);

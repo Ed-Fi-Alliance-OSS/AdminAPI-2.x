@@ -13,14 +13,14 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 
 public interface IAddApiClientCommand
 {
-    AddApiClientResult Execute(IAddApiClientModel apiClientModel, IOptions<AppSettings> options);
+    AddApiClientResult Execute(IAddApiClientModel apiClientModel, IOptionsMonitor<AppSettings> options);
 }
 
 public class AddApiClientCommand(IUsersContext usersContext) : IAddApiClientCommand
 {
     private readonly IUsersContext _usersContext = usersContext;
 
-    public AddApiClientResult Execute(IAddApiClientModel apiClientModel, IOptions<AppSettings> options)
+    public AddApiClientResult Execute(IAddApiClientModel apiClientModel, IOptionsMonitor<AppSettings> options)
     {
         var application = _usersContext.Applications
             .Include(a => a.Vendor)
