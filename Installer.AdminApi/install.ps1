@@ -84,7 +84,7 @@ $adminApiSource = "$packageSource/AdminApi"
 $p = @{
     ToolsPath = "C:/temp/tools"
     DbConnectionInfo = $dbConnectionInfo
-    PackageVersion = '2.2.1.0'
+    PackageVersion = '2.2.2.0'
     PackageSource = $adminApiSource
     AuthenticationSettings = $authenticationSettings
 }
