@@ -3,42 +3,43 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Ods.AdminApi.V1.Features;
-using EdFi.Ods.AdminApi.V1.Infrastructure;
-using log4net;
+//using EdFi.Ods.AdminApi.Common.Infrastructure;
+//using EdFi.Ods.AdminApi.V1.Features;
+//using EdFi.Ods.AdminApi.V1.Infrastructure;
+//using log4net;
 
-var builder = WebApplication.CreateBuilder(args);
+//var builder = WebApplication.CreateBuilder(args);
 
-builder.AddServices();
+//builder.AddServices();
 
-// logging
-var _logger = LogManager.GetLogger("Program");
-_logger.Info("Starting Admin API");
+//// logging
+//var _logger = LogManager.GetLogger("Program");
+//_logger.Info("Starting Admin API");
 
-var app = builder.Build();
+//var app = builder.Build();
 
-var pathBase = app.Configuration.GetValue<string>("AppSettings:PathBase");
-if (!string.IsNullOrEmpty(pathBase))
-{
-    app.UsePathBase("/" + pathBase.Trim('/'));
-    app.UseForwardedHeaders();
-}
+//var pathBase = app.Configuration.GetValue<string>("AppSettings:PathBase");
+//if (!string.IsNullOrEmpty(pathBase))
+//{
+//    app.UsePathBase("/" + pathBase.Trim('/'));
+//    app.UseForwardedHeaders();
+//}
 
-AdminApiVersions.Initialize(app);
+//AdminApiVersions.Initialize(app);
 
-//The ordering here is meaningful: Logging -> Routing -> Auth -> Endpoints
-app.UseMiddleware<RequestLoggingMiddleware>();
-app.UseRouting();
-app.UseAuthentication();
-app.UseAuthorization();
-app.MapFeatureEndpoints();
-app.MapControllers();
-app.UseHealthChecks("/health");
+////The ordering here is meaningful: Logging -> Routing -> Auth -> Endpoints
+//app.UseMiddleware<RequestLoggingMiddleware>();
+//app.UseRouting();
+//app.UseAuthentication();
+//app.UseAuthorization();
+//app.MapFeatureEndpoints();
+//app.MapControllers();
+//app.UseHealthChecks("/health");
 
-if (app.Configuration.GetValue<bool>("EnableSwagger"))
-{
-    app.UseSwagger();
-    app.DefineSwaggerUIWithApiVersions(AdminApiVersions.GetAllVersionStrings());
-}
+//if (app.Configuration.GetValue<bool>("EnableSwagger"))
+//{
+//    app.UseSwagger();
+//    app.DefineSwaggerUIWithApiVersions(AdminApiVersions.GetAllVersionStrings());
+//}
 
-app.Run();
+//app.Run();

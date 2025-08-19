@@ -4,8 +4,8 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 namespace EdFi.Ods.AdminApi.V1.Helpers;
-public class AppSettings
-{
-    public int DefaultPageSizeOffset { get; set; }
-    public int DefaultPageSizeLimit { get; set; }
-}
+//public class AppSettings
+//{
+//    public int DefaultPageSizeOffset { get; set; }
+//    public int DefaultPageSizeLimit { get; set; }
+//}
