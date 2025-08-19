@@ -5,9 +5,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using EdFi.Admin.DataAccess.Contexts;
-using EdFi.Admin.DataAccess.Models;
-using VendorUser = EdFi.Admin.DataAccess.Models.User;
+using EdFi.Admin.DataAccess.V1.Contexts;
+using EdFi.Admin.DataAccess.V1.Models;
+using VendorUser = EdFi.Admin.DataAccess.V1.Models.User;
 
 namespace EdFi.Ods.AdminApi.V1.Infrastructure.Database.Commands;
 

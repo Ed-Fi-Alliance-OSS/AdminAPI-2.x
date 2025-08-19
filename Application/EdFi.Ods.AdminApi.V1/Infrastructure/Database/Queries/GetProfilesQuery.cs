@@ -5,8 +5,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using EdFi.Admin.DataAccess.Contexts;
-using EdFi.Admin.DataAccess.Models;
+using EdFi.Admin.DataAccess.V1.Contexts;
+using EdFi.Admin.DataAccess.V1.Models;
 
 namespace EdFi.Ods.AdminApi.V1.Infrastructure.Database.Queries;
 

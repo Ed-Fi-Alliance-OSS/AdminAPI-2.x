@@ -5,7 +5,7 @@
 
 using System;
 using System.Linq;
-using EdFi.Admin.DataAccess.Contexts;
+using EdFi.Admin.DataAccess.V1.Contexts;
 using EdFi.Ods.AdminApi.V1.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.V1.Infrastructure.ErrorHandling;
 using Microsoft.EntityFrameworkCore;

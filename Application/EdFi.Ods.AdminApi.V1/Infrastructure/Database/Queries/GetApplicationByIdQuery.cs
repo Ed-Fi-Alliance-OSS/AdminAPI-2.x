@@ -4,8 +4,8 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Linq;
-using EdFi.Admin.DataAccess.Contexts;
-using EdFi.Admin.DataAccess.Models;
+using EdFi.Admin.DataAccess.V1.Contexts;
+using EdFi.Admin.DataAccess.V1.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.V1.Infrastructure.Database.Queries;

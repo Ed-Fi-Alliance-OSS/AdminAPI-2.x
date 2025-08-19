@@ -1,0 +1,25 @@
+﻿using System;
+using System.Threading;
+
+namespace EdFi.Security.DataAccess.V1.Utils
+{
+    public class ResettableLazy<T>
+    {
+        private readonly Func<T> _valueFactory;
+        private Lazy<T> _lazy;
+
+        public bool IsValueCreated => _lazy.IsValueCreated;
+        public T Value => _lazy.Value;
+
+        public ResettableLazy(Func<T> valueFactory)
+        {
+            _valueFactory = valueFactory;
+            _lazy = new Lazy<T>(_valueFactory, LazyThreadSafetyMode.PublicationOnly);
+        }
+
+        public void Reset()
+        {
+            _lazy = new Lazy<T>(_valueFactory, LazyThreadSafetyMode.PublicationOnly);
+        }
+    }
+}

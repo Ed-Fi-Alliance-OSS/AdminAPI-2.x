@@ -5,8 +5,9 @@
 
 using System;
 using System.Linq;
+using EdFi.Ods.AdminApi.Common.Infrastructure;
 using EdFi.Ods.AdminApi.V1.Infrastructure.ErrorHandling;
-using EdFi.Security.DataAccess.Contexts;
+using EdFi.Security.DataAccess.V1.Contexts;
 
 namespace EdFi.Ods.AdminApi.V1.Infrastructure.ClaimSetEditor;
 public class DeleteClaimSetCommandService
