@@ -11,6 +11,7 @@ using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repositories;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Tenants;
 using EdFi.Ods.AdminApi.Common.Settings;
+using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -37,6 +38,7 @@ public static class ServicesBuilderExtension
         builder.Services.AddTransient<IAdminConsoleTenantsService, TenantService>();
         builder.Services.AddTransient<IAdminConsoleInstancesService, InstanceService>();
         builder.Services.AddTransient<IAdminConsoleInitializationService, InitializationService>();
+        builder.Services.AddTransient<IGetOdsInstancesQuery, GetOdsInstancesQuery>();
 
         builder.RegisterAdminConsoleServices();
         builder.RegisterAdminConsoleValidators();
