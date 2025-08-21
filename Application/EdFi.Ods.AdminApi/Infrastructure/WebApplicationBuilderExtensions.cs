@@ -259,6 +259,12 @@ public static class WebApplicationBuilderExtensions
                     webApplicationBuilder.Services.AddScoped<ISecurityContext>(sp => new PostgresSecurityContext(
                         SecurityDbContextOptions(sp, DatabaseEngineEnum.PostgreSql)
                     ));
+
+                    webApplicationBuilder.Services.AddScoped<IUsersContext>(
+                        sp => new AdminConsolePostgresUsersContext(
+                            AdminDbContextOptions(sp, DatabaseEngineEnum.PostgreSql)
+                        )
+                    );
                 }
                 else if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.SqlServer))
                 {
@@ -276,6 +282,13 @@ public static class WebApplicationBuilderExtensions
                     webApplicationBuilder.Services.AddScoped<ISecurityContext>(
                         (sp) =>
                             new SqlServerSecurityContext(SecurityDbContextOptions(sp, DatabaseEngineEnum.SqlServer))
+                    );
+
+                    webApplicationBuilder.Services.AddScoped<IUsersContext>(
+                        (sp) =>
+                            new AdminConsoleSqlServerUsersContext(
+                                AdminDbContextOptions(sp, DatabaseEngineEnum.SqlServer)
+                            )
                     );
                 }
                 else

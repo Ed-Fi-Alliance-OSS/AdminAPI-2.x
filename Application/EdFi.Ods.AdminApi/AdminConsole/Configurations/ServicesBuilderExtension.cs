@@ -39,6 +39,10 @@ public static class ServicesBuilderExtension
         builder.Services.AddTransient<IAdminConsoleInstancesService, InstanceService>();
         builder.Services.AddTransient<IAdminConsoleInitializationService, InitializationService>();
         builder.Services.AddTransient<IGetOdsInstancesQuery, GetOdsInstancesQuery>();
+        builder.Services.AddTransient<IGetOdsInstanceContextsQuery, GetOdsInstanceContextsQuery>();
+        builder.Services.AddTransient<IGetOdsInstanceDerivativesQuery, GetOdsInstanceDerivativesQuery>();
+        builder.Services.AddTransient<IGetApiClientIdByApplicationIdQuery, GetApiClientIdByApplicationIdQuery>();
+        builder.Services.AddTransient<IGetApplicationByNameAndClaimsetQuery, GetApplicationByNameAndClaimsetQuery>();
 
         builder.RegisterAdminConsoleServices();
         builder.RegisterAdminConsoleValidators();
