@@ -14,9 +14,6 @@
     <OutputType>Library</OutputType>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="EdFi.Ods.AdminApi.V1.nuspec" CopyToPublishDirectory="Always" CopyToOutputDirectory="Never" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.NpgSql" />
     <PackageReference Include="AspNetCore.HealthChecks.SqlServer" />
     <PackageReference Include="Asp.Versioning.Http" />
@@ -39,8 +36,8 @@
     <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EdFi.Admin.DataAccess\EdFi.Admin.DataAccess.V1.csproj" />
+    <ProjectReference Include="..\EdFi.Admin.DataAccess.V1\EdFi.Admin.DataAccess.V1.csproj" />
     <ProjectReference Include="..\EdFi.Ods.AdminApi.Common\EdFi.Ods.AdminApi.Common.csproj" />
-    <ProjectReference Include="..\EdFi.Security.DataAccess\EdFi.Security.DataAccess.V1.csproj" />
+    <ProjectReference Include="..\EdFi.Security.DataAccess.V1\EdFi.Security.DataAccess.V1.csproj" />
   </ItemGroup>
 </Project>

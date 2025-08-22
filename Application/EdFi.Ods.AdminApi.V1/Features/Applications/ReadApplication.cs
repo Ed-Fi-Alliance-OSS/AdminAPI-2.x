@@ -5,7 +5,7 @@
 
 using AutoMapper;
 using EdFi.Ods.AdminApi.Common.Infrastructure;
-using EdFi.Ods.AdminApi.V1.Infrastructure;
+using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
 using EdFi.Ods.AdminApi.V1.Infrastructure.Database.Queries;
 
 namespace EdFi.Ods.AdminApi.V1.Features.Applications;

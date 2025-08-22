@@ -32,9 +32,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdFi.Ods.AdminApi.AdminCons
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdFi.Ods.AdminApi.V1", "EdFi.Ods.AdminApi.V1\EdFi.Ods.AdminApi.V1.csproj", "{760F71C6-9FD9-4F5B-AE77-34501EE76FBD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdFi.Admin.DataAccess.V1", "EdFi.Admin.DataAccess\EdFi.Admin.DataAccess.V1.csproj", "{9F199993-0B12-4F8E-AAEA-7F47A0DDA2F2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdFi.Admin.DataAccess.V1", "EdFi.Admin.DataAccess.V1\EdFi.Admin.DataAccess.V1.csproj", "{9F199993-0B12-4F8E-AAEA-7F47A0DDA2F2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdFi.Security.DataAccess.V1", "EdFi.Security.DataAccess\EdFi.Security.DataAccess.V1.csproj", "{251B5147-1074-4E3B-85B8-AA9AB21DF387}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdFi.Security.DataAccess.V1", "EdFi.Security.DataAccess.V1\EdFi.Security.DataAccess.V1.csproj", "{251B5147-1074-4E3B-85B8-AA9AB21DF387}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

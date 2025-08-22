@@ -5,7 +5,7 @@
 
 using EdFi.Admin.DataAccess.V1.Contexts;
 using EdFi.Admin.DataAccess.V1.Models;
-using EdFi.Ods.AdminApi.V1.Infrastructure.ErrorHandling;
+using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
 using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.V1.Infrastructure.Database.Commands;

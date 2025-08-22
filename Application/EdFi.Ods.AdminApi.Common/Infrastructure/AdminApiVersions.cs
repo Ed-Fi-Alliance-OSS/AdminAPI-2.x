@@ -15,7 +15,7 @@ public class AdminApiVersions
 {
     private static bool _isInitialized;
 
-    public static AdminApiVersion V1 = new(1.1, "v1");
+    public static readonly AdminApiVersion V1 = new(1.1, "v1");
     public static readonly AdminApiVersion V2 = new(2.0, "v2");
     public static readonly AdminApiVersion AdminConsole = new(1.0, "adminconsole");
     private static ApiVersionSet? _versionSet;

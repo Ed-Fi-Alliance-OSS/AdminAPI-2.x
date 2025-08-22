@@ -5,9 +5,8 @@
 
 using AutoMapper;
 using EdFi.Ods.AdminApi.Common.Infrastructure;
-using EdFi.Ods.AdminApi.V1.Infrastructure;
+using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
 using EdFi.Ods.AdminApi.V1.Infrastructure.ClaimSetEditor;
-using EdFi.Ods.AdminApi.V1.Infrastructure.ErrorHandling;
 using EdFi.Ods.AdminApi.V1.Infrastructure.JsonContractResolvers;
 using EdFi.Ods.AdminApi.V1.Infrastructure.Services.ClaimSetEditor;
 using Newtonsoft.Json;
