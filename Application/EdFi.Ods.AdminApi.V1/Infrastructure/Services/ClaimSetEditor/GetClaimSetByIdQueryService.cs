@@ -6,7 +6,7 @@
 using System.Net;
 using EdFi.Ods.AdminApi.Common.Infrastructure;
 using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
-using EdFi.Security.DataAccess.V1.Contexts;
+using EdFi.Ods.AdminApi.V1.Security.DataAccess.Contexts;
 
 namespace EdFi.Ods.AdminApi.V1.Infrastructure.ClaimSetEditor;
 

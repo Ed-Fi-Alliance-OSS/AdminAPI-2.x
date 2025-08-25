@@ -4,7 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Ods.AdminApi.Common.Settings;
-using EdFi.Ods.AdminApi.V1.Helpers;
 using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApi.V1.Infrastructure.Extensions;

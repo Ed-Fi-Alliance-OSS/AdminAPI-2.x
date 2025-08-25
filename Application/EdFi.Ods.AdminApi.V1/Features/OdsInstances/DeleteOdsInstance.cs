@@ -3,8 +3,8 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Admin.DataAccess.V1.Models;
 using EdFi.Ods.AdminApi.Common.Infrastructure;
+using EdFi.Ods.AdminApi.V1.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApi.V1.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.V1.Infrastructure.Database.Queries;
 using FluentValidation;
@@ -53,7 +53,7 @@ public class DeleteOdsInstance : IFeature
         private bool NotHaveApplicationsRelationships<T>(Request model, int odsIntanceId, ValidationContext<T> context)
         {
             context.MessageFormatter.AppendArgument("Table", "Applications");
-            List<Admin.DataAccess.V1.Models.Application> appList = _getApplicationByOdsInstanceIdQuery.Execute(odsIntanceId) ?? new List<Admin.DataAccess.V1.Models.Application>();
+            List<Application> appList = _getApplicationByOdsInstanceIdQuery.Execute(odsIntanceId) ?? new List<Application>();
             return appList.Count == 0;
         }
     }

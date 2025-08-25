@@ -5,9 +5,8 @@
 
 using EdFi.Ods.AdminApi.Common.Infrastructure;
 using EdFi.Ods.AdminApi.Common.Settings;
-using EdFi.Ods.AdminApi.V1.Helpers;
 using EdFi.Ods.AdminApi.V1.Infrastructure.Extensions;
-using EdFi.Security.DataAccess.V1.Contexts;
+using EdFi.Ods.AdminApi.V1.Security.DataAccess.Contexts;
 using Microsoft.Extensions.Options;
 using ClaimSet = EdFi.Ods.AdminApi.V1.Infrastructure.ClaimSetEditor.ClaimSet;
 

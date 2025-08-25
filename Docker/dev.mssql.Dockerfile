@@ -24,12 +24,6 @@ COPY --from=assets ./Application/EdFi.Ods.AdminApi.AdminConsole EdFi.Ods.AdminAp
 COPY --from=assets ./Application/NuGet.Config EdFi.Ods.AdminApi.Common/
 COPY --from=assets ./Application/EdFi.Ods.AdminApi.Common EdFi.Ods.AdminApi.Common/
 
-COPY --from=assets ./Application/NuGet.Config EdFi.Admin.DataAccess.V1/
-COPY --from=assets ./Application/EdFi.Admin.DataAccess.V1 EdFi.Admin.DataAccess.V1/
-
-COPY --from=assets ./Application/NuGet.Config EdFi.Security.DataAccess.V1/
-COPY --from=assets ./Application/EdFi.Security.DataAccess.V1 EdFi.Security.DataAccess.V1/
-
 COPY --from=assets ./Application/EdFi.Ods.AdminApi.V1 EdFi.Ods.AdminApi.V1/
 
 WORKDIR /source/EdFi.Ods.AdminApi

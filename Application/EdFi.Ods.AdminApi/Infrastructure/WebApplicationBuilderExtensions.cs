@@ -268,7 +268,7 @@ public static class WebApplicationBuilderExtensions
                 }
                 else if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.SqlServer))
                 {
-                    webApplicationBuilder.Services.AddDbContext<Admin.DataAccess.V1.Contexts.UsersContext>(
+                    webApplicationBuilder.Services.AddDbContext<UsersContext>(
                         (sp, options) =>
                         {
                             options.UseSqlServer(

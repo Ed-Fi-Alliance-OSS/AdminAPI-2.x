@@ -4,10 +4,10 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Collections.ObjectModel;
-using EdFi.Admin.DataAccess.V1.Contexts;
-using EdFi.Admin.DataAccess.V1.Models;
 using EdFi.Common.Utils.Extensions;
 using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
+using EdFi.Ods.AdminApi.V1.Admin.DataAccess.Contexts;
+using EdFi.Ods.AdminApi.V1.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApi.V1.Infrastructure.Database.Queries;
 using Microsoft.EntityFrameworkCore;
 

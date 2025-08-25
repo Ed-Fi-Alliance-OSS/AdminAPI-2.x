@@ -46,12 +46,6 @@ jobs:
       - name: Copy admin api common folder to docker context
         run: cp -r ../EdFi.Ods.AdminApi.Common ../../Docker/Application
 
-      - name: Copy admin DataAccess V1 to docker context
-        run: cp -r ../EdFi.Admin.DataAccess.V1 ../../Docker/Application
-
-      - name: Copy security DataAccess V1 folder to docker context
-        run: cp -r ../EdFi.Security.DataAccess.V1 ../../Docker/Application
-
       - name: Copy adminApi V1 folder to docker context
         run: cp -r ../EdFi.Ods.AdminApi.V1 ../../Docker/Application
 

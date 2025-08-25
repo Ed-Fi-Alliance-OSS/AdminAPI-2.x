@@ -41,8 +41,6 @@ jobs:
           cp -r ../EdFi.Ods.AdminApi ../../Docker/Application
           cp -r ../EdFi.Ods.AdminApi.AdminConsole ../../Docker/Application
           cp -r ../EdFi.Ods.AdminApi.Common ../../Docker/Application
-          cp -r ../EdFi.Admin.DataAccess.V1 ../../Docker/Application
-          cp -r ../EdFi.Security.DataAccess.V1 ../../Docker/Application
           cp -r ../EdFi.Ods.AdminApi.V1 ../../Docker/Application
 
       - name: Copy nuget config to docker context

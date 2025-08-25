@@ -4,9 +4,8 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using AutoMapper;
-using EdFi.Admin.DataAccess.V1.Contexts;
 using EdFi.Ods.AdminApi.Common.Infrastructure;
-using EdFi.Ods.AdminApi.V1.Infrastructure;
+using EdFi.Ods.AdminApi.V1.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApi.V1.Infrastructure.Commands;
 using EdFi.Ods.AdminApi.V1.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.V1.Infrastructure.Documentation;

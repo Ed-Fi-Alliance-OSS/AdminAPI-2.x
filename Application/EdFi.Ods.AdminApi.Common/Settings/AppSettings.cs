@@ -30,8 +30,6 @@ public class AppSettings
     public string? adminApiMode { get; set; }
     public string? ProductionApiUrl { get; set; }
     public string? ApiStartupType { get; set; }
-    public string? OdsApiVersion { get; set; }
-
 }
 
 public class SwaggerSettings

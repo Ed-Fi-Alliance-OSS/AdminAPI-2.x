@@ -5,7 +5,6 @@
 
 using EdFi.Ods.AdminApi.Common.Settings;
 using EdFi.Ods.AdminApi.V1.Features;
-using EdFi.Ods.AdminApi.V1.Helpers;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
