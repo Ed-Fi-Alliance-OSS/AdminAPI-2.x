@@ -4,13 +4,12 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Net;
+using System.Text.Json;
 using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
-using EdFi.Ods.AdminApi.Infrastructure.Services;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NJsonSchema;
 
-namespace EdFi.Ods.AdminApi.Infrastructure.Api;
+namespace EdFi.Ods.AdminApi.Common.Infrastructure.Services;
 
 public interface IOdsApiValidator
 {

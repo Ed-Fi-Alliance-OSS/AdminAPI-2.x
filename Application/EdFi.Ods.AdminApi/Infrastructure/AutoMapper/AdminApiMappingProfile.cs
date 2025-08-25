@@ -17,7 +17,6 @@ using EdFi.Ods.AdminApi.Features.OdsInstanceContext;
 using EdFi.Ods.AdminApi.Features.OdsInstanceDerivative;
 using EdFi.Ods.AdminApi.Features.ODSInstances;
 using EdFi.Ods.AdminApi.Features.Profiles;
-using EdFi.Ods.AdminApi.Features.ResourceClaimActionAuthStrategies;
 using EdFi.Ods.AdminApi.Features.ResourceClaimActions;
 using EdFi.Ods.AdminApi.Features.Vendors;
 using EdFi.Ods.AdminApi.Infrastructure.AutoMapper;
