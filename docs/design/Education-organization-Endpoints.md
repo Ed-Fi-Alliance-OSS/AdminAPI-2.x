@@ -12,7 +12,7 @@ basis.
   * `GET /v2/educationorganizations` or `GET /v1/educationorganizations` -
     Returns all education organizations from all instances
   * `GET /v2/educationorganizations/{instanceId}` or
-  * `GET /v1/educationorganizations/{instanceId}` - Returns education organizations
+    `GET /v1/educationorganizations/{instanceId}` - Returns education organizations
     for a specific instance
 
 * **Automatic Data Refresh:**
@@ -94,7 +94,7 @@ V1 and V2 projects to avoid code duplication.
 
 * `IGetEducationOrganizationQuery` - Main query handling interface
 
-* `GetEducationOrganizationQuery` - Implementation database context query logic
+* `GetEducationOrganizationQuery` - Implementation of database context query logic
   for reading the EducationOrganizations
 
 The `RefreshEducationOrganizationCommand` service layer implements a
