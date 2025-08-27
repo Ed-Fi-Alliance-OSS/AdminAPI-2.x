@@ -9,16 +9,20 @@ basis.
 ## Features
 
 * **REST API Endpoints:**
-  * `GET /v2/educationorganizations` or `GET /v1/educationorganizations` -
-    Returns all education organizations from all instances
-  * `GET /v2/educationorganizations/{instanceId}` or
-    `GET /v1/educationorganizations/{instanceId}` - Returns education organizations
-    for a specific instance
+  * `GET /{version}/educationOrganizations` - Returns all education
+    organizations from all instances
+  * `GET /{version}/educationOrganizations/{instanceId}` - Returns education
+    organizations for a specific instance
+  * `POST /{version}/educationOrganizations/refresh` - Refreshes the education
+    organizations for all instances
+  * `POST /{version}/educationOrganizations/refresh/{instanceId}` - Refreshes
+    the education organizations for specific instance
 
-* **Automatic Data Refresh:**
-  * Quartz.NET scheduled job runs every 6 hours by default
-  * No manual refresh endpoint - data is refreshed automatically via background
-    job
+* **Data Refresh:**
+  * Quartz.NET Scheduled Job: Runs every 6 hours by default,
+    automatically refreshing the data in the background
+  * Manual Refresh: API endpoints are available for manually triggering an
+    education organizations data refresh
 
 * **Cross-Database Support:**
   * Works with both SQL Server and PostgreSQL
@@ -54,14 +58,14 @@ basis.
 ### Get All Education Organizations
 
 ```http
-GET /v2/educationorganizations
+GET /v2/educationOrganizations
 Authorization: Bearer <token>
 ```
 
 ### Get Education Organizations for Specific Instance
 
 ```http
-GET /v2/educationorganizations/123
+GET /v2/educationOrganizations/123
 Authorization: Bearer <token>
 ```
 
@@ -105,8 +109,12 @@ multiple ODS instances and persist it into the
 **Key Components:**
 
 * **Dynamic Database Connectivity**: Reads ODS instance connection strings from
-    the `OdsInstances` table and establishes connections to each ODS database
-    dynamically
+    the `OdsInstances` table, decrypts them, and then establishes connections to
+    each ODS database dynamically
+* **Optimize Database Connectivity**: Keep connection pooling enabled. Group
+    connection strings by server, and consider single-connection, multi-database
+    queries. Execute queries in parallel with controlled concurrency (e.g., 8–15
+    simultaneous executions)
 * **Multi-Database Support**: Handles both SQL Server and PostgreSQL with
     database-specific query implementations
 * **Parent Hierarchy Logic**: Implements the same parent relationship logic from
