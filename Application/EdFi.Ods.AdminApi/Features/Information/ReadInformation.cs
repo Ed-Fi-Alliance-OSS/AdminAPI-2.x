@@ -5,8 +5,10 @@
 
 using EdFi.Ods.AdminApi.Common.Features;
 using EdFi.Ods.AdminApi.Common.Infrastructure;
+using EdFi.Ods.AdminApi.Common.Settings;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Helpers;
+using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace EdFi.Ods.AdminApi.Features.Information;
@@ -23,8 +25,15 @@ public class ReadInformation : IFeature
             .AllowAnonymous();
     }
 
-    internal static InformationResult GetInformation()
+    internal static InformationResult GetInformation(IOptions<AppSettings> options)
     {
-        return new InformationResult(ConstantsHelpers.Version, ConstantsHelpers.Build);
+        var adminApiMode = options.Value.AdminApiMode?.ToLowerInvariant() ?? "v2";
+
+        return adminApiMode switch
+        {
+            "v1" => new InformationResult(V1.Infrastructure.Helpers.ConstantsHelpers.Version, V1.Infrastructure.Helpers.ConstantsHelpers.Build),
+            "v2" => new InformationResult(ConstantsHelpers.Version, ConstantsHelpers.Build),
+            _ => throw new InvalidOperationException($"Invalid adminApiMode: {adminApiMode}")
+        };
     }
 }
