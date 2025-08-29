@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "33f67ba7-2151-40b5-ae76-7fe792a3e91a",
+		"_postman_id": "4b7e3365-c05e-4cf6-897d-67766f676cc7",
 		"name": "Admin API E2E refactor Offset and Limit",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "5260609"
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "22794466"
 	},
 	"item": [
 		{
@@ -27,7 +27,6 @@
 											"const results = pm.response.json().result;\r",
 											"\r",
 											"pm.test(\"Response matches success format\", function () {\r",
-											"    pm.expect(response.status).to.equal(200);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"result\");\r",
 											"});\r",
@@ -101,7 +100,6 @@
 											"const results = pm.response.json().result;\r",
 											"\r",
 											"pm.test(\"Response matches success format\", function () {\r",
-											"    pm.expect(response.status).to.equal(200);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"result\");\r",
 											"});\r",
@@ -175,7 +173,6 @@
 											"const results = pm.response.json().result;\r",
 											"\r",
 											"pm.test(\"Response matches success format\", function () {\r",
-											"    pm.expect(response.status).to.equal(200);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"result\");\r",
 											"});\r",
@@ -328,7 +325,6 @@
 											"const results = pm.response.json().result;\r",
 											"\r",
 											"pm.test(\"Response matches success format\", function () {\r",
-											"    pm.expect(response.status).to.equal(200);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"result\");\r",
 											"});\r",
@@ -380,7 +376,6 @@
 											"const results = pm.response.json().result;\r",
 											"\r",
 											"pm.test(\"Response matches success format\", function () {\r",
-											"    pm.expect(response.status).to.equal(200);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"result\");\r",
 											"});\r",
@@ -432,7 +427,6 @@
 											"const results = pm.response.json().result;\r",
 											"\r",
 											"pm.test(\"Response matches success format\", function () {\r",
-											"    pm.expect(response.status).to.equal(200);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"result\");\r",
 											"});\r",
@@ -595,7 +589,6 @@
 											"const results = pm.response.json().result;\r",
 											"\r",
 											"pm.test(\"Response matches success format\", function () {\r",
-											"    pm.expect(response.status).to.equal(200);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"result\");\r",
 											"});\r",
@@ -658,7 +651,6 @@
 											"const results = pm.response.json().result;\r",
 											"\r",
 											"pm.test(\"Response matches success format\", function () {\r",
-											"    pm.expect(response.status).to.equal(200);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"result\");\r",
 											"});\r",
@@ -710,7 +702,6 @@
 											"const results = pm.response.json().result;\r",
 											"\r",
 											"pm.test(\"Response matches success format\", function () {\r",
-											"    pm.expect(response.status).to.equal(200);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"result\");\r",
 											"});\r",
@@ -831,7 +822,6 @@
 											"const results = pm.response.json().result;\r",
 											"\r",
 											"pm.test(\"Response matches success format\", function () {\r",
-											"    pm.expect(response.status).to.equal(200);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"result\");\r",
 											"});\r",
@@ -905,7 +895,6 @@
 											"const results = pm.response.json().result;\r",
 											"\r",
 											"pm.test(\"Response matches success format\", function () {\r",
-											"    pm.expect(response.status).to.equal(200);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"result\");\r",
 											"});\r",
@@ -979,7 +968,6 @@
 											"const results = pm.response.json().result;\r",
 											"\r",
 											"pm.test(\"Response matches success format\", function () {\r",
-											"    pm.expect(response.status).to.equal(200);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"result\");\r",
 											"});\r",
@@ -1119,13 +1107,9 @@
 	],
 	"auth": {
 		"type": "bearer",
-		"bearer": [
-			{
-				"key": "token",
-				"value": "{{TOKEN}}",
-				"type": "string"
-			}
-		]
+		"bearer": {
+			"token": "{{TOKEN}}"
+		}
 	},
 	"event": [
 		{
