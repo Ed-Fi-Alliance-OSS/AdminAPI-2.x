@@ -39,6 +39,7 @@ public class AdminApiModeValidationMiddleware
         {
             response.StatusCode = (int)HttpStatusCode.BadRequest;
             await response.WriteAsync(JsonSerializer.Serialize(new { message = "Wrong API version for this instance mode." }));
+            return;
         }
 
         await _next(context);
