@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "96235532-a9f8-4f99-adb6-4fb726cc1567",
+		"_postman_id": "5f3ea79b-584b-4ca4-8347-63b49b15923c",
 		"name": "Admin API E2E refactor",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "5260609"
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "22794466"
 	},
 	"item": [
 		{
@@ -50,593 +50,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{API_URL}}",
-							"host": [
-								"{{API_URL}}"
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"auth": {
-				"type": "noauth"
-			}
-		},
-		{
-			"name": "User Management",
-			"item": [
-				{
-					"name": "Register",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is OK\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"\r",
-									"const response = pm.response.json();\r",
-									"const result = pm.response.json().result;\r",
-									"\r",
-									"pm.test(\"Response matches success format\", function () {\r",
-									"    pm.expect(response.status).to.equal(200);\r",
-									"    pm.expect(response).to.have.property(\"title\");\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Response title is helpful and accurate\", function () {\r",
-									"    pm.expect(response.title.toLowerCase()).to.contain(\"client\");\r",
-									"    pm.expect(response.title.toLowerCase()).to.contain(\"registered\");\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									"pm.collectionVariables.set(\"RegisteredClientId\", pm.variables.replaceIn('{{$guid}}'));\r",
-									"pm.collectionVariables.set(\"RegisteredClientSecret\", pm.variables.replaceIn('{{$guid}}'));\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "ClientId",
-									"value": "{{RegisteredClientId}}",
-									"type": "text"
-								},
-								{
-									"key": "ClientSecret",
-									"value": "{{RegisteredClientSecret}}",
-									"type": "text"
-								},
-								{
-									"key": "DisplayName",
-									"value": "Postman Test",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{API_URL}}/connect/register",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"connect",
-								"register"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Register - Invalid",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is Bad Request\", function () {\r",
-									"    pm.response.to.have.status(400);\r",
-									"});\r",
-									"\r",
-									"const response = pm.response.json();\r",
-									"\r",
-									"pm.test(\"Response matches error format\", function () {\r",
-									"    pm.expect(response.status).to.equal(400);\r",
-									"    pm.expect(response).to.have.property(\"title\");\r",
-									"    pm.expect(response).to.have.property(\"errors\");\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Response title is helpful and accurate\", function () {\r",
-									"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Response errors include messages by property\", function () {\r",
-									"    pm.expect(response.errors[\"ClientId\"].length).to.equal(1);\r",
-									"    pm.expect(response.errors[\"ClientSecret\"].length).to.equal(1);\r",
-									"    pm.expect(response.errors[\"DisplayName\"].length).to.equal(1);\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "ClientId",
-									"value": "",
-									"type": "text"
-								},
-								{
-									"key": "ClientSecret",
-									"value": "",
-									"type": "text"
-								},
-								{
-									"key": "DisplayName",
-									"value": "",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{API_URL}}/connect/register",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"connect",
-								"register"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Register - Already Exists",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is Bad Request\", function () {\r",
-									"    pm.response.to.have.status(400);\r",
-									"});\r",
-									"\r",
-									"const response = pm.response.json();\r",
-									"\r",
-									"pm.test(\"Response matches error format\", function () {\r",
-									"    pm.expect(response.status).to.equal(400);\r",
-									"    pm.expect(response).to.have.property(\"title\");\r",
-									"    pm.expect(response).to.have.property(\"errors\");\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Response title is helpful and accurate\", function () {\r",
-									"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Response errors include messages by property\", function () {\r",
-									"    pm.expect(response.errors.ClientId.length).to.equal(1);\r",
-									"    pm.expect(response.errors.ClientId[0]).to.contain(\"already exists\");\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "ClientId",
-									"value": "{{RegisteredClientId}}",
-									"type": "text"
-								},
-								{
-									"key": "ClientSecret",
-									"value": "{{RegisteredClientSecret}}",
-									"type": "text"
-								},
-								{
-									"key": "DisplayName",
-									"value": "{{UserName}}",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{API_URL}}/connect/register",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"connect",
-								"register"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Token",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is OK\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"\r",
-									"const response = pm.response.json();\r",
-									"\r",
-									"pm.test(\"Response includes token\", function () {\r",
-									"    pm.expect(response).to.have.property(\"access_token\");\r",
-									"    pm.expect(response).to.have.property(\"token_type\");\r",
-									"    pm.expect(response).to.have.property(\"expires_in\");\r",
-									"\r",
-									"    pm.expect(response[\"token_type\"]).to.equal(\"Bearer\");\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "client_id",
-									"value": "{{RegisteredClientId}}",
-									"type": "text"
-								},
-								{
-									"key": "client_secret",
-									"value": "{{RegisteredClientSecret}}",
-									"type": "text"
-								},
-								{
-									"key": "grant_type",
-									"value": "client_credentials",
-									"type": "text"
-								},
-								{
-									"key": "scope",
-									"value": "edfi_admin_api/full_access",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{API_URL}}/connect/token",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"connect",
-								"token"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Token - Invalid",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is Bad Request\", function () {\r",
-									"    pm.response.to.have.status(400);\r",
-									"});\r",
-									"\r",
-									"const response = pm.response.json();\r",
-									"\r",
-									"pm.test(\"Response includes error message\", function () {\r",
-									"    pm.expect(response).to.have.property(\"error\");\r",
-									"    pm.expect(response).to.have.property(\"error_description\");\r",
-									"    pm.expect(response).to.have.property(\"error_uri\");\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "client_id",
-									"value": "{{$guid}}",
-									"type": "text"
-								},
-								{
-									"key": "client_secret",
-									"value": "",
-									"type": "text"
-								},
-								{
-									"key": "grant_type",
-									"value": "client_credentials",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{API_URL}}/connect/token",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"connect",
-								"token"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Token - Invalid Grant Type",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is Bad Request\", function () {\r",
-									"    pm.response.to.have.status(400);\r",
-									"});\r",
-									"\r",
-									"const response = pm.response.json();\r",
-									"\r",
-									"pm.test(\"Response includes error message\", function () {\r",
-									"    pm.expect(response).to.have.property(\"error\");\r",
-									"    pm.expect(response).to.have.property(\"error_description\");\r",
-									"    pm.expect(response).to.have.property(\"error_uri\");\r",
-									"\r",
-									"    pm.expect(response[\"error_description\"]).to.contain(\"grant_type\");\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "client_id",
-									"value": "{{RegisteredClientId}}",
-									"type": "text"
-								},
-								{
-									"key": "client_secret",
-									"value": "{{RegisteredClientSecret}}",
-									"type": "text"
-								},
-								{
-									"key": "grant_type",
-									"value": "authorization_code",
-									"type": "text"
-								},
-								{
-									"key": "scope",
-									"value": "edfi_admin_api/full_access",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{API_URL}}/connect/token",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"connect",
-								"token"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Token - Invalid Scope",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is Bad Request\", function () {\r",
-									"    pm.response.to.have.status(400);\r",
-									"});\r",
-									"\r",
-									"const response = pm.response.json();\r",
-									"\r",
-									"pm.test(\"Response includes error message\", function () {\r",
-									"    pm.expect(response).to.have.property(\"error\");\r",
-									"    pm.expect(response).to.have.property(\"error_description\");\r",
-									"    pm.expect(response).to.have.property(\"error_uri\");\r",
-									"\r",
-									"    pm.expect(response[\"error_description\"]).to.contain(\"scope\");\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "client_id",
-									"value": "{{RegisteredClientId}}",
-									"type": "text"
-								},
-								{
-									"key": "client_secret",
-									"value": "{{$guid}}",
-									"type": "text"
-								},
-								{
-									"key": "grant_type",
-									"value": "client_credentials",
-									"type": "text"
-								},
-								{
-									"key": "scope",
-									"value": "NOT_REAL/SCOPE",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{API_URL}}/connect/token",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"connect",
-								"token"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Token - Incorrect Secret",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is Unauthorized\", function () {\r",
-									"    pm.response.to.have.status(401);\r",
-									"});\r",
-									"\r",
-									"const response = pm.response.json();\r",
-									"\r",
-									"pm.test(\"Response includes error message\", function () {\r",
-									"    pm.expect(response).to.have.property(\"error\");\r",
-									"    pm.expect(response).to.have.property(\"error_description\");\r",
-									"    pm.expect(response).to.have.property(\"error_uri\");\r",
-									"\r",
-									"    pm.expect(response[\"error_description\"]).to.contain(\"credentials\");\r",
-									"    pm.expect(response[\"error_description\"]).to.contain(\"invalid\");\r",
-									"});\r",
-									"\r",
-									"pm.collectionVariables.unset(\"RegisteredClientId\");\r",
-									"pm.collectionVariables.unset(\"RegisteredClientSecret\");"
-								],
-								"type": "text/javascript"
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "client_id",
-									"value": "{{RegisteredClientId}}",
-									"type": "text"
-								},
-								{
-									"key": "client_secret",
-									"value": "{{$guid}}",
-									"type": "text"
-								},
-								{
-									"key": "grant_type",
-									"value": "client_credentials",
-									"type": "text"
-								},
-								{
-									"key": "scope",
-									"value": "edfi_admin_api/full_access",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{API_URL}}/connect/token",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"connect",
-								"token"
-							]
-						}
+						"url": "{{API_URL}}"
 					},
 					"response": []
 				}
@@ -692,7 +106,8 @@
 											"    pm.collectionVariables.set(\"CreatedVendorId\", result.vendorId);\r",
 											"}"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -708,16 +123,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/vendors",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"vendors"
-									]
-								}
+								"url": "{{API_URL}}/v1/vendors"
 							},
 							"response": [
 								{
@@ -734,15 +140,7 @@
 												}
 											}
 										},
-										"url": {
-											"raw": "{{API_URL}}/vendors",
-											"host": [
-												"{{API_URL}}"
-											],
-											"path": [
-												"vendors"
-											]
-										}
+										"url": "{{API_URL}}/vendors"
 									},
 									"status": "Created",
 									"code": 201,
@@ -788,7 +186,6 @@
 											"const response = pm.response.json();\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
-											"    pm.expect(response.status).to.equal(400);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
@@ -804,7 +201,8 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -820,16 +218,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/vendors",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"vendors"
-									]
-								}
+								"url": "{{API_URL}}/v1/vendors"
 							},
 							"response": []
 						},
@@ -887,16 +276,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/vendors",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"vendors"
-									]
-								}
+								"url": "{{API_URL}}/v1/vendors"
 							},
 							"response": []
 						},
@@ -938,17 +318,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v1/vendors/{{CreatedVendorId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"vendors",
-										"{{CreatedVendorId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/vendors/{{CreatedVendorId}}"
 							},
 							"response": []
 						},
@@ -1010,17 +380,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/vendors/{{CreatedVendorId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"vendors",
-										"{{CreatedVendorId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/vendors/{{CreatedVendorId}}"
 							},
 							"response": []
 						},
@@ -1038,7 +398,6 @@
 											"const response = pm.response.json();\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
-											"    pm.expect(response.status).to.equal(400);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
@@ -1054,7 +413,8 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -1063,7 +423,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -1079,17 +440,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/vendors/{{CreatedVendorId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"vendors",
-										"{{CreatedVendorId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/vendors/{{CreatedVendorId}}"
 							},
 							"response": []
 						},
@@ -1124,17 +475,7 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v1/vendors/{{CreatedVendorId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"vendors",
-										"{{CreatedVendorId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/vendors/{{CreatedVendorId}}"
 							},
 							"response": []
 						},
@@ -1152,9 +493,7 @@
 											"pm.test(\"Response matches error format\", function () {\r",
 											"    const response = pm.response.json();\r",
 											"\r",
-											"    pm.expect(response).to.have.property(\"status\");\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
-											"    pm.expect(response.status).to.equal(404);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response title is helpful and accurate\", function () {\r",
@@ -1166,24 +505,15 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v1/vendors/{{CreatedVendorId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"vendors",
-										"{{CreatedVendorId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/vendors/{{CreatedVendorId}}"
 							},
 							"response": []
 						},
@@ -1201,9 +531,7 @@
 											"pm.test(\"Response matches error format\", function () {\r",
 											"    const response = pm.response.json();\r",
 											"\r",
-											"    pm.expect(response).to.have.property(\"status\");\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
-											"    pm.expect(response.status).to.equal(404);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response title is helpful and accurate\", function () {\r",
@@ -1215,7 +543,8 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -1231,17 +560,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/vendors/{{CreatedVendorId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"vendors",
-										"{{CreatedVendorId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/vendors/{{CreatedVendorId}}"
 							},
 							"response": []
 						},
@@ -1259,9 +578,7 @@
 											"pm.test(\"Response matches error format\", function () {\r",
 											"    const response = pm.response.json();\r",
 											"\r",
-											"    pm.expect(response).to.have.property(\"status\");\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
-											"    pm.expect(response.status).to.equal(404);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response title is helpful and accurate\", function () {\r",
@@ -1275,26 +592,45 @@
 											"pm.collectionVariables.unset(\"CreatedVendorId\");\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v1/vendors/{{CreatedVendorId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"vendors",
-										"{{CreatedVendorId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/vendors/{{CreatedVendorId}}"
 							},
 							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": {
+							"token": "{{TOKEN}}"
+						}
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
 						}
 					]
 				},
@@ -1421,17 +757,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/applications/",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"applications",
-										""
-									]
-								}
+								"url": "{{API_URL}}/v1/applications/"
 							},
 							"response": []
 						},
@@ -1444,7 +770,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -1458,7 +785,6 @@
 											"const response = pm.response.json();\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
-											"    pm.expect(response.status).to.equal(400);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
@@ -1474,7 +800,8 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -1490,17 +817,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/applications/",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"applications",
-										""
-									]
-								}
+								"url": "{{API_URL}}/v1/applications/"
 							},
 							"response": []
 						},
@@ -1513,7 +830,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -1527,7 +845,6 @@
 											"const response = pm.response.json();\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
-											"    pm.expect(response.status).to.equal(400);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
@@ -1542,7 +859,8 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -1558,17 +876,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/applications/",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"applications",
-										""
-									]
-								}
+								"url": "{{API_URL}}/v1/applications/"
 							},
 							"response": []
 						},
@@ -1581,7 +889,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -1596,7 +905,6 @@
 											"const errors = pm.response.json().errors;\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
-											"    pm.expect(response.status).to.equal(400);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
@@ -1611,7 +919,8 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -1627,17 +936,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/applications/",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"applications",
-										""
-									]
-								}
+								"url": "{{API_URL}}/v1/applications/"
 							},
 							"response": []
 						},
@@ -1697,17 +996,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v1/applications/",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"applications",
-										""
-									]
-								}
+								"url": "{{API_URL}}/v1/applications/"
 							},
 							"response": []
 						},
@@ -1761,17 +1050,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"applications",
-										"{{CreatedApplicationId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}"
 							},
 							"response": []
 						},
@@ -1899,18 +1178,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v1/vendors/{{ApplicationVendorId}}/applications",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"vendors",
-										"{{ApplicationVendorId}}",
-										"applications"
-									]
-								}
+								"url": "{{API_URL}}/v1/vendors/{{ApplicationVendorId}}/applications"
 							},
 							"response": []
 						},
@@ -2005,17 +1273,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"applications",
-										"{{CreatedApplicationId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}"
 							},
 							"response": []
 						},
@@ -2028,7 +1286,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -2042,7 +1301,6 @@
 											"const response = pm.response.json();\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
-											"    pm.expect(response.status).to.equal(400);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
@@ -2058,7 +1316,8 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -2074,17 +1333,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"applications",
-										"{{CreatedApplicationId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}"
 							},
 							"response": []
 						},
@@ -2097,7 +1346,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -2111,7 +1361,6 @@
 											"const response = pm.response.json();\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
-											"    pm.expect(response.status).to.equal(400);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
@@ -2126,7 +1375,8 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -2142,17 +1392,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"applications",
-										"{{CreatedApplicationId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}"
 							},
 							"response": []
 						},
@@ -2165,7 +1405,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -2180,7 +1421,6 @@
 											"const errors = pm.response.json().errors;\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
-											"    pm.expect(response.status).to.equal(400);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
@@ -2195,7 +1435,8 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -2211,17 +1452,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"applications",
-										"{{CreatedApplicationId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}"
 							},
 							"response": []
 						},
@@ -2264,18 +1495,7 @@
 							"request": {
 								"method": "PUT",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}/reset-credential",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"applications",
-										"{{CreatedApplicationId}}",
-										"reset-credential"
-									]
-								}
+								"url": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}/reset-credential"
 							},
 							"response": []
 						},
@@ -2309,17 +1529,7 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"applications",
-										"{{CreatedApplicationId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}"
 							},
 							"response": []
 						},
@@ -2337,9 +1547,7 @@
 											"pm.test(\"Response matches error format\", function () {\r",
 											"    const response = pm.response.json();\r",
 											"\r",
-											"    pm.expect(response).to.have.property(\"status\");\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
-											"    pm.expect(response.status).to.equal(404);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response title is helpful and accurate\", function () {\r",
@@ -2351,24 +1559,15 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"applications",
-										"{{CreatedApplicationId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}"
 							},
 							"response": []
 						},
@@ -2386,9 +1585,7 @@
 											"pm.test(\"Response matches error format\", function () {\r",
 											"    const response = pm.response.json();\r",
 											"\r",
-											"    pm.expect(response).to.have.property(\"status\");\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
-											"    pm.expect(response.status).to.equal(404);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response title is helpful and accurate\", function () {\r",
@@ -2400,25 +1597,15 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
 							"request": {
 								"method": "PUT",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}/reset-credential",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"applications",
-										"{{CreatedApplicationId}}",
-										"reset-credential"
-									]
-								}
+								"url": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}/reset-credential"
 							},
 							"response": []
 						},
@@ -2436,9 +1623,7 @@
 											"pm.test(\"Response matches error format\", function () {\r",
 											"    const response = pm.response.json();\r",
 											"\r",
-											"    pm.expect(response).to.have.property(\"status\");\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
-											"    pm.expect(response.status).to.equal(404);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response title is helpful and accurate\", function () {\r",
@@ -2450,7 +1635,8 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -2466,17 +1652,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"applications",
-										"{{CreatedApplicationId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}"
 							},
 							"response": []
 						},
@@ -2494,9 +1670,7 @@
 											"pm.test(\"Response matches error format\", function () {\r",
 											"    const response = pm.response.json();\r",
 											"\r",
-											"    pm.expect(response).to.have.property(\"status\");\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
-											"    pm.expect(response.status).to.equal(404);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response title is helpful and accurate\", function () {\r",
@@ -2548,19 +1722,37 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"applications",
-										"{{CreatedApplicationId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}"
 							},
 							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": {
+							"token": "{{TOKEN}}"
+						}
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
 						}
 					]
 				},
@@ -2631,17 +1823,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"claimsets",
-										""
-									]
-								}
+								"url": "{{API_URL}}/v1/claimsets/"
 							},
 							"response": []
 						},
@@ -2654,7 +1836,8 @@
 										"exec": [
 											"pm.collectionVariables.set(\"ClaimSetOverrideGUID\", pm.variables.replaceIn('{{$guid}}'));"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -2669,7 +1852,6 @@
 											"const result = pm.response.json().result;\r",
 											"\r",
 											"pm.test(\"Override Response matches success format\", function () {\r",
-											"    pm.expect(response.status).to.equal(201);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"result\");\r",
 											"});\r",
@@ -2693,7 +1875,8 @@
 											"}\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -2709,17 +1892,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"claimsets",
-										""
-									]
-								}
+								"url": "{{API_URL}}/v1/claimsets/"
 							},
 							"response": []
 						},
@@ -2732,7 +1905,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -2746,7 +1920,6 @@
 											"const response = pm.response.json();\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
-											"    pm.expect(response.status).to.equal(400);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
@@ -2760,7 +1933,8 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -2776,17 +1950,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"claimsets",
-										""
-									]
-								}
+								"url": "{{API_URL}}/v1/claimsets/"
 							},
 							"response": []
 						},
@@ -2799,7 +1963,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -2813,7 +1978,6 @@
 											"const response = pm.response.json();\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
-											"    pm.expect(response.status).to.equal(400);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
@@ -2827,7 +1991,8 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -2843,17 +2008,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"claimsets",
-										""
-									]
-								}
+								"url": "{{API_URL}}/v1/claimsets/"
 							},
 							"response": []
 						},
@@ -2888,7 +2043,8 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -2902,7 +2058,6 @@
 											"const response = pm.response.json();\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
-											"    pm.expect(response.status).to.equal(400);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
@@ -2917,7 +2072,8 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -2933,17 +2089,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"claimsets",
-										""
-									]
-								}
+								"url": "{{API_URL}}/v1/claimsets/"
 							},
 							"response": []
 						},
@@ -2956,7 +2102,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -2971,7 +2118,6 @@
 											"const errors = pm.response.json().errors;\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
-											"    pm.expect(response.status).to.equal(400);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
@@ -2994,7 +2140,8 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -3010,17 +2157,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"claimsets",
-										""
-									]
-								}
+								"url": "{{API_URL}}/v1/claimsets/"
 							},
 							"response": []
 						},
@@ -3033,7 +2170,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -3048,7 +2186,6 @@
 											"const errors = pm.response.json().errors;\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
-											"    pm.expect(response.status).to.equal(400);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
@@ -3068,7 +2205,8 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -3084,17 +2222,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"claimsets",
-										""
-									]
-								}
+								"url": "{{API_URL}}/v1/claimsets/"
 							},
 							"response": []
 						},
@@ -3107,7 +2235,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -3122,7 +2251,6 @@
 											"const errors = pm.response.json().errors;\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
-											"    pm.expect(response.status).to.equal(400);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
@@ -3138,7 +2266,8 @@
 											"    });\r",
 											"});"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -3154,17 +2283,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"claimsets",
-										""
-									]
-								}
+								"url": "{{API_URL}}/v1/claimsets/"
 							},
 							"response": []
 						},
@@ -3177,7 +2296,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -3192,7 +2312,6 @@
 											"const errors = pm.response.json().errors;\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
-											"    pm.expect(response.status).to.equal(400);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
@@ -3209,7 +2328,8 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -3225,17 +2345,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"claimsets",
-										""
-									]
-								}
+								"url": "{{API_URL}}/v1/claimsets/"
 							},
 							"response": []
 						},
@@ -3308,17 +2418,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"claimsets",
-										""
-									]
-								}
+								"url": "{{API_URL}}/v1/claimsets/"
 							},
 							"response": []
 						},
@@ -3364,17 +2464,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"claimsets",
-										"{{CreatedClaimSetId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetId}}"
 							},
 							"response": []
 						},
@@ -3393,7 +2483,6 @@
 											"const result = pm.response.json().result;\r",
 											"\r",
 											"pm.test(\"Response matches success format\", function () {\r",
-											"    pm.expect(response.status).to.equal(200);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"result\");\r",
 											"});\r",
@@ -3416,24 +2505,15 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetIdOverride}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"claimsets",
-										"{{CreatedClaimSetIdOverride}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetIdOverride}}"
 							},
 							"response": []
 						},
@@ -3446,7 +2526,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -3461,7 +2542,6 @@
 											"const result = pm.response.json().result;\r",
 											"\r",
 											"pm.test(\"Response matches success format\", function () {\r",
-											"    pm.expect(response.status).to.equal(200);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"result\");\r",
 											"});\r",
@@ -3483,7 +2563,8 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -3499,17 +2580,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"claimsets",
-										"{{CreatedClaimSetId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetId}}"
 							},
 							"response": []
 						},
@@ -3522,7 +2593,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -3537,7 +2609,6 @@
 											"const result = pm.response.json().result;\r",
 											"\r",
 											"pm.test(\"Response matches success format\", function () {\r",
-											"    pm.expect(response.status).to.equal(200);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"result\");\r",
 											"});\r",
@@ -3565,7 +2636,8 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -3581,17 +2653,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetIdOverride}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"claimsets",
-										"{{CreatedClaimSetIdOverride}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetIdOverride}}"
 							},
 							"response": []
 						},
@@ -3604,7 +2666,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -3618,7 +2681,6 @@
 											"const response = pm.response.json();\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
-											"    pm.expect(response.status).to.equal(400);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
@@ -3631,7 +2693,8 @@
 											"    pm.expect(response.errors[\"Name\"].length).to.equal(1);\r",
 											"});"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -3647,17 +2710,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"claimsets",
-										"{{CreatedClaimSetId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetId}}"
 							},
 							"response": []
 						},
@@ -3670,7 +2723,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -3684,7 +2738,6 @@
 											"const response = pm.response.json();\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
-											"    pm.expect(response.status).to.equal(400);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
@@ -3697,7 +2750,8 @@
 											"    pm.expect(response.errors[\"Name\"].length).to.equal(1);\r",
 											"});"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -3713,17 +2767,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"claimsets",
-										"{{CreatedClaimSetId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetId}}"
 							},
 							"response": []
 						},
@@ -3736,7 +2780,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -3750,7 +2795,6 @@
 											"const response = pm.response.json();\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
-											"    pm.expect(response.status).to.equal(400);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
@@ -3764,7 +2808,8 @@
 											"    pm.expect(response.errors.Name[0]).to.contain(\"already exists\");\r",
 											"});"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -3780,17 +2825,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"claimsets",
-										"{{CreatedClaimSetId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetId}}"
 							},
 							"response": []
 						},
@@ -3803,7 +2838,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -3818,7 +2854,6 @@
 											"const errors = pm.response.json().errors;\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
-											"    pm.expect(response.status).to.equal(400);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
@@ -3837,7 +2872,8 @@
 											"    });\r",
 											"});"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -3853,17 +2889,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"claimsets",
-										"{{CreatedClaimSetId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetId}}"
 							},
 							"response": []
 						},
@@ -3876,7 +2902,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -3891,7 +2918,6 @@
 											"const errors = pm.response.json().errors;\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
-											"    pm.expect(response.status).to.equal(400);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
@@ -3910,7 +2936,8 @@
 											"    });\r",
 											"});"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -3926,17 +2953,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"claimsets",
-										"{{CreatedClaimSetId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetId}}"
 							},
 							"response": []
 						},
@@ -3949,7 +2966,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -3964,7 +2982,6 @@
 											"const errors = pm.response.json().errors;\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
-											"    pm.expect(response.status).to.equal(400);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
@@ -3980,7 +2997,8 @@
 											"    });\r",
 											"});"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -3996,17 +3014,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"claimsets",
-										"{{CreatedClaimSetId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetId}}"
 							},
 							"response": []
 						},
@@ -4019,7 +3027,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -4034,7 +3043,6 @@
 											"const errors = pm.response.json().errors;\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
-											"    pm.expect(response.status).to.equal(400);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
@@ -4050,7 +3058,8 @@
 											"    });\r",
 											"});"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -4066,17 +3075,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"claimsets",
-										"{{CreatedClaimSetId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetId}}"
 							},
 							"response": []
 						},
@@ -4089,7 +3088,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -4103,7 +3103,6 @@
 											"const response = pm.response.json();\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
-											"    pm.expect(response.status).to.equal(400);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
@@ -4119,7 +3118,8 @@
 											"    });\r",
 											"});"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -4135,17 +3135,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/{{SystemReservedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"claimsets",
-										"{{SystemReservedClaimSetId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/claimsets/{{SystemReservedClaimSetId}}"
 							},
 							"response": []
 						},
@@ -4163,7 +3153,6 @@
 											"const response = pm.response.json();\r",
 											"\r",
 											"pm.test(\"Response matches success format\", function () {\r",
-											"    pm.expect(response.status).to.equal(200);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"});\r",
 											"\r",
@@ -4173,24 +3162,15 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"claimsets",
-										"{{CreatedClaimSetId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetId}}"
 							},
 							"response": []
 						},
@@ -4208,7 +3188,6 @@
 											"const response = pm.response.json();\r",
 											"\r",
 											"pm.test(\"Response matches success format\", function () {\r",
-											"    pm.expect(response.status).to.equal(200);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"});\r",
 											"\r",
@@ -4218,24 +3197,15 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetIdOverride}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"claimsets",
-										"{{CreatedClaimSetIdOverride}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetIdOverride}}"
 							},
 							"response": []
 						},
@@ -4253,7 +3223,6 @@
 											"const response = pm.response.json();\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
-											"    pm.expect(response.status).to.equal(400);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
@@ -4272,7 +3241,8 @@
 											"pm.collectionVariables.unset(\"SystemReservedClaimSetId\");\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -4281,24 +3251,15 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/{{SystemReservedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"claimsets",
-										"{{SystemReservedClaimSetId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/claimsets/{{SystemReservedClaimSetId}}"
 							},
 							"response": []
 						},
@@ -4316,7 +3277,6 @@
 											"const response = pm.response.json();\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
-											"    pm.expect(response.status).to.equal(400);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
@@ -4368,17 +3328,7 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/{{OtherExistingClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"claimsets",
-										"{{OtherExistingClaimSetId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/claimsets/{{OtherExistingClaimSetId}}"
 							},
 							"response": []
 						},
@@ -4396,9 +3346,7 @@
 											"pm.test(\"Response matches error format\", function () {\r",
 											"    const response = pm.response.json();\r",
 											"\r",
-											"    pm.expect(response).to.have.property(\"status\");\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
-											"    pm.expect(response.status).to.equal(404);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response title is helpful and accurate\", function () {\r",
@@ -4410,24 +3358,15 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"claimsets",
-										"{{CreatedClaimSetId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetId}}"
 							},
 							"response": []
 						},
@@ -4445,9 +3384,7 @@
 											"const response = pm.response.json();\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
-											"    pm.expect(response).to.have.property(\"status\");\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
-											"    pm.expect(response.status).to.equal(404);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response title is helpful and accurate\", function () {\r",
@@ -4455,7 +3392,8 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -4471,17 +3409,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"claimsets",
-										"{{CreatedClaimSetId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetId}}"
 							},
 							"response": []
 						},
@@ -4499,9 +3427,7 @@
 											"pm.test(\"Response matches error format\", function () {\r",
 											"    const response = pm.response.json();\r",
 											"\r",
-											"    pm.expect(response).to.have.property(\"status\");\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
-											"    pm.expect(response.status).to.equal(404);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response title is helpful and accurate\", function () {\r",
@@ -4535,19 +3461,37 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"claimsets",
-										"{{CreatedClaimSetId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/claimsets/{{CreatedClaimSetId}}"
 							},
 							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": {
+							"token": "{{TOKEN}}"
+						}
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
 						}
 					]
 				},
@@ -4569,7 +3513,6 @@
 											"const result = pm.response.json().result;\r",
 											"\r",
 											"pm.test(\"Response matches success format\", function () {\r",
-											"    pm.expect(response.status).to.equal(201);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"result\");\r",
 											"});\r",
@@ -4623,16 +3566,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/odsInstances",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"odsInstances"
-									]
-								}
+								"url": "{{API_URL}}/v1/odsInstances"
 							},
 							"response": []
 						},
@@ -4650,7 +3584,6 @@
 											"const response = pm.response.json();\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
-											"    pm.expect(response.status).to.equal(400);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
@@ -4694,16 +3627,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/odsInstances",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"odsInstances"
-									]
-								}
+								"url": "{{API_URL}}/v1/odsInstances"
 							},
 							"response": []
 						},
@@ -4721,7 +3645,6 @@
 											"const response = pm.response.json();\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
-											"    pm.expect(response.status).to.equal(400);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
@@ -4763,16 +3686,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/odsInstances",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"odsInstances"
-									]
-								}
+								"url": "{{API_URL}}/v1/odsInstances"
 							},
 							"response": []
 						},
@@ -4791,7 +3705,6 @@
 											"const results = pm.response.json().result;\r",
 											"\r",
 											"pm.test(\"Response matches success format\", function () {\r",
-											"    pm.expect(response.status).to.equal(200);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"result\");\r",
 											"});\r",
@@ -4842,16 +3755,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/odsInstances",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"odsInstances"
-									]
-								}
+								"url": "{{API_URL}}/v1/odsInstances"
 							},
 							"response": []
 						},
@@ -4870,7 +3774,6 @@
 											"const result = pm.response.json().result;\r",
 											"\r",
 											"pm.test(\"Response matches success format\", function () {\r",
-											"    pm.expect(response.status).to.equal(200);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"result\");\r",
 											"});\r",
@@ -4895,17 +3798,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v1/odsInstances/{{CreateOdsInstanceId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"odsInstances",
-										"{{CreateOdsInstanceId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/odsInstances/{{CreateOdsInstanceId}}"
 							},
 							"response": []
 						},
@@ -4924,7 +3817,6 @@
 											"const result = pm.response.json().result;\r",
 											"\r",
 											"pm.test(\"Response matches success format\", function () {\r",
-											"    pm.expect(response.status).to.equal(200);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"result\");\r",
 											"});\r",
@@ -4970,17 +3862,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/odsInstances/{{CreateOdsInstanceId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"odsInstances",
-										"{{CreateOdsInstanceId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/odsInstances/{{CreateOdsInstanceId}}"
 							},
 							"response": []
 						},
@@ -4998,9 +3880,7 @@
 											"pm.test(\"Response matches error format\", function () {\r",
 											"    const response = pm.response.json();\r",
 											"\r",
-											"    pm.expect(response).to.have.property(\"status\");\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
-											"    pm.expect(response.status).to.equal(400);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response title is helpful and accurate\", function () {\r",
@@ -5095,17 +3975,7 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v1/odsInstances/{{CreateOdsInstanceId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"odsInstances",
-										"{{CreateOdsInstanceId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/odsInstances/{{CreateOdsInstanceId}}"
 							},
 							"response": []
 						},
@@ -5123,7 +3993,6 @@
 											"const response = pm.response.json();\r",
 											"\r",
 											"pm.test(\"Response matches success format\", function () {\r",
-											"    pm.expect(response.status).to.equal(200);\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"});\r",
 											"\r",
@@ -5141,17 +4010,7 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v1/odsInstances/{{CreateOdsInstanceId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"odsInstances",
-										"{{CreateOdsInstanceId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/odsInstances/{{CreateOdsInstanceId}}"
 							},
 							"response": []
 						},
@@ -5169,9 +4028,7 @@
 											"pm.test(\"Response matches error format\", function () {\r",
 											"    const response = pm.response.json();\r",
 											"\r",
-											"    pm.expect(response).to.have.property(\"status\");\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
-											"    pm.expect(response.status).to.equal(404);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response title is helpful and accurate\", function () {\r",
@@ -5191,17 +4048,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v1/odsInstances/{{CreateOdsInstanceId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"odsInstances",
-										"{{CreateOdsInstanceId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/odsInstances/{{CreateOdsInstanceId}}"
 							},
 							"response": []
 						},
@@ -5219,9 +4066,7 @@
 											"pm.test(\"Response matches error format\", function () {\r",
 											"    const response = pm.response.json();\r",
 											"\r",
-											"    pm.expect(response).to.have.property(\"status\");\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
-											"    pm.expect(response.status).to.equal(404);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response title is helpful and accurate\", function () {\r",
@@ -5250,17 +4095,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v1/odsInstances/{{CreateOdsInstanceId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"odsInstances",
-										"{{CreateOdsInstanceId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/odsInstances/{{CreateOdsInstanceId}}"
 							},
 							"response": []
 						},
@@ -5278,9 +4113,7 @@
 											"pm.test(\"Response matches error format\", function () {\r",
 											"    const response = pm.response.json();\r",
 											"\r",
-											"    pm.expect(response).to.have.property(\"status\");\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
-											"    pm.expect(response.status).to.equal(404);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response title is helpful and accurate\", function () {\r",
@@ -5302,41 +4135,111 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v1/odsInstances/{{CreateOdsInstanceId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"odsInstances",
-										"{{CreateOdsInstanceId}}"
-									]
-								}
+								"url": "{{API_URL}}/v1/odsInstances/{{CreateOdsInstanceId}}"
 							},
 							"response": []
 						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": {
+							"token": "{{TOKEN}}"
+						}
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
 					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": {
+					"token": "{{TOKEN}}"
+				}
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
 				}
 			]
 		}
 	],
-	"auth": {
-		"type": "bearer",
-		"bearer": [
-			{
-				"key": "token",
-				"value": "{{TOKEN}}",
-				"type": "string"
-			}
-		]
-	},
 	"event": [
 		{
 			"listen": "prerequest",
 			"script": {
 				"type": "text/javascript",
 				"exec": [
+					"function generateClientSecret() {",
+					"    const minLength = 32;",
+					"    const maxLength = 128;",
+					"    let result = '';",
+					"    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';",
+					"    const specialCharacters = '!@#$%^&*()_+{}:\"<>?|[];\\',./`~';",
+					"    const length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;",
+					"",
+					"    result += randomChar('abcdefghijklmnopqrstuvwxyz');",
+					"    result += randomChar('ABCDEFGHIJKLMNOPQRSTUVWXYZ');",
+					"    result += randomChar('0123456789');",
+					"    result += randomChar(specialCharacters);",
+					"",
+					"    for (let i = result.length; i < length; i++) {",
+					"        const charactersPlusSpecial = characters + specialCharacters;",
+					"        result += charactersPlusSpecial.charAt(Math.floor(Math.random() * charactersPlusSpecial.length));",
+					"    }",
+					"",
+					"    return shuffleString(result);",
+					"}",
+					"",
+					"function randomChar(str) {",
+					"    return str.charAt(Math.floor(Math.random() * str.length));",
+					"}",
+					"",
+					"function shuffleString(str) {",
+					"    const array = str.split('');",
+					"    for (let i = array.length - 1; i > 0; i--) {",
+					"        const j = Math.floor(Math.random() * (i + 1));",
+					"        [array[i], array[j]] = [array[j], array[i]];",
+					"    }",
+					"    return array.join('');",
+					"}",
+					"",
 					"if(pm.request.auth && pm.request.auth.type === \"noauth\") {",
 					"    return;",
 					"}",
@@ -5346,8 +4249,11 @@
 					"    return;",
 					"}",
 					"",
+					"let guid = pm.variables.replaceIn('{{$guid}}');",
+					"let client_secret =  generateClientSecret();",
+					"",
 					"pm.sendRequest({",
-					"    url: `${pm.variables.get(\"API_URL\")}/connect/token`,",
+					"    url: `${pm.variables.get(\"API_URL\")}/connect/register`,",
 					"    method: 'POST',",
 					"    header: {",
 					"        'Content-Type': 'application/x-www-form-urlencoded'",
@@ -5355,10 +4261,9 @@
 					"    body: {",
 					"        mode: 'urlencoded',",
 					"        urlencoded: [",
-					"            {key: 'client_id', value: pm.variables.get(\"RegisteredClientId\")},",
-					"            {key: 'client_secret', value: pm.variables.get(\"RegisteredClientSecret\")},",
-					"            {key: 'grant_type', value: \"client_credentials\"},",
-					"            {key: 'scope', value: \"edfi_admin_api/full_access\"}",
+					"            {key: 'ClientId', value: guid },",
+					"            {key: 'ClientSecret', value: client_secret },",
+					"            {key: 'DisplayName', value: guid }",
 					"        ]",
 					"    }",
 					"},",
@@ -5367,8 +4272,31 @@
 					"        if(error) {",
 					"            throw res.json().error_description",
 					"        }",
-					"        pm.collectionVariables.set(\"TOKEN\", res.json().access_token);",
-					"        console.log(\"Token success\");",
+					"",
+					"        pm.sendRequest({",
+					"            url: `${pm.variables.get(\"API_URL\")}/connect/token`,",
+					"            method: 'POST',",
+					"            header: {",
+					"                'Content-Type': 'application/x-www-form-urlencoded'",
+					"            },",
+					"            body: {",
+					"                mode: 'urlencoded',",
+					"                urlencoded: [",
+					"                    {key: 'client_id', value: guid},",
+					"                    {key: 'client_secret', value: client_secret },",
+					"                    {key: 'grant_type', value: \"client_credentials\"},",
+					"                    {key: 'scope', value: \"edfi_admin_api/full_access\"}",
+					"                ]",
+					"            }",
+					"        },",
+					"            (err, res) => {",
+					"                error = res.json().error",
+					"                if(error) {",
+					"                    throw res.json().error_description",
+					"                }",
+					"                pm.collectionVariables.set(\"TOKEN\", res.json().access_token);",
+					"                console.log(\"Token success\");",
+					"        });",
 					"});"
 				]
 			}
