@@ -52,8 +52,8 @@ jobs:
       - name: Run Admin API
         run: |
           docker compose \
-            -f '../../Docker/Compose/pgsql/SingleTenant/compose-build-dev.yml' \
-            -f '../../Docker/Compose/pgsql/SingleTenant/compose-build-ods.yml' \
+            -f '../../Docker/V2/Compose/pgsql/SingleTenant/compose-build-dev.yml' \
+            -f '../../Docker/V2/Compose/pgsql/SingleTenant/compose-build-ods.yml' \
             --env-file './E2E Tests/V2/gh-action-setup/.automation_pgsql.env' \
             up -d
 

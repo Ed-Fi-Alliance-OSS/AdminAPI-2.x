@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "4b7e3365-c05e-4cf6-897d-67766f676cc7",
+		"_postman_id": "034b80cf-a2d4-478b-9b91-bcb12ec5cb38",
 		"name": "Admin API E2E refactor Offset and Limit",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
 		"_exporter_id": "22794466"
@@ -275,6 +275,7 @@
 									"            vendorsToDelete.push(vendorId);\r",
 									"    });\r",
 									"}\r",
+									"\r",
 									"pm.collectionVariables.set(\"VENDORSTODELETE\", vendorsToDelete);"
 								]
 							}
@@ -285,7 +286,7 @@
 								"type": "text/javascript",
 								"packages": {},
 								"exec": [
-									"let vendorsToDelete = pm.collectionVariables.get(\"VENDORSTODELETE\").split(\",\");\r",
+									"let vendorsToDelete = pm.collectionVariables.get(\"VENDORSTODELETE\");\r",
 									"for (let i = 0; i < vendorsToDelete.length; i++) {\r",
 									"    let id = vendorsToDelete[i];\r",
 									"    pm.sendRequest({        \r",
@@ -1070,7 +1071,7 @@
 									"            odsInstancesToDelete.push(odsInstanceId);\r",
 									"    });\r",
 									"}\r",
-									"pm.collectionVariables.set(\"ODSINSTANCESTODELETE\", odsInstancesToDelete);"
+									"pm.collectionVariables.set(\"ODSINSTANCESTODELETE\", odsInstancesToDelete.join(','));"
 								]
 							}
 						},
@@ -1117,12 +1118,47 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
+					"function generateClientSecret() {",
+					"    const minLength = 32;",
+					"    const maxLength = 128;",
+					"    let result = '';",
+					"    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';",
+					"    const specialCharacters = '!@#$%^&*()_+{}:\"<>?|[];\\',./`~';",
+					"    const length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;",
+					"",
+					"    result += randomChar('abcdefghijklmnopqrstuvwxyz');",
+					"    result += randomChar('ABCDEFGHIJKLMNOPQRSTUVWXYZ');",
+					"    result += randomChar('0123456789');",
+					"    result += randomChar(specialCharacters);",
+					"",
+					"    for (let i = result.length; i < length; i++) {",
+					"        const charactersPlusSpecial = characters + specialCharacters;",
+					"        result += charactersPlusSpecial.charAt(Math.floor(Math.random() * charactersPlusSpecial.length));",
+					"    }",
+					"",
+					"    return shuffleString(result);",
+					"}",
+					"",
+					"function randomChar(str) {",
+					"    return str.charAt(Math.floor(Math.random() * str.length));",
+					"}",
+					"",
+					"function shuffleString(str) {",
+					"    const array = str.split('');",
+					"    for (let i = array.length - 1; i > 0; i--) {",
+					"        const j = Math.floor(Math.random() * (i + 1));",
+					"        [array[i], array[j]] = [array[j], array[i]];",
+					"    }",
+					"    return array.join('');",
+					"}",
+					"",
 					"let currentToken = pm.collectionVariables.get(\"TOKEN\");",
 					"if(currentToken) {",
 					"    return;",
 					"}",
 					"",
 					"var guid = pm.variables.replaceIn('{{$guid}}');",
+					"let client_secret =  generateClientSecret();",
 					"var header = {",
 					"    'Content-Type': 'application/x-www-form-urlencoded'",
 					"};",
@@ -1135,7 +1171,7 @@
 					"        mode: 'urlencoded',",
 					"        urlencoded: [",
 					"            {key: 'ClientId', value: guid },",
-					"            {key: 'ClientSecret', value: guid },",
+					"            {key: 'ClientSecret', value: client_secret },",
 					"            {key: 'DisplayName', value: guid }",
 					"            ]",
 					"    }",
@@ -1149,7 +1185,7 @@
 					"        mode: 'urlencoded',",
 					"        urlencoded: [",
 					"            {key: 'client_id', value: guid },",
-					"            {key: 'client_secret', value: guid },",
+					"            {key: 'client_secret', value: client_secret },",
 					"            {key: 'grant_type', value: \"client_credentials\"},",
 					"            {key: 'scope', value: \"edfi_admin_api/full_access\"}",
 					"        ]",
@@ -1195,43 +1231,35 @@
 		},
 		{
 			"key": "VENDORSTODELETE",
-			"value": "",
-			"type": "string"
+			"value": ""
 		},
 		{
 			"key": "VENDORSCOUNT",
-			"value": "10",
-			"type": "string"
+			"value": "10"
 		},
 		{
 			"key": "APPLICATIONSTODELETE",
-			"value": "",
-			"type": "string"
+			"value": ""
 		},
 		{
 			"key": "APPLICATIONCOUNT",
-			"value": "10",
-			"type": "string"
+			"value": "10"
 		},
 		{
 			"key": "CLAIMSETSTODELETE",
-			"value": "",
-			"type": "string"
+			"value": ""
 		},
 		{
 			"key": "CLAIMSETCOUNT",
-			"value": "10",
-			"type": "string"
+			"value": "10"
 		},
 		{
 			"key": "ODSINSTANCESTODELETE",
-			"value": "",
-			"type": "string"
+			"value": ""
 		},
 		{
 			"key": "ODSINSTANCESCOUNT",
-			"value": "10",
-			"type": "string"
+			"value": "10"
 		}
 	]
 }
