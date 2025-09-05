@@ -58,8 +58,8 @@ jobs:
       - name: Run Admin API
         run: |
           docker compose \
-            -f '../../Docker/Compose/mssql/SingleTenant/compose-build-dev.yml' \
-            -f '../../Docker/Compose/mssql/SingleTenant/compose-build-ods.yml' \
+            -f '../../Docker/V2/Compose/mssql/SingleTenant/compose-build-dev.yml' \
+            -f '../../Docker/V2/Compose/mssql/SingleTenant/compose-build-ods.yml' \
             --env-file './E2E Tests/V2/gh-action-setup/.automation_mssql.env' \
             up -d
 

@@ -340,7 +340,11 @@ function ResetTestDatabases {
 }
 
 function IntegrationTests {
-    Invoke-Execute { RunTests -Filter "*.DBTests" }
+    # Invoke-Execute { RunTests -Filter "*.DBTests" }
+
+    # For now I am excluding EdFi.Ods.AdminApi.V1.DBTests -> 6.x
+    Invoke-Execute { RunTests -Filter "EdFi.Ods.AdminApi.DBTests" }
+    Invoke-Execute { RunTests -Filter "EdFi.Ods.AdminConsole.DBTests" }
 }
 
 function RunNuGetPack {
@@ -562,7 +566,7 @@ function RunAdminApiDevDockerContainer {
 }
 
 function RunAdminApiDevDockerCompose {
-    &docker compose -f "$dockerRoot/Compose/pgsql/compose-build-dev.yml" --env-file "$solutionRoot/EdFi.Ods.AdminApi/V2/E2E Tests/gh-action-setup/.automation.env" -p "ods_admin_api" up -d
+    &docker compose -f "$dockerRoot/Compose/pgsql/compose-build-dev.yml" --env-file "$solutionRoot/EdFi.Ods.AdminApi/E2E Tests/gh-action-setup/.automation.env" -p "ods_admin_api" up -d
 }
 
 function PushPackage {
