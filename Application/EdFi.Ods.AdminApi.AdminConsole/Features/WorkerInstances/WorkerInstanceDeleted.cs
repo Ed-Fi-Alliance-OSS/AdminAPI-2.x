@@ -29,14 +29,13 @@ public class WorkerInstanceDeleted : IFeature
         AdminApiEndpointBuilder.MapPost(endpoints, "/instances/{id}/deleted", Handle)
             .WithRouteOptions(b => b.WithResponseCode(204))
             .WithRouteOptions(b => b.WithResponseCode(400))
-            .WithRouteOptions(b => b.WithResponseCode(404))
-            .BuildForVersions(AuthorizationPolicies.AdminApiWorkerScopePolicy.PolicyName, AdminApiVersions.AdminConsole);
+            .WithRouteOptions(b => b.WithResponseCode(404));
+
         AdminApiEndpointBuilder.MapPost(endpoints, "/instances/{id}/deletefailed", HandleDeleteFailed)
             .WithRouteOptions(b => b.WithResponseCode(204))
             .WithRouteOptions(b => b.WithResponseCode(400))
             .WithRouteOptions(b => b.WithResponseCode(404))
-            .WithRouteOptions(b => b.WithResponseCode(409))
-            .BuildForVersions(AuthorizationPolicies.AdminApiWorkerScopePolicy.PolicyName, AdminApiVersions.AdminConsole);
+            .WithRouteOptions(b => b.WithResponseCode(409));
     }
 
     internal static async Task<IResult> Handle([FromServices] IDeletedInstanceCommand deletedInstanceCommand, [FromRoute] int id)
