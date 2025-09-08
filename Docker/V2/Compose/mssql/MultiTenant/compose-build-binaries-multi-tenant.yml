@@ -24,7 +24,7 @@ services:
 
   adminapi:
     build:
-      context: ../../../../../
+      context: ../../../../
       dockerfile: V2/api.mssql.Dockerfile
       args:
         ADMIN_API_VERSION: "${ADMIN_API_VERSION:-2.2.0}"

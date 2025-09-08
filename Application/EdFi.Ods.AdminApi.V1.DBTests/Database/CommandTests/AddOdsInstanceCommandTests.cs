@@ -10,7 +10,7 @@ using Moq;
 using NUnit.Framework;
 using Shouldly;
 
-namespace EdFi.Ods.AdminApi.V1.DBTestssts.Database.CommandTests;
+namespace EdFi.Ods.AdminApi.V1.DBTests.Database.CommandTests;
 
 public class AddOdsInstanceCommandTests : PlatformUsersContextTestBase
 {

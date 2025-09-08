@@ -18,7 +18,7 @@ using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
 
-namespace EdFi.Ods.AdminApi.V1.DBTestssts;
+namespace EdFi.Ods.AdminApi.V1.DBTests;
 
 public class SecurityTestDatabaseSetup
 {

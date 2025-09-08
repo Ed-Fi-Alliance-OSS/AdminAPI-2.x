@@ -14,7 +14,7 @@ using Application = EdFi.Ods.AdminApi.V1.Security.DataAccess.Models.Application;
 using ClaimSet = EdFi.Ods.AdminApi.V1.Security.DataAccess.Models.ClaimSet;
 using ResourceClaim = EdFi.Ods.AdminApi.V1.Infrastructure.ClaimSetEditor.ResourceClaim;
 
-namespace EdFi.Ods.AdminApi.V1.DBTestssts.ClaimSetEditorTests;
+namespace EdFi.Ods.AdminApi.V1.DBTests.ClaimSetEditorTests;
 
 [TestFixture]
 public class EditResourceOnClaimSetCommandServiceTests : SecurityDataTestBase

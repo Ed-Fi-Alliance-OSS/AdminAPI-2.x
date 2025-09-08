@@ -13,7 +13,7 @@ using NUnit.Framework;
 using Shouldly;
 using ClaimSetModel = EdFi.Ods.AdminApi.V1.Security.DataAccess.Models.ClaimSet;
 
-namespace EdFi.Ods.AdminApi.V1.DBTestssts.ClaimSetEditorTests;
+namespace EdFi.Ods.AdminApi.V1.DBTests.ClaimSetEditorTests;
 
 [TestFixture]
 public class GetAllClaimSetsQueryServiceTests : SecurityDataTestBase

@@ -15,7 +15,7 @@ using Shouldly;
 using Application = EdFi.Ods.AdminApi.V1.Security.DataAccess.Models.Application;
 using ClaimSet = EdFi.Ods.AdminApi.V1.Security.DataAccess.Models.ClaimSet;
 
-namespace EdFi.Ods.AdminApi.V1.DBTestssts.ClaimSetEditorTests;
+namespace EdFi.Ods.AdminApi.V1.DBTests.ClaimSetEditorTests;
 
 [TestFixture]
 public class UpdateResourcesOnClaimSetCommandServiceTests : SecurityDataTestBase
