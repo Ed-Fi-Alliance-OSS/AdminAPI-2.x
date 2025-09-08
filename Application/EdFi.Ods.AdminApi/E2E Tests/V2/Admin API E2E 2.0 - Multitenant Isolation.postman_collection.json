@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "525e4f04-4454-4e5a-ae3c-2e8e61446cc4",
+		"_postman_id": "cf5968b3-918c-4e7c-bd21-628f062540b6",
 		"name": "Admin API E2E 2.0 - Multitenant Isolation",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "26382147"
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "22794466"
 	},
 	"item": [
 		{
@@ -12,6 +12,66 @@
 				{
 					"name": "OdsInstances",
 					"item": [
+						{
+							"name": "OdsInstances - Tenant1 - Invalid Api Mode",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.collectionVariables.set(\"OdsInstanceGUID\", pm.variables.replaceIn('{{$guid}}'));\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"message\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.message.toLowerCase()).to.contain(\"wrong api version for this instance mode.\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Tenant",
+										"value": "Tenant1",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Test-OdsInstance-{{OdsInstanceGUID}}\",\r\n    \"instanceType\": \"postgresql\",\r\n    \"connectionString\": \"{{connectionString}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{API_URL}}/v1/odsInstances/"
+							},
+							"response": []
+						},
 						{
 							"name": "OdsInstances - Tenant1",
 							"event": [
@@ -68,17 +128,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/odsInstances/",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"odsInstances",
-										""
-									]
-								}
+								"url": "{{API_URL}}/v2/odsInstances/"
 							},
 							"response": []
 						},
@@ -161,17 +211,58 @@
 										"type": "text"
 									}
 								],
-								"url": {
-									"raw": "{{API_URL}}/v2/odsInstances/{{CreatedOdsInstanceId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"odsInstances",
-										"{{CreatedOdsInstanceId}}"
-									]
+								"url": "{{API_URL}}/v2/odsInstances/{{CreatedOdsInstanceId}}"
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstances by ID - Tenant1 - Invalid Api Mode",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.variables.get(\"isMultitenant\") == \"true\") {",
+											"    pm.test(\"Status code is Bad Request\", function () {",
+											"        pm.response.to.have.status(400);",
+											"    });",
+											"",
+											"    const response = pm.response.json();",
+											"",
+											"    pm.test(\"Response matches error format\", function () {",
+											"        pm.expect(response).to.have.property(\"message\");",
+											"    });",
+											"",
+											"    pm.test(\"Response title is helpful and accurate\", function () {",
+											"        pm.expect(response.message.toLowerCase()).to.contain(\"wrong api version for this instance mode.\");",
+											"    });",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
 								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Tenant",
+										"value": "Tenant1",
+										"type": "text"
+									}
+								],
+								"url": "{{API_URL}}/v1/odsInstances/{{CreatedOdsInstanceId}}"
 							},
 							"response": []
 						},
@@ -305,13 +396,9 @@
 							"request": {
 								"auth": {
 									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{TOKEN_TENANT2}}",
-											"type": "string"
-										}
-									]
+									"bearer": {
+										"token": "{{TOKEN_TENANT2}}"
+									}
 								},
 								"method": "GET",
 								"header": [
@@ -321,17 +408,7 @@
 										"type": "text"
 									}
 								],
-								"url": {
-									"raw": "{{API_URL}}/v2/odsInstances/{{CreatedOdsInstanceId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"odsInstances",
-										"{{CreatedOdsInstanceId}}"
-									]
-								}
+								"url": "{{API_URL}}/v2/odsInstances/{{CreatedOdsInstanceId}}"
 							},
 							"response": []
 						}
@@ -342,13 +419,9 @@
 	],
 	"auth": {
 		"type": "bearer",
-		"bearer": [
-			{
-				"key": "token",
-				"value": "{{TOKEN_TENANT1}}",
-				"type": "string"
-			}
-		]
+		"bearer": {
+			"token": "{{TOKEN_TENANT1}}"
+		}
 	},
 	"event": [
 		{

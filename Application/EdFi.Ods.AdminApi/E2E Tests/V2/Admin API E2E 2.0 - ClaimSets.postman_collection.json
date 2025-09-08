@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "aa95140d-a83e-4e7f-a3f8-052341b2c007",
+		"_postman_id": "2984faea-b9b4-4cfb-9969-3e21eaa55402",
 		"name": "Admin API E2E 2.0 - ClaimSets",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "22794466"
 	},
 	"item": [
 		{
@@ -56,17 +57,60 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										""
-									]
+								"url": "{{API_URL}}/v2/claimSets/"
+							},
+							"response": []
+						},
+						{
+							"name": "ClaimSets - Invalid Api Mode",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.collectionVariables.set(\"ClaimSetGUID\", pm.variables.replaceIn('{{$guid}}'));"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"message\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.message.toLowerCase()).to.contain(\"wrong api version for this instance mode.\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
 								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Test ClaimSet {{ClaimSetGUID}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{API_URL}}/v1/claimSets/"
 							},
 							"response": []
 						},
@@ -110,17 +154,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/import",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"import"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/import"
 							},
 							"response": []
 						},
@@ -204,17 +238,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/import",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"import"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/import"
 							},
 							"response": []
 						},
@@ -272,17 +296,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/import",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"import"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/import"
 							},
 							"response": []
 						},
@@ -340,17 +354,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/import",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"import"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/import"
 							},
 							"response": []
 						},
@@ -408,17 +412,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/import",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"import"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/import"
 							},
 							"response": []
 						},
@@ -474,17 +468,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										""
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/"
 							},
 							"response": []
 						},
@@ -540,17 +524,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										""
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/"
 							},
 							"response": []
 						},
@@ -636,17 +610,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										""
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/"
 							},
 							"response": []
 						},
@@ -734,6 +698,59 @@
 							"response": []
 						},
 						{
+							"name": "ClaimSets - Invalid Api Mode",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"message\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.message.toLowerCase()).to.contain(\"wrong api version for this instance mode.\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v1/claimSets?offset={{offset}}&limit={{limit}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"claimSets"
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "{{offset}}"
+										},
+										{
+											"key": "limit",
+											"value": "{{limit}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "ClaimSets - Without Offset and Limit",
 							"event": [
 								{
@@ -794,16 +811,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets"
 							},
 							"response": []
 						},
@@ -1136,17 +1144,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{CreatedClaimSetId}}"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}"
 							},
 							"response": []
 						},
@@ -1319,18 +1317,41 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/export",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{CreatedClaimSetId}}",
-										"export"
-									]
+								"url": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/export"
+							},
+							"response": []
+						},
+						{
+							"name": "ClaimSets - Export - Invalid Api Mode",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"message\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.message.toLowerCase()).to.contain(\"wrong api version for this instance mode.\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
 								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{API_URL}}/v1/claimSets/{{CreatedClaimSetId}}/export"
 							},
 							"response": []
 						},
@@ -1371,18 +1392,60 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{CreatedClaimSetId}}",
-										"resourceClaimActions"
-									]
+								"url": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions"
+							},
+							"response": []
+						},
+						{
+							"name": "ResourceClaimClaimSets - Add Action - Invalid Api Mode",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"message\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.message.toLowerCase()).to.contain(\"wrong api version for this instance mode.\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
 								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"resourceClaimId\": 4,\r\n  \"resourceClaimActions\": [\r\n    {\r\n      \"name\": \"read\",\r\n      \"enabled\": true\r\n    },\r\n    {\r\n      \"name\": \"create\",\r\n      \"enabled\": true\r\n    }\r\n  ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{API_URL}}/v1/claimSets/{{CreatedClaimSetId}}/resourceClaimActions"
 							},
 							"response": []
 						},
@@ -1561,17 +1624,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimsets",
-										"{{CreatedClaimSetId}}"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}"
 							},
 							"response": []
 						},
@@ -1629,18 +1682,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{CreatedClaimSetId}}",
-										"resourceClaimActions"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions"
 							},
 							"response": []
 						},
@@ -1698,18 +1740,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{CreatedClaimSetId}}",
-										"resourceClaimActions"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions"
 							},
 							"response": []
 						},
@@ -1794,18 +1825,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{SystemReservedClaimSetId}}/resourceClaimActions",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{SystemReservedClaimSetId}}",
-										"resourceClaimActions"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/{{SystemReservedClaimSetId}}/resourceClaimActions"
 							},
 							"response": []
 						},
@@ -1845,19 +1865,60 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{CreatedClaimSetId}}",
-										"resourceClaimActions",
-										"4"
-									]
+								"url": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4"
+							},
+							"response": []
+						},
+						{
+							"name": "ResourceClaimClaimSets - Modify Action - Invalid Api Mode",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"message\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.message.toLowerCase()).to.contain(\"wrong api version for this instance mode.\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
 								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"resourceClaimId\": 4,\r\n  \"resourceClaimActions\": [\r\n    {\r\n      \"name\": \"read\",\r\n      \"enabled\": true\r\n    },\r\n    {\r\n      \"name\": \"create\",\r\n      \"enabled\": true\r\n    },\r\n    {\r\n      \"name\": \"update\",\r\n      \"enabled\": false\r\n    },\r\n    {\r\n      \"name\": \"delete\",\r\n      \"enabled\": false\r\n    }\r\n  ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{API_URL}}/v1/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4"
 							},
 							"response": []
 						},
@@ -1942,19 +2003,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{SystemReservedClaimSetId}}/resourceClaimActions/4",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{SystemReservedClaimSetId}}",
-										"resourceClaimActions",
-										"4"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/{{SystemReservedClaimSetId}}/resourceClaimActions/4"
 							},
 							"response": []
 						},
@@ -2006,19 +2055,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/90000/resourceClaimActions/4",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"90000",
-										"resourceClaimActions",
-										"4"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/90000/resourceClaimActions/4"
 							},
 							"response": []
 						},
@@ -2058,20 +2095,60 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4/overrideAuthorizationStrategy",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{CreatedClaimSetId}}",
-										"resourceClaimActions",
-										"4",
-										"overrideAuthorizationStrategy"
-									]
+								"url": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4/overrideAuthorizationStrategy"
+							},
+							"response": []
+						},
+						{
+							"name": "ResourceClaimClaimSets - Override Auth Strategy - Invalid Api Mode",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"message\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.message.toLowerCase()).to.contain(\"wrong api version for this instance mode.\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
 								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"actionName\": \"create\",\r\n  \"authorizationStrategies\": [\r\n    \"RelationshipsWithStudentsOnly\"\r\n  ]\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{API_URL}}/v1/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4/overrideAuthorizationStrategy"
 							},
 							"response": []
 						},
@@ -2111,20 +2188,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4/overrideAuthorizationStrategy",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{CreatedClaimSetId}}",
-										"resourceClaimActions",
-										"4",
-										"overrideAuthorizationStrategy"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4/overrideAuthorizationStrategy"
 							},
 							"response": []
 						},
@@ -2309,17 +2373,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimsets",
-										"{{CreatedClaimSetId}}"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}"
 							},
 							"response": []
 						},
@@ -2375,20 +2429,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4/overrideAuthorizationStrategy",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{CreatedClaimSetId}}",
-										"resourceClaimActions",
-										"4",
-										"overrideAuthorizationStrategy"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4/overrideAuthorizationStrategy"
 							},
 							"response": []
 						},
@@ -2473,20 +2514,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{SystemReservedClaimSetId}}/resourceClaimActions/4/overrideAuthorizationStrategy",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{SystemReservedClaimSetId}}",
-										"resourceClaimActions",
-										"4",
-										"overrideAuthorizationStrategy"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/{{SystemReservedClaimSetId}}/resourceClaimActions/4/overrideAuthorizationStrategy"
 							},
 							"response": []
 						},
@@ -2547,20 +2575,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4000/overrideAuthorizationStrategy",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{CreatedClaimSetId}}",
-										"resourceClaimActions",
-										"4000",
-										"overrideAuthorizationStrategy"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4000/overrideAuthorizationStrategy"
 							},
 							"response": []
 						},
@@ -2600,20 +2615,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4/resetAuthorizationStrategies",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{CreatedClaimSetId}}",
-										"resourceClaimActions",
-										"4",
-										"resetAuthorizationStrategies"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4/resetAuthorizationStrategies"
 							},
 							"response": []
 						},
@@ -2698,20 +2700,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{SystemReservedClaimSetId}}/resourceClaimActions/4/resetAuthorizationStrategies",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{SystemReservedClaimSetId}}",
-										"resourceClaimActions",
-										"4",
-										"resetAuthorizationStrategies"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/{{SystemReservedClaimSetId}}/resourceClaimActions/4/resetAuthorizationStrategies"
 							},
 							"response": []
 						},
@@ -2751,20 +2740,60 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/40000/resetAuthorizationStrategies",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{CreatedClaimSetId}}",
-										"resourceClaimActions",
-										"40000",
-										"resetAuthorizationStrategies"
-									]
+								"url": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/40000/resetAuthorizationStrategies"
+							},
+							"response": []
+						},
+						{
+							"name": "ResourceClaimClaimSets - Delete - Invalid Api Mode",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"message\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.message.toLowerCase()).to.contain(\"wrong api version for this instance mode.\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
 								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{API_URL}}/v1/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4"
 							},
 							"response": []
 						},
@@ -2804,19 +2833,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{CreatedClaimSetId}}",
-										"resourceClaimActions",
-										"4"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4"
 							},
 							"response": []
 						},
@@ -2901,19 +2918,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{SystemReservedClaimSetId}}/resourceClaimActions/4",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{SystemReservedClaimSetId}}",
-										"resourceClaimActions",
-										"4"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/{{SystemReservedClaimSetId}}/resourceClaimActions/4"
 							},
 							"response": []
 						},
@@ -2953,19 +2958,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4000",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{CreatedClaimSetId}}",
-										"resourceClaimActions",
-										"4000"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4000"
 							},
 							"response": []
 						},
@@ -3050,17 +3043,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										""
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/"
 							},
 							"response": []
 						},
@@ -3176,17 +3159,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/copy",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"copy"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/copy"
 							},
 							"response": []
 						},
@@ -3245,17 +3218,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/copy",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"copy"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/copy"
 							},
 							"response": []
 						},
@@ -3324,17 +3287,60 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{CreatedClaimSetId}}"
-									]
+								"url": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}"
+							},
+							"response": []
+						},
+						{
+							"name": "ClaimSets - Invalid Api Mode",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"message\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.message.toLowerCase()).to.contain(\"wrong api version for this instance mode.\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
 								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Updated Test ClaimSet\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{API_URL}}/v1/claimSets/{{CreatedClaimSetId}}"
 							},
 							"response": []
 						},
@@ -3389,17 +3395,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{CreatedClaimSetId}}"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}"
 							},
 							"response": []
 						},
@@ -3454,17 +3450,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{CreatedClaimSetId}}"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}"
 							},
 							"response": []
 						},
@@ -3520,17 +3506,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{CreatedClaimSetId}}"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}"
 							},
 							"response": []
 						},
@@ -3616,17 +3592,41 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{SystemReservedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{SystemReservedClaimSetId}}"
-									]
+								"url": "{{API_URL}}/v2/claimSets/{{SystemReservedClaimSetId}}"
+							},
+							"response": []
+						},
+						{
+							"name": "ClaimSets - Invalid Api Mode",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"message\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.message.toLowerCase()).to.contain(\"wrong api version for this instance mode.\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
 								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": "{{API_URL}}/v1/claimSets/{{CreatedClaimSetId}}"
 							},
 							"response": []
 						},
@@ -3676,17 +3676,7 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{CreatedClaimSetId}}"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}"
 							},
 							"response": []
 						},
@@ -3738,17 +3728,7 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{SystemReservedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{SystemReservedClaimSetId}}"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/{{SystemReservedClaimSetId}}"
 							},
 							"response": []
 						},
@@ -3891,17 +3871,7 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{OtherExistingClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{OtherExistingClaimSetId}}"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/{{OtherExistingClaimSetId}}"
 							},
 							"response": []
 						},
@@ -3938,17 +3908,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{CreatedClaimSetId}}"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}"
 							},
 							"response": []
 						},
@@ -3984,18 +3944,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/export",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{CreatedClaimSetId}}",
-										"export"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/export"
 							},
 							"response": []
 						},
@@ -4037,17 +3986,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{CreatedClaimSetId}}"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}"
 							},
 							"response": []
 						},
@@ -4088,17 +4027,7 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{CreatedClaimSetId}}"
-									]
-								}
+								"url": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}"
 							},
 							"response": []
 						}
@@ -4109,13 +4038,9 @@
 	],
 	"auth": {
 		"type": "bearer",
-		"bearer": [
-			{
-				"key": "token",
-				"value": "{{TOKEN}}",
-				"type": "string"
-			}
-		]
+		"bearer": {
+			"token": "{{TOKEN}}"
+		}
 	},
 	"event": [
 		{

@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "17ffd6fd-b6a2-46f1-b232-30a0fc96e829",
+		"_postman_id": "5968dab5-6842-4a94-a808-da5a096d46cf",
 		"name": "Admin API E2E 2.0 - Actions",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21286036"
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "22794466"
 	},
 	"item": [
 		{
@@ -14,6 +14,96 @@
 					"item": [
 						{
 							"name": "Authstrategies",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET Actions: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"GET Actions: Response matches success format\", function () {\r",
+											"    if (response && response.length > 0) {\r",
+											"        pm.expect(response[0]).to.have.property(\"id\");\r",
+											"        pm.expect(response[0]).to.have.property(\"name\");\r",
+											"        pm.expect(response[0]).to.have.property(\"uri\");\r",
+											"    }\r",
+											"});\r",
+											"\r",
+											"const GetActionsSchema = {\r",
+											"  \"type\": \"array\",\r",
+											"  \"items\": [\r",
+											"    {\r",
+											"      \"type\": \"object\",\r",
+											"      \"properties\": {\r",
+											"        \"id\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"name\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"uri\": {\r",
+											"          \"type\": \"string\"\r",
+											"        }\r",
+											"      },\r",
+											"      \"required\": [\r",
+											"        \"id\",\r",
+											"        \"name\",\r",
+											"        \"uri\"\r",
+											"      ]\r",
+											"    }\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET Actions: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetActionsSchema);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/actions?offset={{offset}}&limit={{limit}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"actions"
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "{{offset}}"
+										},
+										{
+											"key": "limit",
+											"value": "{{limit}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Authstrategies - Invalid Api Mode",
 							"event": [
 								{
 									"listen": "test",
@@ -171,16 +261,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v2/actions",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"actions"
-									]
-								}
+								"url": "{{API_URL}}/v2/actions"
 							},
 							"response": []
 						},
@@ -367,13 +448,9 @@
 	],
 	"auth": {
 		"type": "bearer",
-		"bearer": [
-			{
-				"key": "token",
-				"value": "{{TOKEN}}",
-				"type": "string"
-			}
-		]
+		"bearer": {
+			"token": "{{TOKEN}}"
+		}
 	},
 	"event": [
 		{
