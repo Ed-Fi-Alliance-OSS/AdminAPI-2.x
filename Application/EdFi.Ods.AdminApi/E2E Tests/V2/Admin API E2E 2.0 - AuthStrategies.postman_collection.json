@@ -1,8 +1,8 @@
 {
 	"info": {
-		"_postman_id": "372ebb7e-3e4c-4f82-a3f1-6da38bb6c0be",
+		"_postman_id": "0105120f-ddc5-49cc-8c3a-1fa375def9f7",
 		"name": "Admin API E2E 2.0 - AuthStrategies",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "22794466"
 	},
 	"item": [
@@ -70,7 +70,16 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v2/authorizationStrategies"
+								"url": {
+									"raw": "{{API_URL}}/v2/authorizationStrategies",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"authorizationStrategies"
+									]
+								}
 							},
 							"response": []
 						},
@@ -104,7 +113,16 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v1/authorizationStrategies"
+								"url": {
+									"raw": "{{API_URL}}/v1/authorizationStrategies",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"authorizationStrategies"
+									]
+								}
 							},
 							"response": []
 						}
@@ -115,9 +133,13 @@
 	],
 	"auth": {
 		"type": "bearer",
-		"bearer": {
-			"token": "{{TOKEN}}"
-		}
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{TOKEN}}",
+				"type": "string"
+			}
+		]
 	},
 	"event": [
 		{

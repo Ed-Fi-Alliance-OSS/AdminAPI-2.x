@@ -1,8 +1,8 @@
 {
 	"info": {
-		"_postman_id": "748028b2-9b64-4ce0-af35-5da01c787aab",
+		"_postman_id": "206b7cd9-7ff2-4c25-982f-a72cf5d7d918",
 		"name": "Admin API E2E 2.0 - OdsInstances",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "22794466"
 	},
 	"item": [
@@ -59,7 +59,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/odsInstances/"
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										""
+									]
+								}
 							},
 							"response": []
 						},
@@ -113,7 +123,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v1/odsInstances/"
+								"url": {
+									"raw": "{{API_URL}}/v1/odsInstances/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"odsInstances",
+										""
+									]
+								}
 							},
 							"response": []
 						},
@@ -174,7 +194,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/odsInstances/"
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										""
+									]
+								}
 							},
 							"response": []
 						},
@@ -260,7 +290,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/odsInstances/"
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										""
+									]
+								}
 							},
 							"response": []
 						},
@@ -319,7 +359,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/odsInstances/"
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										""
+									]
+								}
 							},
 							"response": []
 						},
@@ -432,7 +482,16 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v1/odsInstances"
+								"url": {
+									"raw": "{{API_URL}}/v1/odsInstances",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"odsInstances"
+									]
+								}
 							},
 							"response": []
 						},
@@ -493,7 +552,16 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v2/odsInstances"
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances"
+									]
+								}
 							},
 							"response": []
 						},
@@ -681,7 +749,17 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v2/odsInstances/0"
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/0",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										"0"
+									]
+								}
 							},
 							"response": []
 						},
@@ -757,7 +835,17 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v2/odsInstances/{{CreatedOdsInstanceId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/{{CreatedOdsInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										"{{CreatedOdsInstanceId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -869,7 +957,18 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v2/odsInstances/{{ODSInstanceId}}/applications"
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/{{ODSInstanceId}}/applications",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										"{{ODSInstanceId}}",
+										"applications"
+									]
+								}
 							},
 							"response": []
 						},
@@ -936,7 +1035,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/odsInstances/{{CreatedOdsInstanceId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/{{CreatedOdsInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										"{{CreatedOdsInstanceId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -989,7 +1098,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v1/odsInstances/{{CreatedOdsInstanceId}}"
+								"url": {
+									"raw": "{{API_URL}}/v1/odsInstances/{{CreatedOdsInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"odsInstances",
+										"{{CreatedOdsInstanceId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1056,7 +1175,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/odsInstances/{{CreatedOdsInstanceId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/{{CreatedOdsInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										"{{CreatedOdsInstanceId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1115,7 +1244,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/odsInstances/{{CreatedOdsInstanceId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/{{CreatedOdsInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										"{{CreatedOdsInstanceId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1172,7 +1311,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/odsInstances/{{CreatedOdsInstanceId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/{{CreatedOdsInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										"{{CreatedOdsInstanceId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1232,7 +1381,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/odsInstances/{{NotExistOdsInstanceId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/{{NotExistOdsInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										"{{NotExistOdsInstanceId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1266,7 +1425,17 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": "{{API_URL}}/v1/odsInstances/{{CreatedOdsInstanceId}}"
+								"url": {
+									"raw": "{{API_URL}}/v1/odsInstances/{{CreatedOdsInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"odsInstances",
+										"{{CreatedOdsInstanceId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1289,7 +1458,17 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": "{{API_URL}}/v2/odsInstances/{{CreatedOdsInstanceId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/{{CreatedOdsInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										"{{CreatedOdsInstanceId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1339,7 +1518,17 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": "{{API_URL}}/v2/odsInstances/{{NotExistOdsInstanceId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/{{NotExistOdsInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										"{{NotExistOdsInstanceId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1387,7 +1576,17 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": "{{API_URL}}/v2/odsInstances/{{ODSInstanceId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/{{ODSInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										"{{ODSInstanceId}}"
+									]
+								}
 							},
 							"response": []
 						}
@@ -1418,9 +1617,13 @@
 	],
 	"auth": {
 		"type": "bearer",
-		"bearer": {
-			"token": "{{TOKEN}}"
-		}
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{TOKEN}}",
+				"type": "string"
+			}
+		]
 	},
 	"event": [
 		{

@@ -1,8 +1,8 @@
 {
 	"info": {
-		"_postman_id": "dd4622b9-a5f3-486d-a73b-2147cc53f593",
+		"_postman_id": "8987d7b3-cc09-4aa2-89fd-62c409604b6c",
 		"name": "Admin API E2E 2.0 - Vendors",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "22794466"
 	},
 	"item": [
@@ -49,7 +49,16 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/vendors"
+								"url": {
+									"raw": "{{API_URL}}/v2/vendors",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"vendors"
+									]
+								}
 							},
 							"response": [
 								{
@@ -66,7 +75,15 @@
 												}
 											}
 										},
-										"url": "{{API_URL}}/vendors"
+										"url": {
+											"raw": "{{API_URL}}/vendors",
+											"host": [
+												"{{API_URL}}"
+											],
+											"path": [
+												"vendors"
+											]
+										}
 									},
 									"status": "Created",
 									"code": 201,
@@ -137,7 +154,16 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v1/vendors"
+								"url": {
+									"raw": "{{API_URL}}/v1/vendors",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"vendors"
+									]
+								}
 							},
 							"response": []
 						},
@@ -186,7 +212,16 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/vendors"
+								"url": {
+									"raw": "{{API_URL}}/v2/vendors",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"vendors"
+									]
+								}
 							},
 							"response": []
 						},
@@ -234,7 +269,16 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/vendors"
+								"url": {
+									"raw": "{{API_URL}}/v2/vendors",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"vendors"
+									]
+								}
 							},
 							"response": []
 						},
@@ -379,7 +423,16 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v1/vendors"
+								"url": {
+									"raw": "{{API_URL}}/v1/vendors",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"vendors"
+									]
+								}
 							},
 							"response": []
 						},
@@ -638,7 +691,17 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v2/vendors/{{CreatedVendorId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/vendors/{{CreatedVendorId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"vendors",
+										"{{CreatedVendorId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -810,7 +873,18 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/vendors/{{OtherApplicationVendorIdwithVendor}}/applications"
+								"url": {
+									"raw": "{{API_URL}}/v2/vendors/{{OtherApplicationVendorIdwithVendor}}/applications",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"vendors",
+										"{{OtherApplicationVendorIdwithVendor}}",
+										"applications"
+									]
+								}
 							},
 							"response": []
 						},
@@ -878,7 +952,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/vendors/{{CreatedVendorId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/vendors/{{CreatedVendorId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"vendors",
+										"{{CreatedVendorId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -931,7 +1015,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v1/vendors/{{CreatedVendorId}}"
+								"url": {
+									"raw": "{{API_URL}}/v1/vendors/{{CreatedVendorId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"vendors",
+										"{{CreatedVendorId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -989,7 +1083,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/vendors/{{CreatedVendorId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/vendors/{{CreatedVendorId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"vendors",
+										"{{CreatedVendorId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1023,7 +1127,17 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": "{{API_URL}}/v1/vendors/{{CreatedVendorId}}"
+								"url": {
+									"raw": "{{API_URL}}/v1/vendors/{{CreatedVendorId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"vendors",
+										"{{CreatedVendorId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1073,7 +1187,17 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": "{{API_URL}}/v2/vendors/{{CreatedVendorId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/vendors/{{CreatedVendorId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"vendors",
+										"{{CreatedVendorId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1110,7 +1234,17 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v2/vendors/{{CreatedVendorId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/vendors/{{CreatedVendorId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"vendors",
+										"{{CreatedVendorId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1168,7 +1302,18 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/vendors/0/applications"
+								"url": {
+									"raw": "{{API_URL}}/v2/vendors/0/applications",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"vendors",
+										"0",
+										"applications"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1214,7 +1359,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/vendors/{{CreatedVendorId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/vendors/{{CreatedVendorId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"vendors",
+										"{{CreatedVendorId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1253,7 +1408,17 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": "{{API_URL}}/v2/vendors/{{CreatedVendorId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/vendors/{{CreatedVendorId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"vendors",
+										"{{CreatedVendorId}}"
+									]
+								}
 							},
 							"response": []
 						}
@@ -1264,13 +1429,17 @@
 	],
 	"auth": {
 		"type": "bearer",
-		"bearer": {
-			"0": {
-				"key": "token",
-				"value": "{{TOKEN}}",
-				"type": "string"
+		"bearer": [
+			{
+				"key": "0",
+				"value": {
+					"key": "token",
+					"value": "{{TOKEN}}",
+					"type": "string"
+				},
+				"type": "any"
 			}
-		}
+		]
 	},
 	"event": [
 		{

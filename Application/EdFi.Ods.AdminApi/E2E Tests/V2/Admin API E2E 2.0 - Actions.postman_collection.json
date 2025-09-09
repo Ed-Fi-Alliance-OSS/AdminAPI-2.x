@@ -1,8 +1,8 @@
 {
 	"info": {
-		"_postman_id": "5e523229-b61f-423b-a839-b1a9d3476a81",
+		"_postman_id": "6d26becf-5a32-471d-86bb-4f62594ad62a",
 		"name": "Admin API E2E 2.0 - Actions",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "22794466"
 	},
 	"item": [
@@ -142,7 +142,16 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v1/actions"
+								"url": {
+									"raw": "{{API_URL}}/v1/actions",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"actions"
+									]
+								}
 							},
 							"response": []
 						},
@@ -215,7 +224,16 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v2/actions"
+								"url": {
+									"raw": "{{API_URL}}/v2/actions",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"actions"
+									]
+								}
 							},
 							"response": []
 						},
@@ -402,9 +420,13 @@
 	],
 	"auth": {
 		"type": "bearer",
-		"bearer": {
-			"token": "{{TOKEN}}"
-		}
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{TOKEN}}",
+				"type": "string"
+			}
+		]
 	},
 	"event": [
 		{

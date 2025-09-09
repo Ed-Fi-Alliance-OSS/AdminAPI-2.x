@@ -1,8 +1,8 @@
 {
 	"info": {
-		"_postman_id": "23def34b-ece6-44ab-8df6-abbbfc89b6eb",
+		"_postman_id": "97a1227d-9c43-4b9a-8782-77234ae83cd0",
 		"name": "Admin API E2E 2.0 - Profiles",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "22794466"
 	},
 	"item": [
@@ -60,7 +60,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/Profiles/"
+								"url": {
+									"raw": "{{API_URL}}/v2/Profiles/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"Profiles",
+										""
+									]
+								}
 							},
 							"response": []
 						},
@@ -113,7 +123,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v1/Profiles/"
+								"url": {
+									"raw": "{{API_URL}}/v1/Profiles/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"Profiles",
+										""
+									]
+								}
 							},
 							"response": []
 						},
@@ -174,7 +194,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/Profiles/"
+								"url": {
+									"raw": "{{API_URL}}/v2/Profiles/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"Profiles",
+										""
+									]
+								}
 							},
 							"response": []
 						},
@@ -233,7 +263,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/Profiles/"
+								"url": {
+									"raw": "{{API_URL}}/v2/Profiles/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"Profiles",
+										""
+									]
+								}
 							},
 							"response": []
 						},
@@ -293,7 +333,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/Profiles/"
+								"url": {
+									"raw": "{{API_URL}}/v2/Profiles/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"Profiles",
+										""
+									]
+								}
 							},
 							"response": []
 						},
@@ -353,7 +403,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/Profiles/"
+								"url": {
+									"raw": "{{API_URL}}/v2/Profiles/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"Profiles",
+										""
+									]
+								}
 							},
 							"response": []
 						},
@@ -460,7 +520,16 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v1/Profiles"
+								"url": {
+									"raw": "{{API_URL}}/v1/Profiles",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"Profiles"
+									]
+								}
 							},
 							"response": []
 						},
@@ -654,7 +723,17 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v2/Profiles/"
+								"url": {
+									"raw": "{{API_URL}}/v2/Profiles/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"Profiles",
+										""
+									]
+								}
 							},
 							"response": []
 						},
@@ -705,7 +784,17 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v2/profiles/{{CreatedProfileId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/profiles/{{CreatedProfileId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"profiles",
+										"{{CreatedProfileId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -750,7 +839,17 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v2/profiles/{{NotExistProfileId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/profiles/{{NotExistProfileId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"profiles",
+										"{{NotExistProfileId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -858,7 +957,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/Profiles/{{OtherCreatedProfileId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/Profiles/{{OtherCreatedProfileId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"Profiles",
+										"{{OtherCreatedProfileId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -911,7 +1020,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v1/Profiles/{{CreatedProfileId}}"
+								"url": {
+									"raw": "{{API_URL}}/v1/Profiles/{{CreatedProfileId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"Profiles",
+										"{{CreatedProfileId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -978,7 +1097,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/Profiles/{{CreatedProfileId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/Profiles/{{CreatedProfileId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"Profiles",
+										"{{CreatedProfileId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1033,7 +1162,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/profiles/{{NotExistProfileId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/profiles/{{NotExistProfileId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"profiles",
+										"{{NotExistProfileId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1092,7 +1231,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/Profiles/{{CreatedProfileId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/Profiles/{{CreatedProfileId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"Profiles",
+										"{{CreatedProfileId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1152,7 +1301,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/Profiles/{{CreatedProfileId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/Profiles/{{CreatedProfileId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"Profiles",
+										"{{CreatedProfileId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1212,7 +1371,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/Profiles/{{CreatedProfileId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/Profiles/{{CreatedProfileId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"Profiles",
+										"{{CreatedProfileId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1246,7 +1415,17 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": "{{API_URL}}/v1/profiles/{{CreatedProfileId}}"
+								"url": {
+									"raw": "{{API_URL}}/v1/profiles/{{CreatedProfileId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"profiles",
+										"{{CreatedProfileId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1269,7 +1448,17 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": "{{API_URL}}/v2/profiles/{{CreatedProfileId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/profiles/{{CreatedProfileId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"profiles",
+										"{{CreatedProfileId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1305,7 +1494,17 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": "{{API_URL}}/v2/profiles/{{NotExistProfileId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/profiles/{{NotExistProfileId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"profiles",
+										"{{NotExistProfileId}}"
+									]
+								}
 							},
 							"response": []
 						}
@@ -1341,9 +1540,13 @@
 	],
 	"auth": {
 		"type": "bearer",
-		"bearer": {
-			"token": "{{TOKEN}}"
-		}
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{TOKEN}}",
+				"type": "string"
+			}
+		]
 	},
 	"event": [
 		{

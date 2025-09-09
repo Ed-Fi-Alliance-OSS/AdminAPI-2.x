@@ -1,8 +1,8 @@
 {
 	"info": {
-		"_postman_id": "dbfeff22-1eae-4dac-846a-59af3344cfb0",
+		"_postman_id": "261ecdca-25ab-45c8-9bfc-a983b0ef9e83",
 		"name": "Admin API E2E 2.0 - ApiClient",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "22794466"
 	},
 	"item": [
@@ -169,7 +169,16 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/apiclients"
+								"url": {
+									"raw": "{{API_URL}}/v2/apiclients",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"apiclients"
+									]
+								}
 							},
 							"response": []
 						},
@@ -293,7 +302,16 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v1/apiclients"
+								"url": {
+									"raw": "{{API_URL}}/v1/apiclients",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"apiclients"
+									]
+								}
 							},
 							"response": []
 						},
@@ -342,9 +360,13 @@
 							"request": {
 								"auth": {
 									"type": "bearer",
-									"bearer": {
-										"token": "{{TOKEN}}"
-									}
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
 								},
 								"method": "POST",
 								"header": [],
@@ -357,7 +379,16 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/apiclients"
+								"url": {
+									"raw": "{{API_URL}}/v2/apiclients",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"apiclients"
+									]
+								}
 							},
 							"response": []
 						},
@@ -406,9 +437,13 @@
 							"request": {
 								"auth": {
 									"type": "bearer",
-									"bearer": {
-										"token": "{{TOKEN}}"
-									}
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
 								},
 								"method": "POST",
 								"header": [],
@@ -421,7 +456,16 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/apiclients"
+								"url": {
+									"raw": "{{API_URL}}/v2/apiclients",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"apiclients"
+									]
+								}
 							},
 							"response": []
 						},
@@ -470,9 +514,13 @@
 							"request": {
 								"auth": {
 									"type": "bearer",
-									"bearer": {
-										"token": "{{TOKEN}}"
-									}
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
 								},
 								"method": "POST",
 								"header": [],
@@ -485,7 +533,16 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/apiclients"
+								"url": {
+									"raw": "{{API_URL}}/v2/apiclients",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"apiclients"
+									]
+								}
 							},
 							"response": []
 						},
@@ -775,7 +832,17 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v2/apiclients/{{CreatedApiClientId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/apiclients/{{CreatedApiClientId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"apiclients",
+										"{{CreatedApiClientId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -809,7 +876,17 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v1/apiclients/{{CreatedApiClientId}}"
+								"url": {
+									"raw": "{{API_URL}}/v1/apiclients/{{CreatedApiClientId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"apiclients",
+										"{{CreatedApiClientId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -885,7 +962,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/apiclients/{{CreatedApiClientId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/apiclients/{{CreatedApiClientId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"apiclients",
+										"{{CreatedApiClientId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -938,7 +1025,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v1/apiclients/{{CreatedApiClientId}}"
+								"url": {
+									"raw": "{{API_URL}}/v1/apiclients/{{CreatedApiClientId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"apiclients",
+										"{{CreatedApiClientId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -996,7 +1093,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/apiclients/{{CreatedApiClientId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/apiclients/{{CreatedApiClientId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"apiclients",
+										"{{CreatedApiClientId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1063,7 +1170,18 @@
 							"request": {
 								"method": "PUT",
 								"header": [],
-								"url": "{{API_URL}}/v2/apiclients/{{CreatedApiClientId}}/reset-credential"
+								"url": {
+									"raw": "{{API_URL}}/v2/apiclients/{{CreatedApiClientId}}/reset-credential",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"apiclients",
+										"{{CreatedApiClientId}}",
+										"reset-credential"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1097,7 +1215,18 @@
 							"request": {
 								"method": "PUT",
 								"header": [],
-								"url": "{{API_URL}}/v1/apiclients/{{CreatedApiClientId}}/reset-credential"
+								"url": {
+									"raw": "{{API_URL}}/v1/apiclients/{{CreatedApiClientId}}/reset-credential",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"apiclients",
+										"{{CreatedApiClientId}}",
+										"reset-credential"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1131,7 +1260,17 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": "{{API_URL}}/v1/apiclients/{{CreatedApiClientId}}"
+								"url": {
+									"raw": "{{API_URL}}/v1/apiclients/{{CreatedApiClientId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"apiclients",
+										"{{CreatedApiClientId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1181,7 +1320,17 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": "{{API_URL}}/v2/apiclients/{{CreatedApiClientId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/apiclients/{{CreatedApiClientId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"apiclients",
+										"{{CreatedApiClientId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1218,7 +1367,17 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v2/apiclients/{{CreatedApiClientId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/apiclients/{{CreatedApiClientId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"apiclients",
+										"{{CreatedApiClientId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1274,7 +1433,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/apiclients/{{CreatedApiClientId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/apiclients/{{CreatedApiClientId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"apiclients",
+										"{{CreatedApiClientId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1311,7 +1480,18 @@
 							"request": {
 								"method": "PUT",
 								"header": [],
-								"url": "{{API_URL}}/v2/apiclients/{{CreatedApiClientId}}/reset-credential"
+								"url": {
+									"raw": "{{API_URL}}/v2/apiclients/{{CreatedApiClientId}}/reset-credential",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"apiclients",
+										"{{CreatedApiClientId}}",
+										"reset-credential"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1348,7 +1528,17 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": "{{API_URL}}/v2/apiclients/{{CreatedApiClientId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/apiclients/{{CreatedApiClientId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"apiclients",
+										"{{CreatedApiClientId}}"
+									]
+								}
 							},
 							"response": []
 						}
@@ -1359,9 +1549,13 @@
 	],
 	"auth": {
 		"type": "bearer",
-		"bearer": {
-			"token": "{{TOKEN}}"
-		}
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{TOKEN}}",
+				"type": "string"
+			}
+		]
 	},
 	"event": [
 		{

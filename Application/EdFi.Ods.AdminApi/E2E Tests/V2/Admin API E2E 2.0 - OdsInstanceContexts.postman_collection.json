@@ -1,8 +1,8 @@
 {
 	"info": {
-		"_postman_id": "520159fb-cb3f-4ecd-8606-15adb58f52cb",
+		"_postman_id": "49130331-de09-473f-8bc9-b40097f952e0",
 		"name": "Admin API E2E 2.0 - OdsInstancesContexts",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "22794466"
 	},
 	"item": [
@@ -79,7 +79,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/OdsInstanceContexts/"
+								"url": {
+									"raw": "{{API_URL}}/v2/OdsInstanceContexts/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"OdsInstanceContexts",
+										""
+									]
+								}
 							},
 							"response": []
 						},
@@ -153,7 +163,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v1/OdsInstanceContexts/"
+								"url": {
+									"raw": "{{API_URL}}/v1/OdsInstanceContexts/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"OdsInstanceContexts",
+										""
+									]
+								}
 							},
 							"response": []
 						},
@@ -205,7 +225,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/OdsInstanceContexts/"
+								"url": {
+									"raw": "{{API_URL}}/v2/OdsInstanceContexts/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"OdsInstanceContexts",
+										""
+									]
+								}
 							},
 							"response": []
 						},
@@ -261,7 +291,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/OdsInstanceContexts/"
+								"url": {
+									"raw": "{{API_URL}}/v2/OdsInstanceContexts/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"OdsInstanceContexts",
+										""
+									]
+								}
 							},
 							"response": []
 						},
@@ -314,7 +354,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/OdsInstanceContexts/"
+								"url": {
+									"raw": "{{API_URL}}/v2/OdsInstanceContexts/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"OdsInstanceContexts",
+										""
+									]
+								}
 							},
 							"response": []
 						},
@@ -370,7 +420,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/OdsInstanceContexts/"
+								"url": {
+									"raw": "{{API_URL}}/v2/OdsInstanceContexts/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"OdsInstanceContexts",
+										""
+									]
+								}
 							},
 							"response": []
 						},
@@ -485,7 +545,16 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v1/OdsInstanceContexts"
+								"url": {
+									"raw": "{{API_URL}}/v1/OdsInstanceContexts",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"OdsInstanceContexts"
+									]
+								}
 							},
 							"response": []
 						},
@@ -547,7 +616,17 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v2/OdsInstanceContexts/"
+								"url": {
+									"raw": "{{API_URL}}/v2/OdsInstanceContexts/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"OdsInstanceContexts",
+										""
+									]
+								}
 							},
 							"response": []
 						},
@@ -761,7 +840,17 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v2/OdsInstanceContexts/{{CreatedOdsInstanceContextId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/OdsInstanceContexts/{{CreatedOdsInstanceContextId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"OdsInstanceContexts",
+										"{{CreatedOdsInstanceContextId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -806,7 +895,17 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v2/OdsInstanceContexts/{{NotExistOdsInstancesContextId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/OdsInstanceContexts/{{NotExistOdsInstancesContextId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"OdsInstanceContexts",
+										"{{NotExistOdsInstancesContextId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -874,7 +973,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/OdsInstanceContexts/{{CreatedOdsInstanceContextId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/OdsInstanceContexts/{{CreatedOdsInstanceContextId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"OdsInstanceContexts",
+										"{{CreatedOdsInstanceContextId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -927,7 +1036,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v1/OdsInstanceContexts/{{CreatedOdsInstanceContextId}}"
+								"url": {
+									"raw": "{{API_URL}}/v1/OdsInstanceContexts/{{CreatedOdsInstanceContextId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"OdsInstanceContexts",
+										"{{CreatedOdsInstanceContextId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -982,7 +1101,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/OdsInstanceContexts/{{NotExistOdsInstancesContextId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/OdsInstanceContexts/{{NotExistOdsInstancesContextId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"OdsInstanceContexts",
+										"{{NotExistOdsInstancesContextId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1034,7 +1163,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/OdsInstanceContexts/{{CreatedOdsInstanceContextId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/OdsInstanceContexts/{{CreatedOdsInstanceContextId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"OdsInstanceContexts",
+										"{{CreatedOdsInstanceContextId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1089,7 +1228,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/OdsInstanceContexts/{{CreatedOdsInstanceContextId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/OdsInstanceContexts/{{CreatedOdsInstanceContextId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"OdsInstanceContexts",
+										"{{CreatedOdsInstanceContextId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1142,7 +1291,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/OdsInstanceContexts/{{CreatedOdsInstanceContextId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/OdsInstanceContexts/{{CreatedOdsInstanceContextId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"OdsInstanceContexts",
+										"{{CreatedOdsInstanceContextId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1221,7 +1380,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/OdsInstanceContexts/{{CreatedOdsInstanceContextId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/OdsInstanceContexts/{{CreatedOdsInstanceContextId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"OdsInstanceContexts",
+										"{{CreatedOdsInstanceContextId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1255,7 +1424,17 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": "{{API_URL}}/v1/OdsInstanceContexts/{{CreatedOdsInstanceContextId}}"
+								"url": {
+									"raw": "{{API_URL}}/v1/OdsInstanceContexts/{{CreatedOdsInstanceContextId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"OdsInstanceContexts",
+										"{{CreatedOdsInstanceContextId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1278,7 +1457,17 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": "{{API_URL}}/v2/OdsInstanceContexts/{{CreatedOdsInstanceContextId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/OdsInstanceContexts/{{CreatedOdsInstanceContextId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"OdsInstanceContexts",
+										"{{CreatedOdsInstanceContextId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1314,7 +1503,17 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": "{{API_URL}}/v2/OdsInstanceContexts/{{NotExistOdsInstancesContextId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/OdsInstanceContexts/{{NotExistOdsInstancesContextId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"OdsInstanceContexts",
+										"{{NotExistOdsInstancesContextId}}"
+									]
+								}
 							},
 							"response": []
 						}
@@ -1350,9 +1549,13 @@
 	],
 	"auth": {
 		"type": "bearer",
-		"bearer": {
-			"token": "{{TOKEN}}"
-		}
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{TOKEN}}",
+				"type": "string"
+			}
+		]
 	},
 	"event": [
 		{

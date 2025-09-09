@@ -1,8 +1,8 @@
 {
 	"info": {
-		"_postman_id": "e385194e-3e8b-4c44-833a-d14cbfe8e89f",
+		"_postman_id": "1d48233c-53b6-42e3-a117-4f544cb4e5a4",
 		"name": "Admin API E2E 2.0 - ResourceClaimActionAuthStrategies",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "22794466"
 	},
 	"item": [
@@ -154,7 +154,16 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v1/resourceClaimActionAuthStrategies"
+								"url": {
+									"raw": "{{API_URL}}/v1/resourceClaimActionAuthStrategies",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"resourceClaimActionAuthStrategies"
+									]
+								}
 							},
 							"response": []
 						},
@@ -247,7 +256,16 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v2/resourceClaimActionAuthStrategies"
+								"url": {
+									"raw": "{{API_URL}}/v2/resourceClaimActionAuthStrategies",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"resourceClaimActionAuthStrategies"
+									]
+								}
 							},
 							"response": []
 						},
@@ -705,9 +723,13 @@
 	],
 	"auth": {
 		"type": "bearer",
-		"bearer": {
-			"token": "{{TOKEN}}"
-		}
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{TOKEN}}",
+				"type": "string"
+			}
+		]
 	},
 	"event": [
 		{

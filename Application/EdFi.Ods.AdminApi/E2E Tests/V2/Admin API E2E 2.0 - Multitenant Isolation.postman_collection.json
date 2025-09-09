@@ -1,8 +1,8 @@
 {
 	"info": {
-		"_postman_id": "cf5968b3-918c-4e7c-bd21-628f062540b6",
+		"_postman_id": "97ab6609-fb32-4b9e-b56d-3d1bbe153cc1",
 		"name": "Admin API E2E 2.0 - Multitenant Isolation",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "22794466"
 	},
 	"item": [
@@ -68,7 +68,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v1/odsInstances/"
+								"url": {
+									"raw": "{{API_URL}}/v1/odsInstances/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"odsInstances",
+										""
+									]
+								}
 							},
 							"response": []
 						},
@@ -128,7 +138,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/odsInstances/"
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										""
+									]
+								}
 							},
 							"response": []
 						},
@@ -211,7 +231,17 @@
 										"type": "text"
 									}
 								],
-								"url": "{{API_URL}}/v2/odsInstances/{{CreatedOdsInstanceId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/{{CreatedOdsInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										"{{CreatedOdsInstanceId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -262,7 +292,17 @@
 										"type": "text"
 									}
 								],
-								"url": "{{API_URL}}/v1/odsInstances/{{CreatedOdsInstanceId}}"
+								"url": {
+									"raw": "{{API_URL}}/v1/odsInstances/{{CreatedOdsInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"odsInstances",
+										"{{CreatedOdsInstanceId}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -396,9 +436,13 @@
 							"request": {
 								"auth": {
 									"type": "bearer",
-									"bearer": {
-										"token": "{{TOKEN_TENANT2}}"
-									}
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN_TENANT2}}",
+											"type": "string"
+										}
+									]
 								},
 								"method": "GET",
 								"header": [
@@ -408,7 +452,17 @@
 										"type": "text"
 									}
 								],
-								"url": "{{API_URL}}/v2/odsInstances/{{CreatedOdsInstanceId}}"
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/{{CreatedOdsInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										"{{CreatedOdsInstanceId}}"
+									]
+								}
 							},
 							"response": []
 						}
@@ -419,9 +473,13 @@
 	],
 	"auth": {
 		"type": "bearer",
-		"bearer": {
-			"token": "{{TOKEN_TENANT1}}"
-		}
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{TOKEN_TENANT1}}",
+				"type": "string"
+			}
+		]
 	},
 	"event": [
 		{

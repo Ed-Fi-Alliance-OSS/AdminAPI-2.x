@@ -1,8 +1,8 @@
 {
 	"info": {
-		"_postman_id": "67e338af-6a6b-4180-85d4-af656693c510",
+		"_postman_id": "d697adea-45fd-432a-90f5-5ad4ba4736c7",
 		"name": "Admin API E2E 2.0 - Resourceclaims",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "22794466"
 	},
 	"item": [
@@ -273,7 +273,16 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v1/resourceClaims"
+								"url": {
+									"raw": "{{API_URL}}/v1/resourceClaims",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"resourceClaims"
+									]
+								}
 							},
 							"response": []
 						},
@@ -486,7 +495,16 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v2/resourceClaims"
+								"url": {
+									"raw": "{{API_URL}}/v2/resourceClaims",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"resourceClaims"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1037,7 +1055,17 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v2/resourceClaims/1"
+								"url": {
+									"raw": "{{API_URL}}/v2/resourceClaims/1",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"resourceClaims",
+										"1"
+									]
+								}
 							},
 							"response": []
 						},
@@ -1073,7 +1101,17 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{API_URL}}/v2/resourceClaims/00"
+								"url": {
+									"raw": "{{API_URL}}/v2/resourceClaims/00",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"resourceClaims",
+										"00"
+									]
+								}
 							},
 							"response": []
 						}
@@ -1084,9 +1122,13 @@
 	],
 	"auth": {
 		"type": "bearer",
-		"bearer": {
-			"token": "{{TOKEN}}"
-		}
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{TOKEN}}",
+				"type": "string"
+			}
+		]
 	},
 	"event": [
 		{
