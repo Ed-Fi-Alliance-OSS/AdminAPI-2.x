@@ -340,11 +340,7 @@ function ResetTestDatabases {
 }
 
 function IntegrationTests {
-    # Invoke-Execute { RunTests -Filter "*.DBTests" }
-
-    # For now I am excluding EdFi.Ods.AdminApi.V1.DBTests -> 6.x
-    Invoke-Execute { RunTests -Filter "EdFi.Ods.AdminApi.DBTests" }
-    Invoke-Execute { RunTests -Filter "EdFi.Ods.AdminConsole.DBTests" }
+    Invoke-Execute { RunTests -Filter "*.DBTests" }
 }
 
 function RunNuGetPack {
