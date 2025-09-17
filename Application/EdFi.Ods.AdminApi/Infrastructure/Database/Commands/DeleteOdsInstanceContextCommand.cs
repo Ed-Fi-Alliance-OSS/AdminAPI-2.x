@@ -19,12 +19,14 @@ public class DeleteOdsInstanceContextCommand : IDeleteOdsInstanceContextCommand
 
     public DeleteOdsInstanceContextCommand(IUsersContext context)
     {
-        _context = context;
+        _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
     public void Execute(int id)
     {
-        var odsInstanceContext = _context.OdsInstanceContexts.SingleOrDefault(v => v.OdsInstanceContextId == id) ?? throw new NotFoundException<int>("odsInstanceContext", id);
+        var odsInstanceContext =
+            _context.OdsInstanceContexts.SingleOrDefault(v => v.OdsInstanceContextId == id)
+            ?? throw new NotFoundException<int>("odsInstanceContext", id);
         _context.OdsInstanceContexts.Remove(odsInstanceContext);
         _context.SaveChanges();
     }

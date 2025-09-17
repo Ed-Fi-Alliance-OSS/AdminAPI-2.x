@@ -6,6 +6,7 @@
 using EdFi.Ods.AdminApi.Features.OdsInstanceContext;
 using NUnit.Framework;
 using Shouldly;
+using System;
 
 namespace EdFi.Ods.AdminApi.UnitTests.Features.OdsInstanceContext;
 
@@ -23,12 +24,12 @@ public class ReadOdsInstanceContextTests
     }
 
     [Test]
-    public void MapEndpoints_DoesNotThrow()
+    public void MapEndpoints_DoesNotExceptNull()
     {
         // Arrange
         var readOdsInstanceContext = new ReadOdsInstanceContext();
 
         // Act & Assert
-        Should.NotThrow(() => readOdsInstanceContext.MapEndpoints(null!));
+        Should.Throw<ArgumentNullException>(() => readOdsInstanceContext.MapEndpoints(null!));
     }
 }

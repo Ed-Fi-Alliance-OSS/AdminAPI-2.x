@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApi.Common.Infrastructure;
+using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
 using EdFi.Ods.AdminApi.Features.OdsInstanceContext;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
@@ -39,7 +40,7 @@ public class AddOdsInstanceContextTests
     public async Task Handle_ExecutesCommandAndReturnsCreated()
     {
         // Arrange
-        var validator = A.Fake<AddOdsInstanceContext.Validator>();
+
         var command = A.Fake<IAddOdsInstanceContextCommand>();
         var mapper = A.Fake<IMapper>();
         var request = new AddOdsInstanceContext.AddOdsInstanceContextRequest
@@ -53,35 +54,34 @@ public class AddOdsInstanceContextTests
         A.CallTo(() => command.Execute(request)).Returns(addedContext);
 
         // Act
-        var result = await AddOdsInstanceContext.Handle(validator, command, mapper, request);
+        var result = await AddOdsInstanceContext.Handle(_validator, command, mapper, request);
 
         // Assert
-        A.CallTo(() => validator.GuardAsync(request)).MustHaveHappenedOnceExactly();
         A.CallTo(() => command.Execute(request)).MustHaveHappenedOnceExactly();
         result.ShouldNotBeNull();
-        result.ShouldBeOfType<Microsoft.AspNetCore.Http.HttpResults.Created<object>>();
+        result.ShouldBeOfType<Microsoft.AspNetCore.Http.HttpResults.Created>();
     }
 
     [Test]
     public void Handle_WhenValidationFails_ThrowsValidationException()
     {
         // Arrange
-        var validator = A.Fake<AddOdsInstanceContext.Validator>();
+
         var command = A.Fake<IAddOdsInstanceContextCommand>();
         var mapper = A.Fake<IMapper>();
         var request = new AddOdsInstanceContext.AddOdsInstanceContextRequest();
 
-        A.CallTo(() => validator.GuardAsync(request)).Throws(new ValidationException("Validation failed"));
-
         // Act & Assert
-        Should.Throw<ValidationException>(async () => await AddOdsInstanceContext.Handle(validator, command, mapper, request));
+        Should.Throw<ValidationException>(
+            async () => await AddOdsInstanceContext.Handle(_validator, command, mapper, request)
+        );
     }
 
     [Test]
     public void Handle_WhenCommandThrows_ExceptionIsPropagated()
     {
         // Arrange
-        var validator = A.Fake<AddOdsInstanceContext.Validator>();
+
         var command = A.Fake<IAddOdsInstanceContextCommand>();
         var mapper = A.Fake<IMapper>();
         var request = new AddOdsInstanceContext.AddOdsInstanceContextRequest();
@@ -89,7 +89,9 @@ public class AddOdsInstanceContextTests
         A.CallTo(() => command.Execute(request)).Throws(new System.Exception("Command failed"));
 
         // Act & Assert
-        Should.Throw<System.Exception>(async () => await AddOdsInstanceContext.Handle(validator, command, mapper, request));
+        Should.Throw<System.Exception>(
+            async () => await AddOdsInstanceContext.Handle(_validator, command, mapper, request)
+        );
     }
 
     [Test]
@@ -198,7 +200,8 @@ public class AddOdsInstanceContextTests
             OdsInstanceId = 999
         };
 
-        A.CallTo(() => _getOdsInstanceQuery.Execute(999)).Throws(new System.Exception("OdsInstance not found"));
+        A.CallTo(() => _getOdsInstanceQuery.Execute(999))
+            .Throws(new NotFoundException<int>("odsInstance", 999));
 
         // Act
         var result = _validator.Validate(model);
@@ -295,12 +298,14 @@ public class AddOdsInstanceContextTests
         A.CallTo(() => _getOdsInstanceQuery.Execute(odsInstanceId)).Returns(new OdsInstance());
 
         // Act
-        var result = _validator.Validate(new AddOdsInstanceContext.AddOdsInstanceContextRequest
-        {
-            ContextKey = "TestKey",
-            ContextValue = "TestValue",
-            OdsInstanceId = odsInstanceId
-        });
+        var result = _validator.Validate(
+            new AddOdsInstanceContext.AddOdsInstanceContextRequest
+            {
+                ContextKey = "TestKey",
+                ContextValue = "TestValue",
+                OdsInstanceId = odsInstanceId
+            }
+        );
 
         // Assert - The validation should pass (assuming other fields are valid)
         A.CallTo(() => _getOdsInstanceQuery.Execute(odsInstanceId)).MustHaveHappenedOnceExactly();

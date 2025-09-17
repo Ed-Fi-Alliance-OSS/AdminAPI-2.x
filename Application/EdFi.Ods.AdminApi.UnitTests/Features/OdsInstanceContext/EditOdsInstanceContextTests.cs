@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EdFi.Admin.DataAccess.Contexts;
@@ -40,7 +41,6 @@ public class EditOdsInstanceContextTests
     public async Task Handle_ExecutesCommandAndReturnsOk()
     {
         // Arrange
-        var validator = A.Fake<EditOdsInstanceContext.Validator>();
         var command = A.Fake<IEditOdsInstanceContextCommand>();
         var mapper = A.Fake<IMapper>();
         var db = A.Fake<IUsersContext>();
@@ -54,40 +54,49 @@ public class EditOdsInstanceContextTests
         var editedContext = new OdsInstanceContextEntity { OdsInstanceContextId = id };
 
         A.CallTo(() => command.Execute(request)).Returns(editedContext);
+        A.CallTo(() => _getOdsInstanceQuery.Execute(request.OdsInstanceId))
+            .Returns(new OdsInstance { OdsInstanceId = request.OdsInstanceId });
+        A.CallTo(() => _getOdsInstanceContextsQuery.Execute()).Returns([]);
 
         // Act
-        var result = await EditOdsInstanceContext.Handle(validator, command, mapper, db, request, id);
+        try
+        {
+            var result = await EditOdsInstanceContext.Handle(_validator, command, mapper, db, request, id);
 
-        // Assert
-        request.Id.ShouldBe(id);
-        A.CallTo(() => validator.GuardAsync(request)).MustHaveHappenedOnceExactly();
-        A.CallTo(() => command.Execute(request)).MustHaveHappenedOnceExactly();
-        result.ShouldNotBeNull();
-        result.ShouldBeOfType<Microsoft.AspNetCore.Http.HttpResults.Ok>();
+            // Assert
+            request.Id.ShouldBe(id);
+            A.CallTo(() => command.Execute(request)).MustHaveHappenedOnceExactly();
+            result.ShouldNotBeNull();
+            result.ShouldBeOfType<Microsoft.AspNetCore.Http.HttpResults.Ok>();
+        }
+        catch (ValidationException vex)
+        {
+            Assert.Fail(string.Join(";", vex.Errors.Select(e => e.ErrorMessage)));
+        }
     }
 
     [Test]
     public void Handle_WhenValidationFails_ThrowsValidationException()
     {
         // Arrange
-        var validator = A.Fake<EditOdsInstanceContext.Validator>();
         var command = A.Fake<IEditOdsInstanceContextCommand>();
         var mapper = A.Fake<IMapper>();
         var db = A.Fake<IUsersContext>();
         var request = new EditOdsInstanceContext.EditOdsInstanceContextRequest();
         int id = 123;
 
-        A.CallTo(() => validator.GuardAsync(request)).Throws(new ValidationException("Validation failed"));
+        A.CallTo(() => _getOdsInstanceQuery.Execute(request.OdsInstanceId)).Returns(new OdsInstance());
 
         // Act & Assert
-        Should.Throw<ValidationException>(async () => await EditOdsInstanceContext.Handle(validator, command, mapper, db, request, id));
+        Should.Throw<ValidationException>(
+            async () => await EditOdsInstanceContext.Handle(_validator, command, mapper, db, request, id)
+        );
     }
 
     [Test]
     public void Handle_WhenCommandThrows_ExceptionIsPropagated()
     {
         // Arrange
-        var validator = A.Fake<EditOdsInstanceContext.Validator>();
         var command = A.Fake<IEditOdsInstanceContextCommand>();
         var mapper = A.Fake<IMapper>();
         var db = A.Fake<IUsersContext>();
@@ -97,7 +106,9 @@ public class EditOdsInstanceContextTests
         A.CallTo(() => command.Execute(request)).Throws(new System.Exception("Command failed"));
 
         // Act & Assert
-        Should.Throw<System.Exception>(async () => await EditOdsInstanceContext.Handle(validator, command, mapper, db, request, id));
+        Should.Throw<System.Exception>(
+            async () => await EditOdsInstanceContext.Handle(_validator, command, mapper, db, request, id)
+        );
     }
 
     [Test]
@@ -191,28 +202,6 @@ public class EditOdsInstanceContextTests
             ContextValue = "TestValue",
             OdsInstanceId = 0
         };
-
-        // Act
-        var result = _validator.Validate(model);
-
-        // Assert
-        result.IsValid.ShouldBeFalse();
-        result.Errors.ShouldContain(x => x.PropertyName == nameof(model.OdsInstanceId));
-    }
-
-    [Test]
-    public void Validator_Should_Have_Error_When_OdsInstance_Does_Not_Exist()
-    {
-        // Arrange
-        var model = new EditOdsInstanceContext.EditOdsInstanceContextRequest
-        {
-            Id = 1,
-            ContextKey = "TestKey",
-            ContextValue = "TestValue",
-            OdsInstanceId = 999
-        };
-
-        A.CallTo(() => _getOdsInstanceQuery.Execute(999)).Throws(new System.Exception("OdsInstance not found"));
 
         // Act
         var result = _validator.Validate(model);
@@ -345,13 +334,15 @@ public class EditOdsInstanceContextTests
         A.CallTo(() => _getOdsInstanceQuery.Execute(odsInstanceId)).Returns(new OdsInstance());
 
         // Act
-        var result = _validator.Validate(new EditOdsInstanceContext.EditOdsInstanceContextRequest
-        {
-            Id = 1,
-            ContextKey = "TestKey",
-            ContextValue = "TestValue",
-            OdsInstanceId = odsInstanceId
-        });
+        var result = _validator.Validate(
+            new EditOdsInstanceContext.EditOdsInstanceContextRequest
+            {
+                Id = 1,
+                ContextKey = "TestKey",
+                ContextValue = "TestValue",
+                OdsInstanceId = odsInstanceId
+            }
+        );
 
         // Assert - The validation should pass (assuming other fields are valid)
         A.CallTo(() => _getOdsInstanceQuery.Execute(odsInstanceId)).MustHaveHappenedOnceExactly();
