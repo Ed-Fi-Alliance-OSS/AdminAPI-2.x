@@ -1,0 +1,184 @@
+// SPDX-License-Identifier: Apache-2.0
+// Licensed to the Ed-Fi Alliance under one or more agreements.
+// The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+// See the LICENSE and NOTICES files in the project root for more information.
+
+using EdFi.Admin.DataAccess.Contexts;
+using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
+using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
+using FakeItEasy;
+using Microsoft.EntityFrameworkCore;
+using NUnit.Framework;
+using Shouldly;
+
+namespace EdFi.Ods.AdminApi.UnitTests.Infrastructure.Database.Commands;
+
+[TestFixture]
+public class AddOdsInstanceContextCommandTests
+{
+    private IUsersContext _usersContext;
+    private AddOdsInstanceContextCommand _command;
+    private DbSet<OdsInstance> _odsInstances;
+    private DbSet<OdsInstanceContext> _odsInstanceContexts;
+
+    [SetUp]
+    public void SetUp()
+    {
+        _usersContext = A.Fake<IUsersContext>();
+        _odsInstances = A.Fake<DbSet<OdsInstance>>();
+        _odsInstanceContexts = A.Fake<DbSet<OdsInstanceContext>>();
+        
+        A.CallTo(() => _usersContext.OdsInstances).Returns(_odsInstances);
+        A.CallTo(() => _usersContext.OdsInstanceContexts).Returns(_odsInstanceContexts);
+        
+        _command = new AddOdsInstanceContextCommand(_usersContext);
+    }
+
+    [Test]
+    public void Execute_WithValidModel_CreatesAndReturnsOdsInstanceContext()
+    {
+        // Arrange
+        var odsInstance = new OdsInstance { OdsInstanceId = 1, Name = "Test Instance" };
+        var model = A.Fake<IAddOdsInstanceContextModel>();
+        A.CallTo(() => model.OdsInstanceId).Returns(1);
+        A.CallTo(() => model.ContextKey).Returns("TestKey");
+        A.CallTo(() => model.ContextValue).Returns("TestValue");
+
+        A.CallTo(() => _odsInstances.SingleOrDefault(A<System.Linq.Expressions.Expression<System.Func<OdsInstance, bool>>>.Ignored))
+            .Returns(odsInstance);
+
+        // Act
+        var result = _command.Execute(model);
+
+        // Assert
+        result.ShouldNotBeNull();
+        result.ContextKey.ShouldBe("TestKey");
+        result.ContextValue.ShouldBe("TestValue");
+        result.OdsInstance.ShouldBe(odsInstance);
+        
+        A.CallTo(() => _odsInstanceContexts.Add(A<OdsInstanceContext>.That.Matches(x => 
+            x.ContextKey == "TestKey" && 
+            x.ContextValue == "TestValue" && 
+            x.OdsInstance == odsInstance)))
+            .MustHaveHappenedOnceExactly();
+        A.CallTo(() => _usersContext.SaveChanges()).MustHaveHappenedOnceExactly();
+    }
+
+    [Test]
+    public void Execute_WhenOdsInstanceNotFound_ThrowsNotFoundException()
+    {
+        // Arrange
+        var model = A.Fake<IAddOdsInstanceContextModel>();
+        A.CallTo(() => model.OdsInstanceId).Returns(999);
+        A.CallTo(() => model.ContextKey).Returns("TestKey");
+        A.CallTo(() => model.ContextValue).Returns("TestValue");
+
+        A.CallTo(() => _odsInstances.SingleOrDefault(A<System.Linq.Expressions.Expression<System.Func<OdsInstance, bool>>>.Ignored))
+            .Returns(null);
+
+        // Act & Assert
+        var exception = Should.Throw<NotFoundException<int>>(() => _command.Execute(model));
+        exception.ResourceName.ShouldBe("odsInstance");
+        exception.Id.ShouldBe(999);
+    }
+
+    [Test]
+    public void Execute_WithNullContextKey_CreatesOdsInstanceContextWithNullKey()
+    {
+        // Arrange
+        var odsInstance = new OdsInstance { OdsInstanceId = 1, Name = "Test Instance" };
+        var model = A.Fake<IAddOdsInstanceContextModel>();
+        A.CallTo(() => model.OdsInstanceId).Returns(1);
+        A.CallTo(() => model.ContextKey).Returns(null);
+        A.CallTo(() => model.ContextValue).Returns("TestValue");
+
+        A.CallTo(() => _odsInstances.SingleOrDefault(A<System.Linq.Expressions.Expression<System.Func<OdsInstance, bool>>>.Ignored))
+            .Returns(odsInstance);
+
+        // Act
+        var result = _command.Execute(model);
+
+        // Assert
+        result.ShouldNotBeNull();
+        result.ContextKey.ShouldBeNull();
+        result.ContextValue.ShouldBe("TestValue");
+        result.OdsInstance.ShouldBe(odsInstance);
+    }
+
+    [Test]
+    public void Execute_WithNullContextValue_CreatesOdsInstanceContextWithNullValue()
+    {
+        // Arrange
+        var odsInstance = new OdsInstance { OdsInstanceId = 1, Name = "Test Instance" };
+        var model = A.Fake<IAddOdsInstanceContextModel>();
+        A.CallTo(() => model.OdsInstanceId).Returns(1);
+        A.CallTo(() => model.ContextKey).Returns("TestKey");
+        A.CallTo(() => model.ContextValue).Returns(null);
+
+        A.CallTo(() => _odsInstances.SingleOrDefault(A<System.Linq.Expressions.Expression<System.Func<OdsInstance, bool>>>.Ignored))
+            .Returns(odsInstance);
+
+        // Act
+        var result = _command.Execute(model);
+
+        // Assert
+        result.ShouldNotBeNull();
+        result.ContextKey.ShouldBe("TestKey");
+        result.ContextValue.ShouldBeNull();
+        result.OdsInstance.ShouldBe(odsInstance);
+    }
+
+    [Test]
+    public void Execute_WithZeroOdsInstanceId_ThrowsNotFoundException()
+    {
+        // Arrange
+        var model = A.Fake<IAddOdsInstanceContextModel>();
+        A.CallTo(() => model.OdsInstanceId).Returns(0);
+        A.CallTo(() => model.ContextKey).Returns("TestKey");
+        A.CallTo(() => model.ContextValue).Returns("TestValue");
+
+        A.CallTo(() => _odsInstances.SingleOrDefault(A<System.Linq.Expressions.Expression<System.Func<OdsInstance, bool>>>.Ignored))
+            .Returns(null);
+
+        // Act & Assert
+        var exception = Should.Throw<NotFoundException<int>>(() => _command.Execute(model));
+        exception.ResourceName.ShouldBe("odsInstance");
+        exception.Id.ShouldBe(0);
+    }
+
+    [Test]
+    public void Execute_WhenSaveChangesFails_ExceptionIsPropagated()
+    {
+        // Arrange
+        var odsInstance = new OdsInstance { OdsInstanceId = 1, Name = "Test Instance" };
+        var model = A.Fake<IAddOdsInstanceContextModel>();
+        A.CallTo(() => model.OdsInstanceId).Returns(1);
+        A.CallTo(() => model.ContextKey).Returns("TestKey");
+        A.CallTo(() => model.ContextValue).Returns("TestValue");
+
+        A.CallTo(() => _odsInstances.SingleOrDefault(A<System.Linq.Expressions.Expression<System.Func<OdsInstance, bool>>>.Ignored))
+            .Returns(odsInstance);
+        A.CallTo(() => _usersContext.SaveChanges()).Throws(new System.Exception("Database error"));
+
+        // Act & Assert
+        Should.Throw<System.Exception>(() => _command.Execute(model));
+    }
+
+    [Test]
+    public void Constructor_WithValidContext_InitializesSuccessfully()
+    {
+        // Arrange & Act
+        var command = new AddOdsInstanceContextCommand(_usersContext);
+
+        // Assert
+        command.ShouldNotBeNull();
+    }
+
+    [Test]
+    public void Constructor_WithNullContext_ShouldThrowArgumentNullException()
+    {
+        // Act & Assert
+        Should.Throw<System.ArgumentNullException>(() => new AddOdsInstanceContextCommand(null));
+    }
+}
