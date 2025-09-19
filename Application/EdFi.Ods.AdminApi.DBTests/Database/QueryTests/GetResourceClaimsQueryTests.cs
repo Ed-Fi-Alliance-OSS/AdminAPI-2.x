@@ -6,7 +6,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using EdFi.Ods.AdminApi.Common.Infrastructure;
-using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using NUnit.Framework;
 using Shouldly;
@@ -125,6 +124,10 @@ public class GetResourceClaimsQueryTests : SecurityDataTestBase
         results.Length.ShouldBe(1);
         results.First().Name.ShouldBe(testResourceClaimsResult.First().ResourceName);
     }
+
+
+
+
 
     private IReadOnlyCollection<ResourceClaim> SetupResourceClaims(int resourceClaimCount = 5)
     {
