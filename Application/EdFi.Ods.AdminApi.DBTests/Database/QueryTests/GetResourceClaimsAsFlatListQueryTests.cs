@@ -70,22 +70,4 @@ public class GetResourceClaimsAsFlatListQueryTests : SecurityDataTestBase
         results.Where(x => x.ParentId != 0).Select(x => x.Name).ToList().ShouldBe(childResourceNames);
     }
 
-    //private IReadOnlyCollection<ResourceClaim> SetupResourceClaims(int resourceClaimCount = 5)
-    //{
-    //    var resourceClaims = new List<ResourceClaim>();
-    //    foreach (var index in Enumerable.Range(1, resourceClaimCount))
-    //    {
-    //        var resourceClaim = new ResourceClaim
-    //        {
-    //            ClaimName = $"TestResourceClaim{index:N}",
-    //            ResourceName = $"TestResourceClaim{index:N}",
-    //        };
-    //        resourceClaims.Add(resourceClaim);
-    //    }
-
-    //    Save(resourceClaims.Cast<object>().ToArray());
-
-    //    return resourceClaims;
-    //}
-
 }

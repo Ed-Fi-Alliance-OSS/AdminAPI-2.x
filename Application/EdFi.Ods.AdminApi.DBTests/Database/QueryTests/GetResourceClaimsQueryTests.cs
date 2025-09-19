@@ -125,10 +125,6 @@ public class GetResourceClaimsQueryTests : SecurityDataTestBase
         results.First().Name.ShouldBe(testResourceClaimsResult.First().ResourceName);
     }
 
-
-
-
-
     private IReadOnlyCollection<ResourceClaim> SetupResourceClaims(int resourceClaimCount = 5)
     {
         var resourceClaims = new List<ResourceClaim>();
