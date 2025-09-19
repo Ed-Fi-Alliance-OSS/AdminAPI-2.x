@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApi.Common.Infrastructure;
 using EdFi.Ods.AdminApi.Features.OdsInstanceContext;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
@@ -16,6 +17,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using NUnit.Framework;
 using Shouldly;
+using OdsInstanceContextEntity = EdFi.Admin.DataAccess.Models.OdsInstanceContext;
 
 namespace EdFi.Ods.AdminApi.UnitTests.Features.OdsInstanceContext;
 
@@ -49,7 +51,7 @@ public class EditOdsInstanceContextTests
             ContextValue = "TestValue"
         };
         int id = 123;
-        var editedContext = new OdsInstanceContext { OdsInstanceContextId = id };
+        var editedContext = new OdsInstanceContextEntity { OdsInstanceContextId = id };
 
         A.CallTo(() => command.Execute(request)).Returns(editedContext);
 
@@ -232,9 +234,9 @@ public class EditOdsInstanceContextTests
             OdsInstanceId = 1
         };
 
-        var existingContexts = new List<OdsInstanceContext>
+        var existingContexts = new List<OdsInstanceContextEntity>
         {
-            new OdsInstanceContext
+            new OdsInstanceContextEntity
             {
                 OdsInstanceContextId = 2, // Different ID
                 ContextKey = "ExistingKey",
@@ -264,9 +266,9 @@ public class EditOdsInstanceContextTests
             OdsInstanceId = 1
         };
 
-        var existingContexts = new List<OdsInstanceContext>
+        var existingContexts = new List<OdsInstanceContextEntity>
         {
-            new OdsInstanceContext
+            new OdsInstanceContextEntity
             {
                 OdsInstanceContextId = 1, // Same ID
                 ContextKey = "ExistingKey",
@@ -295,9 +297,9 @@ public class EditOdsInstanceContextTests
             OdsInstanceId = 1
         };
 
-        var existingContexts = new List<OdsInstanceContext>
+        var existingContexts = new List<OdsInstanceContextEntity>
         {
-            new OdsInstanceContext
+            new OdsInstanceContextEntity
             {
                 OdsInstanceContextId = 2,
                 ContextKey = "DifferentKey",
@@ -326,7 +328,7 @@ public class EditOdsInstanceContextTests
             OdsInstanceId = 1
         };
 
-        A.CallTo(() => _getOdsInstanceContextsQuery.Execute()).Returns(new List<OdsInstanceContext>());
+        A.CallTo(() => _getOdsInstanceContextsQuery.Execute()).Returns(new List<OdsInstanceContextEntity>());
 
         // Act
         var result = _validator.Validate(model);
@@ -367,9 +369,9 @@ public class EditOdsInstanceContextTests
             OdsInstanceId = 1
         };
 
-        var existingContexts = new List<OdsInstanceContext>
+        var existingContexts = new List<OdsInstanceContextEntity>
         {
-            new OdsInstanceContext
+            new OdsInstanceContextEntity
             {
                 OdsInstanceContextId = 2,
                 ContextKey = "testkey", // different case
