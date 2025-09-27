@@ -21,6 +21,8 @@ using EdFi.Ods.AdminApi.Common.Settings;
 using EdFi.Ods.AdminApi.Features.Connect;
 using EdFi.Ods.AdminApi.Infrastructure.Documentation;
 using EdFi.Ods.AdminApi.Infrastructure.Security;
+using EdFi.Ods.AdminApi.Infrastructure.Services.Tenants;
+using EdFi.Ods.AdminApi.Infrastructure.Services;
 using EdFi.Security.DataAccess.Contexts;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -30,6 +32,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
+using EdFi.Ods.AdminApi.Infrastructure.Helpers;
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 
@@ -40,6 +43,11 @@ public static class WebApplicationBuilderExtensions
     public static void AddServices(this WebApplicationBuilder webApplicationBuilder)
     {
         webApplicationBuilder.Services.AddSingleton<ISymmetricStringEncryptionProvider, Aes256SymmetricStringEncryptionProvider>();
+
+        var env = webApplicationBuilder.Environment;
+        var appSettingsPath = Path.Combine(env.ContentRootPath, "appsettings.json");
+        webApplicationBuilder.Services.AddSingleton<FileSystemAppSettingsFileProvider>(new FileSystemAppSettingsFileProvider(appSettingsPath));
+
         ConfigureRateLimiting(webApplicationBuilder);
         ConfigurationManager config = webApplicationBuilder.Configuration;
         webApplicationBuilder.Services.Configure<AppSettings>(config.GetSection("AppSettings"));
@@ -201,6 +209,12 @@ public static class WebApplicationBuilderExtensions
 
         webApplicationBuilder.Services.AddTransient<ISimpleGetRequest, SimpleGetRequest>();
         webApplicationBuilder.Services.AddTransient<IOdsApiValidator, OdsApiValidator>();
+
+        webApplicationBuilder.Services.AddHostedService<TenantBackgroundService>();
+
+        webApplicationBuilder.Services.Configure<AppSettingsFile>(webApplicationBuilder.Configuration);
+
+        webApplicationBuilder.Services.AddTransient<IAdminConsoleTenantsService, TenantService>();
     }
 
     private static void EnableMultiTenancySupport(this WebApplicationBuilder webApplicationBuilder)
