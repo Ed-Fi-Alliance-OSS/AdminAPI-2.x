@@ -41,12 +41,12 @@ public class ReadTenants : IFeature
             return new TenantsResponse
             {
                 TenantName = t.TenantName,
-                AdminConnectrionString = new EdfiConnectrionString()
+                AdminConnectionString = new EdfiConnectionString()
                 {
                     host = adminHostAndDatabase.Host,
                     database = adminHostAndDatabase.Database
                 },
-                SecurityConnectrionString = new EdfiConnectrionString()
+                SecurityConnectionString = new EdfiConnectionString()
                 {
                     host = securityHostAndDatabase.Host,
                     database = securityHostAndDatabase.Database
@@ -73,12 +73,12 @@ public class ReadTenants : IFeature
         return Results.Ok(new TenantsResponse
         {
             TenantName = tenant.TenantName,
-            AdminConnectrionString = new EdfiConnectrionString()
+            AdminConnectionString = new EdfiConnectionString()
             {
                 host = adminHostAndDatabase.Host,
                 database = adminHostAndDatabase.Database
             },
-            SecurityConnectrionString = new EdfiConnectrionString()
+            SecurityConnectionString = new EdfiConnectionString()
             {
                 host = securityHostAndDatabase.Host,
                 database = securityHostAndDatabase.Database
@@ -90,11 +90,11 @@ public class ReadTenants : IFeature
 public class TenantsResponse
 {
     public string? TenantName { get; set; }
-    public EdfiConnectrionString? AdminConnectrionString { get; set; }
-    public EdfiConnectrionString? SecurityConnectrionString { get; set; }
+    public EdfiConnectionString? AdminConnectionString { get; set; }
+    public EdfiConnectionString? SecurityConnectionString { get; set; }
 }
 
-public class EdfiConnectrionString
+public class EdfiConnectionString
 {
     public string? host { get; set; }
     public string? database { get; set; }

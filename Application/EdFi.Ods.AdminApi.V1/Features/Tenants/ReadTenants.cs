@@ -8,7 +8,6 @@ using EdFi.Ods.AdminApi.Common.Infrastructure;
 using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Helpers;
 using EdFi.Ods.AdminApi.Common.Settings;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApi.V1.Features.Tenants;
@@ -43,12 +42,12 @@ public class ReadTenants : IFeature
         var response = new TenantsResponse
         {
             TenantName = defaultTenant.TenantName,
-            AdminConnectrionString = new EdfiConnectrionString()
+            AdminConnectionString = new EdfiConnectionString()
             {
                 host = adminHostAndDatabase.Host,
                 database = adminHostAndDatabase.Database
             },
-            SecurityConnectrionString = new EdfiConnectrionString()
+            SecurityConnectionString = new EdfiConnectionString()
             {
                 host = securityHostAndDatabase.Host,
                 database = securityHostAndDatabase.Database
@@ -61,11 +60,11 @@ public class ReadTenants : IFeature
 public class TenantsResponse
 {
     public string? TenantName { get; set; }
-    public EdfiConnectrionString? AdminConnectrionString { get; set; }
-    public EdfiConnectrionString? SecurityConnectrionString { get; set; }
+    public EdfiConnectionString? AdminConnectionString { get; set; }
+    public EdfiConnectionString? SecurityConnectionString { get; set; }
 }
 
-public class EdfiConnectrionString
+public class EdfiConnectionString
 {
     public string? host { get; set; }
     public string? database { get; set; }
