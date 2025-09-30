@@ -94,6 +94,9 @@ public class RequestLoggingMiddleware
         }
         catch (Exception ex)
         {
+            Console.WriteLine("Error");
+            Console.WriteLine(ex);
+
             var response = context.Response;
 
             // Check if response has already started or stream is closed
