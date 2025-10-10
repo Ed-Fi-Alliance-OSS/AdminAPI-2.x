@@ -33,7 +33,6 @@ RUN wget -nv -O /tmp/EdFi_AdminApi_Scripts.zip "https://pkgs.dev.azure.com/ed-fi
     chmod -R 600 /tmp/AdminApiScripts/PgSql
 USER ${POSTGRES_USER}
 
-
 EXPOSE 5432
 
 CMD ["docker-entrypoint.sh", "postgres"]
