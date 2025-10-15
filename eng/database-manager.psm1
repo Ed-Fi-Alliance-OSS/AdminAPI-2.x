@@ -123,7 +123,11 @@ function Invoke-DbDeploy {
 
         [string[]]
         [Parameter(Mandatory=$true)]
-        $FilePaths
+        $FilePaths,
+
+        [string]
+        [Parameter(Mandatory=$false)]
+        $StandardVersion = "5.0.0"
     )
 
     # Convert relative to absolute paths
@@ -138,7 +142,7 @@ function Invoke-DbDeploy {
         "-e", $DatabaseEngine,
         "-c", $ConnectionString,
         "-p", ($paths -Join ","),
-        "--standardVersion", "5.0.0"
+        "--standardVersion", $StandardVersion
     )
 
     Write-Host "Executing: $DbDeployExe $(Get-MaskedConnectionString $arguments)" -ForegroundColor Magenta
@@ -209,7 +213,11 @@ function Install-EdFiDatabase {
         # Hierarchy of directory paths containing database install files.
         [string[]]
         [Parameter(Mandatory=$true)]
-        $FilePaths
+        $FilePaths,
+
+        [string]
+        [Parameter(Mandatory=$false)]
+        $StandardVersion="5.0.0"
     )
 
     $arguments = @{
@@ -238,11 +246,16 @@ function Install-EdFiDatabase {
         DatabaseType = $DatabaseType
         ConnectionString = $connectionString
         FilePaths = $FilePaths
+        StandardVersion = $StandardVersion
     }
 
     if ($ForPostgreSQL) {
         $arguments.DatabaseEngine = "PostgreSQL"
     }
+
+    Write-Output "CALLING  ----   Invoke-DbDeploy"
+    Write-Output "Invoke-DbDeploy arguments:"
+    $arguments.GetEnumerator() | ForEach-Object { Write-Output "  $($_.Key) = $($_.Value)" }
 
     Invoke-DbDeploy @arguments
 }
@@ -320,7 +333,11 @@ function Install-EdFiAdminDatabase {
 
         # Hierarchy of directory paths containing database install files.
         [string[]]
-        $FilePaths
+        $FilePaths,
+
+        [string]
+        [Parameter(Mandatory=$false)]
+        $StandardVersion = "5.0.0"
     )
 
     $arguments = @{
@@ -336,6 +353,7 @@ function Install-EdFiAdminDatabase {
         Username  = $Username
         Password = $Password
         FilePaths = BuildDefaultFilePathArray -FilePath $FilePaths -RestApiPackagePath $RestApiPackagePath
+        StandardVersion = $StandardVersion
     }
 
     Install-EdFiDatabase @arguments
@@ -390,7 +408,11 @@ function Install-EdFiODSDatabase {
 
         # Hierarchy of directory paths containing database install files.
         [string[]]
-        $FilePaths
+        $FilePaths,
+
+        [string]
+        [Parameter(Mandatory=$false)]
+        $StandardVersion = "5.0.0"
     )
 
     $arguments = @{
@@ -406,6 +428,7 @@ function Install-EdFiODSDatabase {
         Username  = $Username
         Password = $Password
         FilePaths = BuildDefaultFilePathArray -FilePath $FilePaths -RestApiPackagePath $RestApiPackagePath
+        StandardVersion = $StandardVersion
     }
 
     Install-EdFiDatabase @arguments
@@ -477,6 +500,10 @@ function Install-EdFiSecurityDatabase {
         Password = $Password
         FilePaths = BuildDefaultFilePathArray -FilePath $FilePaths -RestApiPackagePath $RestApiPackagePath
     }
+
+    Write-Output "CALLING  ----   Install-EdFiDatabase"
+    Write-Output "Install-EdFiDatabase arguments (from Install-EdFiSecurityDatabase):"
+    $arguments.GetEnumerator() | ForEach-Object { Write-Output "  $($_.Key) = $($_.Value)" }
 
     Install-EdFiDatabase @arguments
 }
@@ -558,7 +585,7 @@ function Invoke-PrepareDatabasesForTesting {
     param(
         [string]
         [Parameter(Mandatory=$true)]
-        [ValidateSet("EdFi.RestApi.Databases.EFA", "EdFi.Suite3.RestApi.Databases.Standard.5.0.0")]
+        [ValidateSet("EdFi.Suite3.RestApi.Databases", "EdFi.Suite3.RestApi.Databases.Standard.5.0.0")]
         $RestApiPackageName,
 
         [string]
@@ -595,7 +622,11 @@ function Invoke-PrepareDatabasesForTesting {
         $PackagesPath = "$PSScriptRoot/.packages",
 
         [string]
-        $ToolsPath = "$PSScriptRoot/.tools"
+        $ToolsPath = "$PSScriptRoot/.tools",
+        
+        [string]
+        [Parameter(Mandatory=$false)]
+        $StandardVersion = "5.0.0"
     )
 
     Import-Module -Name "$PSScriptRoot/package-manager.psm1" -Force
@@ -610,7 +641,14 @@ function Invoke-PrepareDatabasesForTesting {
         RestApiPackagePrerelease = $RestApiPackagePrerelease
     }
 
+    Write-Output "CALLING  ----   Install-EdFiSecurityDatabase AND Install-EdFiAdminDatabase"
+    Write-Output "Get-RestApiPackage arguments:"
+    $arguments.GetEnumerator() | ForEach-Object { Write-Output "  $($_.Key) = $($_.Value)" }
+
     $dbPackagePath = Get-RestApiPackage @arguments
+
+    Write-Output "Get-RestApiPackage result:"
+    Write-Output "  dbPackagePath = $dbPackagePath"
 
     $installArguments = @{
         ToolsPath = $ToolsPath
@@ -623,6 +661,7 @@ function Invoke-PrepareDatabasesForTesting {
         Username = $DbUsername
         Password = $DbPassword
         RestApiPackagePath = $dbPackagePath
+        StandardVersion = $StandardVersion
     }
     $removeArguments = @{
         Server = $DbServer
@@ -638,6 +677,9 @@ function Invoke-PrepareDatabasesForTesting {
     $removeArguments.DatabaseName = "EdFi_Security_Test"
     Write-Host "Installing the Security database to $($installArguments.DatabaseName)" -ForegroundColor Cyan
     Remove-SqlServerDatabase @removeArguments
+
+    Write-Output "Install-EdFiSecurityDatabase arguments:"
+    $installArguments.GetEnumerator() | ForEach-Object { Write-Output "  $($_.Key) = $($_.Value)" }
 
     Install-EdFiSecurityDatabase @installArguments
 

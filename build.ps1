@@ -143,11 +143,20 @@ $Env:MSBUILDDISABLENODEREUSE = "1"
 $solutionRoot = "$PSScriptRoot/Application"
 $dockerRoot = "$PSScriptRoot/Docker"
 
-$supportedApiVersions = @(
+$supportedApiVersions7x = @(
     @{
         OdsPackageName = "EdFi.Suite3.RestApi.Databases.Standard.5.0.0"
         OdsVersion     = "7.1.1192"
         Prerelease     = $false
+        StandardVersion = "5.0.0"
+    }
+)
+$supportedApiVersions6x = @(
+    @{
+        OdsPackageName = "EdFi.Suite3.RestApi.Databases"
+        OdsVersion     = "6.2.4304"
+        Prerelease     = $false
+        StandardVersion = ""
     }
 )
 $maintainers = "Ed-Fi Alliance, LLC and contributors"
@@ -321,7 +330,11 @@ function ResetTestDatabases {
         $DbUsername,
 
         [string]
-        $DbPassword
+        $DbPassword,
+        
+        [string]
+        [Parameter(Mandatory=$false)]
+        $StandardVersion = "5.0.0"
     )
 
     Invoke-Execute {
@@ -329,18 +342,27 @@ function ResetTestDatabases {
             RestApiPackageVersion    = $OdsVersion
             RestApiPackageName       = $OdsPackageName
             UseIntegratedSecurity    = $UseIntegratedSecurity
+            StandardVersion          = $StandardVersion
             RestApiPackagePrerelease = $Prerelease
             NuGetFeed                = $EdFiNuGetFeed
             DbUsername               = $DbUsername
             DbPassword               = $DbPassword
         }
 
+        Write-Output "CALLING  ----   Invoke-PrepareDatabasesForTesting"
+        Write-Output "Invoke-PrepareDatabasesForTesting arguments:"
+        $arguments.GetEnumerator() | ForEach-Object { Write-Output "  $($_.Key) = $($_.Value)" }
+
         Invoke-PrepareDatabasesForTesting @arguments
     }
 }
 
-function IntegrationTests {
-    Invoke-Execute { RunTests -Filter "*.DBTests" }
+function IntegrationTests7x {
+    Invoke-Execute { RunTests -Filter "*AdminApi.DBTests" }
+}
+
+function IntegrationTests6x {
+    Invoke-Execute { RunTests -Filter "*AdminApi.V1.DBTests" }
 }
 
 function RunNuGetPack {
@@ -465,7 +487,7 @@ function Invoke-IntegrationTestSuite {
         $DbPassword
     )
 
-    $supportedApiVersions | ForEach-Object {
+    $supportedApiVersions7x | ForEach-Object {
         Write-Output "Running Integration Tests for ODS Version" $_.OdsVersion
 
         Invoke-Step {
@@ -473,16 +495,47 @@ function Invoke-IntegrationTestSuite {
                 OdsVersion              = $_.OdsVersion
                 OdsPackageName          = $_.OdsPackageName
                 Prerelease              = $_.Prerelease
+                StandardVersion         = $_.StandardVersion
                 UseIntegratedSecurity   = $UseIntegratedSecurity
                 DbUsername              = $DbUsername
                 DbPassword              = $DbPassword
             }
+
+            Write-Output "CALLING  ----   ResetTestDatabases"
+            Write-Output "ResetTestDatabases arguments:"
+            $arguments.GetEnumerator() | ForEach-Object { Write-Output "  $($_.Key) = $($_.Value)" }
+            
             ResetTestDatabases @arguments
         }
         Invoke-Step {
-            IntegrationTests
+            IntegrationTests7x
         }
     }
+
+    # $supportedApiVersions6x | ForEach-Object {
+    #     Write-Output "Running Integration Tests for ODS Version" $_.OdsVersion
+
+    #     Invoke-Step {
+    #         $arguments = @{
+    #             OdsVersion              = $_.OdsVersion
+    #             OdsPackageName          = $_.OdsPackageName
+    #             Prerelease              = $_.Prerelease
+    #             StandardVersion         = $_.StandardVersion
+    #             UseIntegratedSecurity   = $UseIntegratedSecurity
+    #             DbUsername              = $DbUsername
+    #             DbPassword              = $DbPassword
+    #         }
+
+    #         Write-Output "CALLING  ----   ResetTestDatabases"
+    #         Write-Output "ResetTestDatabases arguments:"
+    #         $arguments.GetEnumerator() | ForEach-Object { Write-Output "  $($_.Key) = $($_.Value)" }
+            
+    #         ResetTestDatabases @arguments
+    #     }
+    #     Invoke-Step {
+    #         IntegrationTests6x
+    #     }
+    # }
 }
 
 function Invoke-BuildApiPackage {
