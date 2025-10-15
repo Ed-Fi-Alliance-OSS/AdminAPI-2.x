@@ -10,6 +10,8 @@ using EdFi.Ods.AdminApi.Features;
 using EdFi.Ods.AdminApi.Infrastructure;
 using log4net;
 using log4net.Config;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,7 +63,32 @@ app.UseAuthorization();
 app.MapFeatureEndpoints();
 
 app.MapControllers();
-app.UseHealthChecks("/health");
+app.UseHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = async (context, report) =>
+    {
+        context.Response.ContentType = "application/json";
+
+        // Set HTTP status code based on health check results
+        // 200 OK if all are healthy, 503 Service Unavailable if any are unhealthy
+        context.Response.StatusCode = report.Status == HealthStatus.Healthy ? 200 : 503;
+
+        var response = new
+        {
+            status = report.Status.ToString(),
+            checks = report.Entries.Select(x => new
+            {
+                name = x.Key,
+                status = x.Value.Status.ToString(),
+                exception = x.Value.Exception?.Message,
+                duration = x.Value.Duration.ToString()
+            }),
+            duration = report.TotalDuration.ToString()
+        };
+
+        await context.Response.WriteAsync(System.Text.Json.JsonSerializer.Serialize(response));
+    }
+});
 
 if (app.Configuration.GetValue<bool>("SwaggerSettings:EnableSwagger"))
 {
