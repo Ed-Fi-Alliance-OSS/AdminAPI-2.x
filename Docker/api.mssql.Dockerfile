@@ -5,7 +5,7 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0.8-alpine3.20-amd64@sha256:98fa594b91cda6cac28d2aae25567730db6f8857367fab7646bdda91bc784b5f AS base
 RUN apk upgrade --no-cache && \
-    apk add --no-cache unzip=~6 dos2unix=~7 bash=~5 gettext=~0 jq=~1 icu=~74 openssl=3.3.5-r0 musl=~1.2.5-r1 && \
+    apk add --no-cache unzip=6.0-r9 dos2unix=7.5.1-r0 bash=5.2.26-r0 gettext=0.22.5-r0 jq=1.7.1-r0 icu=74.2-r0 openssl=3.3.5-r0 musl=1.2.5-r1 && \
     addgroup -S edfi && adduser -S edfi -G edfi
 
 FROM base AS build
@@ -39,7 +39,7 @@ RUN umask 0077  && \
     dos2unix /app/log4net.config && \
     chmod 700 /app/*.sh -- ** && \
     rm -f /app/*.exe && \
-    apk del unzip dos2unix && \
+    apk del --no-cache unzip dos2unix && \
     chown -R edfi /app
 
 EXPOSE ${ASPNETCORE_HTTP_PORTS}

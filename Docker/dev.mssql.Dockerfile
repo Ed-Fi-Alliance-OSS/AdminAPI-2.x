@@ -8,7 +8,7 @@
 # The extra layers in the middle support caching of base layers.
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0.403-alpine3.20@sha256:07cb8622ca6c4d7600b42b2eccba968dff4b37d41b43a9bf4bd800aa02fab117 AS build
-RUN apk upgrade --no-cache && apk add --no-cache musl=~1.2.5-r1
+RUN apk upgrade --no-cache && apk add --no-cache musl=1.2.5-r1
 ARG ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT:-"Production"}
 
 WORKDIR /source
@@ -30,7 +30,7 @@ RUN dotnet publish -c Release /p:EnvironmentName=$ASPNETCORE_ENVIRONMENT --no-bu
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0.8-alpine3.20-amd64@sha256:98fa594b91cda6cac28d2aae25567730db6f8857367fab7646bdda91bc784b5f AS runtimebase
 RUN apk upgrade --no-cache && \
-    apk add dos2unix=~7 bash=~5 gettext=~0 icu=~74 curl musl=~1.2.5-r1 && \
+    apk add --no-cache dos2unix=7.5.1-r0 bash=5.2.26-r0 gettext=0.22.5-r0 icu=74.2-r0 curl=8.5.0-r0 musl=1.2.5-r1 && \
     addgroup -S edfi && adduser -S edfi -G edfi
 
 FROM runtimebase AS setup
@@ -58,7 +58,7 @@ RUN cp /app/log4net.txt /app/log4net.config && \
     wget -nv -O /tmp/mssql-tools18_18.4.1.1-1_amd64.apk https://download.microsoft.com/download/7/6/d/76de322a-d860-4894-9945-f0cc5d6a45f8/mssql-tools18_18.4.1.1-1_amd64.apk && \
     apk --no-cache add --allow-untrusted /tmp/msodbcsql18_18.4.1.1-1_amd64.apk  && \
     apk --no-cache add --allow-untrusted /tmp/mssql-tools18_18.4.1.1-1_amd64.apk && \
-    apk del dos2unix
+    apk del --no-cache dos2unix
 
 EXPOSE ${ASPNETCORE_HTTP_PORTS}
 USER edfi

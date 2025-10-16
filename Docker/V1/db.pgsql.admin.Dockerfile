@@ -15,7 +15,7 @@ USER root
 COPY --from=assets Application/EdFi.Ods.AdminApi/Artifacts/PgSql/Structure/Admin/ /tmp/AdminApiScripts/PgSql
 COPY --from=assets Docker/Settings/V1/DB-Admin/pgsql/run-adminapi-migrations.sh /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh
 
-RUN apk upgrade --no-cache && apk add dos2unix=~7 unzip=~6 openssl 'musl>=1.2.4_git20230717-r5'
+RUN apk upgrade --no-cache && apk add --no-cache dos2unix=7.5.1-r0 unzip=6.0-r9 openssl=3.3.5-r0 musl=1.2.5-r1
 USER ${POSTGRES_USER}
 
 FROM base AS setup
@@ -23,7 +23,8 @@ FROM base AS setup
 USER root
 RUN dos2unix /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh && \
     dos2unix /tmp/AdminApiScripts/PgSql/* && \
-    chmod -R 777 /tmp/AdminApiScripts/PgSql/*
+    chmod -R 777 /tmp/AdminApiScripts/PgSql/* && \
+    apk del --no-cache dos2unix unzip
 USER ${POSTGRES_USER}
 
 EXPOSE 5432

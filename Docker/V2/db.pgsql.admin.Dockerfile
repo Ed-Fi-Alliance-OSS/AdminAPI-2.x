@@ -5,7 +5,7 @@
 
 FROM edfialliance/ods-api-db-admin:7.3@sha256:0a25a039e575464de1fdf09b2db270f00910f937cb782dfa809ac3c192509233 AS base
 USER root
-RUN apk --upgrade --no-cache add dos2unix=~7 unzip=~6
+RUN apk --upgrade --no-cache add dos2unix=7.5.* unzip=6.0.*
 
 FROM base AS setup
 LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
@@ -25,7 +25,7 @@ RUN dos2unix /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh && \
     dos2unix /tmp/AdminApiScripts/Security/PgSql/* && \
     chmod -R 777 /tmp/AdminApiScripts/Security/PgSql/* && \
     # Clean up
-    apk del unzip dos2unix
+    apk del --no-cache unzip dos2unix
 
 USER postgres
 

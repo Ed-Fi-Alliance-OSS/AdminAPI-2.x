@@ -17,7 +17,7 @@ ENV VERSION="${ADMIN_API_VERSION:-2.2.0}"
 
 USER root
 COPY run-adminapi-migrations.sh /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh
-RUN apk upgrade --no-cache && apk add dos2unix=~7 unzip=~6 openssl
+RUN apk upgrade --no-cache && apk add --no-cache dos2unix=7.5.1-r0 unzip=6.0-r9 openssl=3.3.5-r0
 USER ${POSTGRES_USER}
 
 FROM base AS setup
@@ -30,7 +30,8 @@ RUN wget -nv -O /tmp/EdFi_AdminApi_Scripts.zip "https://pkgs.dev.azure.com/ed-fi
     rm -r /tmp/AdminApiScripts/AdminApi &&\
     dos2unix /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh && \
     dos2unix /tmp/AdminApiScripts/PgSql/* && \
-    chmod -R 600 /tmp/AdminApiScripts/PgSql
+    chmod -R 600 /tmp/AdminApiScripts/PgSql && \
+    apk del --no-cache dos2unix unzip
 USER ${POSTGRES_USER}
 
 EXPOSE 5432
