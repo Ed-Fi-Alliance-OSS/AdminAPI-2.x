@@ -69,7 +69,6 @@ app.UseHealthChecks("/health", new HealthCheckOptions
     {
         context.Response.ContentType = "application/json";
 
-        // Set HTTP status code based on health check results
         // 200 OK if all are healthy, 503 Service Unavailable if any are unhealthy
         context.Response.StatusCode = report.Status == HealthStatus.Healthy ? 200 : 503;
 
@@ -80,10 +79,8 @@ app.UseHealthChecks("/health", new HealthCheckOptions
             {
                 name = x.Key,
                 status = x.Value.Status.ToString(),
-                exception = x.Value.Exception?.Message,
-                duration = x.Value.Duration.ToString()
-            }),
-            duration = report.TotalDuration.ToString()
+                exception = x.Value.Exception?.Message
+            })
         };
 
         await context.Response.WriteAsync(System.Text.Json.JsonSerializer.Serialize(response));
