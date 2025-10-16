@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Net;
 using EdFi.Ods.AdminApi.Common.Constants;
 using EdFi.Ods.AdminApi.Common.Infrastructure;
 using EdFi.Ods.AdminApi.Common.Infrastructure.MultiTenancy;
@@ -70,7 +71,7 @@ app.UseHealthChecks("/health", new HealthCheckOptions
         context.Response.ContentType = "application/json";
 
         // 200 OK if all are healthy, 503 Service Unavailable if any are unhealthy
-        context.Response.StatusCode = report.Status == HealthStatus.Healthy ? 200 : 503;
+        context.Response.StatusCode = report.Status == HealthStatus.Unhealthy ? (int)HttpStatusCode.ServiceUnavailable : (int)HttpStatusCode.OK;
 
         var response = new
         {
@@ -78,12 +79,11 @@ app.UseHealthChecks("/health", new HealthCheckOptions
             checks = report.Entries.Select(x => new
             {
                 name = x.Key,
-                status = x.Value.Status.ToString(),
-                exception = x.Value.Exception?.Message
+                status = x.Value.Status.ToString()
             })
         };
 
-        await context.Response.WriteAsync(System.Text.Json.JsonSerializer.Serialize(response));
+        await context.Response.WriteAsJsonAsync(response);
     }
 });
 
