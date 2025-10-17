@@ -8,8 +8,7 @@
 # The extra layers in the middle support caching of base layers.
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0.403-alpine3.20@sha256:07cb8622ca6c4d7600b42b2eccba968dff4b37d41b43a9bf4bd800aa02fab117 AS build
-RUN apk upgrade --no-cache && \
-    apk add --no-cache musl=1.2.5-r21 && \
+RUN apk add --no-cache musl=1.2.5-r1 && \
     rm -rf /var/cache/apk/*
 
 ARG ASPNETCORE_ENVIRONMENT="Production"
