@@ -5,7 +5,7 @@
 
 FROM edfialliance/ods-api-db-admin:7.3@sha256:0a25a039e575464de1fdf09b2db270f00910f937cb782dfa809ac3c192509233 AS base
 USER root
-RUN apk --no-cache add dos2unix=7.5.3-r0 unzip=6.0-r16 && rm -rf /var/cache/apk/*
+RUN apk --no-cache --upgrade add dos2unix=7.5.3-r0 unzip=6.0-r16 && rm -rf /var/cache/apk/*
 
 FROM base AS setup
 LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
