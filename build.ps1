@@ -149,14 +149,16 @@ $supportedApiVersions7x = @(
         OdsVersion     = "7.1.1192"
         Prerelease     = $false
         StandardVersion = "5.0.0"
+        DbDeployVersion = "4.1.52"
     }
 )
 $supportedApiVersions6x = @(
     @{
         OdsPackageName = "EdFi.Suite3.RestApi.Databases"
-        OdsVersion     = "6.2.4304"
+        OdsVersion     = "6.2.3630"
         Prerelease     = $false
-        StandardVersion = ""
+        StandardVersion = "4.0.0"           # v6.2 uses Db.Deploy 3.2.27, version 4.1.52 is for ODS 7.x.
+        DbDeployVersion = "3.2.27"
     }
 )
 $maintainers = "Ed-Fi Alliance, LLC and contributors"
@@ -333,8 +335,12 @@ function ResetTestDatabases {
         $DbPassword,
         
         [string]
-        [Parameter(Mandatory=$false)]
-        $StandardVersion = "5.0.0"
+        [Parameter(Mandatory=$true)]
+        $StandardVersion,
+
+        [string]
+        [Parameter(Mandatory=$true)]
+        $DbDeployVersion
     )
 
     Invoke-Execute {
@@ -347,6 +353,7 @@ function ResetTestDatabases {
             NuGetFeed                = $EdFiNuGetFeed
             DbUsername               = $DbUsername
             DbPassword               = $DbPassword
+            DbDeployVersion          = $DbDeployVersion
         }
 
         Write-Output "CALLING  ----   Invoke-PrepareDatabasesForTesting"
@@ -496,6 +503,7 @@ function Invoke-IntegrationTestSuite {
                 OdsPackageName          = $_.OdsPackageName
                 Prerelease              = $_.Prerelease
                 StandardVersion         = $_.StandardVersion
+                DbDeployVersion         = $_.DbDeployVersion
                 UseIntegratedSecurity   = $UseIntegratedSecurity
                 DbUsername              = $DbUsername
                 DbPassword              = $DbPassword
@@ -512,30 +520,31 @@ function Invoke-IntegrationTestSuite {
         }
     }
 
-    # $supportedApiVersions6x | ForEach-Object {
-    #     Write-Output "Running Integration Tests for ODS Version" $_.OdsVersion
+    $supportedApiVersions6x | ForEach-Object {
+        Write-Output "Running Integration Tests for ODS Version" $_.OdsVersion
 
-    #     Invoke-Step {
-    #         $arguments = @{
-    #             OdsVersion              = $_.OdsVersion
-    #             OdsPackageName          = $_.OdsPackageName
-    #             Prerelease              = $_.Prerelease
-    #             StandardVersion         = $_.StandardVersion
-    #             UseIntegratedSecurity   = $UseIntegratedSecurity
-    #             DbUsername              = $DbUsername
-    #             DbPassword              = $DbPassword
-    #         }
+        Invoke-Step {
+            $arguments = @{
+                OdsVersion              = $_.OdsVersion
+                OdsPackageName          = $_.OdsPackageName
+                Prerelease              = $_.Prerelease
+                StandardVersion         = $_.StandardVersion
+                DbDeployVersion         = $_.DbDeployVersion
+                UseIntegratedSecurity   = $UseIntegratedSecurity
+                DbUsername              = $DbUsername
+                DbPassword              = $DbPassword
+            }
 
-    #         Write-Output "CALLING  ----   ResetTestDatabases"
-    #         Write-Output "ResetTestDatabases arguments:"
-    #         $arguments.GetEnumerator() | ForEach-Object { Write-Output "  $($_.Key) = $($_.Value)" }
+            Write-Output "CALLING  ----   ResetTestDatabases"
+            Write-Output "ResetTestDatabases arguments:"
+            $arguments.GetEnumerator() | ForEach-Object { Write-Output "  $($_.Key) = $($_.Value)" }
             
-    #         ResetTestDatabases @arguments
-    #     }
-    #     Invoke-Step {
-    #         IntegrationTests6x
-    #     }
-    # }
+            ResetTestDatabases @arguments
+        }
+        Invoke-Step {
+            IntegrationTests6x
+        }
+    }
 }
 
 function Invoke-BuildApiPackage {

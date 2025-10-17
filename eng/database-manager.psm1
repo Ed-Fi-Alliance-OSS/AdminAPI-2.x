@@ -6,7 +6,6 @@
 #requires -version 5
 
 $ErrorActionPreference = "Stop"
-Set-Variable DbDeployVersion -option Constant -value "4.1.52"
 
 Import-Module -Name "$PSScriptRoot/connection-strings.psm1"
 
@@ -57,7 +56,10 @@ IF EXISTS (SELECT 1 FROM sys.databases WHERE name = '$databaseName')
 GO
 "@
 
-    Install-Module sqlserver -Force
+    # Ensure the SqlServer module is installed. Don't re-install if already present. 
+    if (-not (Get-InstalledModule -Name "SqlServer" -ErrorAction SilentlyContinue)) {
+        Install-Module sqlserver -Force
+    }
     Import-Module sqlserver -Force
     Invoke-SqlCmd -ConnectionString $masterConnection -Query $dropDatabase
 }
@@ -81,17 +83,23 @@ function Install-EdFiDbDeploy {
 
     $exePath = "$ToolsPath/$toolName.exe"
 
-    if (Test-Path $exePath) {
-        $existing = &dotnet tool list --tool-path $ToolsPath | Select-String -Pattern $toolPackageName | Out-String
-        if ($existing.Contains("$Version")) {
-            Write-Host "$toolPackageName is already installed" -ForegroundColor DarkGray
-            return $exePath
-        }
-        else {
-            Write-Host "Uninstalling old version of $toolPackageName"
-            &dotnet tool uninstall $toolPackageName --tool-path $ToolsPath | Out-Host
-        }
-    }
+    # v6.2 uses Db.Deploy 3.2.27, version 4.1.52 is for ODS 7.x.
+    # This means we need to uninstall any existing version before installing the requested version.
+
+    Write-Host "Uninstalling old version of $toolPackageName"
+    &dotnet tool uninstall $toolPackageName --tool-path $ToolsPath | Out-Host
+
+    # if (Test-Path $exePath) {
+    #     $existing = &dotnet tool list --tool-path $ToolsPath | Select-String -Pattern $toolPackageName | Out-String
+    #     if ($existing.Contains("$Version")) {
+    #         Write-Host "$toolPackageName is already installed" -ForegroundColor DarkGray
+    #         return $exePath
+    #     }
+    #     else {
+    #         Write-Host "Uninstalling old version of $toolPackageName"
+    #         &dotnet tool uninstall $toolPackageName --tool-path $ToolsPath | Out-Host
+    #     }
+    # }
 
     Write-Host "Installing $toolPackageName version $Version in $ToolsPath"
     &dotnet tool install $toolPackageName --version $Version --tool-path $ToolsPath --add-source $NuGetFeed | Out-Host
@@ -107,6 +115,10 @@ function Invoke-DbDeploy {
     param (
         [string]
         $DbDeployExe = ".tools/EdFi.Db.Deploy.exe",
+
+        [string]
+        [Parameter(Mandatory=$true)]
+        $DbDeployVersion,
 
         [string]
         [ValidateSet("PostgreSQL", "SqlServer")]
@@ -126,8 +138,8 @@ function Invoke-DbDeploy {
         $FilePaths,
 
         [string]
-        [Parameter(Mandatory=$false)]
-        $StandardVersion = "5.0.0"
+        [Parameter(Mandatory=$true)]
+        $StandardVersion
     )
 
     # Convert relative to absolute paths
@@ -141,21 +153,25 @@ function Invoke-DbDeploy {
         "-d", $DatabaseType,
         "-e", $DatabaseEngine,
         "-c", $ConnectionString,
-        "-p", ($paths -Join ","),
-        "--standardVersion", $StandardVersion
+        "-p", ($paths -Join ",")
     )
+
+    # Only include standardVersion parameter for DbDeployVersion 4.1.52 and later
+    if ($DbDeployVersion -ne "3.2.27") {
+        $arguments += @("--standardVersion", $StandardVersion)
+    }
 
     Write-Host "Executing: $DbDeployExe $(Get-MaskedConnectionString $arguments)" -ForegroundColor Magenta
     if ($DbDeployExe -like "*.exe") {
         $DbDeployExe = $DbDeployExe -replace "\.exe$", ""
     }
 
+    Write-Host "Full command: $DbDeployExe $($arguments -join ' ')" -ForegroundColor blue
     &$DbDeployExe @arguments
 
     if ($LASTEXITCODE -ne 0) {
         throw "Execution of EdFi.Db.Deploy failed."
     }
-
 }
 
 function Install-EdFiDatabase {
@@ -216,8 +232,8 @@ function Install-EdFiDatabase {
         $FilePaths,
 
         [string]
-        [Parameter(Mandatory=$false)]
-        $StandardVersion="5.0.0"
+        [Parameter(Mandatory=$true)]
+        $StandardVersion
     )
 
     $arguments = @{
@@ -226,6 +242,7 @@ function Install-EdFiDatabase {
         NuGetFeed = $NuGetFeed
     }
 
+    Write-Output "CALLING  ----   Install-EdFiDbDeploy" -ForegroundColor Red
     $dbDeployExe = Install-EdFiDbDeploy @arguments
 
     $arguments = @{
@@ -242,6 +259,7 @@ function Install-EdFiDatabase {
 
     $arguments = @{
         DbDeployExe = $dbDeployExe
+        DbDeployVersion = $DbDeployVersion
         DatabaseEngine = "SqlServer"
         DatabaseType = $DatabaseType
         ConnectionString = $connectionString
@@ -292,7 +310,8 @@ function Install-EdFiAdminDatabase {
 
         # EdFi.Db.Deploy tool version to use.
         [string]
-        $DbDeployVersion = $DbDeployVersion,
+        [Parameter(Mandatory=$true)]
+        $DbDeployVersion,
 
         # Ed-Fi NuGet feed for tool download.
         [string]
@@ -336,8 +355,8 @@ function Install-EdFiAdminDatabase {
         $FilePaths,
 
         [string]
-        [Parameter(Mandatory=$false)]
-        $StandardVersion = "5.0.0"
+        [Parameter(Mandatory=$true)]
+        $StandardVersion
     )
 
     $arguments = @{
@@ -356,6 +375,7 @@ function Install-EdFiAdminDatabase {
         StandardVersion = $StandardVersion
     }
 
+    Write-Output "CALLING  ----   Install-EdFiDatabase" -ForegroundColor Red
     Install-EdFiDatabase @arguments
 }
 
@@ -367,7 +387,8 @@ function Install-EdFiODSDatabase {
 
         # EdFi.Db.Deploy tool version to use.
         [string]
-        $DbDeployVersion = $DbDeployVersion,
+        [Parameter(Mandatory=$true)]
+        $DbDeployVersion,
 
         # Ed-Fi NuGet feed for tool download.
         [string]
@@ -411,8 +432,8 @@ function Install-EdFiODSDatabase {
         $FilePaths,
 
         [string]
-        [Parameter(Mandatory=$false)]
-        $StandardVersion = "5.0.0"
+        [Parameter(Mandatory=$true)]
+        $StandardVersion
     )
 
     $arguments = @{
@@ -442,7 +463,8 @@ function Install-EdFiSecurityDatabase {
 
         # EdFi.Db.Deploy tool version to use.
         [string]
-        $DbDeployVersion = $DbDeployVersion,
+        [Parameter(Mandatory=$true)]
+        $DbDeployVersion,
 
         # Ed-Fi NuGet feed for tool download.
         [string]
@@ -483,7 +505,11 @@ function Install-EdFiSecurityDatabase {
 
         # Hierarchy of directory paths containing database install files.
         [string[]]
-        $FilePaths
+        $FilePaths,
+
+        [string]
+        [Parameter(Mandatory=$true)]
+        $StandardVersion
     )
 
     $arguments = @{
@@ -499,6 +525,7 @@ function Install-EdFiSecurityDatabase {
         Username  = $Username
         Password = $Password
         FilePaths = BuildDefaultFilePathArray -FilePath $FilePaths -RestApiPackagePath $RestApiPackagePath
+        StandardVersion = $StandardVersion
     }
 
     Write-Output "CALLING  ----   Install-EdFiDatabase"
@@ -516,7 +543,8 @@ function Install-AdminApiTables {
 
         # EdFi.Db.Deploy tool version to use.
         [string]
-        $DbDeployVersion = $DbDeployVersion,
+        [Parameter(Mandatory=$true)]
+        $DbDeployVersion,
 
         # Ed-Fi NuGet feed for tool download.
         [string]
@@ -557,7 +585,12 @@ function Install-AdminApiTables {
 
         # Hierarchy of directory paths containing database install files.
         [string[]]
-        $FilePath  = "$PSScriptRoot/../Application/EdFi.Ods.AdminApi"
+        $FilePath  = "$PSScriptRoot/../Application/EdFi.Ods.AdminApi",
+
+        [string]
+        [Parameter(Mandatory=$true)]
+        $StandardVersion
+
     )
 
     $arguments = @{
@@ -573,6 +606,7 @@ function Install-AdminApiTables {
         Username  = $Username
         Password = $Password
         FilePaths = @( $FilePath )
+        StandardVersion = $StandardVersion
     }
 
     Install-EdFiDatabase @arguments
@@ -597,7 +631,8 @@ function Invoke-PrepareDatabasesForTesting {
 
         # EdFi.Db.Deploy tool version to use.
         [string]
-        $DbDeployVersion = $DbDeployVersion,
+        [Parameter(Mandatory=$true)]
+        $DbDeployVersion,
 
         # Ed-Fi NuGet feed for tool download.
         [string]
@@ -625,8 +660,8 @@ function Invoke-PrepareDatabasesForTesting {
         $ToolsPath = "$PSScriptRoot/.tools",
         
         [string]
-        [Parameter(Mandatory=$false)]
-        $StandardVersion = "5.0.0"
+        [Parameter(Mandatory=$true)]
+        $StandardVersion
     )
 
     Import-Module -Name "$PSScriptRoot/package-manager.psm1" -Force
@@ -673,7 +708,7 @@ function Invoke-PrepareDatabasesForTesting {
     }
 
     $installArguments.DatabaseName = "EdFi_Security_Test"
-    $installArguments.DatabaseType = "Security"
+    # $installArguments.DatabaseType = "Security"
     $removeArguments.DatabaseName = "EdFi_Security_Test"
     Write-Host "Installing the Security database to $($installArguments.DatabaseName)" -ForegroundColor Cyan
     Remove-SqlServerDatabase @removeArguments
@@ -684,13 +719,14 @@ function Invoke-PrepareDatabasesForTesting {
     Install-EdFiSecurityDatabase @installArguments
 
     $installArguments.DatabaseName = "EdFi_Admin_Test"
-    $installArguments.DatabaseType = "Admin"
+    # $installArguments.DatabaseType = "Admin"
     $removeArguments.DatabaseName = "EdFi_Admin_Test"
     Write-Host "Installing the Admin database to $($installArguments.DatabaseName)" -ForegroundColor Cyan
     Remove-SqlServerDatabase @removeArguments
     Install-EdFiAdminDatabase @installArguments
 
     $installArguments.Remove("RestApiPackagePath")
+    $installArguments.DatabaseType = "Admin"
     Write-Host "Installing the Admin App tables to $($installArguments.DatabaseName)" -ForegroundColor Cyan
     Install-AdminApiTables @installArguments
 }

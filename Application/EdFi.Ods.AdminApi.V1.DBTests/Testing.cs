@@ -12,12 +12,6 @@ namespace EdFi.Ods.AdminApi.V1.DBTests;
 
 public static class Testing
 {
-    public static void EnsureInitialized()
-    {
-        _ = new SecurityTestDatabaseSetup();
-        SecurityTestDatabaseSetup.EnsureSecurityDatabase(@"C:\\temp");
-    }
-
     private static IConfigurationRoot _config;
 
     public static IConfiguration Configuration()
@@ -29,11 +23,9 @@ public static class Testing
         return _config;
     }
 
-    public static string AdminConnectionString { get { return Configuration().GetConnectionString("Admin"); } }
+    public static string AdminConnectionString { get { return Configuration().GetConnectionString("EdFi_Admin"); } }
 
-    public static string SecurityConnectionString { get { return Configuration().GetConnectionString("Security"); } }
-
-    public static string SecurityV53ConnectionString { get { return Configuration().GetConnectionString("SecurityV53"); } }
+    public static string SecurityConnectionString { get { return Configuration().GetConnectionString("EdFi_Security"); } }
 
     public static int DefaultPageSizeOffset => (int)Configuration().GetValue(typeof(int), "AppSettings:DefaultPageSizeOffset");
 
