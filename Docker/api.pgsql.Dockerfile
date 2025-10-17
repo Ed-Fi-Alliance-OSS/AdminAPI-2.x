@@ -6,7 +6,7 @@
 #tag 8.0-alpine
 FROM mcr.microsoft.com/dotnet/aspnet:8.0.10-alpine3.20-amd64@sha256:1659f678b93c82db5b42fb1fb12d98035ce482b85747c2c54e514756fa241095 AS base
 RUN apk upgrade --no-cache && \
-    apk add --no-cache bash=5.2.26-r0 dos2unix=7.5.2-r0 gettext=0.22.5-r0 icu=76.1-r1 jq=1.7.1-r0 musl=1.2.5-r10 openssl=3.3.5-r0 postgresql14-client=14.10-r0 unzip=6.0-r15 && \
+    apk add --no-cache bash=5.2.26-r0 dos2unix=7.5.2-r0 gettext=0.22.5-r0 icu=74.2-r1 jq=1.7.1-r0 musl=1.2.5-r0 openssl=3.3.5-r0 postgresql14-client=14.10-r0 unzip=6.0-r14 && \
     addgroup -S edfi && adduser -S edfi -G edfi
 
 FROM base AS build
