@@ -356,10 +356,6 @@ function ResetTestDatabases {
             DbDeployVersion          = $DbDeployVersion
         }
 
-        Write-Output "CALLING  ----   Invoke-PrepareDatabasesForTesting"
-        Write-Output "Invoke-PrepareDatabasesForTesting arguments:"
-        $arguments.GetEnumerator() | ForEach-Object { Write-Output "  $($_.Key) = $($_.Value)" }
-
         Invoke-PrepareDatabasesForTesting @arguments
     }
 }
@@ -509,10 +505,6 @@ function Invoke-IntegrationTestSuite {
                 DbPassword              = $DbPassword
             }
 
-            Write-Output "CALLING  ----   ResetTestDatabases"
-            Write-Output "ResetTestDatabases arguments:"
-            $arguments.GetEnumerator() | ForEach-Object { Write-Output "  $($_.Key) = $($_.Value)" }
-            
             ResetTestDatabases @arguments
         }
         Invoke-Step {
@@ -535,10 +527,6 @@ function Invoke-IntegrationTestSuite {
                 DbPassword              = $DbPassword
             }
 
-            Write-Output "CALLING  ----   ResetTestDatabases"
-            Write-Output "ResetTestDatabases arguments:"
-            $arguments.GetEnumerator() | ForEach-Object { Write-Output "  $($_.Key) = $($_.Value)" }
-            
             ResetTestDatabases @arguments
         }
         Invoke-Step {

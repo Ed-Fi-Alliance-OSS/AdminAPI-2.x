@@ -271,10 +271,6 @@ function Install-EdFiDatabase {
         $arguments.DatabaseEngine = "PostgreSQL"
     }
 
-    Write-Output "CALLING  ----   Invoke-DbDeploy"
-    Write-Output "Invoke-DbDeploy arguments:"
-    $arguments.GetEnumerator() | ForEach-Object { Write-Output "  $($_.Key) = $($_.Value)" }
-
     Invoke-DbDeploy @arguments
 }
 
@@ -528,10 +524,6 @@ function Install-EdFiSecurityDatabase {
         StandardVersion = $StandardVersion
     }
 
-    Write-Output "CALLING  ----   Install-EdFiDatabase"
-    Write-Output "Install-EdFiDatabase arguments (from Install-EdFiSecurityDatabase):"
-    $arguments.GetEnumerator() | ForEach-Object { Write-Output "  $($_.Key) = $($_.Value)" }
-
     Install-EdFiDatabase @arguments
 }
 
@@ -676,10 +668,6 @@ function Invoke-PrepareDatabasesForTesting {
         RestApiPackagePrerelease = $RestApiPackagePrerelease
     }
 
-    Write-Output "CALLING  ----   Install-EdFiSecurityDatabase AND Install-EdFiAdminDatabase"
-    Write-Output "Get-RestApiPackage arguments:"
-    $arguments.GetEnumerator() | ForEach-Object { Write-Output "  $($_.Key) = $($_.Value)" }
-
     $dbPackagePath = Get-RestApiPackage @arguments
 
     Write-Output "Get-RestApiPackage result:"
@@ -708,18 +696,13 @@ function Invoke-PrepareDatabasesForTesting {
     }
 
     $installArguments.DatabaseName = "EdFi_Security_Test"
-    # $installArguments.DatabaseType = "Security"
     $removeArguments.DatabaseName = "EdFi_Security_Test"
     Write-Host "Installing the Security database to $($installArguments.DatabaseName)" -ForegroundColor Cyan
     Remove-SqlServerDatabase @removeArguments
 
-    Write-Output "Install-EdFiSecurityDatabase arguments:"
-    $installArguments.GetEnumerator() | ForEach-Object { Write-Output "  $($_.Key) = $($_.Value)" }
-
     Install-EdFiSecurityDatabase @installArguments
 
     $installArguments.DatabaseName = "EdFi_Admin_Test"
-    # $installArguments.DatabaseType = "Admin"
     $removeArguments.DatabaseName = "EdFi_Admin_Test"
     Write-Host "Installing the Admin database to $($installArguments.DatabaseName)" -ForegroundColor Cyan
     Remove-SqlServerDatabase @removeArguments
