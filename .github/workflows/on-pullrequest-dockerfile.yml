@@ -47,6 +47,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
+      - name: List available APK versions
+        run: |
+          docker run --rm mcr.microsoft.com/dotnet/aspnet:8.0.10-alpine3.20 \
+            sh -c "apk update && apk info -a bash dos2unix gettext icu musl openssl postgresql14-client"
+
       - name: Set Version Numbers
         if: ${{ matrix.dockerfile.type == 'published' }}
         id: versions
