@@ -17,7 +17,7 @@ ENV VERSION="${ADMIN_API_VERSION:-2.2.0}"
 
 USER root
 COPY run-adminapi-migrations.sh /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh
-RUN apk --no-cache --upgrade add dos2unix=7.5.0-r0 unzip=6.0-r13 && rm -rf /var/cache/apk/*
+RUN apk add --no-cache dos2unix=7.5.2-r0 unzip=6.0-r14 && rm -rf /var/cache/apk/*
 USER ${POSTGRES_USER}
 
 FROM base AS setup
