@@ -8,7 +8,10 @@
 # The extra layers in the middle support caching of base layers.
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0.403-alpine3.20@sha256:07cb8622ca6c4d7600b42b2eccba968dff4b37d41b43a9bf4bd800aa02fab117 AS build
-RUN apk upgrade --no-cache && apk add --no-cache musl=~1.2.5-r1
+RUN apk upgrade --no-cache && \
+    apk add --no-cache musl=1.2.5-r1 && \
+    rm -rf /var/cache/apk/*
+
 ARG ASPNETCORE_ENVIRONMENT="Production"
 ENV ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
 
@@ -31,7 +34,15 @@ RUN dotnet publish -c Release /p:EnvironmentName=$ASPNETCORE_ENVIRONMENT --no-bu
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0.10-alpine3.20-amd64@sha256:1659f678b93c82db5b42fb1fb12d98035ce482b85747c2c54e514756fa241095 AS runtimebase
 RUN apk upgrade --no-cache && \
-    apk add --no-cache bash=~5 dos2unix=~7 gettext=~0 icu=~74 musl=~1.2.5-r1 openssl=3.3.5-r0 postgresql14-client=~14 && \
+    apk add --no-cache \
+        bash=5.2.26-r0 \
+        dos2unix=7.5.0-r0 \
+        gettext=0.22.5-r0 \
+        icu=74.2-r0 \
+        musl=1.2.5-r1 \
+        openssl=3.3.5-r0 \
+        postgresql14-client=14.15-r0 && \
+    rm -rf /var/cache/apk/* && \
     addgroup -S edfi && adduser -S edfi -G edfi
 
 FROM runtimebase AS setup
