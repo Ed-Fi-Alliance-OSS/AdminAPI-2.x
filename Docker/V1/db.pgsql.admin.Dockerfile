@@ -17,7 +17,7 @@ USER root
 COPY --from=assets Application/EdFi.Ods.AdminApi/Artifacts/PgSql/Structure/Admin/ /tmp/AdminApiScripts/PgSql
 COPY --from=assets Docker/Settings/V1/DB-Admin/pgsql/run-adminapi-migrations.sh /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh
 
-RUN apk upgrade --no-cache && apk add --no-cache dos2unix=7.5.2-r0 unzip=6.0-r14 openssl=3.1.3-r0 musl=1.2.5-r1
+RUN apk upgrade --no-cache && apk add --no-cache dos2unix unzip openssl musl
 USER ${POSTGRES_USER}
 
 FROM base AS setup
