@@ -75,11 +75,11 @@ app.UseHealthChecks("/health", new HealthCheckOptions
 
         var response = new
         {
-            status = report.Status.ToString(),
-            checks = report.Entries.Select(x => new
+            Status = report.Status.ToString(),
+            Results = report.Entries.GroupBy(x => x.Value.Tags.FirstOrDefault()).Select(x => new
             {
-                name = x.Key,
-                status = x.Value.Status.ToString()
+                Name = x.Key,
+                Status = x.Min(y => y.Value.Status).ToString()
             })
         };
 
