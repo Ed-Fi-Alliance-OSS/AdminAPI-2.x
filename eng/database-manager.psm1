@@ -608,7 +608,7 @@ function Invoke-PrepareDatabasesForTesting {
     param(
         [string]
         [Parameter(Mandatory=$true)]
-        [ValidateSet("EdFi.Suite3.RestApi.Databases", "EdFi.Suite3.RestApi.Databases.Standard.5.0.0")]
+        [ValidateSet("EdFi.Suite3.RestApi.Databases", "EdFi.Suite3.RestApi.Databases.Standard.5.2.0")]
         $RestApiPackageName,
 
         [string]

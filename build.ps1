@@ -145,10 +145,10 @@ $dockerRoot = "$PSScriptRoot/Docker"
 
 $supportedApiVersions7x = @(
     @{
-        OdsPackageName = "EdFi.Suite3.RestApi.Databases.Standard.5.0.0"
-        OdsVersion     = "7.1.1192"
+        OdsPackageName = "EdFi.Suite3.RestApi.Databases.Standard.5.2.0"
+        OdsVersion     = "7.3.10536"
         Prerelease     = $false
-        StandardVersion = "5.0.0"
+        StandardVersion = "5.2.0"
         DbDeployVersion = "4.1.52"
     }
 )
