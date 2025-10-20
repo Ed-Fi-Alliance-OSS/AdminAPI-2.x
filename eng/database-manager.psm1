@@ -166,7 +166,6 @@ function Invoke-DbDeploy {
         $DbDeployExe = $DbDeployExe -replace "\.exe$", ""
     }
 
-    Write-Host "Full command: $DbDeployExe $($arguments -join ' ')" -ForegroundColor blue
     &$DbDeployExe @arguments
 
     if ($LASTEXITCODE -ne 0) {
@@ -242,7 +241,6 @@ function Install-EdFiDatabase {
         NuGetFeed = $NuGetFeed
     }
 
-    Write-Output "CALLING  ----   Install-EdFiDbDeploy" -ForegroundColor Red
     $dbDeployExe = Install-EdFiDbDeploy @arguments
 
     $arguments = @{
@@ -371,7 +369,6 @@ function Install-EdFiAdminDatabase {
         StandardVersion = $StandardVersion
     }
 
-    Write-Output "CALLING  ----   Install-EdFiDatabase" -ForegroundColor Red
     Install-EdFiDatabase @arguments
 }
 
@@ -669,9 +666,6 @@ function Invoke-PrepareDatabasesForTesting {
     }
 
     $dbPackagePath = Get-RestApiPackage @arguments
-
-    Write-Output "Get-RestApiPackage result:"
-    Write-Output "  dbPackagePath = $dbPackagePath"
 
     $installArguments = @{
         ToolsPath = $ToolsPath

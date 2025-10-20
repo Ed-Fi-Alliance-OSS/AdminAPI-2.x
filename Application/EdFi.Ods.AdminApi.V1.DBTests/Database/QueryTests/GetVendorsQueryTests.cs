@@ -27,7 +27,7 @@ public class GetVendorsQueryTests : PlatformUsersContextTestBase
            [
                new() {
                    NamespacePrefix = "http://testvendor.net",
-                   Vendor = new Vendor() // Assign a new Vendor instance to satisfy the required property
+                   Vendor = new Vendor()
                }
            ],
         };
@@ -61,7 +61,7 @@ public class GetVendorsQueryTests : PlatformUsersContextTestBase
                [
                    new() {
                        NamespacePrefix = "http://testvendor.net",
-                       Vendor = new Vendor() // Assign a new Vendor instance to satisfy the required property
+                       Vendor = new Vendor()
                    }
                ]
             };
