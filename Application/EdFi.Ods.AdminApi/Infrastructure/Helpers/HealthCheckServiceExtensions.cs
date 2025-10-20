@@ -70,11 +70,11 @@ public static class HealthCheckServiceExtensions
 
             if (isSqlServer)
             {
-                hcBuilder.AddSqlServer(connectionString.Value, name: healthCheckName);
+                hcBuilder.AddSqlServer(connectionString.Value, name: healthCheckName, tags: ["Databases"]);
             }
             else
             {
-                hcBuilder.AddNpgSql(connectionString.Value, name: healthCheckName);
+                hcBuilder.AddNpgSql(connectionString.Value, name: healthCheckName, tags: ["Databases"]);
             }
         }
     }
