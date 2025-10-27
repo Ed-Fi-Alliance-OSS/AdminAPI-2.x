@@ -21,17 +21,20 @@ public class EditOdsInstanceContextCommand : IEditOdsInstanceContextCommand
 
     public EditOdsInstanceContextCommand(IUsersContext context)
     {
-        _context = context;
+        _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
     public OdsInstanceContext Execute(IEditOdsInstanceContextModel changedOdsInstanceContextData)
     {
-        var odsInstanceContext = _context.OdsInstanceContexts
-            .Include(oid => oid.OdsInstance)
-            .SingleOrDefault(v => v.OdsInstanceContextId == changedOdsInstanceContextData.Id) ??
-            throw new NotFoundException<int>("odsInstanceContext", changedOdsInstanceContextData.Id);
-        var odsInstance = _context.OdsInstances.SingleOrDefault(v => v.OdsInstanceId == changedOdsInstanceContextData.OdsInstanceId) ??
-            throw new NotFoundException<int>("odsInstance", changedOdsInstanceContextData.OdsInstanceId);
+        var odsInstanceContext =
+            _context
+                .OdsInstanceContexts.Include(oid => oid.OdsInstance)
+                .SingleOrDefault(v => v.OdsInstanceContextId == changedOdsInstanceContextData.Id)
+            ?? throw new NotFoundException<int>("odsInstanceContext", changedOdsInstanceContextData.Id);
+        var odsInstance =
+            _context.OdsInstances.SingleOrDefault(v =>
+                v.OdsInstanceId == changedOdsInstanceContextData.OdsInstanceId
+            ) ?? throw new NotFoundException<int>("odsInstance", changedOdsInstanceContextData.OdsInstanceId);
 
         odsInstanceContext.ContextKey = changedOdsInstanceContextData.ContextKey;
         odsInstanceContext.OdsInstance = odsInstance;
@@ -44,8 +47,8 @@ public class EditOdsInstanceContextCommand : IEditOdsInstanceContextCommand
 
 public interface IEditOdsInstanceContextModel
 {
-    public int Id { get; set; }
-    public int OdsInstanceId { get; set; }
-    public string? ContextKey { get; set; }
-    public string? ContextValue { get; set; }
+    int Id { get; set; }
+    int OdsInstanceId { get; set; }
+    string? ContextKey { get; set; }
+    string? ContextValue { get; set; }
 }
