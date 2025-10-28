@@ -8,10 +8,10 @@
 # The extra layers in the middle support caching of base layers.
 
 # Define assets stage using Alpine 3.20 to match the version used in other stages
-FROM alpine:3.20@sha256:187cce89a2fdd4eaf457a0af45f5ce27672f35ce0f6df49b5b0ee835afe0561b AS assets
+FROM alpine:3.22@sha256:4b7ce07002c69e8f3d704a9c5d6fd3053be500b7f1c69fc0d80990c2ad8dd412 AS assets
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0.403-alpine3.20@sha256:07cb8622ca6c4d7600b42b2eccba968dff4b37d41b43a9bf4bd800aa02fab117 AS build
-RUN apk add --no-cache musl=1.2.5-r1 && \
+FROM mcr.microsoft.com/dotnet/sdk:10.0.100-rc.2-alpine3.22@sha256:bc43a6c308396eb1364b293da5315a55f5f8921ffd08ed61b227e5b35e88e237 AS build
+RUN apk add --no-cache musl=~1 && \
     rm -rf /var/cache/apk/*
 
 ARG ASPNETCORE_ENVIRONMENT="Production"
@@ -34,15 +34,14 @@ RUN export ASPNETCORE_ENVIRONMENT=$ASPNETCORE_ENVIRONMENT
 RUN dotnet restore && dotnet build -c Release
 RUN dotnet publish -c Release /p:EnvironmentName=$ASPNETCORE_ENVIRONMENT --no-build -o /app/EdFi.Ods.AdminApi
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0.10-alpine3.20-amd64@sha256:1659f678b93c82db5b42fb1fb12d98035ce482b85747c2c54e514756fa241095 AS runtimebase
+FROM mcr.microsoft.com/dotnet/aspnet:10.0.0-rc.2-alpine3.22-amd64@sha256:be8c32d90de54fed944b63995ac4661d0e611c938df74b49dad732ff28ad7a7f AS runtimebase
 RUN apk add --no-cache \
-        bash=5.2.26-r0 \
-        dos2unix=7.5.2-r0 \
-        gettext=0.22.5-r0 \
-        icu=74.2-r1 \
-        musl=1.2.5-r1 \
-        openssl=3.3.5-r0 \
-        postgresql14-client=14.17-r0 && \
+        bash=~5 \
+        dos2unix=~7 \
+        gettext=~0 \
+        icu=~76 \
+        openssl=~3 \
+        postgresql16-client=~16 && \
     rm -rf /var/cache/apk/* && \
     addgroup -S edfi && adduser -S edfi -G edfi
 

@@ -3,8 +3,8 @@
 # The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 # See the LICENSE and NOTICES files in the project root for more information.
 
-#tag 8.0-alpine
-FROM mcr.microsoft.com/dotnet/aspnet:8.0.10-alpine3.20-amd64@sha256:1659f678b93c82db5b42fb1fb12d98035ce482b85747c2c54e514756fa241095 AS base
+#tag 10.0-alpine
+FROM mcr.microsoft.com/dotnet/aspnet:10.0.0-rc.2-alpine3.22-amd64@sha256:be8c32d90de54fed944b63995ac4661d0e611c938df74b49dad732ff28ad7a7f AS base
 RUN apk upgrade --no-cache && \
     apk add --no-cache bash=~5 dos2unix=~7 gettext=~0 icu=~74 jq=~1 musl=~1.2.5-r1 openssl=3.3.5-r0 postgresql14-client=~14 unzip=~6 && \
     rm -rf /var/cache/apk/* && \
