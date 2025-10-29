@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>true</IsPackable>
-    <NoWarn>NU5100, NU5124</NoWarn>
+    <NoWarn>NU5100, NU5124, NU1510</NoWarn>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>../..</DockerfileContext>
     <DockerfileFile>dev.pgsql.Dockerfile</DockerfileFile>
