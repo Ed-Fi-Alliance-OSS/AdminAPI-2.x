@@ -125,6 +125,12 @@ jobs:
               throw "Token replacement failed - __ADMINAPI_VERSION__ still found in $installerPath"
           }
 
+          $verifyInstallScriptContent = Get-Content $installScriptPath -Raw
+
+          if ($verifyInstallScriptContent -match '__ADMINAPI_VERSION__')
+          {
+              throw "Token replacement failed - __ADMINAPI_VERSION__ still found in $installScriptPath"
+          }
           Write-Host "Verification passed - token successfully replaced with version: $version"
 
       - name: Create NuGet Packages
