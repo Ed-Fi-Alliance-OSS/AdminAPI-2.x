@@ -287,7 +287,7 @@ function RunTests {
             $coverageArgs = ""
 
             if ($script:RunCoverageAnalysis) {
-                $coverageArgs = "--collect:""XPlat Code Coverage"""
+                $coverageArgs = '--collect:"XPlat Code Coverage"'
             }
 
             dotnet test $_ `
