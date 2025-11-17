@@ -40,7 +40,7 @@ services:
       POSTGRES_USER: "${POSTGRES_USER}"
       TPDM_ENABLED: "${TPDM_ENABLED:-true}"
     volumes:
-      - ${LOGS_FOLDER}:/app/logs
+      - ${LOGS_FOLDER:-./logs}:/app/logs
     depends_on:
       - db-ods
       - db-admin
