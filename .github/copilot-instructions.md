@@ -3,7 +3,7 @@
 * Make only high confidence suggestions when reviewing code changes.
 * Never change NuGet.config files unless explicitly asked to.
 
-## Formatting
+## Formatting and Style
 
 * Apply code-formatting style defined in `.editorconfig`.
 * Prefer file-scoped namespace declarations and single-line using directives.
@@ -11,6 +11,7 @@
 * Ensure that the final return statement of a method is on its own line.
 * Use pattern matching and switch expressions wherever possible.
 * Use `nameof` instead of string literals when referring to member names.
+* Delete unused `using` directives
 
 ### Nullable Reference Types
 
@@ -27,4 +28,5 @@
 
 ## Running tests
 
+* Copilot should build and run unit tests after making changes
 * To build and run tests in the repo, use the command `./build.ps1 UnitTest`

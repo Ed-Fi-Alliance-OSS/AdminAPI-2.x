@@ -7,7 +7,7 @@ using AutoMapper;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApi.Common.Features;
 using EdFi.Ods.AdminApi.Common.Infrastructure;
-using EdFi.Ods.AdminApi.Infrastructure;
+using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.Documentation;
@@ -27,7 +27,14 @@ public class EditOdsInstanceContext : IFeature
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    public static async Task<IResult> Handle(Validator validator, IEditOdsInstanceContextCommand editOdsInstanceContextCommand, IMapper mapper, IUsersContext db, EditOdsInstanceContextRequest request, int id)
+    public static async Task<IResult> Handle(
+        Validator validator,
+        IEditOdsInstanceContextCommand editOdsInstanceContextCommand,
+        IMapper mapper,
+        IUsersContext db,
+        EditOdsInstanceContextRequest request,
+        int id
+    )
     {
         request.Id = id;
         await validator.GuardAsync(request);
@@ -35,18 +42,29 @@ public class EditOdsInstanceContext : IFeature
         return Results.Ok();
     }
 
-
     [SwaggerSchema(Title = "EditOdsInstanceContextRequest")]
     public class EditOdsInstanceContextRequest : IEditOdsInstanceContextModel
     {
         [SwaggerExclude]
         [SwaggerSchema(Description = FeatureConstants.OdsInstanceContextIdDescription, Nullable = false)]
         public int Id { get; set; }
-        [SwaggerSchema(Description = FeatureConstants.OdsInstanceContextOdsInstanceIdDescription, Nullable = false)]
+
+        [SwaggerSchema(
+            Description = FeatureConstants.OdsInstanceContextOdsInstanceIdDescription,
+            Nullable = false
+        )]
         public int OdsInstanceId { get; set; }
-        [SwaggerSchema(Description = FeatureConstants.OdsInstanceContextContextKeyDescription, Nullable = false)]
+
+        [SwaggerSchema(
+            Description = FeatureConstants.OdsInstanceContextContextKeyDescription,
+            Nullable = false
+        )]
         public string? ContextKey { get; set; }
-        [SwaggerSchema(Description = FeatureConstants.OdsInstanceContextContextValueDescription, Nullable = false)]
+
+        [SwaggerSchema(
+            Description = FeatureConstants.OdsInstanceContextContextValueDescription,
+            Nullable = false
+        )]
         public string? ContextValue { get; set; }
     }
 
@@ -55,7 +73,10 @@ public class EditOdsInstanceContext : IFeature
         private readonly IGetOdsInstanceQuery _getOdsInstanceQuery;
         private readonly IGetOdsInstanceContextsQuery _getOdsInstanceContextsQuery;
 
-        public Validator(IGetOdsInstanceQuery getOdsInstanceQuery, IGetOdsInstanceContextsQuery getOdsInstanceContextsQuery)
+        public Validator(
+            IGetOdsInstanceQuery getOdsInstanceQuery,
+            IGetOdsInstanceContextsQuery getOdsInstanceContextsQuery
+        )
         {
             _getOdsInstanceQuery = getOdsInstanceQuery;
             _getOdsInstanceContextsQuery = getOdsInstanceContextsQuery;
@@ -67,9 +88,7 @@ public class EditOdsInstanceContext : IFeature
                 .NotEqual(0)
                 .WithMessage(FeatureConstants.OdsInstanceIdValidationMessage);
 
-            RuleFor(m => m.OdsInstanceId)
-                .Must(BeAnExistingOdsInstance)
-                .When(m => !m.OdsInstanceId.Equals(0));
+            RuleFor(m => m.OdsInstanceId).Must(BeAnExistingOdsInstance).When(m => !m.OdsInstanceId.Equals(0));
 
             RuleFor(odsContext => odsContext)
                 .Must(BeUniqueCombinedKey)
@@ -78,16 +97,26 @@ public class EditOdsInstanceContext : IFeature
 
         private bool BeAnExistingOdsInstance(int id)
         {
-            _getOdsInstanceQuery.Execute(id);
-            return true;
+            try
+            {
+                _getOdsInstanceQuery.Execute(id);
+                return true;
+            }
+            catch (NotFoundException<int>)
+            {
+                return false;
+            }
         }
 
         private bool BeUniqueCombinedKey(EditOdsInstanceContextRequest request)
         {
-            return !_getOdsInstanceContextsQuery.Execute().Exists
-                (x => x.OdsInstance?.OdsInstanceId == request.OdsInstanceId &&
-                x.ContextKey.Equals(request.ContextKey, StringComparison.OrdinalIgnoreCase) &&
-                x.OdsInstanceContextId != request.Id);
+            return !_getOdsInstanceContextsQuery
+                .Execute()
+                .Exists(x =>
+                    x.OdsInstance?.OdsInstanceId == request.OdsInstanceId
+                    && x.ContextKey.Equals(request.ContextKey, StringComparison.OrdinalIgnoreCase)
+                    && x.OdsInstanceContextId != request.Id
+                );
         }
     }
 }
